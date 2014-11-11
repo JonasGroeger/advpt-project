@@ -105,6 +105,43 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             entities.push_back(dynamic_cast<Entity*> (new_unit));
             constructedBitset.set(TERRAN_MARINE);
         }
+        else if(type == TERRAN_REFINERY)
+        {
+			Refinery *new_unit = new Refinery();
+			entities.push_back(dynamic_cast<Entity*> (new_unit));
+			constructedBitset.set(TERRAN_REFINERY);
+		} 
+		else if(type==TERRAN_FACTORY)
+		{
+			Factory *new_unit = new Factory();
+			updatables.push_back(dynamic_cast<Updatable*> (new_unit));
+			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit));
+            producers.push_back(dynamic_cast<Producer*> (new_unit));
+			entities.push_back(dynamic_cast<Entity*> (new_unit));
+			constructedBitset.set(TERRAN_FACTORY);
+		}
+		else if(type==TERRAN_STARPORT) 
+		{
+			Starport *new_unit = new Starport();
+			updatables.push_back(dynamic_cast<Updatable*> (new_unit));
+			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit));
+            producers.push_back(dynamic_cast<Producer*> (new_unit));
+			entities.push_back(dynamic_cast<Entity*> (new_unit));
+			constructedBitset.set(TERRAN_STARPORT);
+			
+		}
+		else if(type == TERRAN_BATTLECRUISER)
+        {
+			BattleCruiser *new_unit = new BattleCruiser();
+			entities.push_back(dynamic_cast<Entity*> (new_unit));
+			constructedBitset.set(TERRAN_BATTLECRUISER);
+		} 
+		else if(type == TERRAN_HELLION) {
+			Hellion *new_unit = new Hellion();
+			entities.push_back(dynamic_cast<Entity*> (new_unit));
+			constructedBitset.set(TERRAN_HELLION);
+		}
+			
     }
 }
 void GameState::removeEntity(Entity& entity)
