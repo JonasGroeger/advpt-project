@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(adv-project)
+project(sc2sim)
 
-add_executable(adv-project src/main.cpp)
+add_executable(sc2sim src/main.cpp)

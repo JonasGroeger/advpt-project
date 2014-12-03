@@ -13,3 +13,4 @@ if [ ! -f "$1" ]; then
 	exit 2
 fi
 
+./_build/sc2sim
