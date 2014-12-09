@@ -1,9 +1,8 @@
 #pragma once
 
-class Updatable {
-	
-	public:
+class Updatable
+{
+public:
 	virtual void update(GameState state);
 	virtual ~Updatable();
-	
-}
+};

@@ -3,6 +3,6 @@
 class BuildOrder
 {
 public:
-        BuildStep getNextStep();
-        void advance();
-}
+    BuildStep getNextStep();
+    void advance();
+};

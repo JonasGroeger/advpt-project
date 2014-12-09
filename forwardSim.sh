@@ -9,8 +9,8 @@ if [ ! -d "$BUILD_FOLDER" ]; then
 fi
 
 if [ ! -f "$1" ]; then
-	echo "Usage: ./forwardSim.sh buildlist"
-	exit 2
+    echo "Usage: ./forwardSim.sh buildlist"
+    exit 2
 fi
 
 ./$BUILD_FOLDER/sc2sim $1

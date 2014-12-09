@@ -1,10 +1,10 @@
 #pragma once
 
-class Game 
+class Game
 {
-        void executeBuildStep(BuildStep step);
+    void executeBuildStep(BuildStep step);
 public:
-        void loop();
-        bool isFinished();
-        GameState& getFinalState();
-}
+    void loop();
+    bool isFinished();
+    GameState& getFinalState();
+};

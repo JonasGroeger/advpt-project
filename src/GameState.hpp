@@ -3,4 +3,6 @@
 class GameState
 {
 public:
-        hasEnough(
+    hasEnough(
+
+};

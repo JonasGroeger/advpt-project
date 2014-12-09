@@ -3,9 +3,9 @@
 class BuildStep
 {
 private:
-        BuildStepType type;
-        Entity which;
+    BuildStepType type;
+    Entity which;
 public:
-        BuildStepType getType();
-        Entity getWhich();
-}
+    BuildStepType getType();
+    Entity getWhich();
+};
