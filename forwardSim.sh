@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-BUILD_FOLDER="_build"
+BUILD_FOLDER="build"
 
 if [ ! -d "$BUILD_FOLDER" ]; then
     echo "You must first build the project (chmod +x build.sh && ./build.sh)."

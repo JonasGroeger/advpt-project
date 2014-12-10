@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-BUILD_FOLDER="_build"
+BUILD_FOLDER="build"
 
 # Remove left-overs from last build
 rm -rf $BUILD_FOLDER
