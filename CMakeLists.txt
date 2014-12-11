@@ -1,13 +1,20 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project(sc2sim)
+
+set(EXECUTABLE sc2sim)
+set(HEADER_FILES include)
+set(CPP_FILES src)
+
+include_directories(${HEADER_FILES})
+include_directories(${CPP})
+
+project(${EXECUTABLE})
 
 # Add all the header files
 set( HPP_FILES
   include/BuildOrder.hpp
   include/BuildStep.hpp
   include/Constructable.hpp
-  include/Decimal.hpp
-  include/Entitiy.hpp
+  include/Entity.hpp
   include/EntityType.hpp
   include/Game.hpp
   include/GameState.hpp
@@ -19,6 +26,7 @@ set( HPP_FILES
 # Add all the source files
 set( CPP_FILES
   src/main.cpp
+  src/BuildOrder.cpp	
 )
 
-add_executable( sc2sim ${CPP_FILES} ${HPP_FILES} )
+add_executable(${EXECUTABLE} ${CPP_FILES} ${HPP_FILES})
