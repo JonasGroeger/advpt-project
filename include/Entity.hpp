@@ -1,8 +1,10 @@
 #pragma once
+#include "EntityType.hpp"
+
 
 class Entity
 {
 public:
     EntityType type;
-    virtual EntityType getType() = 0;
+    EntityType getType();
 };
