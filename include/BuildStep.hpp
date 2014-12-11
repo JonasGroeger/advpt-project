@@ -12,12 +12,16 @@ private:
     Entity which;
     string name;
 public:
+    //The name argument is just for testing
+    //TODO
     BuildStep(string value){
         name = value;
     }
     
     BuildStepType getType();
     Entity getWhich();
+    
+    //Just for testing
     std::string getName(){
         return name;
     }
