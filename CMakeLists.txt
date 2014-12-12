@@ -27,6 +27,7 @@ set( HPP_FILES
 set( CPP_FILES
   src/main.cpp
   src/BuildOrder.cpp	
+  src/Game.cpp
 )
 
 # Enable c++11

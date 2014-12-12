@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Upgradable.hpp"
+#include "Updatable.hpp"
+#include "Producer.hpp"
+
 class GameState
 {
 public:
@@ -17,10 +21,10 @@ public:
 
     void addEntity(EntityType& type, long amount);
     void removeEntity(Entity& entity);
-    void changeEntity(Entity& old: Entity& theNew);
+    void changeEntity(Entity& old, Entity& theNew);
 
     std::vector<EntityType>& getEntities(EntityType& type);
-    std::vector<Upgradables>& getUpgradeables();
-    std::vector<Updatables>& getUpdatables();
+    std::vector<Upgradable>& getUpgradeables();
+    std::vector<Updatable>& getUpdatables();
     std::vector<Producer>& getProducers();
 };

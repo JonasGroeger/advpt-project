@@ -1,13 +1,18 @@
 #include "BuildOrder.hpp"
 
-BuildStep* BuildOrder::getNextStep(){
-    if(iterator != buildSteps.end()){
-        ++iterator;
+BuildStep* BuildOrder::getNextStep()
+{
+    if(iterator != buildSteps.end())
+    {
         return *iterator;
     }
     return nullptr;
 }
 
-void BuildOrder::advance(){
-
+void BuildOrder::advance()
+{
+        if (iterator != buildSteps.end())
+        {
+            ++iterator;
+        }
 }
