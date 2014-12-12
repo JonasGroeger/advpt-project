@@ -2,26 +2,25 @@
 
 bool Game::executeBuildStep(BuildStep* step)
 {
-    std::cout << "EntityType: " << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
-    /*
     switch (step->getType())
     {
         case BuildStepType::UPGRADE:
-            std::cout << "THAT WAS AN UPGRADE!!!" << std::endl;
+            std::cout << "upgrading a: ";
             break;
         case BuildStepType::PRODUCE:
-            std::cout << "THAT WAS AN PRODUCTION!!!" << std::endl;
+            std::cout << "producing a: ";
             // TODO
             break;
         case BuildStepType::CONSTRUCT:
-            std::cout << "THAT WAS AN CONSTRUCTION!!!" << std::endl;
+            std::cout << "constructing a: ";
             // TODO
             break;
         case BuildStepType::CHRONO_BOOST:
-            std::cout << "THAT WAS AN CHRONO_BOOST!!!" << std::endl;
+            std::cout << "chrono boosting a: ";
             // TODO
             break;
-    }*/
+    }
+    std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
 
     return true;
 }
