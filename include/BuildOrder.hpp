@@ -1,9 +1,12 @@
 #pragma once
 #include <vector>
 #include <cstdio>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+
 #include "BuildStep.hpp"
 using namespace std;
 
@@ -14,19 +17,8 @@ private:
     vector<BuildStep*>::iterator iterator;
     
 public:
-    BuildOrder(char* file){
-        ifstream infile(file);
-        string line;
-        while (getline(infile, line))
-        {
-            buildSteps.insert(buildSteps.end(), new BuildStep(line));
-        }
-        
-        iterator = buildSteps.begin();
-    }
-    
-    ~BuildOrder(){
-    }
+    BuildOrder(const char* file);
+    ~BuildOrder();
     
     BuildStep* getNextStep();
     void advance();
