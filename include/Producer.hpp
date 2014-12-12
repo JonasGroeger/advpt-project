@@ -1,5 +1,7 @@
 #pragma once
 
+#include "EntityType.hpp"
+
 // Forward declaration of GameState so this compiles
 class GameState;
 

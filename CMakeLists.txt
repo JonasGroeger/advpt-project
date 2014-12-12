@@ -28,6 +28,9 @@ set( CPP_FILES
   src/main.cpp
   src/BuildOrder.cpp	
   src/Game.cpp
+  src/GameState.cpp
+  src/Upgradable.cpp
+  src/Updatable.cpp
 )
 
 # Enable c++11
