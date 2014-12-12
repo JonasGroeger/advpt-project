@@ -14,6 +14,7 @@ bool GameState::hasEnoughSupply(unsigned long amount)
 }
 bool GameState::hasEntity(EntityType& type, unsigned long amount)
 {
+    // TODO
     return false;
 }
 
@@ -32,24 +33,29 @@ void GameState::consumeEnoughSupply(unsigned long amount)
 
 void GameState::addMinerals(unsigned long amount)
 {
-
+    minerals += (amount * MIN_FACTOR);
 }
 void GameState::addVespine(unsigned long amount)
 {
+    gas += (amount * GAS_FACTOR);
+}
 
+void GameState::increaseSupply(unsigned long amount)
+{
+    maximumSupply = (maximumSupply + amount <= 200) ? (maximumSupply + amount) : (200);
 }
 
 void GameState::addEntity(EntityType& type, unsigned long amount)
 {
-
+    // TODO
 }
 void GameState::removeEntity(Entity& entity)
 {
-
+    // TODO
 }
 void GameState::changeEntity(Entity& old, Entity& theNew)
 {
-
+    // TODO
 }
 
 vector<EntityType>& GameState::getEntities(EntityType& type)

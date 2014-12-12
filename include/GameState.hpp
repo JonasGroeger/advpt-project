@@ -46,6 +46,7 @@ public:
 
     void addMinerals(unsigned long amount);
     void addVespine(unsigned long amount);
+    void increaseSupply(unsigned long amount);
 
     void addEntity(EntityType& type, unsigned long amount);
     void removeEntity(Entity& entity);
