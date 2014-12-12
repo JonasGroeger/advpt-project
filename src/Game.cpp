@@ -2,7 +2,27 @@
 
 bool Game::executeBuildStep(BuildStep* step)
 {
-    std::cout << "Executed: " << step->getName() << std::endl;
+    std::cout << "EntityType: " << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+    /*
+    switch (step->getType())
+    {
+        case BuildStepType::UPGRADE:
+            std::cout << "THAT WAS AN UPGRADE!!!" << std::endl;
+            break;
+        case BuildStepType::PRODUCE:
+            std::cout << "THAT WAS AN PRODUCTION!!!" << std::endl;
+            // TODO
+            break;
+        case BuildStepType::CONSTRUCT:
+            std::cout << "THAT WAS AN CONSTRUCTION!!!" << std::endl;
+            // TODO
+            break;
+        case BuildStepType::CHRONO_BOOST:
+            std::cout << "THAT WAS AN CHRONO_BOOST!!!" << std::endl;
+            // TODO
+            break;
+    }*/
+
     return true;
 }
 
@@ -11,7 +31,6 @@ void Game::loop()
     // TODO add a maximum number of steps
     while (true)
     {
-        // TODO this won't compile and i don't really know why yet
         // We update each updateable
         auto updatables = currentState.getUpdatables();
 

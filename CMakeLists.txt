@@ -27,6 +27,7 @@ set( HPP_FILES
 set( CPP_FILES
   src/main.cpp
   src/BuildOrder.cpp	
+  src/BuildStep.cpp	
   src/Game.cpp
   src/GameState.cpp
   src/Upgradable.cpp

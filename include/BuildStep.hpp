@@ -1,28 +1,36 @@
 #pragma once
 #include "Entity.hpp"
-#include "BuildStepType.hpp"
+
+#include <map>
+#include <string>
 
 using namespace std;
 
+enum class BuildStepType { UPGRADE, PRODUCE, CONSTRUCT, CHRONO_BOOST };
 
 class BuildStep
 {
 private:
     BuildStepType type;
-    Entity which;
+    EntityType which;
     string name;
 public:
-    //The name argument is just for testing
-    //TODO
-    BuildStep(string value){
-        name = value;
+    static map<string, EntityType> stringToEntityType;
+    // DEBUGGING
+    static map<EntityType, string> entityTypeToString;
+    static void initMap(void)
+    {
+        for (auto it = BuildStep::stringToEntityType.begin(); it != BuildStep::stringToEntityType.end(); it++)
+        {
+            BuildStep::entityTypeToString[it->second] = it->first;
+        }
     }
-    
+
+    BuildStep(string value);
+
     BuildStepType getType();
-    Entity getWhich();
-    
+    EntityType getWhich();
+
     //Just for testing
-    std::string getName(){
-        return name;
-    }
+    string getName();
 };
