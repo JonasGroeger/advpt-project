@@ -1,45 +1,45 @@
 #include "GameState.hpp"
 
-bool GameState::hasEnoughMinerals(long amount)
+bool GameState::hasEnoughMinerals(unsigned long amount)
+{
+    return (amount * MIN_FACTOR) <= minerals;
+}
+bool GameState::hasEnoughVespine(unsigned long amount)
+{
+    return (amount * GAS_FACTOR) <= gas;
+}
+bool GameState::hasEnoughSupply(unsigned long amount)
+{
+    return amount <= (maximumSupply-usedSupply);
+}
+bool GameState::hasEntity(EntityType& type, unsigned long amount)
 {
     return false;
 }
-bool GameState::hasEnoughVespine(long amount)
+
+void GameState::consumeEnoughMinerals(unsigned long amount)
 {
-    return false;
+    minerals -= (amount * MIN_FACTOR);
 }
-bool GameState::hasEnoughSupply(long amount)
+void GameState::consumeEnoughVespine(unsigned long amount)
 {
-    return false;
+    gas -= (amount * GAS_FACTOR);
 }
-bool GameState::hasEntity(EntityType& type, long amount)
+void GameState::consumeEnoughSupply(unsigned long amount)
 {
-    return false;
+    usedSupply += amount;
 }
 
-void GameState::consumeEnoughMinerals(long amount)
-{
-
-}
-void GameState::consumeEnoughVespine(long amount)
+void GameState::addMinerals(unsigned long amount)
 {
 
 }
-void GameState::consumeEnoughSupply(long amount)
+void GameState::addVespine(unsigned long amount)
 {
 
 }
 
-void GameState::addMinerals(long amount)
-{
-
-}
-void GameState::addVespine(long amount)
-{
-
-}
-
-void GameState::addEntity(EntityType& type, long amount)
+void GameState::addEntity(EntityType& type, unsigned long amount)
 {
 
 }
