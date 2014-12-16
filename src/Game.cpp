@@ -4,18 +4,20 @@
 bool Game::executeBuildStep(BuildStep* step)
 {
     //TODO remove these hardcoded costs and get them from current entitytype
-	int mineral = 2;
-	int gas = 1;
-	int supply = 3;
+	int mineral = 20;
+	int gas = 10;
+	int supply = 30;
 	bool success = false;
     //success defines if we have enough of the needed costs to execute this step
-    success = currentState.hasEnoughMinerals(1)
-        && currentState.hasEnoughVespine(1)
-        && currentState.hasEnoughSupply(1);
+    success = currentState.hasEnoughMinerals(mineral)
+        && currentState.hasEnoughVespine(gas)
+        && currentState.hasEnoughSupply(supply);
 
     if(!success){
         return false;
     }
+    
+    std::cout << "[TIME " << currentState.getSimulationTime()<< "] ";
     switch (step->getType())
     {
         case BuildStepType::UPGRADE:
@@ -70,7 +72,7 @@ void Game::loop()
             }
 			buildOrder.advance();
 		}
-		//count simulation time one step up
+        currentState.incrementSimulationTime();
     }
 }
 
@@ -78,16 +80,16 @@ void Game::loop()
 
 bool Game::isFinished()
 {
-
+    return (buildOrder.getNextStep() == nullptr);
 }
 
 GameState& Game::getFinalState()
 {
-
+    return currentState;
 }
 
-// TODO pass a BuildOrder and initiliaze GameState
+// TODO remove these debug values of gamestate
 Game::Game(char *file)
-    : buildOrder(BuildOrder(file))
+    :currentState(GameState(20,12,10)), buildOrder(BuildOrder(file))
 {
 }
