@@ -2,14 +2,22 @@
 
 bool Game::executeBuildStep(BuildStep* step)
 {
+	mineral = ...
+	gas = ...
+	supply = ...
+	bool success = false;
     switch (step->getType())
-    {
+l
         case BuildStepType::UPGRADE:
             std::cout << "upgrading a: ";
             break;
         case BuildStepType::PRODUCE:
             std::cout << "producing a: ";
-            // TODO
+			if(gamestate.haseenough....(mineral, gas, supply) && //nebenbedingungen (mehr als eine instanz erlaubt etc...)) {
+				getEntities.push_back(createdOne)
+				GameState
+				success =true;
+			}
             break;
         case BuildStepType::CONSTRUCT:
             std::cout << "constructing a: ";
@@ -20,6 +28,10 @@ bool Game::executeBuildStep(BuildStep* step)
             // TODO
             break;
     }
+    
+    if(success){
+		//decrease values of gamestate based on costs of unit
+	}
     std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
 
     return true;
@@ -44,10 +56,10 @@ void Game::loop()
         {
             return;
         } 
-        else if (executeBuildStep(nextStep))
-        {
-            buildOrder.advance();
-        }
+        while(executeBuildStep(nextStep)){
+			buildOrder.advance();
+		}
+		//count simulation time one step up
     }
 }
 

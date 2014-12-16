@@ -5,7 +5,7 @@ set(HEADER_FILES include)
 set(CPP_FILES src)
 
 include_directories(${HEADER_FILES})
-include_directories(${CPP})
+include_directories(${CPP_FILES})
 
 project(${EXECUTABLE})
 

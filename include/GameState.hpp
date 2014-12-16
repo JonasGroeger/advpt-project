@@ -52,8 +52,12 @@ public:
     void removeEntity(Entity& entity);
     void changeEntity(Entity& old, Entity& theNew);
 
+	//contains all created entities
     vector<EntityType>& getEntities(EntityType& type);
-    vector<Upgradable>& getUpgradeables();
-    vector<Updatable>& getUpdatables();
-    vector<Producer>& getProducers();
+	
+	//following three vectors only contain pointers to specific elements of the above one
+	//contains references to the getEntities vector (views)
+    vector<Upgradable*> getUpgradeables();
+    vector<Updatable*> getUpdatables();
+    vector<Producer*> getProducers();
 };
