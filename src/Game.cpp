@@ -1,5 +1,6 @@
 #include "Game.hpp"
 
+
 bool Game::executeBuildStep(BuildStep* step)
 {
     //TODO remove these hardcoded costs and get them from current entitytype
@@ -7,6 +8,14 @@ bool Game::executeBuildStep(BuildStep* step)
 	int gas = 1;
 	int supply = 3;
 	bool success = false;
+    //success defines if we have enough of the needed costs to execute this step
+    success = currentState.hasEnoughMinerals(1)
+        && currentState.hasEnoughVespine(1)
+        && currentState.hasEnoughSupply(1);
+
+    if(!success){
+        return false;
+    }
     switch (step->getType())
     {
         case BuildStepType::UPGRADE:
@@ -29,10 +38,6 @@ bool Game::executeBuildStep(BuildStep* step)
             // TODO
             break;
     }
-    
-    if(success){
-		//decrease values of gamestate based on costs of unit
-	}
     std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
 
     return true;
@@ -52,17 +57,24 @@ void Game::loop()
 
         // We try to execute the next BuildStep
         BuildStep* nextStep = buildOrder.getNextStep();
-
         if (nextStep == nullptr)
         {
             return;
         } 
+        //if we have enough to execute current buildstep, we go further until it fails
         while(executeBuildStep(nextStep)){
+            //TODO fix duplicate code here, see above
+            nextStep = buildOrder.getNextStep();
+            if(nextStep == nullptr){
+                return;
+            }
 			buildOrder.advance();
 		}
 		//count simulation time one step up
     }
 }
+
+
 
 bool Game::isFinished()
 {
