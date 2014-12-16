@@ -2,22 +2,23 @@
 
 bool Game::executeBuildStep(BuildStep* step)
 {
-	mineral = ...
-	gas = ...
-	supply = ...
+    //TODO remove these hardcoded costs and get them from current entitytype
+	int mineral = 2;
+	int gas = 1;
+	int supply = 3;
 	bool success = false;
     switch (step->getType())
-l
+    {
         case BuildStepType::UPGRADE:
             std::cout << "upgrading a: ";
             break;
         case BuildStepType::PRODUCE:
             std::cout << "producing a: ";
-			if(gamestate.haseenough....(mineral, gas, supply) && //nebenbedingungen (mehr als eine instanz erlaubt etc...)) {
-				getEntities.push_back(createdOne)
-				GameState
+			//if(gamestate.haseenough....(mineral, gas, supply) && //nebenbedingungen (mehr als eine instanz erlaubt etc...)) {
+			//	getEntities.push_back(createdOne)
+			//	GameState
 				success =true;
-			}
+			//}
             break;
         case BuildStepType::CONSTRUCT:
             std::cout << "constructing a: ";

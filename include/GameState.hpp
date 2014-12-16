@@ -34,7 +34,6 @@ public:
      */
     unsigned long usedSupply, maximumSupply;
 
-public:
     bool hasEnoughMinerals(unsigned long amount);
     bool hasEnoughVespine(unsigned long amount);
     bool hasEnoughSupply(unsigned long amount);
@@ -57,7 +56,7 @@ public:
 	
 	//following three vectors only contain pointers to specific elements of the above one
 	//contains references to the getEntities vector (views)
-    vector<Upgradable*> getUpgradeables();
-    vector<Updatable*> getUpdatables();
-    vector<Producer*> getProducers();
+    vector<Upgradable>& getUpgradeables();
+    vector<Updatable>& getUpdatables();
+    vector<Producer>& getProducers();
 };

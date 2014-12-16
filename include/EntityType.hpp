@@ -2,7 +2,7 @@
 
 enum EntityType
 {
-    ZERG_HATCHERY("name"),
+    ZERG_HATCHERY,
     ZERG_LARVA,
     ZERG_EVOLUTION_CHAMBER,
     ZERG_SPORE_CRAWLER,
