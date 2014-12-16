@@ -52,17 +52,24 @@ void Game::loop()
 
         // We try to execute the next BuildStep
         BuildStep* nextStep = buildOrder.getNextStep();
-
         if (nextStep == nullptr)
         {
             return;
         } 
+        //if we have enough to execute current buildstep, we go further until it fails
         while(executeBuildStep(nextStep)){
+            //TODO fix duplicate code here, see above
+            nextStep = buildOrder.getNextStep();
+            if(nextStep == nullptr){
+                return;
+            }
 			buildOrder.advance();
 		}
 		//count simulation time one step up
     }
 }
+
+
 
 bool Game::isFinished()
 {
