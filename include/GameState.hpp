@@ -14,6 +14,10 @@ class Updatable;
 
 class GameState
 {
+
+private:
+    int simulationTime;
+
 // TODO this should be private but it won't compile anymore
 public:
     vector<EntityType> entityTypes;
@@ -34,6 +38,8 @@ public:
      */
     unsigned long usedSupply, maximumSupply;
 
+
+
 public:
     bool hasEnoughMinerals(unsigned long amount);
     bool hasEnoughVespine(unsigned long amount);
@@ -51,6 +57,9 @@ public:
     void addEntity(EntityType& type, unsigned long amount);
     void removeEntity(Entity& entity);
     void changeEntity(Entity& old, Entity& theNew);
+
+    int getSimulationTime();
+    void incrementSimulationTime();
 
 	//contains all created entities
     vector<EntityType>& getEntities(EntityType& type);

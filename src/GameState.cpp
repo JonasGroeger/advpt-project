@@ -58,6 +58,14 @@ void GameState::changeEntity(Entity& old, Entity& theNew)
     // TODO
 }
 
+void incrementSimulationTime() {
+    this->simulationTime++;
+}
+
+int getSimulationTime() {
+    return this->simulationTime;
+}
+
 vector<EntityType>& GameState::getEntities(EntityType& type)
 {
     return this->entityTypes;
