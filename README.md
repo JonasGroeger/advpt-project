@@ -4,7 +4,7 @@
 advpt@googlegroups.com
 
 # Formatting
-    #define MAX_LINE_LENGTH 120
+    #define MAX_LINE_LENGTH  120
     #define INDENT_USING     SPACES
     #define INDENT_COUNT     4
     #define BRACKETS_IN      NEWLINE
