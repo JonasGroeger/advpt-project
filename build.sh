@@ -12,5 +12,4 @@ cd $BUILD_FOLDER
 
 # Create the Makefile
 cmake ..
-cd ..
 make
