@@ -9,6 +9,9 @@
 
 using std::vector;
 
+#define GAS         ( gas * 100 )
+#define MINERALS    ( minerals * 100 )
+
 class Upgradable;
 class Updatable;
 
@@ -20,6 +23,12 @@ private:
 
 // TODO this should be private but it won't compile anymore
 public:
+    GameState(unsigned long initialGas, unsigned long initialSupply, unsigned long initialsMinerals){
+        gas = initialGas;
+        minerals = initialsMinerals;
+        supply = initialSupply;
+    }
+    
     vector<EntityType> entityTypes;
     vector<Upgradable> upgradeables;
     vector<Updatable> updatables;
@@ -27,7 +36,7 @@ public:
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
     const unsigned long MIN_FACTOR = 100, GAS_FACTOR = 100;
-    unsigned long minerals, gas;
+    unsigned long minerals, gas, supply;
 
     /*
      * Supply is a ressource that gives a maximum to how many units a player can control.

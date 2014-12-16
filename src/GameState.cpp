@@ -2,11 +2,11 @@
 
 bool GameState::hasEnoughMinerals(unsigned long amount)
 {
-    return (amount * MIN_FACTOR) <= minerals;
+    return amount <= MINERALS;
 }
 bool GameState::hasEnoughVespine(unsigned long amount)
 {
-    return (amount * GAS_FACTOR) <= gas;
+    return amount <= GAS;
 }
 bool GameState::hasEnoughSupply(unsigned long amount)
 {
