@@ -35,12 +35,12 @@ set( CPP_FILES
 )
 
 # See: http://stackoverflow.com/q/7031126
-SET (CMAKE_C_COMPILER               "/usr/bin/clang")
-SET (CMAKE_C_FLAGS                  "-Wall -std=c11")
-SET (CMAKE_C_FLAGS_DEBUG            "-g")
-
-SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
+#SET (CMAKE_C_COMPILER               "/usr/bin/clang")
+#SET (CMAKE_C_FLAGS                  "-Wall -std=c11")
+#SET (CMAKE_C_FLAGS_DEBUG            "-g")
+#
+#SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
 SET (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
-SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
+#SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
 
 add_executable(${EXECUTABLE} ${CPP_FILES} ${HPP_FILES})
