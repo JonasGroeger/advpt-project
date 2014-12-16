@@ -58,11 +58,11 @@ void GameState::changeEntity(Entity& old, Entity& theNew)
     // TODO
 }
 
-void incrementSimulationTime() {
+void GameState::incrementSimulationTime() {
     this->simulationTime++;
 }
 
-int getSimulationTime() {
+int GameState::getSimulationTime() {
     return this->simulationTime;
 }
 
