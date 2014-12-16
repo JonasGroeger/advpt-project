@@ -26,18 +26,21 @@ set( HPP_FILES
 # Add all the source files
 set( CPP_FILES
   src/main.cpp
-  src/BuildOrder.cpp	
-  src/BuildStep.cpp	
+  src/BuildOrder.cpp
+  src/BuildStep.cpp
   src/Game.cpp
   src/GameState.cpp
   src/Upgradable.cpp
   src/Updatable.cpp
 )
 
-# Enable c++11
-set( CMAKE_CXX_FLAGS 
-  "${CMAKE_CXX_FLAGS} -std=c++11"
-)
+# See: http://stackoverflow.com/q/7031126
+SET (CMAKE_C_COMPILER               "/usr/bin/clang")
+SET (CMAKE_C_FLAGS                  "-Wall -std=c11")
+SET (CMAKE_C_FLAGS_DEBUG            "-g")
 
+SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
+SET (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
+SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
 
 add_executable(${EXECUTABLE} ${CPP_FILES} ${HPP_FILES})
