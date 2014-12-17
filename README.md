@@ -3,6 +3,23 @@
 # Mailing list
 advpt@googlegroups.com
 
+# Building
+## Linux im CIP
+```
+export CC=/local/clang-3.5/bin/clang
+export CXX=/local/clang-3.5/bin/clang++
+chmod +x build.sh
+./build.sh
+```
+
+## Linux (sonstige)
+Export CC and CXX according to your environment and then execute the build.sh
+
+## Windows
+Install CMake and CMake for VS. Add cmake.exe to $PATH. Use cmake-gui to generate .sln files
+like http://i.imgur.com/6vwZbyL.png and hit "Configure" a few times until nothing is red
+anymore in the upper section. Then click "Generate". Open $PROJECT/build/sc2sim.sln with VS.
+
 # Formatting
     #define MAX_LINE_LENGTH  120
     #define INDENT_USING     SPACES
