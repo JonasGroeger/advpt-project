@@ -26,6 +26,11 @@ BuildStep* BuildOrder::getNextStep()
     return nullptr;
 }
 
+bool BuildOrder::isDone()
+{
+        return iterator == buildSteps.end();
+}
+
 void BuildOrder::advance()
 {
     if (iterator != buildSteps.end())

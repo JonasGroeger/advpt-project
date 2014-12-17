@@ -48,8 +48,26 @@ bool Game::executeBuildStep(BuildStep* step)
 void Game::loop()
 {
     // TODO add a maximum number of steps
-    while (true)
+    while (!buildOrder.isDone())
     {
+        // As long as there are still steps left
+        while (!buildOrder.isDone())
+        {
+            BuildStep* nextStep = buildOrder.getNextStep();
+
+            // We try to execute the first one
+            if (executeBuildStep(nextStep))
+            {
+                // If successfull we try the next step
+                buildOrder.advance();
+            }
+            else
+            {
+                // Or let the simulation advance first
+                break;
+            }
+        }
+
         // We update each updateable
         auto updatables = currentState.getUpdatables();
 
@@ -57,26 +75,9 @@ void Game::loop()
                 [this] (Updatable& updt) { updt.update(this->currentState); }
         );
 
-        // We try to execute the next BuildStep
-        BuildStep* nextStep = buildOrder.getNextStep();
-        if (nextStep == nullptr)
-        {
-            return;
-        } 
-        //if we have enough to execute current buildstep, we go further until it fails
-        while(executeBuildStep(nextStep)){
-            //TODO fix duplicate code here, see above
-            nextStep = buildOrder.getNextStep();
-            if(nextStep == nullptr){
-                return;
-            }
-			buildOrder.advance();
-		}
         currentState.incrementSimulationTime();
     }
 }
-
-
 
 bool Game::isFinished()
 {
