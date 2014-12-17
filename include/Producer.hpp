@@ -14,5 +14,6 @@ public:
     virtual ~Producer() {}
     virtual bool canProduce(EntityType type, GameState& state) {return false;}
     virtual void produce(EntityType type, GameState& state) {}
+    virtual long getTimeToFinish() {return 0;}
     virtual void applyChronoBoost() {}
 };
