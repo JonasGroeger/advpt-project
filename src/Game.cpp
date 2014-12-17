@@ -2,42 +2,42 @@
 
 bool Game::executeBuildStep(BuildStep* step)
 {
-    std::cout << "[TIME " << currentState.getSimulationTime()<< "] ";
-    std::cout << "[Minerals " << currentState.getMinerals()<< "] ";
+    //std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
+    //std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
     // Switch is not possible here
     if (step->getType() == BuildStepType::UPGRADE)
     {
-            std::cout << "upgrading a: ";
+            std::cerr << "upgrading a: ";
     }
     else if (step->getType() == BuildStepType::PRODUCE)
     {
-            std::cout << "producing a: ";
             auto producers = currentState.getProducers();
-            std::cout << producers.size();
             for (auto it = producers.begin(); it != producers.end(); it++)
             {
                 Producer* prod = *it;
                 if (prod->canProduce(step->getWhich(), currentState))
                 {
+                    std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
+                    std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
+                    std::cerr << "producing a: ";
+                    std::cerr << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
                     prod->produce(step->getWhich(), currentState);
-                    std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
-                    std::cout << "SUCCESS" << std::endl;
                     return true;
                 }
             }
     }
     else if (step->getType() == BuildStepType::CONSTRUCT)
     {
-            std::cout << "constructing a: ";
+            std::cerr << "constructing a: ";
             // TODO
     }
     else if (step->getType() == BuildStepType::CHRONO_BOOST)
     {
-            std::cout << "chrono boosting a: ";
+            std::cerr << "chrono boosting a: ";
             // TODO
     }
-    std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
-    std::cout << "FAILURE" << std::endl;
+    //std::cerr << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+    //std::cerr << "FAILURE" << std::endl;
 
     return false;
 }
@@ -57,7 +57,7 @@ void Game::loop()
             {
                 // If successfull we try the next step
                 buildOrder.advance();
-                std::cout << "advance" << std::endl;
+                std::cerr << "advance" << std::endl;
             }
             else
             {
@@ -65,6 +65,8 @@ void Game::loop()
                 break;
             }
         }
+
+        std::cerr << "Update..." << std::endl;
 
         // We update each updateable
         auto updatables = currentState.getUpdatables();
@@ -117,5 +119,5 @@ Game::Game(char *file)
     :currentState(GameState(50, 50, 50)), buildOrder(BuildOrder(file))
 {
     currentState.addEntity(TERRAN_SCV, 5);
-    currentState.addEntity(TERRAN_COMMAND_CENTER, 5);
+    currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
 }
