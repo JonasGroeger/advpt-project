@@ -22,4 +22,5 @@ public:
     
     BuildStep* getNextStep();
     void advance();
+    bool isDone();
 };
