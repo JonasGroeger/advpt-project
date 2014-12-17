@@ -4,7 +4,8 @@
 
 class Entity
 {
-public:
+private:
     EntityType type;
-    EntityType getType();
+public:
+    virtual EntityType getType();
 };
