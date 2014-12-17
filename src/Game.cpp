@@ -13,6 +13,7 @@ bool Game::executeBuildStep(BuildStep* step)
     {
             std::cout << "producing a: ";
             auto producers = currentState.getProducers();
+            std::cout << producers.size();
             for (auto it = producers.begin(); it != producers.end(); it++)
             {
                 Producer* prod = *it;

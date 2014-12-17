@@ -135,8 +135,8 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
     {"archon", BuildStepType::PRODUCE},
     {"mothership", BuildStepType::PRODUCE},
     //Terran
-    {"supply_depot", BuildStepType::CONSTRUCT},
-    {"barracks", BuildStepType::CONSTRUCT},
+    {"supply_depot", BuildStepType::PRODUCE},
+    {"barracks", BuildStepType::PRODUCE},
     {"marine", BuildStepType::PRODUCE},
     {"scv", BuildStepType::PRODUCE},
 };

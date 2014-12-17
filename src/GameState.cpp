@@ -57,18 +57,33 @@ void GameState::addEntity(EntityType type, unsigned long amount)
         if (type == TERRAN_COMMAND_CENTER)
         {
             CommandCenter *new_unit = new CommandCenter();
-            Entity *new_entity = dynamic_cast<Entity*> (new_unit);
-            Updatable *new_updatable = dynamic_cast<Updatable*> (new_unit);
-            Producer *new_producer = dynamic_cast<Producer*> (new_unit);
-            entities.push_back(new_entity);
-            updatables.push_back(new_updatable);
-            producers.push_back(new_producer);
+            entities.push_back(dynamic_cast<Entity*> (new_unit));
+            updatables.push_back(dynamic_cast<Updatable*> (new_unit));
+            producers.push_back(dynamic_cast<Producer*> (new_unit));
         }
         else if (type == TERRAN_SCV)
         {
             SCV *new_unit = new SCV();
             entities.push_back(dynamic_cast<Entity*> (new_unit));
             updatables.push_back(dynamic_cast<Updatable*> (new_unit));
+            producers.push_back(dynamic_cast<Producer*> (new_unit));
+        }
+        else if (type == TERRAN_BARRACKS)
+        {
+            Barracks *new_unit = new Barracks();
+            entities.push_back(dynamic_cast<Entity*> (new_unit));
+            updatables.push_back(dynamic_cast<Updatable*> (new_unit));
+            producers.push_back(dynamic_cast<Producer*> (new_unit));
+        }
+        else if (type == TERRAN_SUPPLY_DEPOT)
+        {
+            SupplyDepot *new_unit = new SupplyDepot();
+            entities.push_back(dynamic_cast<Entity*> (new_unit));
+        }
+        else if (type == TERRAN_MARINE)
+        {
+            Marine *new_unit = new Marine();
+            entities.push_back(dynamic_cast<Entity*> (new_unit));
         }
     }
 }
