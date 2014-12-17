@@ -9,29 +9,28 @@ include_directories( ${CPP_FOLDER} )
 project( ${EXECUTABLE} )
 
 set( CMAKE_BUILD_TYPE Debug )
-
 # See: http://stackoverflow.com/q/7031126
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+  # Für den CIP POOL:
+  #set( CMAKE_C_COMPILER               "/local/clang-3.5/bin/clang" )
+  #set( CMAKE_CXX_COMPILER             "/local/clang-3.5/bin/clang++" )
 
-  # Für den CIP POOL
-  set( CMAKE_C_COMPILER               "/local/clang-3.5/bin/clang" )
-  set( CMAKE_C_FLAGS                  "-Wall -std=c11" )
-  set( CMAKE_C_FLAGS_DEBUG            "-g" )
-
-  set( CMAKE_CXX_COMPILER             "/local/clang-3.5/bin/clang++" )
-  set( CMAKE_CXX_FLAGS                "-Wall -std=c++11" )
-  set( CMAKE_CXX_FLAGS_DEBUG          "-g" )
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
   # Using GNU g++
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" )
   # using Intel C++
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-
   # Turn on the ability to create folders to organize projects (.vcxproj)
   # It creates "CMakePredefinedTargets" folder by default and adds CMake
   # defined projects like INSTALL.vcxproj and ZERO_CHECK.vcxproj
   set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 endif()
+
+set( CMAKE_C_FLAGS                  "-Wall -std=c11" )
+set( CMAKE_C_FLAGS_DEBUG            "-g" )
+
+set( CMAKE_CXX_FLAGS                "-Wall -std=c++11" )
+set( CMAKE_CXX_FLAGS_DEBUG          "-g" )
 
 # Output some properties for easy debugging
 message( "C COMPILER   -->" ${CMAKE_C_COMPILER} )
