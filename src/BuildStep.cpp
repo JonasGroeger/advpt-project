@@ -93,7 +93,7 @@ map<string, EntityType> BuildStep::stringToEntityType =
     {"armory",TERRAN_ARMORY},
     {"orbital_command",TERRAN_ORBITAL_COMMAND},
     {"command_center",TERRAN_COMMAND_CENTER},
-    {"svc",TERRAN_SVC},
+    {"scv",TERRAN_SCV},
     {"engineering_bay",TERRAN_ENGINEERING_BAY},
     {"planetary_fortress",TERRAN_PLANETARY_FORTRESS},
     {"missile_turret",TERRAN_MISSILE_TURRET},
@@ -133,7 +133,12 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
     {"twilight_council", BuildStepType::CONSTRUCT},
     {"stargate", BuildStepType::CONSTRUCT},
     {"archon", BuildStepType::PRODUCE},
-    {"mothership", BuildStepType::PRODUCE}
+    {"mothership", BuildStepType::PRODUCE},
+    //Terran
+    {"supply_depot", BuildStepType::CONSTRUCT},
+    {"barracks", BuildStepType::CONSTRUCT},
+    {"marine", BuildStepType::PRODUCE},
+    {"scv", BuildStepType::PRODUCE},
 };
 map<BuildStepType, string> BuildStep::buildStepTypeToString;
 

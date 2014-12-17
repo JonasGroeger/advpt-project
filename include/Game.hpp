@@ -5,6 +5,7 @@
 #include "BuildOrder.hpp"
 #include "BuildStep.hpp"
 #include "GameState.hpp"
+#include "EntityType.hpp"
 
 class Game
 {

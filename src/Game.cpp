@@ -1,48 +1,44 @@
 #include "Game.hpp"
 
-
 bool Game::executeBuildStep(BuildStep* step)
 {
-    //TODO remove these hardcoded costs and get them from current entitytype
-	int mineral = 20;
-	int gas = 10;
-	int supply = 30;
-	bool success = false;
-    //success defines if we have enough of the needed costs to execute this step
-    success = currentState.hasEnoughMinerals(mineral)
-        && currentState.hasEnoughVespine(gas)
-        && currentState.hasEnoughSupply(supply);
-
-    if(!success){
-        return false;
-    }
-    
     std::cout << "[TIME " << currentState.getSimulationTime()<< "] ";
-    switch (step->getType())
+    std::cout << "[Minerals " << currentState.getMinerals()<< "] ";
+    // Switch is not possible here
+    if (step->getType() == BuildStepType::UPGRADE)
     {
-        case BuildStepType::UPGRADE:
             std::cout << "upgrading a: ";
-            break;
-        case BuildStepType::PRODUCE:
+    }
+    else if (step->getType() == BuildStepType::PRODUCE)
+    {
             std::cout << "producing a: ";
-			//if(gamestate.haseenough....(mineral, gas, supply) && //nebenbedingungen (mehr als eine instanz erlaubt etc...)) {
-			//	getEntities.push_back(createdOne)
-			//	GameState
-				success =true;
-			//}
-            break;
-        case BuildStepType::CONSTRUCT:
+            auto producers = currentState.getProducers();
+            for (auto it = producers.begin(); it != producers.end(); it++)
+            {
+                Producer* prod = *it;
+                if (prod->canProduce(step->getWhich(), currentState))
+                {
+                    prod->produce(step->getWhich(), currentState);
+                    std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+                    std::cout << "SUCCESS" << std::endl;
+                    return true;
+                }
+            }
+    }
+    else if (step->getType() == BuildStepType::CONSTRUCT)
+    {
             std::cout << "constructing a: ";
             // TODO
-            break;
-        case BuildStepType::CHRONO_BOOST:
+    }
+    else if (step->getType() == BuildStepType::CHRONO_BOOST)
+    {
             std::cout << "chrono boosting a: ";
             // TODO
-            break;
     }
     std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+    std::cout << "FAILURE" << std::endl;
 
-    return true;
+    return false;
 }
 
 void Game::loop()
@@ -60,6 +56,7 @@ void Game::loop()
             {
                 // If successfull we try the next step
                 buildOrder.advance();
+                std::cout << "advance" << std::endl;
             }
             else
             {
@@ -72,7 +69,7 @@ void Game::loop()
         auto updatables = currentState.getUpdatables();
 
         std::for_each(updatables.begin(), updatables.end(), 
-                [this] (Updatable& updt) { updt.update(this->currentState); }
+                [this] (Updatable* updt) { updt->update(this->currentState); }
         );
 
         currentState.incrementSimulationTime();
@@ -91,6 +88,8 @@ GameState& Game::getFinalState()
 
 // TODO remove these debug values of gamestate
 Game::Game(char *file)
-    :currentState(GameState(20,12,10)), buildOrder(BuildOrder(file))
+    :currentState(GameState(50, 50, 50)), buildOrder(BuildOrder(file))
 {
+    currentState.addEntity(TERRAN_SCV, 5);
+    currentState.addEntity(TERRAN_COMMAND_CENTER, 5);
 }

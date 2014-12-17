@@ -21,6 +21,7 @@ set( HPP_FILES
   include/Producer.hpp
   include/Updatable.hpp
   include/Upgradable.hpp
+  include/Units.hpp
 )
 
 # Add all the source files
@@ -32,6 +33,8 @@ set( CPP_FILES
   src/GameState.cpp
   src/Upgradable.cpp
   src/Updatable.cpp
+  src/Units.cpp
+  src/Entity.cpp
 )
 
 # See: http://stackoverflow.com/q/7031126
