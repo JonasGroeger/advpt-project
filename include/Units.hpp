@@ -113,7 +113,6 @@ class Refinery : public Entity
 
 class Factory : public Entity,
                 public Producer,
-                public Upgradable,
                 public Updatable
 {
     private:
@@ -133,11 +132,6 @@ class Factory : public Entity,
         virtual long getTimeToFinish() override;
         virtual void applyChronoBoost() override;
 
-    /* class Upgradable */
-    public:
-        virtual bool isUpgradable(GameState &state, EntityType type) override;
-        virtual void upgrade(GameState &state, EntityType to) override;
-
     /* class Updatable */
     public:
         virtual void update(GameState &state) override;
@@ -152,7 +146,6 @@ class Hellion : public Entity
 
 class Starport : public Entity,
                  public Producer,
-                 public Upgradable,
                  public Updatable
 {
     /* class Entity */
@@ -168,10 +161,6 @@ class Starport : public Entity,
     virtual long getTimeToFinish() override;
 
     virtual void applyChronoBoost() override;
-
-    virtual bool isUpgradable(GameState &state, EntityType type) override;
-
-    virtual void upgrade(GameState &state, EntityType to) override;
 };
 
 class BattleCruiser : public Entity

@@ -239,18 +239,6 @@ void Starport::applyChronoBoost()
     Producer::applyChronoBoost();
 }
 
-bool Starport::isUpgradable(GameState &state, EntityType type)
-{
-    // TODO: Implement
-    return Upgradable::isUpgradable(state, type);
-}
-
-void Starport::upgrade(GameState &state, EntityType to)
-{
-    // TODO: Implement
-    Upgradable::upgrade(state, to);
-}
-
 bool Factory::canProduce(EntityType type, GameState &state)
 {
     // TODO: Implement
@@ -261,18 +249,6 @@ void Factory::update(GameState &state)
 {
     // TODO: Implement
     Updatable::update(state);
-}
-
-void Factory::upgrade(GameState &state, EntityType to)
-{
-    // TODO: Implement
-    Upgradable::upgrade(state, to);
-}
-
-bool Factory::isUpgradable(GameState &state, EntityType type)
-{
-    // TODO: Implement
-    return Upgradable::isUpgradable(state, type);
 }
 
 void Factory::applyChronoBoost()
