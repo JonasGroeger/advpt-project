@@ -56,6 +56,7 @@ public:
      */
     unsigned long usedSupply, maximumSupply;
 
+    bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
     bool hasEnoughMinerals(unsigned long amount);
     bool hasEnoughVespine(unsigned long amount);
     bool hasEnoughSupply(unsigned long amount);

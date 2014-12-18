@@ -131,3 +131,8 @@ vector<Producer*>& GameState::getProducers()
 {
     return producers;
 }
+
+bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply)
+{
+    return hasEnoughMinerals(minerals) && hasEnoughVespine(vespine) && hasEnoughSupply(supply);
+}
