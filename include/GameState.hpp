@@ -4,16 +4,14 @@
 #include <bitset>
 
 #include "Units.hpp"
-#include "Upgradable.hpp"
-#include "Updatable.hpp"
 #include "Producer.hpp"
 #include "Entity.hpp"
 #include "EntityType.hpp"
 
+class Updatable;
+class Upgradable;
 
 using std::vector;
-class Upgradable;
-class Updatable;
 class GameState
 {
 
@@ -36,7 +34,7 @@ public:
     vector<Entity*> entities;
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
-    const unsigned long FACTOR = 100;
+    static const unsigned long FACTOR = 100;
     unsigned long minerals, gas, supply;
 
     //This bitset contains a setted bit if this entity is already created by us
