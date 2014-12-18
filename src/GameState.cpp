@@ -3,15 +3,15 @@
 
 bool GameState::hasEnoughMinerals(unsigned long amount)
 {
-    return amount * MIN_FACTOR <= minerals;
+    return amount * FACTOR <= minerals;
 }
 bool GameState::hasEnoughVespine(unsigned long amount)
 {
-    return amount * GAS_FACTOR <= gas;
+    return amount * FACTOR <= gas;
 }
 bool GameState::hasEnoughSupply(unsigned long amount)
 {
-    return amount <= (maximumSupply-usedSupply);
+    return amount * FACTOR <= (maximumSupply-usedSupply);
 }
 bool GameState::hasEntity(EntityType type)
 {
@@ -21,24 +21,24 @@ bool GameState::hasEntity(EntityType type)
 
 void GameState::consumeEnoughMinerals(unsigned long amount)
 {
-    minerals -= (amount * MIN_FACTOR);
+    minerals -= (amount * FACTOR);
 }
 void GameState::consumeEnoughVespine(unsigned long amount)
 {
-    gas -= (amount * GAS_FACTOR);
+    gas -= (amount * FACTOR);
 }
 void GameState::consumeEnoughSupply(unsigned long amount)
 {
-    usedSupply += amount;
+    usedSupply += amount * FACTOR;
 }
 
-void GameState::addMinerals(unsigned long amount)
+void GameState::addMineralsWithFactor(unsigned long amount)
 {
-    minerals += (amount * MIN_FACTOR);
+    minerals += amount;
 }
-void GameState::addVespine(unsigned long amount)
+void GameState::addVespineWithFactor(unsigned long amount)
 {
-    gas += (amount * GAS_FACTOR);
+    gas += amount;
 }
 
 unsigned long GameState::getMinerals()

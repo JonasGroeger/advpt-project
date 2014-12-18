@@ -23,9 +23,9 @@ private:
 // TODO this should be private but it won't compile anymore
 public:
     GameState(unsigned long initialGas, unsigned long initialSupply, unsigned long initialsMinerals){
-        gas = initialGas * GAS_FACTOR;
-        minerals = initialsMinerals * MIN_FACTOR;
-        supply = initialSupply;
+        gas = initialGas * FACTOR;
+        minerals = initialsMinerals * FACTOR;
+        supply = initialSupply * FACTOR;
         simulationTime = 0;
     }
     
@@ -36,7 +36,7 @@ public:
     vector<Entity*> entities;
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
-    const unsigned long MIN_FACTOR = 100, GAS_FACTOR = 100;
+    const unsigned long FACTOR = 100;
     unsigned long minerals, gas, supply;
 
     //This bitset contains a setted bit if this entity is already created by us
@@ -51,6 +51,7 @@ public:
      */
     unsigned long usedSupply, maximumSupply;
 
+    //All methods here receive the real value they need as we have no floats here
     bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
     bool hasEnoughMinerals(unsigned long amount);
     bool hasEnoughVespine(unsigned long amount);
@@ -59,12 +60,14 @@ public:
     //This method checks if type is existing/already created in our current state
     bool hasEntity(EntityType type);
 
+    // Use actual amount
     void consumeEnoughMinerals(unsigned long amount);
     void consumeEnoughVespine(unsigned long amount);
     void consumeEnoughSupply(unsigned long amount);
 
-    void addMinerals(unsigned long amount);
-    void addVespine(unsigned long amount);
+    // Use amount * 100
+    void addMineralsWithFactor(unsigned long amount);
+    void addVespineWithFactor(unsigned long amount);
     void increaseSupply(unsigned long amount);
 
     unsigned long getMinerals();
