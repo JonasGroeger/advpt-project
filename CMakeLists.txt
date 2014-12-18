@@ -47,6 +47,7 @@ set( HPP_FILES
   include/Producer.hpp
   include/Updatable.hpp
   include/Upgradable.hpp
+  include/Units.hpp
 )
 
 # ... and source files ...
@@ -57,6 +58,8 @@ set( CPP_FILES
   src/GameState.cpp
   src/main.cpp
   src/Updatable.cpp
+  src/Units.cpp
+  src/Entity.cpp
   src/Upgradable.cpp
 )
 

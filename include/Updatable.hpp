@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameState.hpp"
+//#include "GameState.hpp"
 
 // Forward declaration of GameState so this compiles
 class GameState;

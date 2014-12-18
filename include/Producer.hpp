@@ -8,8 +8,12 @@ class GameState;
 class Producer
 {
 public:
-    virtual ~Producer();
-    virtual bool canProduce(EntityType type, GameState& state);
-    virtual void produce(EntityType type, GameState& state);
-    virtual void applyChronoBoost();
+    // The virtual functions must have a definition
+    // See: http://stackoverflow.com/questions/9406580/c-undefined-reference-to-vtable-and-inheritance
+
+    virtual ~Producer() {}
+    virtual bool canProduce(EntityType type, GameState& state) {return false;}
+    virtual void produce(EntityType type, GameState& state) {}
+    virtual long getTimeToFinish() {return 0;}
+    virtual void applyChronoBoost() {}
 };

@@ -2,10 +2,12 @@
 
 #include <vector>
 
+#include "Units.hpp"
 #include "Upgradable.hpp"
 #include "Updatable.hpp"
 #include "Producer.hpp"
 #include "Entity.hpp"
+#include "EntityType.hpp"
 
 using std::vector;
 
@@ -24,15 +26,17 @@ private:
 // TODO this should be private but it won't compile anymore
 public:
     GameState(unsigned long initialGas, unsigned long initialSupply, unsigned long initialsMinerals){
-        gas = initialGas;
-        minerals = initialsMinerals;
+        gas = initialGas * GAS_FACTOR;
+        minerals = initialsMinerals * MIN_FACTOR;
         supply = initialSupply;
+        simulationTime = 0;
     }
     
     vector<EntityType> entityTypes;
-    vector<Upgradable> upgradeables;
-    vector<Updatable> updatables;
-    vector<Producer> producers;
+    vector<Upgradable*> upgradeables;
+    vector<Updatable*> updatables;
+    vector<Producer*> producers;
+    vector<Entity*> entities;
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
     const unsigned long MIN_FACTOR = 100, GAS_FACTOR = 100;
@@ -60,7 +64,9 @@ public:
     void addVespine(unsigned long amount);
     void increaseSupply(unsigned long amount);
 
-    void addEntity(EntityType& type, unsigned long amount);
+    unsigned long getMinerals();
+
+    void addEntity(EntityType type, unsigned long amount);
     void removeEntity(Entity& entity);
     void changeEntity(Entity& old, Entity& theNew);
 
@@ -72,7 +78,7 @@ public:
 	
 	//following three vectors only contain pointers to specific elements of the above one
 	//contains references to the getEntities vector (views)
-    vector<Upgradable>& getUpgradeables();
-    vector<Updatable>& getUpdatables();
-    vector<Producer>& getProducers();
+    vector<Upgradable*>& getUpgradeables();
+    vector<Updatable*>& getUpdatables();
+    vector<Producer*>& getProducers();
 };

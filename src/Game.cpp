@@ -1,48 +1,45 @@
 #include "Game.hpp"
 
-
 bool Game::executeBuildStep(BuildStep* step)
 {
-    //TODO remove these hardcoded costs and get them from current entitytype
-	int mineral = 20;
-	int gas = 10;
-	int supply = 30;
-	bool success = false;
-    //success defines if we have enough of the needed costs to execute this step
-    success = currentState.hasEnoughMinerals(mineral)
-        && currentState.hasEnoughVespine(gas)
-        && currentState.hasEnoughSupply(supply);
-
-    if(!success){
-        return false;
-    }
-    
-    std::cout << "[TIME " << currentState.getSimulationTime()<< "] ";
-    switch (step->getType())
+    //std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
+    //std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
+    // Switch is not possible here
+    if (step->getType() == BuildStepType::UPGRADE)
     {
-        case BuildStepType::UPGRADE:
-            std::cout << "upgrading a: ";
-            break;
-        case BuildStepType::PRODUCE:
-            std::cout << "producing a: ";
-			//if(gamestate.haseenough....(mineral, gas, supply) && //nebenbedingungen (mehr als eine instanz erlaubt etc...)) {
-			//	getEntities.push_back(createdOne)
-			//	GameState
-				success =true;
-			//}
-            break;
-        case BuildStepType::CONSTRUCT:
-            std::cout << "constructing a: ";
-            // TODO
-            break;
-        case BuildStepType::CHRONO_BOOST:
-            std::cout << "chrono boosting a: ";
-            // TODO
-            break;
+            std::cerr << "upgrading a: ";
     }
-    std::cout << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+    else if (step->getType() == BuildStepType::PRODUCE)
+    {
+            auto producers = currentState.getProducers();
+            for (auto it = producers.begin(); it != producers.end(); it++)
+            {
+                Producer* prod = *it;
+                if (prod->canProduce(step->getWhich(), currentState))
+                {
+                    std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
+                    std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
+                    std::cerr << "producing a: ";
+                    std::cerr << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+                    prod->produce(step->getWhich(), currentState);
+                    return true;
+                }
+            }
+    }
+    else if (step->getType() == BuildStepType::CONSTRUCT)
+    {
+            std::cerr << "constructing a: ";
+            // TODO
+    }
+    else if (step->getType() == BuildStepType::CHRONO_BOOST)
+    {
+            std::cerr << "chrono boosting a: ";
+            // TODO
+    }
+    //std::cerr << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
+    //std::cerr << "FAILURE" << std::endl;
 
-    return true;
+    return false;
 }
 
 void Game::loop()
@@ -60,6 +57,7 @@ void Game::loop()
             {
                 // If successfull we try the next step
                 buildOrder.advance();
+                std::cerr << "advance" << std::endl;
             }
             else
             {
@@ -68,15 +66,42 @@ void Game::loop()
             }
         }
 
+        std::cerr << "Update..." << std::endl;
+
         // We update each updateable
         auto updatables = currentState.getUpdatables();
 
         std::for_each(updatables.begin(), updatables.end(), 
-                [this] (Updatable& updt) { updt.update(this->currentState); }
+                [this] (Updatable* updt) { updt->update(this->currentState); }
         );
 
         currentState.incrementSimulationTime();
     }
+
+    std::cerr << "All orders are given!" << std::endl;
+
+    /*
+     * No every Order is given, but some may still take some time to complete.
+     * So we ask every producer how long he will need and wait the maximum amount
+     */
+    long maxTime = 0;
+    auto producers = currentState.getProducers();
+
+    std::for_each(producers.begin(), producers.end(),
+            [&maxTime] (Producer* prod) 
+            { 
+                maxTime = (prod->getTimeToFinish() > maxTime) ? prod->getTimeToFinish() : maxTime;
+            }
+    );
+
+    std::cerr << "Need to wait " << maxTime << " for everything to finish up." << std::endl;
+
+    for (long i = 0; i < maxTime; i++)
+    {
+        currentState.incrementSimulationTime();
+    }
+
+    std::cerr << "Finished." << std::endl;
 }
 
 bool Game::isFinished()
@@ -91,6 +116,8 @@ GameState& Game::getFinalState()
 
 // TODO remove these debug values of gamestate
 Game::Game(char *file)
-    :currentState(GameState(20,12,10)), buildOrder(BuildOrder(file))
+    :currentState(GameState(50, 50, 50)), buildOrder(BuildOrder(file))
 {
+    currentState.addEntity(TERRAN_SCV, 5);
+    currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
 }

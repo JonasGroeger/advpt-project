@@ -104,6 +104,7 @@ map<string, EntityType> BuildStep::stringToEntityType =
 map<EntityType, string> BuildStep::entityTypeToString;
 
 map<string, BuildStepType> BuildStep::stringToBuildStepType =
+/*
         {
                 {"assimilator", BuildStepType::CONSTRUCT},
                 {"forge", BuildStepType::CONSTRUCT},
@@ -202,6 +203,43 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
                 {"missile_turret", BuildStepType::CONSTRUCT},
                 {"sensort_tower", BuildStepType::CONSTRUCT},
         };
+*/
+{
+    {"assimilator", BuildStepType::CONSTRUCT},
+    {"forge", BuildStepType::CONSTRUCT},
+    {"pylon", BuildStepType::CONSTRUCT},
+    {"nexus", BuildStepType::CONSTRUCT},
+    {"photon_cannon", BuildStepType::CONSTRUCT},
+    {"phoenix", BuildStepType::PRODUCE},
+    {"void_ray", BuildStepType::PRODUCE},
+    {"carrier", BuildStepType::PRODUCE},
+    {"fleet_bacon", BuildStepType::CONSTRUCT},
+    {"dark_shrine", BuildStepType::CONSTRUCT},
+    {"templar_archives", BuildStepType::CONSTRUCT},
+    {"robotics_bay", BuildStepType::CONSTRUCT},
+    {"colossus", BuildStepType::PRODUCE},
+    {"observer", BuildStepType::PRODUCE},
+    {"immortal", BuildStepType::PRODUCE},
+    {"warp_prism", BuildStepType::PRODUCE},
+    {"sentry", BuildStepType::PRODUCE},
+    {"stalker", BuildStepType::PRODUCE},
+    {"zealot", BuildStepType::PRODUCE},
+    {"probe", BuildStepType::PRODUCE},
+    {"gateway", BuildStepType::CONSTRUCT},
+    {"cybernetics_core", BuildStepType::CONSTRUCT},
+    {"robotics_facility", BuildStepType::CONSTRUCT},
+    {"high_templar", BuildStepType::PRODUCE},
+    {"dark_templar", BuildStepType::PRODUCE},
+    {"twilight_council", BuildStepType::CONSTRUCT},
+    {"stargate", BuildStepType::CONSTRUCT},
+    {"archon", BuildStepType::PRODUCE},
+    {"mothership", BuildStepType::PRODUCE},
+    //Terran
+    {"supply_depot", BuildStepType::PRODUCE},
+    {"barracks", BuildStepType::PRODUCE},
+    {"marine", BuildStepType::PRODUCE},
+    {"scv", BuildStepType::PRODUCE},
+};
 map<BuildStepType, string> BuildStep::buildStepTypeToString;
 
 BuildStep::BuildStep(string value)
