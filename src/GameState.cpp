@@ -64,6 +64,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             entities.push_back(dynamic_cast<Entity*> (new_unit));
             updatables.push_back(dynamic_cast<Updatable*> (new_unit));
             producers.push_back(dynamic_cast<Producer*> (new_unit));
+            //add this entity to our bitset
             constructedBitset.set(TERRAN_COMMAND_CENTER);
         }
         else if (type == TERRAN_SCV)

@@ -59,6 +59,8 @@ public:
     bool hasEnoughMinerals(unsigned long amount);
     bool hasEnoughVespine(unsigned long amount);
     bool hasEnoughSupply(unsigned long amount);
+
+    //This method checks if type is existing/already created in our current state
     bool hasEntity(EntityType type);
 
     void consumeEnoughMinerals(unsigned long amount);
