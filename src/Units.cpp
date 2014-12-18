@@ -24,15 +24,6 @@ void SCV::update(GameState& state)
     }
 }
 
-bool SCV::isConstructable(GameState& state)
-{
-    return state.hasEnoughMinerals(50);
-}
-void SCV::construct(GameState& state)
-{
-    state.consumeEnoughMinerals(50);
-}
-
 bool SCV::canProduce(EntityType type, GameState& state)
 {
     if (type == TERRAN_SUPPLY_DEPOT)
@@ -98,15 +89,6 @@ void CommandCenter::update(GameState& state)
     }
 }
 
-bool CommandCenter::isConstructable(GameState& state)
-{
-    return state.hasEnoughMinerals(150);
-}
-
-void CommandCenter::construct(GameState& state)
-{
-    state.consumeEnoughMinerals(150);
-}
 bool CommandCenter::canProduce(EntityType type, GameState& state)
 {
     if (type == TERRAN_SCV)
@@ -168,14 +150,6 @@ void Barracks::update(GameState& state)
         }
         currentProgress ++;
     }
-}
-bool Barracks::isConstructable(GameState& state)
-{
-    return state.hasEnoughMinerals(150);
-}
-void Barracks::construct(GameState& state)
-{
-    state.consumeEnoughMinerals(150);
 }
 
 bool Barracks::canProduce(EntityType type, GameState& state)

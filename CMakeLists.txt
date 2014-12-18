@@ -45,7 +45,6 @@ message( "CXX FLAGS:   -->" ${CMAKE_CXX_FLAGS} )
 set( HPP_FILES
   include/BuildOrder.hpp
   include/BuildStep.hpp
-  include/Constructable.hpp
   include/Entity.hpp
   include/EntityType.hpp
   include/Game.hpp
