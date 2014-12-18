@@ -67,11 +67,6 @@ class SupplyDepot: public Entity
     /* class Entity */
     public:
         virtual EntityType getType();
-
-    /* class Constructable */
-    public:
-        virtual bool isConstructable(GameState& state);
-        virtual void construct(GameState& state);
 };
 
 class Barracks: public Entity,
