@@ -186,3 +186,118 @@ EntityType Marine::getType()
 {
     return TERRAN_MARINE;
 }
+
+EntityType Factory::getType()
+{
+    return TERRAN_FACTORY;
+}
+
+EntityType Refinery::getType()
+{
+    return TERRAN_REFINERY;
+}
+
+EntityType Hellion::getType()
+{
+    return TERRAN_HELLION;
+}
+
+EntityType Starport::getType()
+{
+    return TERRAN_STARPORT;
+}
+
+EntityType BattleCruiser::getType()
+{
+    return TERRAN_BATTLECRUISER;
+}
+
+Starport::Starport()
+{
+    interfaceBitmask = PRODUCER_INTERFACE | UPGRADABLE_INTERFACE | UPDATABLE_INTERFACE;
+}
+
+Factory::Factory()
+{
+    interfaceBitmask = PRODUCER_INTERFACE | UPGRADABLE_INTERFACE | UPDATABLE_INTERFACE;
+}
+
+/* TODO: IMPLEMENT the functions below, as they are only dummies */
+
+bool Starport::canProduce(EntityType type, GameState &state)
+{
+    // TODO: Implement
+    return Producer::canProduce(type, state);
+}
+
+void Starport::produce(EntityType type, GameState &state)
+{
+    // TODO: Implement
+    Producer::produce(type, state);
+}
+
+long Starport::getTimeToFinish()
+{
+    // TODO: Implement
+    return Producer::getTimeToFinish();
+}
+
+void Starport::applyChronoBoost()
+{
+    // TODO: Implement
+    Producer::applyChronoBoost();
+}
+
+bool Starport::isUpgradable(GameState &state, EntityType type)
+{
+    // TODO: Implement
+    return Upgradable::isUpgradable(state, type);
+}
+
+void Starport::upgrade(GameState &state, EntityType to)
+{
+    // TODO: Implement
+    Upgradable::upgrade(state, to);
+}
+
+bool Factory::canProduce(EntityType type, GameState &state)
+{
+    // TODO: Implement
+    return Producer::canProduce(type, state);
+}
+
+void Factory::update(GameState &state)
+{
+    // TODO: Implement
+    Updatable::update(state);
+}
+
+void Factory::upgrade(GameState &state, EntityType to)
+{
+    // TODO: Implement
+    Upgradable::upgrade(state, to);
+}
+
+bool Factory::isUpgradable(GameState &state, EntityType type)
+{
+    // TODO: Implement
+    return Upgradable::isUpgradable(state, type);
+}
+
+void Factory::applyChronoBoost()
+{
+    // TODO: Implement
+    Producer::applyChronoBoost();
+}
+
+long Factory::getTimeToFinish()
+{
+    // TODO: Implement
+    return Producer::getTimeToFinish();
+}
+
+void Factory::produce(EntityType type, GameState &state)
+{
+    // TODO: Implement
+    Producer::produce(type, state);
+}

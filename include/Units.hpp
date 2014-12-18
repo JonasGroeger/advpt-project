@@ -101,3 +101,79 @@ class Marine: public Entity
     public:
         virtual EntityType getType();
 };
+
+class Refinery : public Entity
+{
+    public:
+        virtual EntityType getType() override;
+};
+
+class Factory : public Entity,
+                public Producer,
+                public Upgradable,
+                public Updatable
+{
+    private:
+        bool isProducing = false;
+        int currentProgress = 0;
+        const int maxProgress = 30; // Build time of hellion
+
+    /* class Entity */
+    public:
+        Factory();
+        virtual EntityType getType() override;
+
+    /* class Producer */
+    public:
+        virtual bool canProduce(EntityType type, GameState &state) override;
+        virtual void produce(EntityType type, GameState &state) override;
+        virtual long getTimeToFinish() override;
+        virtual void applyChronoBoost() override;
+
+    /* class Upgradable */
+    public:
+        virtual bool isUpgradable(GameState &state, EntityType type) override;
+        virtual void upgrade(GameState &state, EntityType to) override;
+
+    /* class Updatable */
+    public:
+        virtual void update(GameState &state) override;
+};
+
+class Hellion : public Entity
+{
+    /* class Entity */
+    public:
+        virtual EntityType getType() override;
+};
+
+class Starport : public Entity,
+                 public Producer,
+                 public Upgradable,
+                 public Updatable
+{
+    /* class Entity */
+    public:
+        Starport();
+        virtual EntityType getType() override;
+
+
+    virtual bool canProduce(EntityType type, GameState &state) override;
+
+    virtual void produce(EntityType type, GameState &state) override;
+
+    virtual long getTimeToFinish() override;
+
+    virtual void applyChronoBoost() override;
+
+    virtual bool isUpgradable(GameState &state, EntityType type) override;
+
+    virtual void upgrade(GameState &state, EntityType to) override;
+};
+
+class BattleCruiser : public Entity
+{
+    /* class Entity */
+    public:
+        virtual EntityType getType() override;
+};
