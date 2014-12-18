@@ -12,13 +12,8 @@
 
 
 using std::vector;
-
-#define GAS         ( gas * 100 )
-#define MINERALS    ( minerals * 100 )
-
 class Upgradable;
 class Updatable;
-
 class GameState
 {
 

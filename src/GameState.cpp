@@ -1,5 +1,4 @@
 #include <ostream>
-#include <iostream>
 #include "GameState.hpp"
 
 bool GameState::hasEnoughMinerals(unsigned long amount)
