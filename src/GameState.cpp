@@ -1,4 +1,5 @@
 #include <ostream>
+#include <iostream>
 #include "GameState.hpp"
 
 bool GameState::hasEnoughMinerals(unsigned long amount)
@@ -43,7 +44,8 @@ void GameState::addVespineWithFactor(unsigned long amount)
 
 unsigned long GameState::getMinerals()
 {
-        return minerals;
+    //TODO we have rounded values here maybe use float?
+        return minerals/FACTOR;
 }
 
 void GameState::increaseSupply(unsigned long amount)

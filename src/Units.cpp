@@ -20,7 +20,7 @@ void SCV::update(GameState& state)
     }
     else
     {
-        state.addMineralsWithFactor(700 * GameState::FACTOR);
+        state.addMineralsWithFactor(0.7 * GameState::FACTOR);
     }
 }
 
