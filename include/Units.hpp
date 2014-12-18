@@ -22,6 +22,7 @@ class SCV : public Entity,
 
     /* class Entity */
     public:
+        SCV();
         virtual EntityType getType();
 
     /* class Updatable */
@@ -48,6 +49,7 @@ class CommandCenter: public Entity,
 
     /* class Entity */
     public:
+        CommandCenter();
         virtual EntityType getType();
 
     /* class Updatable */
@@ -81,6 +83,7 @@ class Barracks: public Entity,
 
     /* class Entity */
     public:
+        Barracks();
         virtual EntityType getType();
 
     /* class Updatable */

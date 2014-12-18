@@ -301,3 +301,18 @@ void Factory::produce(EntityType type, GameState &state)
     // TODO: Implement
     Producer::produce(type, state);
 }
+
+SCV::SCV()
+{
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+}
+
+CommandCenter::CommandCenter()
+{
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+}
+
+Barracks::Barracks()
+{
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+}
