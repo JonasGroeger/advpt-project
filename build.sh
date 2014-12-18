@@ -16,9 +16,9 @@ cd $BUILD_FOLDER
 # do all cip clients have a hostname starting with "fau"? i think so
 if [[ ${HOSTNAME:0:3} = "fau" ]] 
 then
-	cmake -DCMAKE_CXX_COMPILER=/local/clang-3.5/bin/clang++ ..
-else 
-	cmake ..
+  export CC=/local/clang-3.5/bin/clang
+  export CXX=/local/clang-3.5/bin/clang++
 fi
 
+cmake ..
 make
