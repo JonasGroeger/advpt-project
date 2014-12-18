@@ -2,9 +2,15 @@ cmake_minimum_required( VERSION 2.8 FATAL_ERROR )
 
 set( EXECUTABLE sc2sim )
 set( HEADER_FOLDER include )
+set( HEADER_TERRAN include/terran )
+set( HEADER_PROTOSS include/protoss )
+set( HEADER_ZERG include/zerg )
 set( CPP_FOLDER src )
 
 include_directories( ${HEADER_FOLDER} )
+include_directories( ${HEADER_TERRAN} )
+include_directories( ${HEADER_PROTOSS} )
+include_directories( ${HEADER_ZERG} )
 include_directories( ${CPP_FOLDER} )
 project( ${EXECUTABLE} )
 
@@ -48,6 +54,7 @@ set( HPP_FILES
   include/Updatable.hpp
   include/Upgradable.hpp
   include/Units.hpp
+  include/entities/terran/Marine.hpp
 )
 
 # ... and source files ...
@@ -61,6 +68,7 @@ set( CPP_FILES
   src/Units.cpp
   src/Entity.cpp
   src/Upgradable.cpp
+  src/entities/terran/Marine.cpp
 )
 
 source_group( "src" FILES ${CPP_FILES} )
