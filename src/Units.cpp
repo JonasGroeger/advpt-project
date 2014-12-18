@@ -124,15 +124,6 @@ EntityType SupplyDepot::getType()
     return TERRAN_SUPPLY_DEPOT;
 }
 
-bool SupplyDepot::isConstructable(GameState& state)
-{
-    return state.hasEnoughMinerals(100);
-}
-void SupplyDepot::construct(GameState& state)
-{
-    state.consumeEnoughMinerals(100);
-}
-
 EntityType Barracks::getType()
 {
     return TERRAN_BARRACKS;
