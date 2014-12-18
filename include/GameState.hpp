@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <bitset>
 
 #include "Units.hpp"
 #include "Upgradable.hpp"
@@ -8,6 +9,7 @@
 #include "Producer.hpp"
 #include "Entity.hpp"
 #include "EntityType.hpp"
+
 
 using std::vector;
 
@@ -42,6 +44,9 @@ public:
     const unsigned long MIN_FACTOR = 100, GAS_FACTOR = 100;
     unsigned long minerals, gas, supply;
 
+    //This bitset contains a setted bit if this entity is already created by us
+    //it is initialized by 50 to be sure to have enough capacity for our terran entities
+    std::bitset<50> constructedBitset = 0;
     /*
      * Supply is a ressource that gives a maximum to how many units a player can control.
      * Some units and buildings increase the maximum supply this acts like a capacity.
@@ -54,7 +59,7 @@ public:
     bool hasEnoughMinerals(unsigned long amount);
     bool hasEnoughVespine(unsigned long amount);
     bool hasEnoughSupply(unsigned long amount);
-    bool hasEntity(EntityType& type, unsigned long amount);
+    bool hasEntity(EntityType type);
 
     void consumeEnoughMinerals(unsigned long amount);
     void consumeEnoughVespine(unsigned long amount);

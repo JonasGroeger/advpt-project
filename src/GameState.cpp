@@ -1,3 +1,5 @@
+#include <ostream>
+#include <iostream>
 #include "GameState.hpp"
 
 bool GameState::hasEnoughMinerals(unsigned long amount)
@@ -12,10 +14,10 @@ bool GameState::hasEnoughSupply(unsigned long amount)
 {
     return amount <= (maximumSupply-usedSupply);
 }
-bool GameState::hasEntity(EntityType& type, unsigned long amount)
+bool GameState::hasEntity(EntityType type)
 {
-    // TODO
-    return false;
+    //TODO do we really need amount as a param here?
+    return constructedBitset.test(type);
 }
 
 void GameState::consumeEnoughMinerals(unsigned long amount)
@@ -62,6 +64,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             entities.push_back(dynamic_cast<Entity*> (new_unit));
             updatables.push_back(dynamic_cast<Updatable*> (new_unit));
             producers.push_back(dynamic_cast<Producer*> (new_unit));
+            constructedBitset.set(TERRAN_COMMAND_CENTER);
         }
         else if (type == TERRAN_SCV)
         {
@@ -69,6 +72,8 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             entities.push_back(dynamic_cast<Entity*> (new_unit));
             updatables.push_back(dynamic_cast<Updatable*> (new_unit));
             producers.push_back(dynamic_cast<Producer*> (new_unit));
+            constructedBitset.set(TERRAN_SCV);
+
         }
         else if (type == TERRAN_BARRACKS)
         {
@@ -76,16 +81,19 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             entities.push_back(dynamic_cast<Entity*> (new_unit));
             updatables.push_back(dynamic_cast<Updatable*> (new_unit));
             producers.push_back(dynamic_cast<Producer*> (new_unit));
+            constructedBitset.set(TERRAN_BARRACKS);
         }
         else if (type == TERRAN_SUPPLY_DEPOT)
         {
             SupplyDepot *new_unit = new SupplyDepot();
             entities.push_back(dynamic_cast<Entity*> (new_unit));
+            constructedBitset.set(TERRAN_SUPPLY_DEPOT);
         }
         else if (type == TERRAN_MARINE)
         {
             Marine *new_unit = new Marine();
             entities.push_back(dynamic_cast<Entity*> (new_unit));
+            constructedBitset.set(TERRAN_MARINE);
         }
     }
 }
