@@ -11,8 +11,8 @@ enum class BuildStepType { UPGRADE, PRODUCE, CONSTRUCT, CHRONO_BOOST };
 class BuildStep
 {
 private:
-    BuildStepType type;
-    EntityType which;
+    BuildStepType buildstepType;
+    EntityType entityType;
     string name;
 public:
     static map<string, EntityType> stringToEntityType;
@@ -34,8 +34,8 @@ public:
 
     BuildStep(string value);
 
-    BuildStepType getType();
-    EntityType getWhich();
+    BuildStepType getBuildStepType();
+    EntityType getEntityType();
 
     //Just for testing
     string getName();

@@ -247,18 +247,18 @@ map<BuildStepType, string> BuildStep::buildStepTypeToString;
 BuildStep::BuildStep(string value)
 {
     name = value;
-    which = stringToEntityType[value];
-    type = stringToBuildStepType[value];
+    entityType = stringToEntityType[value];
+    buildstepType = stringToBuildStepType[value];
 }
 
-BuildStepType BuildStep::getType()
+BuildStepType BuildStep::getBuildStepType()
 {
-    return this->type;
+    return buildstepType;
 }
 
-EntityType BuildStep::getWhich()
+EntityType BuildStep::getEntityType()
 {
-    return which;
+    return entityType;
 }
 
 string BuildStep::getName()

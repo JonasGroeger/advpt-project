@@ -5,33 +5,33 @@ bool Game::executeBuildStep(BuildStep* step)
     //std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
     //std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
     // Switch is not possible here
-    if (step->getType() == BuildStepType::UPGRADE)
+    if (step->getBuildStepType() == BuildStepType::UPGRADE)
     {
             std::cerr << "upgrading a: ";
     }
-    else if (step->getType() == BuildStepType::PRODUCE)
+    else if (step->getBuildStepType() == BuildStepType::PRODUCE)
     {
             auto producers = currentState.getProducers();
             for (auto it = producers.begin(); it != producers.end(); it++)
             {
                 Producer* prod = *it;
-                if (prod->canProduce(step->getWhich(), currentState))
+                if (prod->canProduce(step->getEntityType(), currentState))
                 {
                     std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
                     std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
                     std::cerr << "producing a: ";
-                    std::cerr << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
-                    prod->produce(step->getWhich(), currentState);
+                    std::cerr << BuildStep::entityTypeToString[step->getEntityType()] << std::endl;
+                    prod->produce(step->getEntityType(), currentState);
                     return true;
                 }
             }
     }
-    else if (step->getType() == BuildStepType::CONSTRUCT)
+    else if (step->getBuildStepType() == BuildStepType::CONSTRUCT)
     {
             std::cerr << "constructing a: ";
             // TODO
     }
-    else if (step->getType() == BuildStepType::CHRONO_BOOST)
+    else if (step->getBuildStepType() == BuildStepType::CHRONO_BOOST)
     {
             std::cerr << "chrono boosting a: ";
             // TODO
