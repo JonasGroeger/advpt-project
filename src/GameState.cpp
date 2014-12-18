@@ -50,6 +50,8 @@ void GameState::increaseSupply(unsigned long amount)
     maximumSupply = (maximumSupply + amount <= 200) ? (maximumSupply + amount) : (200);
 }
 
+//map<EntityType, Entity, BitMask> = {TERRAN_BARRACKS, dynamic_cast<Entity>(new Barracks()), ENTITY | UPDATABLE | PRODUCER}
+
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
     for (unsigned long i = 0; i < amount; i++)

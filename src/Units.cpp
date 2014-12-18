@@ -45,6 +45,9 @@ bool SCV::canProduce(EntityType type, GameState& state)
     }
     return false;
 }
+/* 
+ * Only call if canProduce returned true!!!
+ */
 void SCV::produce(EntityType type, GameState& state)
 {
     // TODO different build times
