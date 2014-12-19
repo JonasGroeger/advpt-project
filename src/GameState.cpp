@@ -62,6 +62,21 @@ unsigned long GameState::getMinerals() const
     return minerals / FACTOR;
 }
 
+unsigned long GameState::getVespine() const
+{
+    return gas / FACTOR;
+}
+
+unsigned long GameState::getUsedSupply() const
+{
+    return usedSupply;
+}
+
+unsigned long GameState::getAvailableSupply() const
+{
+    return maximumSupply - usedSupply;
+}
+
 void GameState::notifyEntityIsBeingProduced(EntityType type){
     entitiesInConstruction.set(type);
 }

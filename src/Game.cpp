@@ -17,8 +17,6 @@ bool Game::executeBuildStep(BuildStep* step)
             Producer* prod = *it;
             if (prod->canProduce(step->getEntityType(), currentState))
             {
-                std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
-                std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
                 std::cerr << "producing a: ";
                 std::cerr << BuildStep::entityTypeToString[step->getEntityType()] << std::endl;
                 prod->produce(step->getEntityType(), currentState);
@@ -78,6 +76,7 @@ int Game::loop()
             [this] (Updatable* updt) { updt->update(this->currentState); }
         );
         if(somethingHappened){
+            printResourcesMessage();
             printWorkerMessage();
         }
     }
@@ -109,6 +108,7 @@ int Game::loop()
     {
         currentState.incrementSimulationTime();
     }
+    printResourcesMessage();
 
     std::cerr << "Finished." << std::endl;
     //all fine, return 0
@@ -155,7 +155,21 @@ void Game::printWorkerMessage() {
     std::cout << std::setw(14);
     std::cout << "workers";
     std::cout << "minerals:" << mineralWorkers;
-    std::cout << ",vespine:" << vespineWorkers;
+    std::cout << ",vespene:" << vespineWorkers;
+    std::cout << std::endl;
+}
+
+void Game::printResourcesMessage()
+{
+    std::cout << std::left;
+    std::cout << std::setw(5);
+    std::cout << currentState.getSimulationTime();
+    std::cout << std::setw(14);
+    std::cout << "resources";
+    std::cout << "minerals:" << currentState.getMinerals();
+    std::cout << ",vespene:" << currentState.getVespine();
+    std::cout << ",usedSupply:" << currentState.getUsedSupply();
+    std::cout << ",availableSupply:" << currentState.getAvailableSupply();
     std::cout << std::endl;
 }
 

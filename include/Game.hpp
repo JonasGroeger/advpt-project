@@ -20,6 +20,7 @@ public:
     int loop();
     bool isFinished();
     void printWorkerMessage();
+    void printResourcesMessage();
     GameState& getFinalState();
 
     Game(char *file);

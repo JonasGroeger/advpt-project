@@ -71,6 +71,9 @@ public:
     void increaseSupply(unsigned long amount);
 
     unsigned long getMinerals() const;
+    unsigned long getVespine() const;
+    unsigned long getUsedSupply() const;
+    unsigned long getAvailableSupply() const;
 
     void notifyEntityIsBeingProduced(EntityType type);
 
