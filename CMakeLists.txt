@@ -53,6 +53,8 @@ set( HPP_FILES
   include/Updatable.hpp
   include/Upgradable.hpp
   include/Units.hpp
+  include/TypeOfWork.hpp
+  include/entities/Worker.hpp
   include/entities/terran/Marine.hpp
 )
 
@@ -67,6 +69,7 @@ set( CPP_FILES
   src/Units.cpp
   src/Entity.cpp
   src/Upgradable.cpp
+  src/entities/Worker.cpp
   src/entities/terran/Marine.cpp
 )
 
