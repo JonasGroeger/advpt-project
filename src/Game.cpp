@@ -155,8 +155,12 @@ void Game::printWorkerMessage() {
 
 // TODO remove these debug values of gamestate
 Game::Game(char *file)
-    :currentState(GameState(1000, 50, 50, 50)), buildOrder(BuildOrder(file))
+    :buildOrder(BuildOrder(file))
 {
+    currentState.setMaxSimTime(1000);
+    currentState.addMineralsWithFactor(50 * GameState::FACTOR);
+    currentState.addVespineWithFactor(0 * GameState::FACTOR);
+    currentState.increaseSupply(200); // TODO 
     currentState.addEntity(TERRAN_SCV, 5);
     currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
 }

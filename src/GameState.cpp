@@ -2,28 +2,29 @@
 #include <iostream>
 #include "GameState.hpp"
 
-bool GameState::hasEnoughMinerals(unsigned long amount)
+bool GameState::hasEnoughMinerals(unsigned long amount) const
 {
     return amount * FACTOR <= minerals;
 }
 
-bool GameState::hasEnoughVespine(unsigned long amount)
+bool GameState::hasEnoughVespine(unsigned long amount) const
 {
     return amount * FACTOR <= gas;
 }
 
-bool GameState::hasEnoughSupply(unsigned long amount)
+bool GameState::hasEnoughSupply(unsigned long amount) const
 {
-    return amount * FACTOR <= (maximumSupply-usedSupply);
+    return amount <= (maximumSupply-usedSupply);
 }
 
-bool GameState::hasEntity(EntityType type)
+bool GameState::hasEntity(EntityType type) const
 {
     //TODO do we really need amount as a param here?
     return constructedBitset.test(type);
 }
 
-bool GameState::hasEntityInProduction(EntityType type){
+bool GameState::hasEntityInProduction(EntityType type) const
+{
     return entitiesInConstruction.test(type);
 }
 
@@ -39,7 +40,7 @@ void GameState::consumeEnoughVespine(unsigned long amount)
 
 void GameState::consumeEnoughSupply(unsigned long amount)
 {
-    usedSupply += amount * FACTOR;
+    usedSupply += amount;
 }
 
 void GameState::addMineralsWithFactor(unsigned long amount)
@@ -52,14 +53,14 @@ void GameState::addVespineWithFactor(unsigned long amount)
     gas += amount;
 }
 
-unsigned long GameState::getMinerals()
-{
-    return minerals / FACTOR;
-}
-
 void GameState::increaseSupply(unsigned long amount)
 {
     maximumSupply = (maximumSupply + amount <= 200) ? (maximumSupply + amount) : (200);
+}
+
+unsigned long GameState::getMinerals() const
+{
+    return minerals / FACTOR;
 }
 
 void GameState::notifyEntityIsBeingProduced(EntityType type){
@@ -211,43 +212,46 @@ void GameState::changeEntity(Entity& old, Entity& theNew)
     // TODO
 }
 
-bool GameState::maxSimTimeReached(){
+void GameState::setMaxSimTime(int time)
+{
+    maxTime = time;
+}
+
+bool GameState::maxSimTimeReached() const
+{
     return (simulationTime >= maxTime);
+}
+
+int GameState::getSimulationTime() const
+{
+    return this->simulationTime;
 }
 
 void GameState::incrementSimulationTime() {
     this->simulationTime++;
 }
 
-int GameState::getSimulationTime() {
-    return this->simulationTime;
-}
-
-vector<EntityType>& GameState::getEntities(EntityType& type)
+const vector<EntityType>& GameState::getEntities(EntityType& type) const
 {
     return this->entityTypes;
 }
 
-vector<Upgradable*>& GameState::getUpgradeables()
+const vector<Upgradable*>& GameState::getUpgradeables() const
 {
     return upgradeables;
 }
 
-vector<Updatable*>& GameState::getUpdatables()
+const vector<Updatable*>& GameState::getUpdatables() const
 {
     return updatables;
 }
 
-vector<Producer*>& GameState::getProducers()
+const vector<Producer*>& GameState::getProducers() const
 {
     return producers;
 }
 
-vector<Worker*>& GameState::getWorkers() {
-    return workers;
-}
-
-bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply)
+const vector<Worker*>& GameState::getWorkers() const
 {
-    return hasEnoughMinerals(minerals) && hasEnoughVespine(vespine) && hasEnoughSupply(supply);
+    return workers;
 }

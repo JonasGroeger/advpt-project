@@ -13,11 +13,12 @@ class Updatable;
 class Upgradable;
 
 using std::vector;
+
 class GameState
 {
-
 private:
-    unsigned long minerals, gas, supply;
+    // Ressources stored multiplied by FACTOR
+    unsigned long minerals = 0, gas = 0;
     /*
      * Supply is a ressource that gives a maximum to how many units a player can control.
      * Some units and buildings increase the maximum supply this acts like a capacity.
@@ -25,21 +26,11 @@ private:
      * Most units use a certain amount of supply. This increases the usedSupply.
      * So maximumSupply - usedSupply gives the available amount of supply.
      */
-    unsigned long usedSupply, maximumSupply;
+    unsigned long usedSupply = 0, maximumSupply = 0;
 
-    unsigned int simulationTime;
+    unsigned int simulationTime = 0;
     unsigned int maxTime = 0;
 
-// TODO this should be private but it won't compile anymore
-public:
-    GameState(unsigned int maxSimTime, unsigned long initialGas, unsigned long initialSupply, unsigned long initialsMinerals){
-        gas = initialGas * FACTOR;
-        minerals = initialsMinerals * FACTOR;
-        supply = initialSupply * FACTOR;
-        maxTime = maxSimTime;
-        simulationTime = 0;
-    }
-    
     vector<EntityType> entityTypes;
     vector<Upgradable*> upgradeables;
     vector<Updatable*> updatables;
@@ -47,6 +38,8 @@ public:
     vector<Worker*> workers;
     vector<Entity*> entities;
 
+// TODO this should be private but it won't compile anymore
+public:
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
     static const unsigned long FACTOR = 100;
 
@@ -57,46 +50,49 @@ public:
     std::bitset<50> entitiesInConstruction = 0;
     
     //All methods here receive the real value they need as we have no floats here
-    bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
-    bool hasEnoughMinerals(unsigned long amount);
-    bool hasEnoughVespine(unsigned long amount);
-    bool hasEnoughSupply(unsigned long amount);
+    bool hasEnoughMinerals(unsigned long amount) const;
+    bool hasEnoughVespine(unsigned long amount) const;
+    bool hasEnoughSupply(unsigned long amount) const;
 
     //This method checks if type is existing/already created in our current state
-    bool hasEntity(EntityType type);
+    bool hasEntity(EntityType type) const;
+
     //This method checks if type is currently being produced
-    bool hasEntityInProduction(EntityType type);
+    bool hasEntityInProduction(EntityType type) const;
 
     // Use actual amount
     void consumeEnoughMinerals(unsigned long amount);
     void consumeEnoughVespine(unsigned long amount);
     void consumeEnoughSupply(unsigned long amount);
 
-    // Use amount * 100
+    // Use amount * FACTOR
     void addMineralsWithFactor(unsigned long amount);
     void addVespineWithFactor(unsigned long amount);
     void increaseSupply(unsigned long amount);
 
-    unsigned long getMinerals();
+    unsigned long getMinerals() const;
 
-    void addEntity(EntityType type, unsigned long amount);
-    //this method sets the value of type to 1 in the entitiesBeingProduced bitset
     void notifyEntityIsBeingProduced(EntityType type);
-    void removeEntity(Entity& entity);
-    void changeEntity(Entity& old, Entity& theNew);
+
+    //this method sets the value of type to 1 in the entitiesBeingProduced bitset
+    void addEntity(EntityType type, unsigned long amount);
+
+    void removeEntity(Entity& entity); // TODO implement
+    void changeEntity(Entity& old, Entity& theNew); // TODO implement
 
     //returns true if simTime >= maxTime, false otherwise
-    bool maxSimTimeReached();
-    int getSimulationTime();
+    void setMaxSimTime(int time);
+    bool maxSimTimeReached() const;
+    int getSimulationTime() const;
     void incrementSimulationTime();
 
-	//contains all created entities
-    vector<EntityType>& getEntities(EntityType& type);
+    //contains all created entities
+    const vector<EntityType>& getEntities(EntityType& type) const;
 	
-	//following three vectors only contain pointers to specific elements of the above one
-	//contains references to the getEntities vector (views)
-    vector<Upgradable*>& getUpgradeables();
-    vector<Updatable*>& getUpdatables();
-    vector<Producer*>& getProducers();
-    vector<Worker*>& getWorkers();
+    //following three vectors only contain pointers to specific elements of the above one
+    //contains references to the getEntities vector (views)
+    const vector<Upgradable*>& getUpgradeables() const;
+    const vector<Updatable*>& getUpdatables() const;
+    const vector<Producer*>& getProducers() const;
+    const vector<Worker*>& getWorkers() const;
 };
