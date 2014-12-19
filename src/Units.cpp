@@ -1,5 +1,6 @@
 #include "Units.hpp"
 #include <iostream>
+#include <Python/Python.h>
 
 EntityType SCV::getType()
 {
@@ -8,24 +9,37 @@ EntityType SCV::getType()
 
 void SCV::update(GameState& state)
 {
-    if (isProducing)
-    {
-        if (currentProgress >= maxProgress)
-        {
-            state.addEntity(product, 1);
-            isProducing = false;
-            currentProgress = 0;
-        }
-        currentProgress ++;
-    }
-    else
-    {
-        state.addMineralsWithFactor(0.7 * GameState::FACTOR);
+    Worker* w = dynamic_cast<Worker*>(this);
+    switch (w->getTypeOfWork()){
+        case TypeOfWork::Idle:
+            break;
+        case TypeOfWork::Minerals:
+            state.addMineralsWithFactor(0.7 * GameState::FACTOR);
+            break;
+        case TypeOfWork::Vespine:
+            state.addVespineWithFactor(0.35 * GameState::FACTOR);
+            break;
+        case TypeOfWork::Producing:
+            if (currentProgress >= maxProgress)
+            {
+                state.addEntity(product, 1);
+                isProducing = false;
+                w->setTypeOfWork(TypeOfWork::Minerals);
+                currentProgress = 0;
+            }
+            currentProgress ++;
+            break;
     }
 }
 
 bool SCV::canProduce(EntityType type, GameState& state)
 {
+    Worker* w = dynamic_cast<Worker*>(this);
+
+    if(w->getTypeOfWork() == TypeOfWork::Producing){
+        return false;
+    }
+
     if (type == TERRAN_SUPPLY_DEPOT)
     {
         return (!isProducing) && state.hasEnoughMinerals(100); // TODO we should use isConstructable
@@ -41,6 +55,9 @@ bool SCV::canProduce(EntityType type, GameState& state)
  */
 void SCV::produce(EntityType type, GameState& state)
 {
+    Worker* w = dynamic_cast<Worker*>(this);
+    w->setTypeOfWork(TypeOfWork::Producing);
+
     // TODO different build times
     if (type == TERRAN_SUPPLY_DEPOT)
     {
@@ -271,7 +288,7 @@ void Factory::produce(EntityType type, GameState &state)
 
 SCV::SCV()
 {
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | WORKER_INTERFACE;
 }
 
 CommandCenter::CommandCenter()

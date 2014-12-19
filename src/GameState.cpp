@@ -75,6 +75,10 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             updatables.push_back(dynamic_cast<Updatable*> (new_unit));
             producers.push_back(dynamic_cast<Producer*> (new_unit));
             constructedBitset.set(TERRAN_SCV);
+            new_unit->setTypeOfWork(TypeOfWork::Minerals);
+            if(new_unit->isWorker()){
+                workers.push_back(dynamic_cast<Worker*>(new_unit));
+            }
 
         }
         else if (type == TERRAN_BARRACKS)
@@ -131,6 +135,10 @@ vector<Updatable*>& GameState::getUpdatables()
 vector<Producer*>& GameState::getProducers()
 {
     return producers;
+}
+
+vector<Worker*>& GameState::getWorkers() {
+    return workers;
 }
 
 bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply)

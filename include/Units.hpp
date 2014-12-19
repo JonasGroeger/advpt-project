@@ -6,11 +6,13 @@
 #include "Upgradable.hpp"
 #include "Updatable.hpp"
 #include "GameState.hpp"
+#include "entities/Worker.hpp"
 
 class Updatable;
 
 class SCV : public Entity, 
-            public Updatable, 
+            public Worker,
+            public Updatable,
             public Producer
 {
     /* Should be refactored int common class */

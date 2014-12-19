@@ -7,6 +7,7 @@
 #include "Producer.hpp"
 #include "Entity.hpp"
 #include "EntityType.hpp"
+#include "entities/Worker.hpp"
 
 class Updatable;
 class Upgradable;
@@ -31,6 +32,7 @@ public:
     vector<Upgradable*> upgradeables;
     vector<Updatable*> updatables;
     vector<Producer*> producers;
+    vector<Worker*> workers;
     vector<Entity*> entities;
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
@@ -85,4 +87,5 @@ public:
     vector<Upgradable*>& getUpgradeables();
     vector<Updatable*>& getUpdatables();
     vector<Producer*>& getProducers();
+    vector<Worker*>& getWorkers();
 };
