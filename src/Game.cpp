@@ -148,9 +148,15 @@ void Game::printWorkerMessage() {
                 break;
         }
     }
-    std::cerr << "[TIME " << currentState.getSimulationTime()<< "]\t\t";
-    std::cout << "[Workers " << workers.size() << "] " << " gas : " << vespineWorkers << "   minerals : " << mineralWorkers
-            <<" producing : " << producingWorkers << "  idle : " << idleWorkers << endl;
+
+    std::cout << std::left;
+    std::cout << std::setw(5);
+    std::cout << currentState.getSimulationTime();
+    std::cout << std::setw(14);
+    std::cout << "workers";
+    std::cout << "minerals:" << mineralWorkers;
+    std::cout << ",vespine:" << vespineWorkers;
+    std::cout << std::endl;
 }
 
 // TODO remove these debug values of gamestate

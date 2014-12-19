@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 #include "BuildOrder.hpp"
 #include "BuildStep.hpp"
 #include "GameState.hpp"
