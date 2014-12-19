@@ -15,10 +15,12 @@ bool Game::executeBuildStep(BuildStep* step)
         for (auto it = producers.begin(); it != producers.end(); it++)
         {
             Producer* prod = *it;
-            if (prod->canProduce(step->getEntityType(), currentState))
+
+            //TODO fix produce interface
+
+            if (prod->produceEntityIfPossible(step->getEntityType(), currentState))
             {
                 printBuildStartMessage(step->getEntityType());
-                prod->produce(step->getEntityType(), currentState);
                 return true;
             }
         }
