@@ -102,50 +102,75 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new Hellion();
 				break;
 			case TERRAN_ARMORY:
+				new_unit = new Armory();
 				break;
 			case TERRAN_BANSHEE:
+				new_unit = new Banshee();
 				break;
 			case TERRAN_BARRACKS_REACTOR:
+				new_unit = new BarracksReactor();
 				break;
 			case TERRAN_BARRACKS_TECH_LAB:
+				new_unit = new BarracksTechLab();
 				break;
 			case TERRAN_BUNKER:
+				new_unit = new Bunker();
 				break;
 			case TERRAN_REAPER:
+				new_unit = new Reaper();
 				break;
 			case TERRAN_GHOST:
+				new_unit = new Ghost();
 				break;
 			case TERRAN_GHOST_ACADEMY:
+				new_unit = new GhostAcademy();
 				break;
 			case TERRAN_FACTORY_TECH_LAB:
+				new_unit = new FactoryTechLab();
 				break;
-			case TERRAN_FACTORY_REACTOR:
+			case TERRAN_FACTORY_REACTOR:	
+				new_unit = new FactoryReactor();
 				break;
 			case TERRAN_STARPORT_TECH_LAB:
+				new_unit = new StarportTechLab();
 				break;
 			case TERRAN_STARPORT_REACTOR:
+				new_unit = new StarportReactor();
 				break;
 			case TERRAN_RAVEN:
+				new_unit = new Raven();
 				break;
 			case TERRAN_FUSION_CORE:
+				new_unit = new FusionCore();
 				break;
 			case TERRAN_VIKING:
+				new_unit = new Viking();
 				break;
 			case TERRAN_MEDIVAC:
+				new_unit = new Medivac();
 				break;
 			case TERRAN_SIEGE_TANK:
+				new_unit = new SiegeTank();				
 				break;
 			case TERRAN_THOR:
+				new_unit = new Thor();
 				break;
 			case TERRAN_ORBITAL_COMMAND:
+				new_unit = new OrbitalCommand();
 				break;
 			case TERRAN_ENGINEERING_BAY:
+				new_unit = new EngineeringBay();
 				break;
 			case TERRAN_PLANETARY_FORTRESS:
+				new_unit = new PlanetaryFortress();
 				break;
 			case TERRAN_MISSILE_TURRET:
+				new_unit = new MissileTurret();
 				break;
 			case TERRAN_SENSOR_TOWER:
+				new_unit = new SensorTower();
+				break;
+			case NONE:
 				break;
 			default:
 				break;		

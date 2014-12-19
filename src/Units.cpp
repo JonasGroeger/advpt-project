@@ -297,3 +297,111 @@ Barracks::Barracks()
 {
     interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
 }
+
+EntityType Armory::getType() {
+	return TERRAN_ARMORY;
+}
+
+EntityType Banshee::getType() {
+	return TERRAN_BANSHEE;
+}
+
+EntityType BarracksReactor::getType() {
+	return TERRAN_BARRACKS_REACTOR;
+}
+
+EntityType Bunker::getType() {
+	return TERRAN_BUNKER;
+}
+
+EntityType Reaper::getType() {
+	return TERRAN_REAPER;
+}
+
+EntityType Ghost::getType() {
+	return TERRAN_GHOST;
+}
+
+EntityType GhostAcademy::getType() {
+	return TERRAN_GHOST_ACADEMY;
+}
+
+EntityType FactoryTechLab::getType() {
+	return TERRAN_FACTORY_TECH_LAB;
+}
+
+EntityType FactoryReactor::getType() {
+	return TERRAN_FACTORY_REACTOR;
+}
+
+EntityType StarportTechLab::getType()  {
+	return TERRAN_STARPORT_TECH_LAB;
+}
+
+EntityType StarportReactor::getType() {
+	return TERRAN_STARPORT_REACTOR;
+}
+
+EntityType Raven::getType() {
+	return TERRAN_RAVEN;
+}
+
+EntityType FusionCore::getType() {
+	return TERRAN_FUSION_CORE;
+}
+
+EntityType Viking::getType() {
+	return TERRAN_VIKING;
+}
+
+EntityType Medivac::getType() {
+	return TERRAN_MEDIVAC;
+}
+
+EntityType SiegeTank::getType() {
+	return TERRAN_SIEGE_TANK;
+}
+
+EntityType Thor::getType() {
+	return TERRAN_THOR;
+}
+
+EntityType OrbitalCommand::getType() {
+	return TERRAN_ORBITAL_COMMAND;
+}
+
+EntityType EngineeringBay::getType() {
+	return TERRAN_ENGINEERING_BAY;
+}
+
+
+EntityType PlanetaryFortress::getType() {
+	return TERRAN_PLANETARY_FORTRESS;
+}
+
+EntityType MissileTurret::getType() {
+	return TERRAN_MISSILE_TURRET;
+}
+
+EntityType SensorTower::getType() {
+	return TERRAN_SENSOR_TOWER;
+}
+
+EntityType BarracksTechLab::getType() {
+	return TERRAN_BARRACKS_TECH_LAB;
+}
+
+bool PlanetaryFortress::canProduce(EntityType type, GameState &state)
+{
+	return true;
+}
+void PlanetaryFortress::produce(EntityType type, GameState &state)
+{
+}
+long PlanetaryFortress::getTimeToFinish() {
+	return 0;
+}
+void PlanetaryFortress::applyChronoBoost() 
+{
+}
+
