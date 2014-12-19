@@ -292,14 +292,14 @@ void Factory::produce(EntityType type, GameState &state)
 }
 
 bool Factory::isUpgradable(GameState& state, EntityType type){
-
+    return false;
 }
 void Factory::upgrade(GameState& state, EntityType to){
 
 }
 
 bool Starport::isUpgradable(GameState& state, EntityType type){
-
+    return false;
 }
 void Starport::upgrade(GameState& state, EntityType to){
 

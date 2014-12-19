@@ -24,8 +24,8 @@ protected:
     unsigned char interfaceBitmask = 0;
 
 public:
-    virtual EntityType getType();
-    virtual ~Entity();
+    virtual EntityType getType() = 0;
+    virtual ~Entity() = 0;
 
     /*
     The following methods will return if a specific interface is implemented by this instance
