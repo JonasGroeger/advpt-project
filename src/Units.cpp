@@ -269,6 +269,20 @@ void Factory::produce(EntityType type, GameState &state)
     Producer::produce(type, state);
 }
 
+bool Factory::isUpgradable(GameState& state, EntityType type){
+
+}
+void Factory::upgrade(GameState& state, EntityType to){
+
+}
+
+bool Starport::isUpgradable(GameState& state, EntityType type){
+
+}
+void Starport::upgrade(GameState& state, EntityType to){
+
+}
+
 SCV::SCV()
 {
     interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
