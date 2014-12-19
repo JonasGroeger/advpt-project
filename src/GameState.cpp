@@ -19,7 +19,6 @@ bool GameState::hasEnoughSupply(unsigned long amount) const
 
 bool GameState::hasEntity(EntityType type) const
 {
-    //TODO do we really need amount as a param here?
     return constructedBitset.test(type);
 }
 

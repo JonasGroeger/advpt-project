@@ -275,7 +275,8 @@ class EngineeringBay : public Entity
 	
 };
 
-class PlanetaryFortress : public Entity, public Producer
+class PlanetaryFortress : public Entity,
+                          public Producer
 {
 	public:
 		virtual EntityType getType() override;
