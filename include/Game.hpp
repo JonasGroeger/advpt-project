@@ -19,11 +19,13 @@ class Game
 public:
     int loop();
     bool isFinished();
-    void printMessageProlog();
-    void printBuildStartMessage(EntityType type);
-    void printBuildEndMessage(EntityType type);
-    void printWorkerMessage();
-    void printResourcesMessage();
+
+    void printMessageProlog() const;
+    void printBuildStartMessage(EntityType type) const;
+    void printBuildEndMessage(EntityType type) const;
+
+    void printWorkerMessage() const;
+    void printResourcesMessage() const;
     GameState& getFinalState();
 
     Game(char *file);
