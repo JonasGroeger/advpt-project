@@ -108,6 +108,10 @@ void GameState::changeEntity(Entity& old, Entity& theNew)
     // TODO
 }
 
+bool GameState::maxSimTimeReached(){
+    return (simulationTime >= maxTime);
+}
+
 void GameState::incrementSimulationTime() {
     this->simulationTime++;
 }

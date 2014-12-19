@@ -42,10 +42,9 @@ bool Game::executeBuildStep(BuildStep* step)
     return false;
 }
 
-void Game::loop()
+int Game::loop()
 {
-    // TODO add a maximum number of steps
-    while (!buildOrder.isDone())
+    while (!buildOrder.isDone() && !currentState.maxSimTimeReached())
     {
         // As long as there are still steps left
         while (!buildOrder.isDone())
@@ -78,6 +77,11 @@ void Game::loop()
         currentState.incrementSimulationTime();
     }
 
+    if(currentState.maxSimTimeReached() && ! buildOrder.isDone()){
+        //buildlist did not succeed so return non zero
+        return -1;
+    }
+
     std::cerr << "All orders are given!" << std::endl;
 
     /*
@@ -102,6 +106,8 @@ void Game::loop()
     }
 
     std::cerr << "Finished." << std::endl;
+    //all fine, return 0
+    return 0;
 }
 
 bool Game::isFinished()
@@ -116,7 +122,7 @@ GameState& Game::getFinalState()
 
 // TODO remove these debug values of gamestate
 Game::Game(char *file)
-    :currentState(GameState(50, 50, 50)), buildOrder(BuildOrder(file))
+    :currentState(GameState(1000, 50, 50, 50)), buildOrder(BuildOrder(file))
 {
     currentState.addEntity(TERRAN_SCV, 5);
     currentState.addEntity(TERRAN_COMMAND_CENTER, 1);

@@ -16,14 +16,16 @@ class GameState
 {
 
 private:
-    int simulationTime;
+    unsigned int simulationTime;
+    unsigned int maxTime = 0;
 
 // TODO this should be private but it won't compile anymore
 public:
-    GameState(unsigned long initialGas, unsigned long initialSupply, unsigned long initialsMinerals){
+    GameState(unsigned int maxSimTime, unsigned long initialGas, unsigned long initialSupply, unsigned long initialsMinerals){
         gas = initialGas * FACTOR;
         minerals = initialsMinerals * FACTOR;
         supply = initialSupply * FACTOR;
+        maxTime = maxSimTime;
         simulationTime = 0;
     }
     
@@ -74,6 +76,8 @@ public:
     void removeEntity(Entity& entity);
     void changeEntity(Entity& old, Entity& theNew);
 
+    //returns true if simTime >= maxTime, false otherwise
+    bool maxSimTimeReached();
     int getSimulationTime();
     void incrementSimulationTime();
 

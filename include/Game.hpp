@@ -16,7 +16,7 @@ class Game
 
     bool executeBuildStep(BuildStep* step);
 public:
-    void loop();
+    int loop();
     bool isFinished();
     GameState& getFinalState();
 
