@@ -23,6 +23,23 @@ private:
     std::bitset<50> constructedBitset = 0;
     //see above bitset comment - except this bitset holds entities not finished but in construction
     std::bitset<50> entitiesInConstruction = 0;
+    //holds our ressources
+    unsigned long minerals, gas, supply;
+    
+    /*
+     * Supply is a ressource that gives a maximum to how many units a player can control.
+     * Some units and buildings increase the maximum supply this acts like a capacity.
+     * Note that maximumSupply can never be increased over 200.
+     * Most units use a certain amount of supply. This increases the usedSupply.
+     * So maximumSupply - usedSupply gives the available amount of supply.
+     */
+    unsigned long usedSupply, maximumSupply;
+
+    vector<EntityType> entityTypes;
+    vector<Upgradable*> upgradeables;
+    vector<Updatable*> updatables;
+    vector<Producer*> producers;
+    vector<Entity*> entities;
 
 // TODO this should be private but it won't compile anymore
 public:
@@ -33,25 +50,9 @@ public:
         maxTime = maxSimTime;
         simulationTime = 0;
     }
-    
-    vector<EntityType> entityTypes;
-    vector<Upgradable*> upgradeables;
-    vector<Updatable*> updatables;
-    vector<Producer*> producers;
-    vector<Entity*> entities;
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
     static const unsigned long FACTOR = 100;
-    unsigned long minerals, gas, supply;
-
-    /*
-     * Supply is a ressource that gives a maximum to how many units a player can control.
-     * Some units and buildings increase the maximum supply this acts like a capacity.
-     * Note that maximumSupply can never be increased over 200.
-     * Most units use a certain amount of supply. This increases the usedSupply.
-     * So maximumSupply - usedSupply gives the available amount of supply.
-     */
-    unsigned long usedSupply, maximumSupply;
 
     //All methods here receive the real value they need as we have no floats here
     bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
