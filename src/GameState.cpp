@@ -65,83 +65,118 @@ void GameState::notifyEntityIsBeingProduced(EntityType type){
 
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
+	
+	
     for (unsigned long i = 0; i < amount; i++)
     {
-        if (type == TERRAN_COMMAND_CENTER)
-        {
-            CommandCenter *new_unit = new CommandCenter();
-            entities.push_back(dynamic_cast<Entity*> (new_unit));
-            updatables.push_back(dynamic_cast<Updatable*> (new_unit));
-            producers.push_back(dynamic_cast<Producer*> (new_unit));
-            //add this entity to our bitset
-            constructedBitset.set(TERRAN_COMMAND_CENTER);
-        }
-        else if (type == TERRAN_SCV)
-        {
-            SCV *new_unit = new SCV();
-            entities.push_back(dynamic_cast<Entity*> (new_unit));
-            updatables.push_back(dynamic_cast<Updatable*> (new_unit));
-            producers.push_back(dynamic_cast<Producer*> (new_unit));
-            constructedBitset.set(TERRAN_SCV);
-
-        }
-        else if (type == TERRAN_BARRACKS)
-        {
-            Barracks *new_unit = new Barracks();
-            entities.push_back(dynamic_cast<Entity*> (new_unit));
-            updatables.push_back(dynamic_cast<Updatable*> (new_unit));
-            producers.push_back(dynamic_cast<Producer*> (new_unit));
-            constructedBitset.set(TERRAN_BARRACKS);
-        }
-        else if (type == TERRAN_SUPPLY_DEPOT)
-        {
-            SupplyDepot *new_unit = new SupplyDepot();
-            entities.push_back(dynamic_cast<Entity*> (new_unit));
-            constructedBitset.set(TERRAN_SUPPLY_DEPOT);
-        }
-        else if (type == TERRAN_MARINE)
-        {
-            Marine *new_unit = new Marine();
-            entities.push_back(dynamic_cast<Entity*> (new_unit));
-            constructedBitset.set(TERRAN_MARINE);
-        }
-        else if(type == TERRAN_REFINERY)
-        {
-			Refinery *new_unit = new Refinery();
-			entities.push_back(dynamic_cast<Entity*> (new_unit));
-			constructedBitset.set(TERRAN_REFINERY);
-		} 
-		else if(type==TERRAN_FACTORY)
-		{
-			Factory *new_unit = new Factory();
-			updatables.push_back(dynamic_cast<Updatable*> (new_unit));
-			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit));
-            producers.push_back(dynamic_cast<Producer*> (new_unit));
-			entities.push_back(dynamic_cast<Entity*> (new_unit));
-			constructedBitset.set(TERRAN_FACTORY);
-		}
-		else if(type==TERRAN_STARPORT) 
-		{
-			Starport *new_unit = new Starport();
-			updatables.push_back(dynamic_cast<Updatable*> (new_unit));
-			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit));
-            producers.push_back(dynamic_cast<Producer*> (new_unit));
-			entities.push_back(dynamic_cast<Entity*> (new_unit));
-			constructedBitset.set(TERRAN_STARPORT);
+		Entity* new_unit;
+		switch(type) {
+			case TERRAN_COMMAND_CENTER:
+				new_unit = new CommandCenter();
+				constructedBitset.set(TERRAN_COMMAND_CENTER);
+				break;
+			case TERRAN_SCV:
+				new_unit = new SCV(); 
+				constructedBitset.set(TERRAN_SCV);
+				break;
+			case TERRAN_BARRACKS:
+				new_unit = new Barracks();
+				constructedBitset.set(TERRAN_BARRACKS);
+				break;
+			case TERRAN_SUPPLY_DEPOT:
+				new_unit = new SupplyDepot();
+				constructedBitset.set(TERRAN_SUPPLY_DEPOT);
+				break;
+			case TERRAN_MARINE:
+				new_unit = new Marine();
+				constructedBitset.set(TERRAN_MARINE);
+				break;
+			case TERRAN_REFINERY:
+				new_unit = new Refinery();
+				constructedBitset.set(TERRAN_REFINERY);
+				break;
+			case TERRAN_FACTORY:
+				new_unit = new Factory();
+				constructedBitset.set(TERRAN_FACTORY);
+				break;
+			case TERRAN_STARPORT:
+				new_unit = new Starport();
+				constructedBitset.set(TERRAN_STARPORT);
+				break;
+			case TERRAN_BATTLECRUISER:
+				new_unit = new BattleCruiser();
+				constructedBitset.set(TERRAN_BATTLECRUISER);
+				break;
+			case TERRAN_HELLION:
+				new_unit = new Hellion();
+				constructedBitset.set(TERRAN_HELLION);
+				break;
+			case TERRAN_ARMORY:
+				break;
+			case TERRAN_BANSHEE:
+				break;
+			case TERRAN_BARRACKS_REACTOR:
+				break;
+			case TERRAN_BARRACKS_TECH_LAB:
+				break;
+			case TERRAN_BUNKER:
+				break;
+			case TERRAN_REAPER:
+				break;
+			case TERRAN_GHOST:
+				break;
+			case TERRAN_GHOST_ACADEMY:
+				break;
+			case TERRAN_FACTORY_TECH_LAB:
+				break;
+			case TERRAN_FACTORY_REACTOR:
+				break;
+			case TERRAN_STARPORT_TECH_LAB:
+				break;
+			case TERRAN_STARPORT_REACTOR:
+				break;
+			case TERRAN_RAVEN:
+				break;
+			case TERRAN_FUSION_CORE:
+				break;
+			case TERRAN_VIKING:
+				break;
+			case TERRAN_MEDIVAC:
+				break;
+			case TERRAN_SIEGE_TANK:
+				break;
+			case TERRAN_THOR:
+				break;
+			case TERRAN_ORBITAL_COMMAND:
+				break;
+			case TERRAN_ENGINEERING_BAY:
+				break;
+			case TERRAN_PLANETARY_FORTRESS:
+				break;
+			case TERRAN_MISSILE_TURRET:
+				break;
+			case TERRAN_SENSOR_TOWER:
+				break;
+			default:
+				break;
+				
+						
 			
 		}
-		else if(type == TERRAN_BATTLECRUISER)
-        {
-			BattleCruiser *new_unit = new BattleCruiser();
-			entities.push_back(dynamic_cast<Entity*> (new_unit));
-			constructedBitset.set(TERRAN_BATTLECRUISER);
-		} 
-		else if(type == TERRAN_HELLION) {
-			Hellion *new_unit = new Hellion();
-			entities.push_back(dynamic_cast<Entity*> (new_unit));
-			constructedBitset.set(TERRAN_HELLION);
+		if(new_unit->isUpgradable()) 
+		{ 
+			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit)); 
 		}
-			
+		if(new_unit->isUpdatable())
+		{
+			updatables.push_back(dynamic_cast<Updatable*>(new_unit));
+		}
+		if(new_unit->isProducer()) 
+		{
+			producers.push_back(dynamic_cast<Producer*> (new_unit));
+		}
+		entities.push_back((new_unit));
+		
     }
 }
 void GameState::removeEntity(Entity& entity)
