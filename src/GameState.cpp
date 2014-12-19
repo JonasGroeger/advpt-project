@@ -20,6 +20,10 @@ bool GameState::hasEntity(EntityType type)
     return constructedBitset.test(type);
 }
 
+bool GameState::hasEntityInProduction(EntityType type){
+    return entitiesInConstruction.test(type);
+}
+
 void GameState::consumeEnoughMinerals(unsigned long amount)
 {
     minerals -= (amount * FACTOR);
@@ -54,6 +58,10 @@ void GameState::increaseSupply(unsigned long amount)
 }
 
 //map<EntityType, Entity, BitMask> = {TERRAN_BARRACKS, dynamic_cast<Entity>(new Barracks()), ENTITY | UPDATABLE | PRODUCER}
+
+void GameState::notifyEntityIsBeingProduced(EntityType type){
+    entitiesInConstruction.set(type);
+}
 
 void GameState::addEntity(EntityType type, unsigned long amount)
 {

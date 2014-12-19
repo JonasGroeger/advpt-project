@@ -18,6 +18,11 @@ class GameState
 private:
     unsigned int simulationTime;
     unsigned int maxTime = 0;
+    //This bitset contains a setted bit if this entity is already created by us
+    //it is initialized by 50 to be sure to have enough capacity for our terran entities
+    std::bitset<50> constructedBitset = 0;
+    //see above bitset comment - except this bitset holds entities not finished but in construction
+    std::bitset<50> entitiesInConstruction = 0;
 
 // TODO this should be private but it won't compile anymore
 public:
@@ -39,9 +44,6 @@ public:
     static const unsigned long FACTOR = 100;
     unsigned long minerals, gas, supply;
 
-    //This bitset contains a setted bit if this entity is already created by us
-    //it is initialized by 50 to be sure to have enough capacity for our terran entities
-    std::bitset<50> constructedBitset = 0;
     /*
      * Supply is a ressource that gives a maximum to how many units a player can control.
      * Some units and buildings increase the maximum supply this acts like a capacity.
@@ -59,6 +61,8 @@ public:
 
     //This method checks if type is existing/already created in our current state
     bool hasEntity(EntityType type);
+    //This method checks if type is currently being produced
+    bool hasEntityInProduction(EntityType type);
 
     // Use actual amount
     void consumeEnoughMinerals(unsigned long amount);
@@ -73,6 +77,8 @@ public:
     unsigned long getMinerals();
 
     void addEntity(EntityType type, unsigned long amount);
+    //this method sets the value of type to 1 in the entitiesBeingProduced bitset
+    void notifyEntityIsBeingProduced(EntityType type);
     void removeEntity(Entity& entity);
     void changeEntity(Entity& old, Entity& theNew);
 
