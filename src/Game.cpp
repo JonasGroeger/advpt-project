@@ -201,4 +201,6 @@ Game::Game(char *file)
     currentState.increaseSupply(200); // TODO 
     currentState.addEntity(TERRAN_SCV, 5);
     currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
+
+    currentState.registerLogger(this);
 }

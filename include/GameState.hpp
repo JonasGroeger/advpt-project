@@ -9,6 +9,8 @@
 #include "EntityType.hpp"
 #include "entities/Worker.hpp"
 
+class Game;
+
 class Updatable;
 class Upgradable;
 
@@ -37,6 +39,8 @@ private:
     vector<Producer*> producers;
     vector<Worker*> workers;
     vector<Entity*> entities;
+
+    Game *logger = nullptr;
 
 // TODO this should be private but it won't compile anymore
 public:
@@ -98,4 +102,7 @@ public:
     const vector<Updatable*>& getUpdatables() const;
     const vector<Producer*>& getProducers() const;
     const vector<Worker*>& getWorkers() const;
+
+    void registerLogger(Game *newLogger);
+    void unregisterLogger();
 };
