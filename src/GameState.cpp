@@ -6,14 +6,17 @@ bool GameState::hasEnoughMinerals(unsigned long amount)
 {
     return amount * FACTOR <= minerals;
 }
+
 bool GameState::hasEnoughVespine(unsigned long amount)
 {
     return amount * FACTOR <= gas;
 }
+
 bool GameState::hasEnoughSupply(unsigned long amount)
 {
     return amount * FACTOR <= (maximumSupply-usedSupply);
 }
+
 bool GameState::hasEntity(EntityType type)
 {
     //TODO do we really need amount as a param here?
@@ -24,10 +27,12 @@ void GameState::consumeEnoughMinerals(unsigned long amount)
 {
     minerals -= (amount * FACTOR);
 }
+
 void GameState::consumeEnoughVespine(unsigned long amount)
 {
     gas -= (amount * FACTOR);
 }
+
 void GameState::consumeEnoughSupply(unsigned long amount)
 {
     usedSupply += amount * FACTOR;
@@ -37,6 +42,7 @@ void GameState::addMineralsWithFactor(unsigned long amount)
 {
     minerals += amount;
 }
+
 void GameState::addVespineWithFactor(unsigned long amount)
 {
     gas += amount;
@@ -44,16 +50,13 @@ void GameState::addVespineWithFactor(unsigned long amount)
 
 unsigned long GameState::getMinerals()
 {
-    //TODO we have rounded values here maybe use float?
-        return minerals/FACTOR;
+    return minerals / FACTOR;
 }
 
 void GameState::increaseSupply(unsigned long amount)
 {
     maximumSupply = (maximumSupply + amount <= 200) ? (maximumSupply + amount) : (200);
 }
-
-//map<EntityType, Entity, BitMask> = {TERRAN_BARRACKS, dynamic_cast<Entity>(new Barracks()), ENTITY | UPDATABLE | PRODUCER}
 
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
@@ -103,10 +106,12 @@ void GameState::addEntity(EntityType type, unsigned long amount)
         }
     }
 }
+
 void GameState::removeEntity(Entity& entity)
 {
     // TODO
 }
+
 void GameState::changeEntity(Entity& old, Entity& theNew)
 {
     // TODO
@@ -124,14 +129,17 @@ vector<EntityType>& GameState::getEntities(EntityType& type)
 {
     return this->entityTypes;
 }
+
 vector<Upgradable*>& GameState::getUpgradeables()
 {
     return upgradeables;
 }
+
 vector<Updatable*>& GameState::getUpdatables()
 {
     return updatables;
 }
+
 vector<Producer*>& GameState::getProducers()
 {
     return producers;

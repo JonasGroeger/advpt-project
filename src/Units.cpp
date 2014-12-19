@@ -1,6 +1,5 @@
 #include "Units.hpp"
 #include <iostream>
-#include <Python/Python.h>
 
 EntityType SCV::getType()
 {
@@ -42,14 +41,15 @@ bool SCV::canProduce(EntityType type, GameState& state)
 
     if (type == TERRAN_SUPPLY_DEPOT)
     {
-        return (!isProducing) && state.hasEnoughMinerals(100); // TODO we should use isConstructable
+        return (!isProducing) && state.hasEnoughMinerals(100);
     }
     else if (type == TERRAN_BARRACKS)
     {
-        return (!isProducing) && state.hasEnoughMinerals(150); // TODO we should use isConstructable
+        return (!isProducing) && state.hasEnoughMinerals(150);
     }
     return false;
 }
+
 /* 
  * Only call if canProduce returned true!!!
  */
@@ -58,7 +58,6 @@ void SCV::produce(EntityType type, GameState& state)
     Worker* w = dynamic_cast<Worker*>(this);
     w->setTypeOfWork(TypeOfWork::Producing);
 
-    // TODO different build times
     if (type == TERRAN_SUPPLY_DEPOT)
     {
         state.consumeEnoughMinerals(100);
@@ -69,9 +68,9 @@ void SCV::produce(EntityType type, GameState& state)
         state.consumeEnoughMinerals(150);
         maxProgress = 65;
     }
+
     isProducing = true;
     currentProgress = 0;
-    maxProgress = 65;
     product = type;
 }
 
@@ -83,6 +82,7 @@ long SCV::getTimeToFinish()
     }
     return 0;
 }
+
 void SCV::applyChronoBoost()
 {
 }
@@ -114,6 +114,7 @@ bool CommandCenter::canProduce(EntityType type, GameState& state)
     }
     return false;
 }
+
 void CommandCenter::produce(EntityType type, GameState& state)
 {
     if (type == TERRAN_SCV)
@@ -132,6 +133,7 @@ long CommandCenter::getTimeToFinish()
     }
     return 0;
 }
+
 void CommandCenter::applyChronoBoost()
 {
 }
@@ -169,6 +171,7 @@ bool Barracks::canProduce(EntityType type, GameState& state)
     }
     return false;
 }
+
 void Barracks::produce(EntityType type, GameState& state)
 {
     if (type == TERRAN_MARINE)
@@ -178,9 +181,11 @@ void Barracks::produce(EntityType type, GameState& state)
         currentProgress = 0;
     }
 }
+
 void Barracks::applyChronoBoost()
 {
 }
+
 long Barracks::getTimeToFinish()
 {
     if (isProducing)
