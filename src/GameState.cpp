@@ -1,6 +1,11 @@
 #include <ostream>
-#include <iostream>
 #include "GameState.hpp"
+
+bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply){
+	return hasEnoughMinerals(minerals)
+			&& hasEnoughVespine(vespine)
+			&& hasEnoughSupply(supply);
+}
 
 bool GameState::hasEnoughMinerals(unsigned long amount) const
 {
