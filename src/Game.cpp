@@ -17,8 +17,7 @@ bool Game::executeBuildStep(BuildStep* step)
             Producer* prod = *it;
             if (prod->canProduce(step->getEntityType(), currentState))
             {
-                std::cerr << "producing a: ";
-                std::cerr << BuildStep::entityTypeToString[step->getEntityType()] << std::endl;
+                printBuildStartMessage(step->getEntityType());
                 prod->produce(step->getEntityType(), currentState);
                 return true;
             }
@@ -125,6 +124,30 @@ GameState& Game::getFinalState()
     return currentState;
 }
 
+void Game::printMessageProlog()
+{
+    std::cout << std::left;
+    std::cout << std::setw(5);
+    std::cout << currentState.getSimulationTime();
+    std::cout << std::setw(14);
+}
+
+void Game::printBuildStartMessage(EntityType type)
+{
+    printMessageProlog();
+    std::cout << "build-start";
+    std::cout << BuildStep::entityTypeToString[type];
+    std::cout << std::endl;
+}
+
+void Game::printBuildEndMessage(EntityType type)
+{
+    printMessageProlog();
+    std::cout << "build-end";
+    std::cout << BuildStep::entityTypeToString[type];
+    std::cout << std::endl;
+}
+
 void Game::printWorkerMessage() {
     int idleWorkers = 0;
     int vespineWorkers = 0;
@@ -149,10 +172,7 @@ void Game::printWorkerMessage() {
         }
     }
 
-    std::cout << std::left;
-    std::cout << std::setw(5);
-    std::cout << currentState.getSimulationTime();
-    std::cout << std::setw(14);
+    printMessageProlog();
     std::cout << "workers";
     std::cout << "minerals:" << mineralWorkers;
     std::cout << ",vespene:" << vespineWorkers;
@@ -161,10 +181,7 @@ void Game::printWorkerMessage() {
 
 void Game::printResourcesMessage()
 {
-    std::cout << std::left;
-    std::cout << std::setw(5);
-    std::cout << currentState.getSimulationTime();
-    std::cout << std::setw(14);
+    printMessageProlog();
     std::cout << "resources";
     std::cout << "minerals:" << currentState.getMinerals();
     std::cout << ",vespene:" << currentState.getVespine();

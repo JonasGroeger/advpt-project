@@ -19,6 +19,9 @@ class Game
 public:
     int loop();
     bool isFinished();
+    void printMessageProlog();
+    void printBuildStartMessage(EntityType type);
+    void printBuildEndMessage(EntityType type);
     void printWorkerMessage();
     void printResourcesMessage();
     GameState& getFinalState();
