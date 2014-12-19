@@ -7,6 +7,7 @@
 #include "Producer.hpp"
 #include "Entity.hpp"
 #include "EntityType.hpp"
+#include "entities/Worker.hpp"
 
 class Updatable;
 class Upgradable;
@@ -16,16 +17,7 @@ class GameState
 {
 
 private:
-    unsigned int simulationTime;
-    unsigned int maxTime = 0;
-    //This bitset contains a setted bit if this entity is already created by us
-    //it is initialized by 50 to be sure to have enough capacity for our terran entities
-    std::bitset<50> constructedBitset = 0;
-    //see above bitset comment - except this bitset holds entities not finished but in construction
-    std::bitset<50> entitiesInConstruction = 0;
-    //holds our ressources
     unsigned long minerals, gas, supply;
-    
     /*
      * Supply is a ressource that gives a maximum to how many units a player can control.
      * Some units and buildings increase the maximum supply this acts like a capacity.
@@ -35,11 +27,8 @@ private:
      */
     unsigned long usedSupply, maximumSupply;
 
-    vector<EntityType> entityTypes;
-    vector<Upgradable*> upgradeables;
-    vector<Updatable*> updatables;
-    vector<Producer*> producers;
-    vector<Entity*> entities;
+    unsigned int simulationTime;
+    unsigned int maxTime = 0;
 
 // TODO this should be private but it won't compile anymore
 public:
@@ -50,10 +39,23 @@ public:
         maxTime = maxSimTime;
         simulationTime = 0;
     }
+    
+    vector<EntityType> entityTypes;
+    vector<Upgradable*> upgradeables;
+    vector<Updatable*> updatables;
+    vector<Producer*> producers;
+    vector<Worker*> workers;
+    vector<Entity*> entities;
 
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
     static const unsigned long FACTOR = 100;
 
+    //This bitset contains a setted bit if this entity is already created by us
+    //it is initialized by 50 to be sure to have enough capacity for our terran entities
+    std::bitset<50> constructedBitset = 0;
+    //see above bitset comment - except this bitset holds entities not finished but in construction
+    std::bitset<50> entitiesInConstruction = 0;
+    
     //All methods here receive the real value they need as we have no floats here
     bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
     bool hasEnoughMinerals(unsigned long amount);
@@ -96,4 +98,5 @@ public:
     vector<Upgradable*>& getUpgradeables();
     vector<Updatable*>& getUpdatables();
     vector<Producer*>& getProducers();
+    vector<Worker*>& getWorkers();
 };

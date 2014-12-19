@@ -8,40 +8,56 @@ EntityType SCV::getType()
 
 void SCV::update(GameState& state)
 {
-    if (isProducing)
-    {
-        if (currentProgress >= maxProgress)
-        {
-            state.addEntity(product, 1);
-            isProducing = false;
-            currentProgress = 0;
-        }
-        currentProgress ++;
-    }
-    else
-    {
-        state.addMineralsWithFactor(0.7 * GameState::FACTOR);
+    Worker* w = dynamic_cast<Worker*>(this);
+    switch (w->getTypeOfWork()){
+        case TypeOfWork::Idle:
+            break;
+        case TypeOfWork::Minerals:
+            state.addMineralsWithFactor(0.7 * GameState::FACTOR);
+            break;
+        case TypeOfWork::Vespine:
+            state.addVespineWithFactor(0.35 * GameState::FACTOR);
+            break;
+        case TypeOfWork::Producing:
+            if (currentProgress >= maxProgress)
+            {
+                state.addEntity(product, 1);
+                isProducing = false;
+                w->setTypeOfWork(TypeOfWork::Minerals);
+                currentProgress = 0;
+            }
+            currentProgress ++;
+            break;
     }
 }
 
 bool SCV::canProduce(EntityType type, GameState& state)
 {
+    Worker* w = dynamic_cast<Worker*>(this);
+
+    if(w->getTypeOfWork() == TypeOfWork::Producing){
+        return false;
+    }
+
     if (type == TERRAN_SUPPLY_DEPOT)
     {
-        return (!isProducing) && state.hasEnoughMinerals(100); // TODO we should use isConstructable
+        return (!isProducing) && state.hasEnoughMinerals(100);
     }
     else if (type == TERRAN_BARRACKS)
     {
-        return (!isProducing) && state.hasEnoughMinerals(150); // TODO we should use isConstructable
+        return (!isProducing) && state.hasEnoughMinerals(150);
     }
     return false;
 }
+
 /* 
  * Only call if canProduce returned true!!!
  */
 void SCV::produce(EntityType type, GameState& state)
 {
-    // TODO different build times
+    Worker* w = dynamic_cast<Worker*>(this);
+    w->setTypeOfWork(TypeOfWork::Producing);
+
     if (type == TERRAN_SUPPLY_DEPOT)
     {
         state.consumeEnoughMinerals(100);
@@ -52,9 +68,9 @@ void SCV::produce(EntityType type, GameState& state)
         state.consumeEnoughMinerals(150);
         maxProgress = 65;
     }
+
     isProducing = true;
     currentProgress = 0;
-    maxProgress = 65;
     product = type;
 }
 
@@ -66,6 +82,7 @@ long SCV::getTimeToFinish()
     }
     return 0;
 }
+
 void SCV::applyChronoBoost()
 {
 }
@@ -97,6 +114,7 @@ bool CommandCenter::canProduce(EntityType type, GameState& state)
     }
     return false;
 }
+
 void CommandCenter::produce(EntityType type, GameState& state)
 {
     if (type == TERRAN_SCV)
@@ -115,6 +133,7 @@ long CommandCenter::getTimeToFinish()
     }
     return 0;
 }
+
 void CommandCenter::applyChronoBoost()
 {
 }
@@ -145,13 +164,14 @@ void Barracks::update(GameState& state)
 
 bool Barracks::canProduce(EntityType type, GameState& state)
 {
-    std::cerr << "Barracks: canProduce" << std::endl;
+    //std::cerr << "Barracks: canProduce" << std::endl;
     if (type == TERRAN_MARINE)
     {
         return state.hasEnoughMinerals(50);
     }
     return false;
 }
+
 void Barracks::produce(EntityType type, GameState& state)
 {
     if (type == TERRAN_MARINE)
@@ -161,9 +181,11 @@ void Barracks::produce(EntityType type, GameState& state)
         currentProgress = 0;
     }
 }
+
 void Barracks::applyChronoBoost()
 {
 }
+
 long Barracks::getTimeToFinish()
 {
     if (isProducing)
@@ -285,7 +307,7 @@ void Starport::upgrade(GameState& state, EntityType to){
 
 SCV::SCV()
 {
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | WORKER_INTERFACE;
 }
 
 CommandCenter::CommandCenter()

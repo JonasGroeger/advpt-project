@@ -18,6 +18,7 @@ class Game
 public:
     int loop();
     bool isFinished();
+    void printWorkerMessage();
     GameState& getFinalState();
 
     Game(char *file);

@@ -46,6 +46,9 @@ int Game::loop()
 {
     while (!buildOrder.isDone() && !currentState.maxSimTimeReached())
     {
+        currentState.incrementSimulationTime();
+
+        bool somethingHappened = false;
         // As long as there are still steps left
         while (!buildOrder.isDone())
         {
@@ -54,9 +57,10 @@ int Game::loop()
             // We try to execute the first one
             if (executeBuildStep(nextStep))
             {
+                somethingHappened = true;
                 // If successfull we try the next step
                 buildOrder.advance();
-                std::cerr << "advance" << std::endl;
+                //std::cerr << "advance buildorder" << std::endl;
             }
             else
             {
@@ -65,7 +69,7 @@ int Game::loop()
             }
         }
 
-        std::cerr << "Update..." << std::endl;
+        //std::cerr << "Update..." << std::endl;
 
         // We update each updateable
         auto updatables = currentState.getUpdatables();
@@ -73,8 +77,9 @@ int Game::loop()
         std::for_each(updatables.begin(), updatables.end(), 
             [this] (Updatable* updt) { updt->update(this->currentState); }
         );
-
-        currentState.incrementSimulationTime();
+        if(somethingHappened){
+            printWorkerMessage();
+        }
     }
 
     if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
@@ -118,6 +123,34 @@ bool Game::isFinished()
 GameState& Game::getFinalState()
 {
     return currentState;
+}
+
+void Game::printWorkerMessage() {
+    int idleWorkers = 0;
+    int vespineWorkers = 0;
+    int mineralWorkers = 0;
+    int producingWorkers = 0;
+    auto workers = currentState.getWorkers();
+
+    for(auto* worker : workers){
+        switch(worker->getTypeOfWork()){
+            case TypeOfWork::Idle:
+                idleWorkers++;
+                break;
+            case TypeOfWork::Vespine:
+                vespineWorkers++;
+                break;
+            case TypeOfWork::Minerals:
+                mineralWorkers++;
+                break;
+            case TypeOfWork::Producing:
+                producingWorkers++;
+                break;
+        }
+    }
+    std::cerr << "[TIME " << currentState.getSimulationTime()<< "]\t\t";
+    std::cout << "[Workers " << workers.size() << "] " << " gas : " << vespineWorkers << "   minerals : " << mineralWorkers
+            <<" producing : " << producingWorkers << "  idle : " << idleWorkers << endl;
 }
 
 // TODO remove these debug values of gamestate
