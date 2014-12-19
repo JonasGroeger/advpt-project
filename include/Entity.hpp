@@ -7,7 +7,7 @@ private:
 
 protected:
     //00000001
-    unsigned char ENTITY_INTERFACE = 1 << 0;
+    unsigned char WORKER_INTERFACE = 1 << 0;
     //00000010
     unsigned char UPDATABLE_INTERFACE = 1 << 1;
     //00000100
@@ -31,6 +31,11 @@ public:
     The following methods will return if a specific interface is implemented by this instance
     addEntity inside GameState has to check if a entity is of a specific type by calling them
      */
+    bool isWorker(){
+        bool hasInterface = (interfaceBitmask & WORKER_INTERFACE);
+        return hasInterface;
+    }
+
     bool isProducer() {
         bool hasInterface = (interfaceBitmask & PRODUCER_INTERFACE);
         return hasInterface;
