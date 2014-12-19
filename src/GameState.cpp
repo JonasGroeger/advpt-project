@@ -66,50 +66,40 @@ void GameState::notifyEntityIsBeingProduced(EntityType type){
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
 	
-	
+	Entity* new_unit;
     for (unsigned long i = 0; i < amount; i++)
     {
-		Entity* new_unit;
+		
 		switch(type) {
 			case TERRAN_COMMAND_CENTER:
 				new_unit = new CommandCenter();
-				constructedBitset.set(TERRAN_COMMAND_CENTER);
 				break;
 			case TERRAN_SCV:
 				new_unit = new SCV(); 
-				constructedBitset.set(TERRAN_SCV);
 				break;
 			case TERRAN_BARRACKS:
 				new_unit = new Barracks();
-				constructedBitset.set(TERRAN_BARRACKS);
 				break;
 			case TERRAN_SUPPLY_DEPOT:
 				new_unit = new SupplyDepot();
-				constructedBitset.set(TERRAN_SUPPLY_DEPOT);
 				break;
 			case TERRAN_MARINE:
 				new_unit = new Marine();
-				constructedBitset.set(TERRAN_MARINE);
 				break;
 			case TERRAN_REFINERY:
 				new_unit = new Refinery();
-				constructedBitset.set(TERRAN_REFINERY);
 				break;
 			case TERRAN_FACTORY:
 				new_unit = new Factory();
-				constructedBitset.set(TERRAN_FACTORY);
 				break;
 			case TERRAN_STARPORT:
 				new_unit = new Starport();
-				constructedBitset.set(TERRAN_STARPORT);
 				break;
 			case TERRAN_BATTLECRUISER:
 				new_unit = new BattleCruiser();
-				constructedBitset.set(TERRAN_BATTLECRUISER);
 				break;
 			case TERRAN_HELLION:
 				new_unit = new Hellion();
-				constructedBitset.set(TERRAN_HELLION);
 				break;
 			case TERRAN_ARMORY:
 				break;
@@ -158,9 +148,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			case TERRAN_SENSOR_TOWER:
 				break;
 			default:
-				break;
-				
-						
+				break;		
 			
 		}
 		if(new_unit->isUpgradable()) 
@@ -176,6 +164,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			producers.push_back(dynamic_cast<Producer*> (new_unit));
 		}
 		entities.push_back((new_unit));
+		constructedBitset.set(type);
 		
     }
 }
