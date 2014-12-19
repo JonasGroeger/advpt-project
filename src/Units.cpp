@@ -162,7 +162,7 @@ void Barracks::update(GameState& state)
 
 bool Barracks::canProduce(EntityType type, GameState& state)
 {
-    std::cerr << "Barracks: canProduce" << std::endl;
+    //std::cerr << "Barracks: canProduce" << std::endl;
     if (type == TERRAN_MARINE)
     {
         return state.hasEnoughMinerals(50);
