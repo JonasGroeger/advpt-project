@@ -202,45 +202,55 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new SensorTower();
 				break;
 			case NONE:
-				break;
+				return;
 			default:
-				break;		
+				return;
 		}
-
-		if(new_unit->isUpgradable()) 
-		{ 
-			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit)); 
-		}
-		if(new_unit->isUpdatable())
-		{
-			updatables.push_back(dynamic_cast<Updatable*>(new_unit));
-		}
-		if(new_unit->isProducer()) 
-		{
-			producers.push_back(dynamic_cast<Producer*> (new_unit));
-		}
-        if (new_unit->isWorker())
-        {
-            Worker *worker = dynamic_cast<Worker*> (new_unit);
-			workers.push_back(worker);
-            if (hasOpenVespeneSlot())
-            {
-                worker->setTypeOfWork(TypeOfWork::Vespine);
-            }
-            else
-            {
-                worker->setTypeOfWork(TypeOfWork::Minerals);
-            }
-        }
-		entities.push_back(new_unit);
-		constructedBitset.set(type);
-
-        if (logger != nullptr)
-        {
-            logger->printBuildEndMessage(type);
-        }
+		addEntityToVectors(new_unit);
     }
 }
+
+void GameState::addCreatedEntity(Entity* entity)
+{
+	if(entity == nullptr){
+		return;
+	}
+	addEntityToVectors(entity);
+}
+
+void GameState::addEntityToVectors(Entity* entity)
+{
+	entities.push_back(entity);
+
+	constructedBitset.set(entity->getType());
+
+	if(entity->isUpgradable())
+	{
+		upgradeables.push_back(dynamic_cast<Upgradable*> (entity));
+	}
+	if(entity->isUpdatable())
+	{
+		updatables.push_back(dynamic_cast<Updatable*>(entity));
+	}
+	if(entity->isProducer())
+	{
+		producers.push_back(dynamic_cast<Producer*> (entity));
+	}
+	if (entity->isWorker())
+	{
+		Worker *worker = dynamic_cast<Worker*> (entity);
+		workers.push_back(worker);
+		if (hasOpenVespeneSlot())
+		{
+			worker->setTypeOfWork(TypeOfWork::Vespine);
+		}
+		else
+		{
+			worker->setTypeOfWork(TypeOfWork::Minerals);
+		}
+	}
+}
+
 
 void GameState::removeEntity(Entity& entity)
 {
