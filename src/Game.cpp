@@ -195,6 +195,7 @@ Game::Game(char *file)
     currentState.setMaxSimTime(1000);
 
     currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
+    currentState.addVespineWithFactor(150 * GameState::FACTOR); 
     currentState.addEntity(TERRAN_SCV, 5);
     currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
     currentState.consumeEnoughSupply(5 * 1); // Each SCV consumes 1 supply 
