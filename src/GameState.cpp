@@ -112,6 +112,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case TERRAN_REFINERY:
 				new_unit = new Refinery();
+                vespeneSlots += 3;
 				break;
 			case TERRAN_FACTORY:
 				new_unit = new Factory();
@@ -216,7 +217,14 @@ void GameState::addEntity(EntityType type, unsigned long amount)
         {
             Worker *worker = dynamic_cast<Worker*> (new_unit);
 			workers.push_back(worker);
-            worker->setTypeOfWork(TypeOfWork::Minerals);
+            if (hasOpenVespeneSlot())
+            {
+                worker->setTypeOfWork(TypeOfWork::Vespine);
+            }
+            else
+            {
+                worker->setTypeOfWork(TypeOfWork::Minerals);
+            }
         }
 		entities.push_back(new_unit);
 		constructedBitset.set(type);
@@ -255,6 +263,20 @@ int GameState::getSimulationTime() const
 
 void GameState::incrementSimulationTime() {
     this->simulationTime++;
+}
+
+bool GameState::hasOpenVespeneSlot()
+{
+    unsigned int usedSlots = 0;
+    for (Worker* wrk : workers)
+    {
+        if (wrk->getTypeOfWork() == TypeOfWork::Vespine)
+        {
+            usedSlots ++;
+        }
+    }
+
+    return vespeneSlots > usedSlots;
 }
 
 const vector<EntityType>& GameState::getEntities(EntityType& type) const

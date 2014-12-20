@@ -22,6 +22,13 @@ class GameState
 private:
     // Ressources stored multiplied by FACTOR
     unsigned long minerals = 0, gas = 0;
+
+    /*
+     * This describes how many workers could harvest vespene currently
+     * It is increased whenever a Refinery is built
+     */
+    unsigned long vespeneSlots = 0;
+
     /*
      * Supply is a ressource that gives a maximum to how many units a player can control.
      * Some units and buildings increase the maximum supply this acts like a capacity.
@@ -94,6 +101,8 @@ public:
     bool maxSimTimeReached() const;
     int getSimulationTime() const;
     void incrementSimulationTime();
+
+    bool hasOpenVespeneSlot();
 
     //contains all created entities
     const vector<EntityType>& getEntities(EntityType& type) const;

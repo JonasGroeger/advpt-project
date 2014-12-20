@@ -23,7 +23,14 @@ void SCV::update(GameState& state)
             {
                 state.addEntity(product, 1);
                 isProducing = false;
-                w->setTypeOfWork(TypeOfWork::Minerals);
+                if (state.hasOpenVespeneSlot())
+                {
+                    w->setTypeOfWork(TypeOfWork::Vespine);
+                }
+                else
+                {
+                    w->setTypeOfWork(TypeOfWork::Minerals);
+                }
             }
             break;
     }
