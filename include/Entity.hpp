@@ -2,10 +2,9 @@
 #include "EntityType.hpp"
 
 class Entity {
-private:
+protected:
     EntityType type;
 
-protected:
     //00000001
     unsigned char WORKER_INTERFACE = 1 << 0;
     //00000010
@@ -24,7 +23,8 @@ protected:
     unsigned char interfaceBitmask = 0;
 
 public:
-    virtual EntityType getType() = 0;
+    virtual EntityType getType(){ return this->type; };
+    virtual void setType(EntityType newType);
     virtual ~Entity() = 0;
 
     /*
