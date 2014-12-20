@@ -95,6 +95,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 		switch(type) {
 			case TERRAN_COMMAND_CENTER:
 				new_unit = new CommandCenter();
+                increaseSupply(11);
 				break;
 			case TERRAN_SCV:
 				new_unit = new SCV(); 
@@ -104,6 +105,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case TERRAN_SUPPLY_DEPOT:
 				new_unit = new SupplyDepot();
+                increaseSupply(8);
 				break;
 			case TERRAN_MARINE:
 				new_unit = new Marine();
@@ -196,8 +198,8 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			default:
 				break;		
-			
 		}
+
 		if(new_unit->isUpgradable()) 
 		{ 
 			upgradeables.push_back(dynamic_cast<Upgradable*> (new_unit)); 
@@ -216,7 +218,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			workers.push_back(worker);
             worker->setTypeOfWork(TypeOfWork::Minerals);
         }
-		entities.push_back((new_unit));
+		entities.push_back(new_unit);
 		constructedBitset.set(type);
 
         if (logger != nullptr)

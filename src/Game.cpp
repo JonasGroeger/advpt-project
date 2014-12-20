@@ -80,7 +80,8 @@ int Game::loop()
     }
 
     if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
-        //buildlist did not succeed so return non zero
+        //buildlist did not succeed so return non zero and print error message
+        std::cerr << "Reached maximum Time - aborting..." << std::endl;
         return -1;
     }
     printResourcesMessage();
@@ -134,6 +135,7 @@ void Game::printBuildEndMessage(EntityType type) const
     std::cout << "build-end";
     std::cout << BuildStep::entityTypeToString[type];
     std::cout << std::endl;
+    printResourcesMessage(); // TODO this is only for debugging
 }
 
 void Game::printWorkerMessage() const
@@ -184,11 +186,11 @@ Game::Game(char *file)
     :buildOrder(BuildOrder(file))
 {
     currentState.setMaxSimTime(1000);
-    currentState.addMineralsWithFactor(50 * GameState::FACTOR);
-    currentState.addVespineWithFactor(0 * GameState::FACTOR);
-    currentState.increaseSupply(200); // TODO 
+
+    currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
     currentState.addEntity(TERRAN_SCV, 5);
     currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
+    currentState.consumeEnoughSupply(5 * 1); // Each SCV consumes 1 supply 
 
     currentState.registerLogger(this);
 }

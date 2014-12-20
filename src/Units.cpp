@@ -41,7 +41,6 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     //to check at the end
     unsigned long minerals = 0;
     unsigned long gas = 0;
-    unsigned long supply = 0;
 
     switch(type)
     {
@@ -108,12 +107,11 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     }
 
     //we can produce that thing
-    if (state.hasEnough(minerals, gas, supply))
+    if (state.hasEnough(minerals, gas, 0))
     {
         w->setTypeOfWork(TypeOfWork::Producing);
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
-        state.consumeEnoughSupply(supply);
         state.notifyEntityIsBeingProduced(type);
         product = type;
         currentProgress = 0;
@@ -220,7 +218,7 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
 {
     switch(type){
         case EntityType::TERRAN_MARINE:
-            if(state.hasEnoughMinerals(50)){
+            if(state.hasEnough(50, 0, 1)){
                 isProducing = true;
                 state.consumeEnoughMinerals(50);
                 state.notifyEntityIsBeingProduced(type);
