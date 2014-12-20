@@ -52,6 +52,14 @@ class Marine: public Entity
         }
 };
 
+class Marauder : public Entity
+{
+    public:
+        Marauder(){
+            type = TERRAN_MARAUDER;
+        }
+};
+
 
 class Refinery : public Entity
 {

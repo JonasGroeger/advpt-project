@@ -113,6 +113,9 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			case TERRAN_MARINE:
 				new_unit = new Marine();
 				break;
+			case TERRAN_MARAUDER:
+				new_unit = new Marauder();
+				break;
 			case TERRAN_REFINERY:
 				new_unit = new Refinery();
                 vespeneSlots += 3;
