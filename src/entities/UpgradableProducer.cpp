@@ -19,8 +19,11 @@ void UpgradableProducer::update(GameState& gameState)
 
             if (currentProgress >= maxProgress)
             {
-                // TODO change this to changeEntity when changeEntity is implemented
-                gameState.addEntity(product, 1);
+                //just switch our own entitytype and notify gamestate of the new type
+                Entity* ourEntity = dynamic_cast<Entity*>(this);
+                ourEntity->setType(product);
+                gameState.setAvailableEntityType(product);
+                //gameState.addEntity(product, 1);
                 this->state = UPState::IDLE;
             }
         default:
