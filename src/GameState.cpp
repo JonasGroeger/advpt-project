@@ -137,10 +137,12 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new Banshee();
 				break;
 			case TERRAN_BARRACKS_REACTOR:
-				new_unit = new BarracksReactor();
+				// Ignore, we only get these entity out of an upgrade
+				// new_unit = new BarracksReactor();
 				break;
 			case TERRAN_BARRACKS_TECH_LAB:
-				new_unit = new BarracksTechLab();
+				// Ignore, we only get these entity out of an upgrade
+				//new_unit = new BarracksTechLab();
 				break;
 			case TERRAN_BUNKER:
 				new_unit = new Bunker();

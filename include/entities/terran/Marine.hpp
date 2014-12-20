@@ -5,6 +5,4 @@
 class Marine: public Entity
 {
     /* class Entity */
-public:
-    virtual EntityType getType();
 };
