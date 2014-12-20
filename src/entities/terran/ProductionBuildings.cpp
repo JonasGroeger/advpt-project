@@ -6,11 +6,6 @@ CommandCenter::CommandCenter()
     interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | UPGRADABLE_INTERFACE;
 }
 
-EntityType CommandCenter::getType()
-{
-    return TERRAN_COMMAND_CENTER;
-}
-
 bool CommandCenter::produceEntityIfPossible(EntityType type, GameState& state)
 {
     if (isBusy())
@@ -69,14 +64,13 @@ bool CommandCenter::upgradeIfPossible(EntityType type, GameState &state)
     return false;
 }
 
+
+
+
 Barracks::Barracks()
 {
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
-}
-
-EntityType Barracks::getType()
-{
-    return TERRAN_BARRACKS;
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | UPGRADABLE_INTERFACE;
+    type = TERRAN_BARRACKS;
 }
 
 bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
@@ -85,6 +79,12 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
     {
         return false;
     }
+
+    EntityType barrackType = this->getType();
+    unsigned long minerals = 0;
+    unsigned long gas = 0;
+    unsigned long supply = 0;
+    unsigned long time = 0;
 
     switch(type){
         case EntityType::TERRAN_MARINE:
@@ -99,16 +99,62 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
                 return true;
             }
             break;
+        case EntityType::TERRAN_MARAUDER:
+            if(barrackType != TERRAN_BARRACKS_TECH_LAB){
+                return false;
+            }
+            minerals = 100;
+            gas = 25;
+            time = 30;
+            supply = 2;
+            break;
+        case EntityType::TERRAN_REAPER:
+            if(barrackType != TERRAN_BARRACKS_TECH_LAB){
+                return false;
+            }
+            minerals = 50;
+            gas = 50;
+            time = 45;
+            supply = 1;
+            break;
+
+        case EntityType::TERRAN_GHOST:
+            if(barrackType != TERRAN_BARRACKS_TECH_LAB){
+                return false;
+            }
+            if(!state.hasEntity(EntityType::TERRAN_GHOST_ACADEMY)){
+                return false;
+            }
+            minerals = 200;
+            gas = 100;
+            time = 40;
+            supply = 2;
+            break;
         default:
             return false;
     }
+
+    if(state.hasEnough(minerals, gas, supply)){
+        state.consumeEnoughMinerals(minerals);
+        state.consumeEnoughVespine(gas);
+        state.consumeEnoughSupply(supply);
+        state.notifyEntityIsBeingProduced(type);
+        this->state = UPState::PRODUCING;
+        currentProgress = 0;
+        maxProgress = time;
+        product = type;
+        return true;
+    }
+
     return false;
 }
 
-// TODO
 bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
 {
-    if(isBusy()){
+    if(isBusy()
+            || this->getType() == TERRAN_BARRACKS_TECH_LAB
+            || this->getType() == TERRAN_BARRACKS_REACTOR)
+    {
         return false;
     }
 
@@ -135,103 +181,61 @@ bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
     if(state.hasEnough(minerals, gas, 0)){
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
-        state.consumeEnoughVespine(gas);
+        state.consumeEnoughVespine(0);
         product = type;
         currentProgress = 0;
         maxProgress = time;
+        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
     return false;
 }
 
-BarracksTechLab::BarracksTechLab(){
-    interfaceBitmask = PRODUCER_INTERFACE | UPDATABLE_INTERFACE;
-}
+void Barracks::update(GameState& state){
+    switch(this->state)
+    {
+        case UPState::PRODUCING:
+            currentProgress ++;
 
-EntityType BarracksTechLab::getType()
-{
-    return EntityType::TERRAN_BARRACKS_TECH_LAB;
-}
-
-bool BarracksTechLab::produceEntityIfPossible(EntityType type, GameState &state)
-{
-    if(isBusy()){
-        return false;
-    }
-    unsigned long minerals = 0;
-    unsigned long gas = 0;
-    unsigned long supply = 0;
-    unsigned long time = 0;
-
-    switch(type){
-        case EntityType::TERRAN_MARAUDER:
-            minerals = 100;
-            gas = 25;
-            time = 30;
-            supply = 2;
-            break;
-        case EntityType::TERRAN_REAPER:
-            minerals = 50;
-            gas = 50;
-            time = 45;
-            supply = 1;
-            break;
-
-        case EntityType::TERRAN_GHOST:
-            if(!state.hasEntity(EntityType::TERRAN_GHOST_ACADEMY)){
-                return false;
+            if (currentProgress >= maxProgress)
+            {
+                state.addEntity(product, 1);
+                this->state = UPState::IDLE;
             }
-            minerals = 200;
-            gas = 100;
-            time = 40;
-            supply = 2;
             break;
+        case UPState::UPGRADING:
+            currentProgress ++;
+
+            if (currentProgress >= maxProgress)
+            {
+                //just switch our own entitytype and notify gamestate of the new type
+                this->setType(product);
+                state.setAvailableEntityType(product);
+                //if we have a reactor as upgrade add a second instance to gamestate since
+                //reactor doubles the capacity
+                if(product == TERRAN_BARRACKS_REACTOR){
+                    Entity* secondBarrack = new Barracks();
+                    secondBarrack->setType(TERRAN_BARRACKS_REACTOR);
+                    state.addCreatedEntity(secondBarrack);
+                }
+                //gameState.addEntity(product, 1);
+                this->state = UPState::IDLE;
+                printBuildEndMessage(product, state.getSimulationTime());
+
+            }
         default:
-            return false;
+            return;
     }
-
-    if(state.hasEnough(minerals, gas, supply)){
-        state.consumeEnoughMinerals(minerals);
-        state.consumeEnoughVespine(gas);
-        state.consumeEnoughSupply(supply);
-        state.notifyEntityIsBeingProduced(type);
-        this->state = UPState::PRODUCING;
-        currentProgress = 0;
-        maxProgress = time;
-        product = type;
-        return true;
-    }
-
-    return false;
-
 }
 
-BarracksReactor::BarracksReactor(){
-    interfaceBitmask = PRODUCER_INTERFACE | UPDATABLE_INTERFACE;
-}
 
-EntityType BarracksReactor::getType()
-{
-    return EntityType::TERRAN_BARRACKS_REACTOR;
-}
 
-bool BarracksReactor::produceEntityIfPossible(EntityType type, GameState &state)
-{
-    if(isBusy()){
-        return false;
-    }
-    //TODO
-}
 
 Factory::Factory()
 {
     interfaceBitmask = UPDATABLE_INTERFACE | UPGRADABLE_INTERFACE | PRODUCER_INTERFACE;
-}
-
-EntityType Factory::getType()
-{
-    return TERRAN_FACTORY;
+    type = TERRAN_FACTORY;
 }
 
 bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
@@ -267,20 +271,20 @@ bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
     return false;
 }
 
-// TODO
 bool Factory::upgradeIfPossible(EntityType type, GameState &state)
 {
+    // TODO
     return false;
 }
+
+
+
+
 
 Starport::Starport()
 {
     interfaceBitmask = PRODUCER_INTERFACE | UPGRADABLE_INTERFACE | UPDATABLE_INTERFACE;
-}
-
-EntityType Starport::getType()
-{
-    return TERRAN_STARPORT;
+    type = TERRAN_STARPORT;
 }
 
 bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
@@ -323,8 +327,8 @@ bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
     return false;
 }
 
-// TODO
 bool Starport::upgradeIfPossible(EntityType type, GameState &state)
 {
+    // TODO
     return false;
 }

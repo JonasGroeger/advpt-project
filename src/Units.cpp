@@ -1,14 +1,9 @@
 #include "Units.hpp"
 
-
 SCV::SCV()
 {
     interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | WORKER_INTERFACE;
-}
-
-EntityType SCV::getType()
-{
-    return TERRAN_SCV;
+    type = TERRAN_SCV;
 }
 
 void SCV::update(GameState& state)
@@ -147,121 +142,14 @@ void SCV::applyChronoBoost()
 {
 }
 
-EntityType SupplyDepot::getType()
-{
-    return TERRAN_SUPPLY_DEPOT;
-}
-
-EntityType Refinery::getType()
-{
-    return TERRAN_REFINERY;
-}
-
-EntityType Hellion::getType()
-{
-    return TERRAN_HELLION;
-}
-
-EntityType BattleCruiser::getType()
-{
-    return TERRAN_BATTLECRUISER;
-}
-
-/* TODO: IMPLEMENT the functions below, as they are only dummies */
 
 
-
-EntityType Armory::getType() {
-	return TERRAN_ARMORY;
-}
-
-EntityType Banshee::getType() {
-	return TERRAN_BANSHEE;
-}
-
-EntityType Bunker::getType() {
-	return TERRAN_BUNKER;
-}
-
-EntityType Reaper::getType() {
-	return TERRAN_REAPER;
-}
-
-EntityType Ghost::getType() {
-	return TERRAN_GHOST;
-}
-
-EntityType GhostAcademy::getType() {
-	return TERRAN_GHOST_ACADEMY;
-}
-
-EntityType FactoryTechLab::getType() {
-	return TERRAN_FACTORY_TECH_LAB;
-}
-
-EntityType FactoryReactor::getType() {
-	return TERRAN_FACTORY_REACTOR;
-}
-
-EntityType StarportTechLab::getType()  {
-	return TERRAN_STARPORT_TECH_LAB;
-}
-
-EntityType StarportReactor::getType() {
-	return TERRAN_STARPORT_REACTOR;
-}
-
-EntityType Raven::getType() {
-	return TERRAN_RAVEN;
-}
-
-EntityType FusionCore::getType() {
-	return TERRAN_FUSION_CORE;
-}
-
-EntityType Viking::getType() {
-	return TERRAN_VIKING;
-}
-
-EntityType Medivac::getType() {
-	return TERRAN_MEDIVAC;
-}
-
-EntityType SiegeTank::getType() {
-	return TERRAN_SIEGE_TANK;
-}
-
-EntityType Thor::getType() {
-	return TERRAN_THOR;
-}
-
-EntityType OrbitalCommand::getType() {
-	return TERRAN_ORBITAL_COMMAND;
-}
-
-EntityType EngineeringBay::getType() {
-	return TERRAN_ENGINEERING_BAY;
-}
-
-
-EntityType PlanetaryFortress::getType() {
-	return TERRAN_PLANETARY_FORTRESS;
-}
-
-EntityType MissileTurret::getType() {
-	return TERRAN_MISSILE_TURRET;
-}
-
-EntityType SensorTower::getType() {
-	return TERRAN_SENSOR_TOWER;
-}
 
 
 bool PlanetaryFortress::produceEntityIfPossible(EntityType type, GameState &state)
 {
 	return true;
 }
-
 
 long PlanetaryFortress::getTimeToFinish() {
 	return 0;

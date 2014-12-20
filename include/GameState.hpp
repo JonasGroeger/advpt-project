@@ -49,6 +49,8 @@ private:
     vector<Entity*> entities;
 
     Game *logger = nullptr;
+    void addEntityToVectors(Entity* entity);
+
 
 // TODO this should be private but it won't compile anymore
 public:
@@ -89,9 +91,11 @@ public:
     unsigned long getAvailableSupply() const;
 
     void notifyEntityIsBeingProduced(EntityType type);
+    void setAvailableEntityType(EntityType type);
 
     //this method sets the value of type to 1 in the entitiesBeingProduced bitset
     void addEntity(EntityType type, unsigned long amount);
+    void addCreatedEntity(Entity* entity);
 
     void removeEntity(Entity& entity); // TODO implement
     void changeEntity(Entity& old, Entity& theNew); // TODO implement
