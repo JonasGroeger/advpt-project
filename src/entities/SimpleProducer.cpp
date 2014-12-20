@@ -1,6 +1,5 @@
 #include "entities/SimpleProducer.hpp"
 #include "GameState.hpp"
-#include <iostream>
 
 void SimpleProducer::update(GameState& state)
 {
