@@ -15,7 +15,6 @@ class SCV : public Entity,
 {
     /* Should be refactored int common class */
     private:
-        bool isProducing = false;
         int currentProgress = 0;
         int maxProgress = 0;
         EntityType product = NONE;

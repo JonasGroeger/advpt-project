@@ -1,5 +1,11 @@
 #include "Units.hpp"
 
+
+SCV::SCV()
+{
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | WORKER_INTERFACE;
+}
+
 EntityType SCV::getType()
 {
     return TERRAN_SCV;
@@ -127,7 +133,6 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     return false;
 }
 
-
 long SCV::getTimeToFinish()
 {
     Worker* w = dynamic_cast<Worker*>(this);
@@ -165,10 +170,7 @@ EntityType BattleCruiser::getType()
 
 /* TODO: IMPLEMENT the functions below, as they are only dummies */
 
-SCV::SCV()
-{
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | WORKER_INTERFACE;
-}
+
 
 EntityType Armory::getType() {
 	return TERRAN_ARMORY;
