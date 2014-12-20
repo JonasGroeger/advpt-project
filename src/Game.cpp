@@ -43,14 +43,16 @@ bool Game::executeBuildStep(BuildStep* step)
 
 int Game::loop()
 {
-    while ( (!buildOrder.isDone() || (isAnybodyProducing()))
+    while ( (!buildOrder.isDone() || isAnybodyProducing())
           && !currentState.maxSimTimeReached())
     {
         bool somethingHappened = false;
 
-        // We update each updateable
+        /*
+         * We update before executing any build steps so any Producer
+         * that finishes this tick is cleared to produce something new
+         */
         auto updatables = currentState.getUpdatables();
-
         std::for_each(updatables.begin(), updatables.end(), 
             [this] (Updatable* updt) { updt->update(this->currentState); }
         );
@@ -63,10 +65,9 @@ int Game::loop()
             // We try to execute the first one
             if (executeBuildStep(nextStep))
             {
-                somethingHappened = true;
                 // If successfull we try the next step
                 buildOrder.advance();
-                //std::cerr << "advance buildorder" << std::endl;
+                somethingHappened = true;
             }
             else
             {
@@ -87,7 +88,6 @@ int Game::loop()
         //buildlist did not succeed so return non zero
         return -1;
     }
-
     printResourcesMessage();
 
     //all fine, return 0
