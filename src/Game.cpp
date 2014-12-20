@@ -47,6 +47,14 @@ int Game::loop()
           && !currentState.maxSimTimeReached())
     {
         bool somethingHappened = false;
+
+        // We update each updateable
+        auto updatables = currentState.getUpdatables();
+
+        std::for_each(updatables.begin(), updatables.end(), 
+            [this] (Updatable* updt) { updt->update(this->currentState); }
+        );
+
         // As long as there are still steps left
         while (!buildOrder.isDone())
         {
@@ -66,13 +74,6 @@ int Game::loop()
                 break;
             }
         }
-
-        // We update each updateable
-        auto updatables = currentState.getUpdatables();
-
-        std::for_each(updatables.begin(), updatables.end(), 
-            [this] (Updatable* updt) { updt->update(this->currentState); }
-        );
 
         if(somethingHappened){
             printResourcesMessage();

@@ -18,13 +18,13 @@ void SCV::update(GameState& state)
             state.addVespineWithFactor(0.35 * GameState::FACTOR);
             break;
         case TypeOfWork::Producing:
+            currentProgress ++;
             if (currentProgress >= maxProgress)
             {
                 state.addEntity(product, 1);
                 isProducing = false;
                 w->setTypeOfWork(TypeOfWork::Minerals);
             }
-            currentProgress ++;
             break;
     }
 }
@@ -146,13 +146,13 @@ void CommandCenter::update(GameState& state)
 {
     if (isProducing)
     {
+        currentProgress ++;
+
         if (currentProgress >= maxProgress)
         {
             state.addEntity(TERRAN_SCV, 1);
             isProducing = false;
-            return;
         }
-        currentProgress ++;
     }
 }
 
@@ -207,12 +207,12 @@ void Barracks::update(GameState& state)
 {
     if (isProducing)
     {
+        currentProgress ++;
         if (currentProgress >= maxProgress)
         {
             state.addEntity(TERRAN_MARINE, 1);
             isProducing = false;
         }
-        currentProgress ++;
     }
 }
 
