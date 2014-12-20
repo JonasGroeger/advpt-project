@@ -23,7 +23,6 @@ void SCV::update(GameState& state)
                 state.addEntity(product, 1);
                 isProducing = false;
                 w->setTypeOfWork(TypeOfWork::Minerals);
-                currentProgress = 0;
             }
             currentProgress ++;
             break;
@@ -117,6 +116,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
         state.consumeEnoughSupply(supply);
         state.notifyEntityIsBeingProduced(type);
         product = type;
+        currentProgress = 0;
         return true;
     }
 }
@@ -150,7 +150,7 @@ void CommandCenter::update(GameState& state)
         {
             state.addEntity(TERRAN_SCV, 1);
             isProducing = false;
-            currentProgress = 0;
+            return;
         }
         currentProgress ++;
     }
@@ -170,6 +170,7 @@ bool CommandCenter::produceEntityIfPossible(EntityType type, GameState& state)
                 state.consumeEnoughSupply(1);
                 state.notifyEntityIsBeingProduced(type);
                 isProducing = true;
+                currentProgress = 0;
                 return true;
             }
             break;
@@ -210,7 +211,6 @@ void Barracks::update(GameState& state)
         {
             state.addEntity(TERRAN_MARINE, 1);
             isProducing = false;
-            currentProgress = 0;
         }
         currentProgress ++;
     }
@@ -224,6 +224,7 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
                 isProducing = true;
                 state.consumeEnoughMinerals(50);
                 state.notifyEntityIsBeingProduced(type);
+                currentProgress = 0;
                 return true;
             }
             break;
