@@ -1,4 +1,3 @@
-#include <entities/terran/Marine.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
 

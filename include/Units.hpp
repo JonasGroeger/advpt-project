@@ -44,6 +44,15 @@ class SupplyDepot: public Entity
         }
 };
 
+class Marine: public Entity
+{
+    public:
+        Marine(){
+            type = TERRAN_MARINE;
+        }
+};
+
+
 class Refinery : public Entity
 {
     public:
