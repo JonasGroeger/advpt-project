@@ -4,7 +4,7 @@
 #include <bitset>
 
 #include "Units.hpp"
-#include "Producer.hpp"
+#include "entities/Producer.hpp"
 #include "Entity.hpp"
 #include "EntityType.hpp"
 #include "entities/Worker.hpp"

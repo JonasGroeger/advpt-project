@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 #include "EntityType.hpp"
-#include "Producer.hpp"
+#include "entities/Producer.hpp"
 #include "Upgradable.hpp"
 #include "Updatable.hpp"
 #include "GameState.hpp"
@@ -15,7 +15,6 @@ class SCV : public Entity,
 {
     /* Should be refactored int common class */
     private:
-        bool isProducing = false;
         int currentProgress = 0;
         int maxProgress = 0;
         EntityType product = NONE;

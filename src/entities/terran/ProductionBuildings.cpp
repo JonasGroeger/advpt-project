@@ -1,6 +1,5 @@
 #include "entities/terran/ProductionBuildings.hpp"
 #include "GameState.hpp"
-#include <iostream>
 
 CommandCenter::CommandCenter()
 {
