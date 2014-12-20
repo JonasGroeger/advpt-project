@@ -37,8 +37,6 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     if(current == TypeOfWork::Producing){
         return false;
     }
-    //set typeofwork to producing, will be reset if failed
-    w->setTypeOfWork(TypeOfWork::Producing);
 
     //to check at the end
     unsigned long minerals = 0;
@@ -110,12 +108,12 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     }
     if(!success){
         //failed, reset current type of work
-        w->setTypeOfWork(current);
         return false;
     }
 
     //we could poduce that thing
     if(state.hasEnough(minerals, gas, supply)){
+        w->setTypeOfWork(TypeOfWork::Producing);
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
         state.consumeEnoughSupply(supply);
