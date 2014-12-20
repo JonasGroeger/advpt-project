@@ -1,7 +1,8 @@
-#include <entities/terran/Marine.hpp>
-#include <entities/terran/Barracks.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
+#include "entities/terran/Marine.hpp"
+#include "entities/terran/Barracks.hpp"
+#include "entities/terran/SCV.hpp"
 
 bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply){
 	return hasEnoughMinerals(minerals)
@@ -98,7 +99,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new CommandCenter();
 				break;
 			case TERRAN_SCV:
-				new_unit = new SCV(); 
+				new_unit = new SCV();
 				break;
 			case TERRAN_BARRACKS:
 				new_unit = new Barracks();
