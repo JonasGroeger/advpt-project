@@ -230,11 +230,11 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
     {"siege_tank", BuildStepType::PRODUCE},
     {"thor", BuildStepType::PRODUCE},
     {"armory", BuildStepType::PRODUCE},
-    {"orbital_command", BuildStepType::PRODUCE}, //and update?
+    {"orbital_command", BuildStepType::UPGRAD}, //and update?
     {"command_center", BuildStepType::PRODUCE},
     {"scv", BuildStepType::PRODUCE},
     {"engineering_bay", BuildStepType::PRODUCE},
-    {"planetary_fortress", BuildStepType::PRODUCE}, // and update?
+    {"planetary_fortress", BuildStepType::UPGRADE}, // and update?
     {"missile_turret", BuildStepType::PRODUCE},
     {"sensort_tower", BuildStepType::PRODUCE},
     {"supply_depot", BuildStepType::PRODUCE},
