@@ -25,11 +25,6 @@ bool Game::executeBuildStep(BuildStep* step)
             }
         }
     }
-    else if (step->getBuildStepType() == BuildStepType::CONSTRUCT)
-    {
-        std::cerr << "constructing a: ";
-        // TODO
-    }
     else if (step->getBuildStepType() == BuildStepType::CHRONO_BOOST)
     {
         std::cerr << "chrono boosting a: ";
