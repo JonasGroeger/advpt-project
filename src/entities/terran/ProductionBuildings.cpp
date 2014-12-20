@@ -108,6 +108,40 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
 // TODO
 bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
 {
+    if(isBusy()){
+        return false;
+    }
+
+    unsigned int minerals = 0;
+    unsigned int gas = 0;
+    unsigned int time = 0;
+
+    switch (type)
+    {
+        case TERRAN_BARRACKS_TECH_LAB:
+            minerals = 50;
+            gas = 25;
+            time = 25;
+            break;
+        case TERRAN_BARRACKS_REACTOR:
+            minerals = 50;
+            gas = 50;
+            time = 50;
+            break;
+        default:
+            return false;
+    }
+
+    if(state.hasEnough(minerals, gas, 0)){
+        this->state = UPState::UPGRADING;
+        state.consumeEnoughMinerals(minerals);
+        state.consumeEnoughVespine(gas);
+        product = type;
+        currentProgress = 0;
+        maxProgress = time;
+        return true;
+    }
+
     return false;
 }
 
