@@ -1,71 +1,62 @@
 #pragma once
 
 #include "Entity.hpp"
-//#include "Upgradable.hpp"
-#include "entities/SimpleProducer.hpp"
+#include "entities/UpgradableProducer.hpp"
 
 class CommandCenter: public Entity,
-                     public SimpleProducer
+                     public UpgradableProducer
 {
     /* class Entity */
     public:
         CommandCenter();
         virtual EntityType getType() override;
 
-    /* class SimpleProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
 };
 
 class Barracks: public Entity,
-                public SimpleProducer
+                public UpgradableProducer
 {
     /* class Entity */
     public:
         Barracks();
         virtual EntityType getType() override;
 
-    /* class SimpleProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
 };
 
 class Factory : public Entity,
                 //public Upgradable,
-                public SimpleProducer
+                public UpgradableProducer
 {
     /* class Entity */
     public:
         Factory();
         virtual EntityType getType() override;
 
-    /* class SimpleProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
-    /* class Upgradable
-    public:
-        virtual bool isUpgradable(GameState& state, EntityType type);
-        virtual void upgrade(GameState& state, EntityType to);
-        */
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
 };
 
 class Starport : public Entity,
                  //public Upgradable,
-                 public SimpleProducer
+                 public UpgradableProducer
 {
     /* class Entity */
     public:
         Starport();
         virtual EntityType getType() override;
     
-    /* class SimpleProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
-    /* class Upgradable 
-    public:
-        virtual bool isUpgradable(GameState& state, EntityType type) override;
-        virtual void upgrade(GameState& state, EntityType to) override;
-        */
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
 };

@@ -6,6 +6,6 @@ class GameState;
 class Upgradable
 {
 public:
-    virtual ~Upgradable() = 0;
+    virtual ~Upgradable() {}
     virtual bool upgradeIfPossible(EntityType type, GameState &state) = 0;
 };

@@ -14,17 +14,19 @@ EntityType CommandCenter::getType()
 
 bool CommandCenter::produceEntityIfPossible(EntityType type, GameState& state)
 {
-    if(isProducing){
+    if (isBusy())
+    {
         return false;
     }
 
     switch(type){
         case EntityType::TERRAN_SCV:
-            if(state.hasEnough(50, 0, 1)){
+            if(state.hasEnough(50, 0, 1))
+            {
                 state.consumeEnoughMinerals(50);
                 state.consumeEnoughSupply(1);
                 state.notifyEntityIsBeingProduced(type);
-                isProducing = true;
+                this->state = UPState::PRODUCING;
                 currentProgress = 0;
                 maxProgress = 17;
                 product = type;
@@ -35,6 +37,22 @@ bool CommandCenter::produceEntityIfPossible(EntityType type, GameState& state)
             return false;
     }
     return false;
+}
+
+// TODO
+bool CommandCenter::upgradeIfPossible(EntityType type, GameState &state)
+{
+    switch (type)
+    {
+        case TERRAN_ORBITAL_COMMAND:
+            return true;
+            break;
+        case TERRAN_PLANETARY_FORTRESS:
+            return true;
+            break;
+        default:
+            return false;
+    }
 }
 
 Barracks::Barracks()
@@ -49,7 +67,7 @@ EntityType Barracks::getType()
 
 bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
 {
-    if (isProducing)
+    if (isBusy())
     {
         return false;
     }
@@ -60,7 +78,7 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
                 state.consumeEnoughMinerals(50);
                 state.consumeEnoughSupply(1);
                 state.notifyEntityIsBeingProduced(type);
-                isProducing = true;
+                this->state = UPState::PRODUCING;
                 currentProgress = 0;
                 maxProgress = 25;
                 product = type;
@@ -70,6 +88,12 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
         default:
             return false;
     }
+    return false;
+}
+
+// TODO
+bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
+{
     return false;
 }
 
@@ -85,7 +109,7 @@ EntityType Factory::getType()
 
 bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
 {
-    if(isProducing)
+    if (isBusy())
     {
         return false;
     }
@@ -107,12 +131,18 @@ bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
         state.consumeEnoughSupply(supply);
-        isProducing = true;
+        this->state = UPState::PRODUCING;
         currentProgress = 0;
         product = type;
         return true;
     }
 
+    return false;
+}
+
+// TODO
+bool Factory::upgradeIfPossible(EntityType type, GameState &state)
+{
     return false;
 }
 
@@ -128,7 +158,7 @@ EntityType Starport::getType()
 
 bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
 {
-    if(isProducing)
+    if(isBusy())
     {
         return false;
     }
@@ -157,11 +187,17 @@ bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
         state.consumeEnoughSupply(supply);
-        isProducing = true;
+        this->state = UPState::PRODUCING;
         currentProgress = 0;
         product = type;
         return true;
     }
 
+    return false;
+}
+
+// TODO
+bool Starport::upgradeIfPossible(EntityType type, GameState &state)
+{
     return false;
 }
