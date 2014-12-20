@@ -46,7 +46,6 @@ int Game::loop()
     while ( (!buildOrder.isDone() || (isAnybodyProducing()))
           && !currentState.maxSimTimeReached())
     {
-        currentState.incrementSimulationTime();
 
         bool somethingHappened = false;
         // As long as there are still steps left
@@ -80,6 +79,8 @@ int Game::loop()
             printResourcesMessage();
             printWorkerMessage();
         }
+
+        currentState.incrementSimulationTime();
     }
 
     if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
