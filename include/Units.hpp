@@ -39,41 +39,59 @@ class SupplyDepot: public Entity
 {
     /* class Entity */
     public:
-        ;
+        SupplyDepot(){
+            type = TERRAN_SUPPLY_DEPOT;
+        }
 };
 
 class Refinery : public Entity
 {
     public:
+        Refinery(){
+            type = TERRAN_REFINERY;
+        }
 };
 
 class Hellion : public Entity
 {
     /* class Entity */
     public:
+        Hellion(){
+            type = TERRAN_HELLION;
+        }
 };
 
 class BattleCruiser : public Entity
 {
     /* class Entity */
     public:
+        BattleCruiser(){
+            type = TERRAN_BATTLECRUISER;
+        }
 };
 
 class Armory : public Entity
 {
 	public:
+        Armory(){
+            type = TERRAN_ARMORY;
+        }
 };
 
 class Banshee : public Entity
 {
 	public:
-
+        Banshee(){
+            type = TERRAN_BANSHEE;
+        }
 };
 
 class Bunker : public Entity
 {
 	public:
-
+        Bunker(){
+            type = TERRAN_BUNKER;
+        }
 };
 
 
@@ -88,54 +106,81 @@ class Reaper : public Entity
 class Ghost : public Entity
 {
 	public:
+        Ghost(){
+            type = TERRAN_GHOST;
+        }
 
 };
 
 class Raven: public Entity
 {
 	public:
+        Raven(){
+            type = TERRAN_RAVEN;
+        }
 
 };
 
 class FusionCore : public Entity
 {
 	public:
+        FusionCore(){
+            type = TERRAN_FUSION_CORE;
+        }
 
 };
 
 class Viking : public Entity
 {
 	public:
+        Viking(){
+            type = TERRAN_VIKING;
+        }
 
 };
 
 class Medivac : public Entity
 {
 	public:
+        Medivac(){
+            type = TERRAN_MEDIVAC;
+        }
 
 };
 
 class SiegeTank : public Entity
 {
 	public:
+        SiegeTank(){
+            type = TERRAN_SIEGE_TANK;
+        }
 
 };
 
 class Thor : public Entity
 {
 	public:
+        Thor(){
+            type = TERRAN_THOR;
+        }
 
 };
 
 class OrbitalCommand : public Entity
 {
 	public:
+        OrbitalCommand(){
+            type = TERRAN_ORBITAL_COMMAND;
+        }
 
 };
 
 class EngineeringBay : public Entity
 {
 	public:
+        EngineeringBay(){
+            type = TERRAN_ENGINEERING_BAY;
+        }
 
 };
 
@@ -143,6 +188,10 @@ class PlanetaryFortress : public Entity,
                           public Producer
 {
 	public:
+        PlanetaryFortress(){
+            interfaceBitmask = PRODUCER_INTERFACE | UPDATABLE_INTERFACE;
+            type = TERRAN_PLANETARY_FORTRESS;
+        }
 
 		/* class Producer */
     public:
@@ -155,41 +204,27 @@ class PlanetaryFortress : public Entity,
 class MissileTurret : public Entity
 {
 	public:
+        MissileTurret(){
+            type = TERRAN_MISSILE_TURRET;
+        }
 
 };
 
 class SensorTower : public Entity
 {
 	public:
+        SensorTower(){
+            type = TERRAN_SENSOR_TOWER;
+        }
 
 };
 
 class GhostAcademy : public Entity
 {
 	public:
+        GhostAcademy(){
+            type = TERRAN_GHOST_ACADEMY;
+        }
 
 };
 
-class FactoryTechLab : public Entity
-{
-	public:
-
-};
-
-class FactoryReactor : public Entity
-{
-	public:
-
-};
-
-class StarportTechLab : public Entity
-{
-	public:
-
-};
-
-class StarportReactor : public Entity
-{
-	public:
-
-};

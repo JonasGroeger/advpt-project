@@ -157,16 +157,20 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new GhostAcademy();
 				break;
 			case TERRAN_FACTORY_TECH_LAB:
-				new_unit = new FactoryTechLab();
+				// Ignore, we only get these entity out of an upgrade
+				//new_unit = new FactoryTechLab();
 				break;
-			case TERRAN_FACTORY_REACTOR:	
-				new_unit = new FactoryReactor();
+			case TERRAN_FACTORY_REACTOR:
+				// Ignore, we only get these entity out of an upgrade
+				//new_unit = new FactoryReactor();
 				break;
 			case TERRAN_STARPORT_TECH_LAB:
-				new_unit = new StarportTechLab();
+				// Ignore, we only get these entity out of an upgrade
+				//new_unit = new StarportTechLab();
 				break;
 			case TERRAN_STARPORT_REACTOR:
-				new_unit = new StarportReactor();
+				// Ignore, we only get these entity out of an upgrade
+				//new_unit = new StarportReactor();
 				break;
 			case TERRAN_RAVEN:
 				new_unit = new Raven();
