@@ -1,4 +1,6 @@
 #include <entities/terran/Marine.hpp>
 
-Marine::Marine()
-{}
+EntityType Marine::getType()
+{
+    return TERRAN_MARINE;
+}

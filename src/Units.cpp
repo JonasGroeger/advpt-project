@@ -195,11 +195,6 @@ long Barracks::getTimeToFinish()
     return 0;
 }
 
-EntityType Marine::getType()
-{
-    return TERRAN_MARINE;
-}
-
 EntityType Factory::getType()
 {
     return TERRAN_FACTORY;

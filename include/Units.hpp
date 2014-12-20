@@ -100,13 +100,6 @@ class Barracks: public Entity,
         virtual long getTimeToFinish();
 };
 
-class Marine: public Entity
-{
-    /* class Entity */
-    public:
-        virtual EntityType getType();
-};
-
 class Refinery : public Entity
 {
     public:
