@@ -20,7 +20,7 @@ class UpgradableProducer : public Producer,
 {
 /* Updatable */
 public:
-    void update(GameState& state) final;
+    void update(GameState& state);
 
 /* Producer */
 public:

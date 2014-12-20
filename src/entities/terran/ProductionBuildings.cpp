@@ -191,6 +191,42 @@ bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
     return false;
 }
 
+void Barracks::update(GameState& state){
+    switch(this->state)
+    {
+        case UPState::PRODUCING:
+            currentProgress ++;
+
+            if (currentProgress >= maxProgress)
+            {
+                state.addEntity(product, 1);
+                this->state = UPState::IDLE;
+            }
+            break;
+        case UPState::UPGRADING:
+            currentProgress ++;
+
+            if (currentProgress >= maxProgress)
+            {
+                //just switch our own entitytype and notify gamestate of the new type
+                Entity* ourEntity = dynamic_cast<Entity*>(this);
+                ourEntity->setType(product);
+                state.setAvailableEntityType(product);
+                //if we have a reactor as upgrade add a second instance to gamestate since
+                //reactor doubles the capacity
+                if(product == TERRAN_BARRACKS_REACTOR){
+                    Entity* secondBarrack = new Barracks();
+                    secondBarrack->setType(TERRAN_BARRACKS_REACTOR);
+                    state.addCreatedEntity(secondBarrack);
+                }
+                //gameState.addEntity(product, 1);
+                this->state = UPState::IDLE;
+            }
+        default:
+            return;
+    }
+}
+
 
 
 
