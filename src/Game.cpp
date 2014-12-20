@@ -43,7 +43,8 @@ bool Game::executeBuildStep(BuildStep* step)
 
 int Game::loop()
 {
-    while (!buildOrder.isDone() && !currentState.maxSimTimeReached())
+    while ( (!buildOrder.isDone() || (isAnybodyProducing()))
+          && !currentState.maxSimTimeReached())
     {
         currentState.incrementSimulationTime();
 
@@ -68,14 +69,13 @@ int Game::loop()
             }
         }
 
-        //std::cerr << "Update..." << std::endl;
-
         // We update each updateable
         auto updatables = currentState.getUpdatables();
 
         std::for_each(updatables.begin(), updatables.end(), 
             [this] (Updatable* updt) { updt->update(this->currentState); }
         );
+
         if(somethingHappened){
             printResourcesMessage();
             printWorkerMessage();
@@ -87,33 +87,23 @@ int Game::loop()
         return -1;
     }
 
-    std::cerr << "All orders are given!" << std::endl;
-
-    /*
-     * No every Order is given, but some may still take some time to complete.
-     * So we ask every producer how long he will need and wait the maximum amount
-     */
-    long maxTime = 0;
-    auto producers = currentState.getProducers();
-
-    std::for_each(producers.begin(), producers.end(),
-        [&maxTime] (Producer* prod) 
-        { 
-        maxTime = (prod->getTimeToFinish() > maxTime) ? prod->getTimeToFinish() : maxTime;
-        }
-    );
-
-    std::cerr << "Need to wait " << maxTime << " for everything to finish up." << std::endl;
-
-    for (long i = 0; i < maxTime; i++)
-    {
-        currentState.incrementSimulationTime();
-    }
     printResourcesMessage();
 
-    std::cerr << "Finished." << std::endl;
     //all fine, return 0
     return 0;
+}
+
+bool Game::isAnybodyProducing() const
+{
+    auto producers = currentState.getProducers();
+    bool result = false;
+    std::for_each(producers.begin(), producers.end(),
+        [&result] (Producer* prod) 
+        { 
+            if (prod->getTimeToFinish() > 0) result = true;
+        }
+    );
+    return result;
 }
 
 bool Game::isFinished()

@@ -17,6 +17,7 @@ private:
     BuildOrder buildOrder;
 
     bool executeBuildStep(BuildStep* step);
+    bool isAnybodyProducing() const;
 
     void printMessageProlog() const;
     void printBuildStartMessage(EntityType type) const;
