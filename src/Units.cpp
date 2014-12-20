@@ -119,6 +119,9 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
         product = type;
         return true;
     }
+
+    // We cant produce.
+    return false;
 }
 
 
