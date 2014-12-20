@@ -54,6 +54,7 @@ public:
     std::bitset<50> entitiesInConstruction = 0;
     
     //All methods here receive the real value they need as we have no floats here
+    bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
     bool hasEnoughMinerals(unsigned long amount) const;
     bool hasEnoughVespine(unsigned long amount) const;
     bool hasEnoughSupply(unsigned long amount) const;

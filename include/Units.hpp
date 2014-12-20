@@ -33,8 +33,7 @@ class SCV : public Entity,
 
     /* class Producer */
     public:
-        virtual bool canProduce(EntityType type, GameState& state);
-        virtual void produce(EntityType type, GameState& state);
+        virtual bool produceEntityIfPossible(EntityType type, GameState& state);
         virtual void applyChronoBoost();
         virtual long getTimeToFinish();
 };
@@ -60,8 +59,7 @@ class CommandCenter: public Entity,
 
     /* class Producer */
     public:
-        virtual bool canProduce(EntityType type, GameState& state);
-        virtual void produce(EntityType type, GameState& state);
+        virtual bool produceEntityIfPossible(EntityType type, GameState& state);
         virtual void applyChronoBoost();
         virtual long getTimeToFinish();
 };
@@ -81,7 +79,7 @@ class Barracks: public Entity,
     private:
         bool isProducing = false;
         int currentProgress = 0;
-        const int maxProgress = 25; // Build time of scv
+        const int maxProgress = 25; // Build time of a marine
 
     /* class Entity */
     public:
@@ -94,8 +92,7 @@ class Barracks: public Entity,
 
     /* class Producer */
     public:
-        virtual bool canProduce(EntityType type, GameState& state);
-        virtual void produce(EntityType type, GameState& state);
+        virtual bool produceEntityIfPossible(EntityType type, GameState& state);
         virtual void applyChronoBoost();
         virtual long getTimeToFinish();
 };
@@ -123,8 +120,7 @@ class Factory : public Entity,
 
     /* class Producer */
     public:
-        virtual bool canProduce(EntityType type, GameState &state);
-        virtual void produce(EntityType type, GameState &state);
+        virtual bool produceEntityIfPossible(EntityType type, GameState &state);
         virtual long getTimeToFinish() override;
         virtual void applyChronoBoost() override;
 
@@ -156,9 +152,7 @@ class Starport : public Entity,
         virtual EntityType getType() override;
 
 
-    virtual bool canProduce(EntityType type, GameState &state) override;
-
-    virtual void produce(EntityType type, GameState &state) override;
+    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
 
     virtual long getTimeToFinish() override;
 
@@ -276,8 +270,7 @@ class PlanetaryFortress : public Entity,
 		
 		/* class Producer */
     public:
-        virtual bool canProduce(EntityType type, GameState &state);
-        virtual void produce(EntityType type, GameState &state);
+        virtual bool produceEntityIfPossible(EntityType type, GameState &state);
         virtual long getTimeToFinish() override;
         virtual void applyChronoBoost() override;
 	
