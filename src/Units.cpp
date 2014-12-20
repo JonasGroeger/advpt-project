@@ -216,6 +216,11 @@ void Barracks::update(GameState& state)
 
 bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
 {
+    if (isProducing)
+    {
+        return false;
+    }
+
     switch(type){
         case EntityType::TERRAN_MARINE:
             if(state.hasEnough(50, 0, 1)){
