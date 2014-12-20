@@ -2,9 +2,9 @@
 
 #include "Entity.hpp"
 
-class Marine : public Entity
+class Marine: public Entity
 {
+    /* class Entity */
 public:
-    Marine();
-    ~Marine();
+    virtual EntityType getType();
 };
