@@ -79,7 +79,7 @@ class Barracks: public Entity,
     private:
         bool isProducing = false;
         int currentProgress = 0;
-        const int maxProgress = 25; // Build time of scv
+        const int maxProgress = 25; // Build time of a marine
 
     /* class Entity */
     public:

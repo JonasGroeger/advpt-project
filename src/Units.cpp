@@ -116,6 +116,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
         state.consumeEnoughVespine(gas);
         state.consumeEnoughSupply(supply);
         state.notifyEntityIsBeingProduced(type);
+        product = type;
         return true;
     }
 }
