@@ -1,5 +1,6 @@
 #pragma once
 
+#include <entities/SimpleProducer.hpp>
 #include "Entity.hpp"
 #include "entities/UpgradableProducer.hpp"
 
@@ -57,4 +58,25 @@ class Starport : public Entity,
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
         virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+};
+
+
+class BarracksTechLab : public Entity,
+                       public SimpleProducer
+{
+    /* class Entity */
+    public:
+        BarracksTechLab();
+        virtual EntityType getType() override;
+        virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
+};
+
+class BarracksReactor : public Entity,
+                        public SimpleProducer
+{
+    public:
+        BarracksReactor();
+        virtual EntityType getType() override;
+        virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
+
 };

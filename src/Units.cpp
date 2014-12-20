@@ -179,10 +179,6 @@ EntityType Banshee::getType() {
 	return TERRAN_BANSHEE;
 }
 
-EntityType BarracksReactor::getType() {
-	return TERRAN_BARRACKS_REACTOR;
-}
-
 EntityType Bunker::getType() {
 	return TERRAN_BUNKER;
 }
@@ -260,9 +256,6 @@ EntityType SensorTower::getType() {
 	return TERRAN_SENSOR_TOWER;
 }
 
-EntityType BarracksTechLab::getType() {
-	return TERRAN_BARRACKS_TECH_LAB;
-}
 
 bool PlanetaryFortress::produceEntityIfPossible(EntityType type, GameState &state)
 {

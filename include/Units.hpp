@@ -181,20 +181,6 @@ class SensorTower : public Entity
 	
 };
 
-class BarracksReactor : public Entity
-{
-	public:
-		virtual EntityType getType() override;
-	
-};
-
-class BarracksTechLab : public Entity
-{
-	public:
-		virtual EntityType getType() override;
-	
-};
-
 class GhostAcademy : public Entity
 {
 	public:
