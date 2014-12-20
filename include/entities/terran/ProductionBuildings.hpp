@@ -32,7 +32,6 @@ class Barracks: public Entity,
 };
 
 class Factory : public Entity,
-                //public Upgradable,
                 public UpgradableProducer
 {
     /* class Entity */
@@ -47,7 +46,6 @@ class Factory : public Entity,
 };
 
 class Starport : public Entity,
-                 //public Upgradable,
                  public UpgradableProducer
 {
     /* class Entity */

@@ -4,7 +4,7 @@
 
 CommandCenter::CommandCenter()
 {
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | UPGRADABLE_INTERFACE;
 }
 
 EntityType CommandCenter::getType()
@@ -45,14 +45,29 @@ bool CommandCenter::upgradeIfPossible(EntityType type, GameState &state)
     switch (type)
     {
         case TERRAN_ORBITAL_COMMAND:
-            return true;
+            if (state.hasEnoughMinerals(150))
+            {
+                this->state = UPState::UPGRADING;
+                product = type;
+                maxProgress = 35;
+                state.consumeEnoughMinerals(150);
+                return true;
+            }
             break;
         case TERRAN_PLANETARY_FORTRESS:
-            return true;
+            if (state.hasEnough(150, 150, 0) && state.hasEntity(TERRAN_ENGINEERING_BAY))
+            {
+                product = type;
+                maxProgress = 50;
+                state.consumeEnoughMinerals(150);
+                state.consumeEnoughVespine(150);
+                return true;
+            }
             break;
         default:
             return false;
     }
+    return false;
 }
 
 Barracks::Barracks()

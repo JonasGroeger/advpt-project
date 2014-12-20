@@ -1,3 +1,2 @@
 engineering_bay
 planetary_fortress
-scv
