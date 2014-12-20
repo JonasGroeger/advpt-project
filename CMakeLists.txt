@@ -49,7 +49,7 @@ set( HPP_FILES
   include/EntityType.hpp
   include/Game.hpp
   include/GameState.hpp
-  include/Producer.hpp
+  include/entities/Producer.hpp
   include/Updatable.hpp
   include/Upgradable.hpp
   include/Units.hpp

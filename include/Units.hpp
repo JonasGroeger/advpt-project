@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 #include "EntityType.hpp"
-#include "Producer.hpp"
+#include "entities/Producer.hpp"
 #include "Upgradable.hpp"
 #include "Updatable.hpp"
 #include "GameState.hpp"

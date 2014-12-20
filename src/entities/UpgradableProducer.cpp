@@ -1,11 +1,6 @@
 #include "entities/UpgradableProducer.hpp"
 #include "GameState.hpp"
 
-bool UpgradableProducer::isBusy()
-{
-    return state == UPState::PRODUCING || state == UPState::UPGRADING;
-}
-
 void UpgradableProducer::update(GameState& gameState)
 {
     switch(this->state)

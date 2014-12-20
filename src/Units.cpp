@@ -28,7 +28,6 @@ void SCV::update(GameState& state)
             if (currentProgress >= maxProgress)
             {
                 state.addEntity(product, 1);
-                isProducing = false;
                 if (state.hasOpenVespeneSlot())
                 {
                     w->setTypeOfWork(TypeOfWork::Vespine);
