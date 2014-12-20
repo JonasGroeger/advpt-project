@@ -19,6 +19,15 @@ void UpgradableProducer::update(GameState& gameState)
                 this->state = UPState::IDLE;
             }
         break;
+        case UPState::UPGRADING:
+            currentProgress ++;
+
+            if (currentProgress >= maxProgress)
+            {
+                // TODO change this to changeEntity when changeEntity is implemented
+                gameState.addEntity(product, 1);
+                this->state = UPState::IDLE;
+            }
         default:
             return;
     }
