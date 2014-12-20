@@ -10,7 +10,6 @@ class CommandCenter: public Entity,
     /* class Entity */
     public:
         CommandCenter();
-        virtual EntityType getType() override;
 
     /* class UpgradableProducer */
     public:
@@ -24,7 +23,6 @@ class Barracks: public Entity,
     /* class Entity */
     public:
         Barracks();
-        virtual EntityType getType() override;
 
     /* class UpgradableProducer */
     public:
@@ -38,7 +36,6 @@ class Factory : public Entity,
     /* class Entity */
     public:
         Factory();
-        virtual EntityType getType() override;
 
     /* class UpgradableProducer */
     public:
@@ -52,31 +49,8 @@ class Starport : public Entity,
     /* class Entity */
     public:
         Starport();
-        virtual EntityType getType() override;
-    
     /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
         virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
-};
-
-
-class BarracksTechLab : public Entity,
-                       public SimpleProducer
-{
-    /* class Entity */
-    public:
-        BarracksTechLab();
-        virtual EntityType getType() override;
-        virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-};
-
-class BarracksReactor : public Entity,
-                        public SimpleProducer
-{
-    public:
-        BarracksReactor();
-        virtual EntityType getType() override;
-        virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
 };
