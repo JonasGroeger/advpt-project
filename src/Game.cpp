@@ -7,7 +7,14 @@ bool Game::executeBuildStep(BuildStep* step)
     // Switch is not possible here
     if (step->getBuildStepType() == BuildStepType::UPGRADE)
     {
-        std::cerr << "upgrading a: ";
+        auto upgradables = currentState.getUpgradeables();
+        for (Upgradable *upgrd : upgradables)
+        {
+            if (upgrd->upgradeIfPossible(step->getEntityType(), currentState))
+            {
+                return true;
+            }
+        }
     }
     else if (step->getBuildStepType() == BuildStepType::PRODUCE)
     {

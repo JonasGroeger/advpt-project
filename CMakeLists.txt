@@ -70,7 +70,6 @@ set( CPP_FILES
   src/Updatable.cpp
   src/Units.cpp
   src/Entity.cpp
-  src/Upgradable.cpp
   src/entities/Worker.cpp
   src/entities/SimpleProducer.cpp
   src/entities/terran/Marine.cpp
