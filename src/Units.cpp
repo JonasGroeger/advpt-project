@@ -60,6 +60,9 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             minerals = 75;
             break;
         case EntityType::TERRAN_BARRACKS:
+            if(!state.hasEntity(TERRAN_SUPPLY_DEPOT)){
+                return false;
+            }
             maxProgress = 65;
             minerals = 150;
             break;
@@ -68,44 +71,71 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             minerals = 400;
             break;
         case EntityType::TERRAN_GHOST_ACADEMY:
+            if(!state.hasEntity(TERRAN_BARRACKS)){
+                return false;
+            }
             maxProgress = 40;
             minerals = 150;
             gas = 50;
             break;
         case EntityType::TERRAN_BUNKER:
+            if(!state.hasEntity(TERRAN_BARRACKS)){
+                return false;
+            }
             maxProgress = 40;
             minerals = 100;
             break;
         case EntityType::TERRAN_FACTORY:
+            if(!state.hasEntity(TERRAN_BARRACKS)){
+                return false;
+            }
             maxProgress = 60;
             minerals = 150;
             gas = 100;
             break;
         case EntityType::TERRAN_ENGINEERING_BAY:
+            if(!state.hasEntity(TERRAN_COMMAND_CENTER)){
+                return false;
+            }
             maxProgress = 30;
             minerals = 125;
             break;
         case EntityType::TERRAN_ARMORY:
+            if(!state.hasEntity(TERRAN_FACTORY)){
+                return false;
+            }
             maxProgress = 35;
             minerals = 150;
             gas = 100;
             break;
         case EntityType::TERRAN_STARPORT:
+            if(!state.hasEntity(TERRAN_FACTORY)){
+                return false;
+            }
             maxProgress = 50;
             minerals = 150;
             gas = 100;
             break;
         case EntityType::TERRAN_FUSION_CORE:
+            if(!state.hasEntity(TERRAN_STARPORT)){
+                return false;
+            }
             maxProgress = 65;
             minerals = 150;
             gas = 150;
             break;
         case EntityType::TERRAN_SENSOR_TOWER:
+            if(!state.hasEntity(TERRAN_ENGINEERING_BAY)){
+                return false;
+            }
             maxProgress = 25;
             minerals = 125;
             gas = 100;
             break;
         case EntityType::TERRAN_MISSILE_TURRET:
+            if(!state.hasEntity(TERRAN_ENGINEERING_BAY)){
+                return false;
+            }
             maxProgress = 25;
             minerals = 100;
             break;
