@@ -1,6 +1,6 @@
 #pragma once
 
-enum TypeOfWork{
+enum class TypeOfWork{
         Idle,
         Vespine,
         Minerals,
