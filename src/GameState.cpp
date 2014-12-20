@@ -1,6 +1,5 @@
-#include <ostream>
-#include <iostream>
 #include "GameState.hpp"
+#include "Game.hpp"
 
 bool GameState::hasEnoughMinerals(unsigned long amount) const
 {
@@ -83,7 +82,6 @@ void GameState::notifyEntityIsBeingProduced(EntityType type){
 
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
-	
 	Entity* new_unit;
     for (unsigned long i = 0; i < amount; i++)
     {
@@ -213,6 +211,11 @@ void GameState::addEntity(EntityType type, unsigned long amount)
         }
 		entities.push_back((new_unit));
 		constructedBitset.set(type);
+
+        if (logger != nullptr)
+        {
+            logger->printBuildEndMessage(type);
+        }
     }
 }
 
@@ -268,4 +271,13 @@ const vector<Producer*>& GameState::getProducers() const
 const vector<Worker*>& GameState::getWorkers() const
 {
     return workers;
+}
+
+void GameState::registerLogger(Game *newLogger)
+{
+    logger = newLogger;
+}
+void GameState::unregisterLogger()
+{
+    logger = nullptr;
 }

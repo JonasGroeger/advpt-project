@@ -124,7 +124,7 @@ GameState& Game::getFinalState()
     return currentState;
 }
 
-void Game::printMessageProlog()
+void Game::printMessageProlog() const
 {
     std::cout << std::left;
     std::cout << std::setw(5);
@@ -132,7 +132,7 @@ void Game::printMessageProlog()
     std::cout << std::setw(14);
 }
 
-void Game::printBuildStartMessage(EntityType type)
+void Game::printBuildStartMessage(EntityType type) const
 {
     printMessageProlog();
     std::cout << "build-start";
@@ -140,7 +140,7 @@ void Game::printBuildStartMessage(EntityType type)
     std::cout << std::endl;
 }
 
-void Game::printBuildEndMessage(EntityType type)
+void Game::printBuildEndMessage(EntityType type) const
 {
     printMessageProlog();
     std::cout << "build-end";
@@ -148,7 +148,8 @@ void Game::printBuildEndMessage(EntityType type)
     std::cout << std::endl;
 }
 
-void Game::printWorkerMessage() {
+void Game::printWorkerMessage() const
+{
     int idleWorkers = 0;
     int vespineWorkers = 0;
     int mineralWorkers = 0;
@@ -179,7 +180,7 @@ void Game::printWorkerMessage() {
     std::cout << std::endl;
 }
 
-void Game::printResourcesMessage()
+void Game::printResourcesMessage() const
 {
     printMessageProlog();
     std::cout << "resources";
@@ -200,4 +201,6 @@ Game::Game(char *file)
     currentState.increaseSupply(200); // TODO 
     currentState.addEntity(TERRAN_SCV, 5);
     currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
+
+    currentState.registerLogger(this);
 }
