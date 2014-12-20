@@ -1,0 +1,8 @@
+scv
+scv
+scv
+barracks
+scv
+scv
+barrack_tech_lab
+reaper

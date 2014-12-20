@@ -69,7 +69,7 @@ bool CommandCenter::upgradeIfPossible(EntityType type, GameState &state)
 
 Barracks::Barracks()
 {
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
+    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | UPGRADABLE_INTERFACE;
     type = TERRAN_BARRACKS;
 }
 
@@ -181,10 +181,11 @@ bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
     if(state.hasEnough(minerals, gas, 0)){
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
-        state.consumeEnoughVespine(gas);
+        state.consumeEnoughVespine(0);
         product = type;
         currentProgress = 0;
         maxProgress = time;
+        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
@@ -209,8 +210,7 @@ void Barracks::update(GameState& state){
             if (currentProgress >= maxProgress)
             {
                 //just switch our own entitytype and notify gamestate of the new type
-                Entity* ourEntity = dynamic_cast<Entity*>(this);
-                ourEntity->setType(product);
+                this->setType(product);
                 state.setAvailableEntityType(product);
                 //if we have a reactor as upgrade add a second instance to gamestate since
                 //reactor doubles the capacity
@@ -221,6 +221,8 @@ void Barracks::update(GameState& state){
                 }
                 //gameState.addEntity(product, 1);
                 this->state = UPState::IDLE;
+                printBuildEndMessage(product, state.getSimulationTime());
+
             }
         default:
             return;

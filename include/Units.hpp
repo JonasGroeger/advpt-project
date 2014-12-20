@@ -80,7 +80,9 @@ class Bunker : public Entity
 class Reaper : public Entity
 {
 	public:
-
+        Reaper(){
+            type = TERRAN_REAPER;
+        }
 };
 
 class Ghost : public Entity

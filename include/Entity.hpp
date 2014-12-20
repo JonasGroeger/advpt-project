@@ -24,7 +24,7 @@ protected:
 
 public:
     virtual EntityType getType(){ return this->type; };
-    virtual void setType(EntityType newType){ this->type = type; }
+    virtual void setType(EntityType newType){ this->type = newType; }
     virtual ~Entity() = 0;
 
     /*

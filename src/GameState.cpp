@@ -249,6 +249,13 @@ void GameState::addEntityToVectors(Entity* entity)
 			worker->setTypeOfWork(TypeOfWork::Minerals);
 		}
 	}
+
+	if (logger != nullptr)
+	{
+		logger->printBuildEndMessage(entity->getType());
+	}
+
+
 }
 
 

@@ -20,7 +20,11 @@ class UpgradableProducer : public Producer,
 {
 /* Updatable */
 public:
-    void update(GameState& state);
+    virtual void update(GameState& state);
+    virtual void printMessageProlog(unsigned int time) const;
+    virtual void printBuildStartMessage(EntityType type, unsigned int time) const;
+    virtual void printBuildEndMessage(EntityType type, unsigned int time) const;
+
 
 /* Producer */
 public:
