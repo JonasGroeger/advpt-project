@@ -34,7 +34,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
 {
     Worker* w = dynamic_cast<Worker*>(this);
     TypeOfWork current = w->getTypeOfWork();
-    if(current == TypeOfWork::Producing){
+    if(current == TypeOfWork::Producing)
+    {
         return false;
     }
 
@@ -42,9 +43,9 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     unsigned long minerals = 0;
     unsigned long gas = 0;
     unsigned long supply = 0;
-    bool success = true;
 
-    switch(type){
+    switch(type)
+    {
         case EntityType::TERRAN_SUPPLY_DEPOT:
             maxProgress = 30;
             minerals = 100;
@@ -55,7 +56,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             break;
         case EntityType::TERRAN_BARRACKS:
             maxProgress = 65;
-            minerals = 100;
+            minerals = 150;
             break;
         case EntityType::TERRAN_COMMAND_CENTER:
             maxProgress = 100;
@@ -104,15 +105,12 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             minerals = 100;
             break;
         default:
-            success = false;
-    }
-    if(!success){
-        //failed, reset current type of work
-        return false;
+            return false;
     }
 
-    //we could poduce that thing
-    if(state.hasEnough(minerals, gas, supply)){
+    //we can produce that thing
+    if (state.hasEnough(minerals, gas, supply))
+    {
         w->setTypeOfWork(TypeOfWork::Producing);
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
