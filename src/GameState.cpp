@@ -87,6 +87,10 @@ void GameState::notifyEntityIsBeingProduced(EntityType type){
     entitiesInConstruction.set(type);
 }
 
+void GameState::setAvailableEntityType(EntityType type){
+	constructedBitset.set(type);
+}
+
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
 	Entity* new_unit;

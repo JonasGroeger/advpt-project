@@ -89,6 +89,7 @@ public:
     unsigned long getAvailableSupply() const;
 
     void notifyEntityIsBeingProduced(EntityType type);
+    void setAvailableEntityType(EntityType type);
 
     //this method sets the value of type to 1 in the entitiesBeingProduced bitset
     void addEntity(EntityType type, unsigned long amount);
