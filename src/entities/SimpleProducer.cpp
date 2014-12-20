@@ -11,7 +11,7 @@ void SimpleProducer::update(GameState& state)
 
             if (currentProgress >= maxProgress)
             {
-                gameState.addEntity(product, 1);
+                state.addEntity(product, 1);
                 this->state = UPState::IDLE;
             }
             break;

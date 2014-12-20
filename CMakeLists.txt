@@ -55,6 +55,7 @@ set( HPP_FILES
   include/Units.hpp
   include/TypeOfWork.hpp
   include/entities/Worker.hpp
+  include/entities/SimpleProducer.hpp
   include/entities/UpgradableProducer.hpp
   include/entities/terran/Marine.hpp
   include/entities/terran/ProductionBuildings.hpp
@@ -71,6 +72,7 @@ set( CPP_FILES
   src/Units.cpp
   src/Entity.cpp
   src/entities/Worker.cpp
+  src/entities/SimpleProducer.cpp
   src/entities/UpgradableProducer.cpp
   src/entities/terran/Marine.cpp
   src/entities/terran/ProductionBuildings.cpp
