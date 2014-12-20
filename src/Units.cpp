@@ -117,6 +117,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
         currentProgress = 0;
         return true;
     }
+    return false;
 }
 
 
@@ -135,124 +136,9 @@ void SCV::applyChronoBoost()
 {
 }
 
-EntityType CommandCenter::getType()
-{
-    return TERRAN_COMMAND_CENTER;
-}
-
-void CommandCenter::update(GameState& state)
-{
-    if (isProducing)
-    {
-        currentProgress ++;
-
-        if (currentProgress >= maxProgress)
-        {
-            state.addEntity(TERRAN_SCV, 1);
-            isProducing = false;
-        }
-    }
-}
-
-bool CommandCenter::produceEntityIfPossible(EntityType type, GameState& state)
-{
-    if(isProducing){
-        return false;
-    }
-
-    switch(type){
-        case EntityType::TERRAN_SCV:
-            if(state.hasEnough(50, 0, 1)){
-                state.consumeEnoughMinerals(50);
-                state.consumeEnoughVespine(0);
-                state.consumeEnoughSupply(1);
-                state.notifyEntityIsBeingProduced(type);
-                isProducing = true;
-                currentProgress = 0;
-                return true;
-            }
-            break;
-        default:
-            return false;
-    }
-    return false;
-}
-
-long CommandCenter::getTimeToFinish()
-{
-    if (isProducing)
-    {
-        return maxProgress - currentProgress;
-    }
-    return 0;
-}
-
-void CommandCenter::applyChronoBoost()
-{
-}
-
 EntityType SupplyDepot::getType()
 {
     return TERRAN_SUPPLY_DEPOT;
-}
-
-EntityType Barracks::getType()
-{
-    return TERRAN_BARRACKS;
-}
-
-void Barracks::update(GameState& state)
-{
-    if (isProducing)
-    {
-        currentProgress ++;
-        if (currentProgress >= maxProgress)
-        {
-            state.addEntity(TERRAN_MARINE, 1);
-            isProducing = false;
-        }
-    }
-}
-
-bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
-{
-    if (isProducing)
-    {
-        return false;
-    }
-
-    switch(type){
-        case EntityType::TERRAN_MARINE:
-            if(state.hasEnough(50, 0, 1)){
-                isProducing = true;
-                state.consumeEnoughMinerals(50);
-                state.notifyEntityIsBeingProduced(type);
-                currentProgress = 0;
-                return true;
-            }
-            break;
-        default:
-            return false;
-    }
-    return false;
-}
-
-void Barracks::applyChronoBoost()
-{
-}
-
-long Barracks::getTimeToFinish()
-{
-    if (isProducing)
-    {
-        return maxProgress - currentProgress;
-    }
-    return 0;
-}
-
-EntityType Factory::getType()
-{
-    return TERRAN_FACTORY;
 }
 
 EntityType Refinery::getType()
@@ -265,93 +151,16 @@ EntityType Hellion::getType()
     return TERRAN_HELLION;
 }
 
-EntityType Starport::getType()
-{
-    return TERRAN_STARPORT;
-}
-
 EntityType BattleCruiser::getType()
 {
     return TERRAN_BATTLECRUISER;
 }
 
-Starport::Starport()
-{
-    interfaceBitmask = PRODUCER_INTERFACE | UPGRADABLE_INTERFACE | UPDATABLE_INTERFACE;
-}
-
-Factory::Factory()
-{
-    interfaceBitmask = PRODUCER_INTERFACE | UPGRADABLE_INTERFACE | UPDATABLE_INTERFACE;
-}
-
 /* TODO: IMPLEMENT the functions below, as they are only dummies */
-
-bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
-{
-}
-
-long Starport::getTimeToFinish()
-{
-    // TODO: Implement
-    return Producer::getTimeToFinish();
-}
-
-void Starport::applyChronoBoost()
-{
-    // TODO: Implement
-    Producer::applyChronoBoost();
-}
-
-bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
-{
-}
-
-void Factory::update(GameState &state)
-{
-    // TODO: Implement
-    Updatable::update(state);
-}
-
-void Factory::applyChronoBoost()
-{
-    // TODO: Implement
-    Producer::applyChronoBoost();
-}
-
-long Factory::getTimeToFinish()
-{
-    // TODO: Implement
-    return Producer::getTimeToFinish();
-}
-
-bool Factory::isUpgradable(GameState& state, EntityType type){
-    return false;
-}
-void Factory::upgrade(GameState& state, EntityType to){
-
-}
-
-bool Starport::isUpgradable(GameState& state, EntityType type){
-    return false;
-}
-void Starport::upgrade(GameState& state, EntityType to){
-
-}
 
 SCV::SCV()
 {
     interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | WORKER_INTERFACE;
-}
-
-CommandCenter::CommandCenter()
-{
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
-}
-
-Barracks::Barracks()
-{
-    interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
 }
 
 EntityType Armory::getType() {

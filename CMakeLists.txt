@@ -55,7 +55,9 @@ set( HPP_FILES
   include/Units.hpp
   include/TypeOfWork.hpp
   include/entities/Worker.hpp
+  include/entities/SimpleProducer.hpp
   include/entities/terran/Marine.hpp
+  include/entities/terran/ProductionBuildings.hpp
 )
 
 # ... and source files ...
@@ -70,7 +72,9 @@ set( CPP_FILES
   src/Entity.cpp
   src/Upgradable.cpp
   src/entities/Worker.cpp
+  src/entities/SimpleProducer.cpp
   src/entities/terran/Marine.cpp
+  src/entities/terran/ProductionBuildings.cpp
 )
 
 source_group( "src" FILES ${CPP_FILES} )

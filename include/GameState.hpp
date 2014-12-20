@@ -8,6 +8,7 @@
 #include "Entity.hpp"
 #include "EntityType.hpp"
 #include "entities/Worker.hpp"
+#include "entities/terran/ProductionBuildings.hpp"
 
 class Game;
 
