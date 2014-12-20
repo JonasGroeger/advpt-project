@@ -3,7 +3,7 @@
 
 class Entity {
 protected:
-    EntityType type;
+    EntityType type = NONE;
 
     //00000001
     unsigned char WORKER_INTERFACE = 1 << 0;
@@ -24,7 +24,7 @@ protected:
 
 public:
     virtual EntityType getType(){ return this->type; };
-    virtual void setType(EntityType newType);
+    virtual void setType(EntityType newType){ this->type = type; }
     virtual ~Entity() = 0;
 
     /*
