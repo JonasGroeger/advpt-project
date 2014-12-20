@@ -1,4 +1,5 @@
 #include <entities/terran/Marine.hpp>
+#include <entities/terran/Barracks.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
 
