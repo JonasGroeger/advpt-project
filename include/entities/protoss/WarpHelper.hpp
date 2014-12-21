@@ -22,9 +22,13 @@ private :
             product = type;
         }
 
+        int getTimeToFinish(){
+            return warpTime - doneTime;
+        }
+
         bool isFinished()
         {
-            return warpTime >= doneTime;
+            return getTimeToFinish() <= 0;
         }
 
         bool update()
@@ -36,6 +40,8 @@ private :
             return product;
         }
     };
+
+    long maxTime = 0;
     std::vector<WarpTask*> warpTasks;
     static WarpHelper *_instance;
 
@@ -62,7 +68,7 @@ public :
 
     /* Producer */
     virtual bool produceEntityIfPossible(EntityType type, GameState& state);
-    virtual long getTimeToFinish() {return 0;}
+    virtual long getTimeToFinish();
 
 };
 

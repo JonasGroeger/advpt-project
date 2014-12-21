@@ -4,22 +4,33 @@ WarpHelper* WarpHelper::_instance = 0;
 
 /* Updatable */
 void WarpHelper::update(GameState &state){
-    auto task = warpTasks.begin();
-    while (task != std::end(warpTasks)) {
+    auto it = warpTasks.begin();
+    while (it != std::end(warpTasks)) {
         // do some stuff
-        if((*task)->isFinished()){
-            state.addEntity((*task)->getType(), 1);
-            warpTasks.erase(task);
+        if((*it)->isFinished()){
+            state.addEntity((*it)->getType(), 1);
+
+            maxTime = ((*it)->getTimeToFinish() > maxTime)
+                    ? (*it)->getTimeToFinish()
+                    : maxTime;
+
+            WarpTask* toDelete = *it;
+            warpTasks.erase(it);
+            delete(toDelete);
         }
         else{
-            (*task)->update();
+            (*it)->update();
         }
-        task++;
+        it++;
     }
 }
 
 bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state){
     //TODO
+}
+
+long WarpHelper::getTimeToFinish(){
+    return maxTime;
 }
 
 
