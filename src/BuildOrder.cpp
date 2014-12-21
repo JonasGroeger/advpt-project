@@ -29,7 +29,13 @@ bool BuildOrder::doSanityCheck()
     EntityType race = Entity::typeToRace(buildSteps[0]->getEntityType());
     for (BuildStep* step : buildSteps)
     {
-        if (race != Entity::typeToRace(step->getEntityType()))
+        EntityType stepType = step->getEntityType();
+        if (stepType == NONE)
+        {
+            throw std::invalid_argument("Did not recognize entityType");
+        }
+
+        if (race != Entity::typeToRace(stepType))
         {
             throw std::invalid_argument("Race mismatch: TODO MEANINGFUL ERROR MESSAGE");
         }
