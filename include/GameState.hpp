@@ -59,9 +59,9 @@ public:
 
     //This bitset contains a setted bit if this entity is already created by us
     //it is initialized by 50 to be sure to have enough capacity for our terran entities
-    std::bitset<50> constructedBitset = 0;
+    std::bitset<100> constructedBitset = 0;
     //see above bitset comment - except this bitset holds entities not finished but in construction
-    std::bitset<50> entitiesInConstruction = 0;
+    std::bitset<100> entitiesInConstruction = 0;
     
     //All methods here receive the real value they need as we have no floats here
     bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
