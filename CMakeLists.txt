@@ -59,6 +59,7 @@ set( HPP_FILES
   include/entities/terran/Units.hpp
   include/entities/terran/ProductionBuildings.hpp
   include/entities/protoss/Units.hpp
+  include/entities/protoss/Probe.hpp
   include/entities/protoss/ProductionBuildings.hpp
   include/entities/protoss/WarpHelper.hpp
   include/entities/zerg/Units.hpp
@@ -79,6 +80,7 @@ set( CPP_FILES
   src/entities/terran/Units.cpp
   src/entities/terran/ProductionBuildings.cpp
   src/entities/protoss/Units.cpp
+  src/entities/protoss/Probe.cpp
   src/entities/protoss/ProductionBuildings.cpp
   src/entities/protoss/WarpHelper.cpp
   src/entities/zerg/Units.cpp
