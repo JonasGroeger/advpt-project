@@ -48,7 +48,8 @@ private :
 
 protected:
     WarpHelper(){
-        this->type = PROTOSS_WARP_HELPER;
+        type = PROTOSS_WARP_HELPER;
+        interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
     }
 
 public :
