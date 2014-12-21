@@ -26,7 +26,7 @@ bool BuildOrder::doSanityCheck()
         throw std::invalid_argument("There are no steps in the build list!");
     }
 
-    EntityType race = Entity::typeToRace(buildSteps[0]->getEntityType());
+    this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
     for (BuildStep* step : buildSteps)
     {
         EntityType stepType = step->getEntityType();
@@ -35,7 +35,7 @@ bool BuildOrder::doSanityCheck()
             throw std::invalid_argument("Did not recognize entityType");
         }
 
-        if (race != Entity::typeToRace(stepType))
+        if (this->race != Entity::typeToRace(stepType))
         {
             throw std::invalid_argument("Race mismatch: TODO MEANINGFUL ERROR MESSAGE");
         }
@@ -68,4 +68,9 @@ void BuildOrder::advance()
     {
         ++iterator;
     }
+}
+
+EntityType BuildOrder::getRace()
+{
+    return this->race;
 }

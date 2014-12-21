@@ -5,6 +5,7 @@
 #include <vector>
 
 class WarpHelper : public Updatable,
+                   public Entity,
                    public Producer
 {
 
@@ -47,7 +48,7 @@ private :
 
 protected:
     WarpHelper(){
-
+        this->type = PROTOSS_WARP_HELPER;
     }
 
 public :
@@ -62,7 +63,6 @@ public :
 
     virtual void warpBuilding(int duration, EntityType type, GameState& state);
 
-
     /* Updatable */
     virtual void update(GameState &state);
 
@@ -71,6 +71,3 @@ public :
     virtual long getTimeToFinish();
 
 };
-
-
-

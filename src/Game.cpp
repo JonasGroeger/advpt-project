@@ -197,12 +197,31 @@ Game::Game(char *file)
     :buildOrder(BuildOrder(file))
 {
     //TODO maxSimTime == 1000 should fit this assignments requirements
-    currentState.setMaxSimTime(3000);
+    //
+    switch (buildOrder.getRace())
+    {
+        case PROTOSS:
+            currentState.addEntity(PROTOSS_PROBE, 5);
+            currentState.addEntity(PROTOSS_NEXUS, 1);
+            currentState.addCreatedEntity(WarpHelper::Instance());
+            break;
+        case TERRAN:
+            currentState.addEntity(TERRAN_SCV, 5);
+            currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
+            break;
+        case ZERG:
+            currentState.addEntity(ZERG_DRONE, 5);
+            currentState.addEntity(ZERG_HATCHERY, 1);
+            currentState.addEntity(ZERG_OVERLORD, 1);
+            break;
+        default:
+            throw invalid_argument("Uncrecognized race");
+            break;
+    }
 
+    currentState.setMaxSimTime(3000);
     currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
-    currentState.addEntity(TERRAN_SCV, 5);
-    currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
-    currentState.consumeEnoughSupply(5 * 1); // Each SCV consumes 1 supply 
+    currentState.consumeEnoughSupply(5 * 1); // Each Worker consumes 1 supply 
 
     currentState.registerLogger(this);
 }
