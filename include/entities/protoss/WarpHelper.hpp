@@ -32,7 +32,7 @@ private :
             return getTimeToFinish() <= 0;
         }
 
-        bool update()
+        void update()
         {
             doneTime++;
         }
