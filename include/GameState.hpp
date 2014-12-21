@@ -79,6 +79,7 @@ public:
     void consumeEnoughMinerals(unsigned long amount);
     void consumeEnoughVespine(unsigned long amount);
     void consumeEnoughSupply(unsigned long amount);
+    void consumeEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
 
     // Use amount * FACTOR
     void addMineralsWithFactor(unsigned long amount);

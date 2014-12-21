@@ -47,6 +47,13 @@ void GameState::consumeEnoughSupply(unsigned long amount)
     usedSupply += amount;
 }
 
+void GameState::consumeEnough(unsigned long minerals, unsigned long vespine, unsigned long supply)
+{
+    consumeEnoughMinerals(minerals);
+    consumeEnoughVespine(vespine);
+    consumeEnoughSupply(supply);
+}
+
 void GameState::addMineralsWithFactor(unsigned long amount)
 {
     minerals += amount;
