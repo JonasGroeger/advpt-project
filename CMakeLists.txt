@@ -52,11 +52,11 @@ set( HPP_FILES
   include/entities/Producer.hpp
   include/Updatable.hpp
   include/Upgradable.hpp
-  include/Units.hpp
   include/TypeOfWork.hpp
   include/entities/Worker.hpp
   include/entities/SimpleProducer.hpp
   include/entities/UpgradableProducer.hpp
+  include/entities/terran/Units.hpp
   include/entities/terran/ProductionBuildings.hpp
 )
 
@@ -68,11 +68,10 @@ set( CPP_FILES
   src/GameState.cpp
   src/main.cpp
   src/Updatable.cpp
-  src/Units.cpp
-  src/Entity.cpp
   src/entities/Worker.cpp
   src/entities/SimpleProducer.cpp
   src/entities/UpgradableProducer.cpp
+  src/entities/terran/Units.cpp
   src/entities/terran/ProductionBuildings.cpp
 )
 
