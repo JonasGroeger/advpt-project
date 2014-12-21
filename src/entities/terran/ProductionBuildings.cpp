@@ -34,7 +34,6 @@ bool CommandCenter::produceEntityIfPossible(EntityType type, GameState& state)
     return false;
 }
 
-// TODO
 bool CommandCenter::upgradeIfPossible(EntityType type, GameState &state)
 {
     switch (type)
@@ -64,9 +63,6 @@ bool CommandCenter::upgradeIfPossible(EntityType type, GameState &state)
     }
     return false;
 }
-
-
-
 
 Barracks::Barracks()
 {
@@ -295,10 +291,6 @@ bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
     switch(type)
     {
         case EntityType::TERRAN_HELLION:
-            minerals = 100;
-            gas = 0;
-            supply = 2;
-            time = 30;
             if (state.hasEnough(100, 0, 2))
             {
                 state.consumeEnoughMinerals(100);
@@ -344,7 +336,6 @@ bool Factory::produceEntityIfPossible(EntityType type, GameState &state)
     {
         return false;
     }
-
 
     if (state.hasEnough(minerals, gas, supply))
     {
@@ -412,37 +403,85 @@ Starport::Starport()
 
 bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
 {
-    if(isBusy())
+    if (isBusy())
+    {
+        return false;
+    }
+    
+    EntityType ownType = this->getType();
+    int minerals = 0, gas = 0, supply = 0, time = 0;
+    switch(type)
+    {
+        case EntityType::TERRAN_MEDIVAC:
+            if (state.hasEnough(100, 100, 2))
+            {
+                state.consumeEnough(100, 100, 2);
+                state.notifyEntityIsBeingProduced(type);
+                this->state = UPState::PRODUCING;
+                currentProgress = 0;
+                maxProgress = 42;
+                product = type;
+                return true;
+            }
+            break;
+        case EntityType::TERRAN_VIKING:
+            if (state.hasEnough(100, 75, 2))
+            {
+                state.consumeEnough(100, 75, 2);
+                state.notifyEntityIsBeingProduced(type);
+                this->state = UPState::PRODUCING;
+                currentProgress = 0;
+                maxProgress = 42;
+                product = type;
+                return true;
+            }
+            break;
+        default:
+            break;
+    }
+
+    if (ownType == TERRAN_STARPORT_TECH_LAB)
+    {
+        switch (type)
+        {
+            case EntityType::TERRAN_RAVEN:
+                minerals = 100;
+                gas = 200;
+                time = 60;
+                supply = 2;
+                break;
+            case EntityType::TERRAN_BANSHEE:
+                minerals = 150;
+                gas = 100;
+                time = 60;
+                supply = 3;
+                break;
+            case EntityType::TERRAN_BATTLECRUISER:
+                if (!state.hasEntity(EntityType::TERRAN_FUSION_CORE))
+                {
+                    return false;
+                }
+                minerals = 400;
+                gas = 300;
+                time = 90;
+                supply = 6;
+                break;
+            default:
+                return false;
+        }
+    }
+    else
     {
         return false;
     }
 
-    int minerals = 0, gas = 0, supply = 0;
-    switch(type)
-    {
-        case EntityType::TERRAN_MEDIVAC:
-            minerals = 100;
-            gas = 100;
-            supply = 2;
-            maxProgress = 42;
-            break;
-        case EntityType::TERRAN_VIKING:
-            minerals = 150;
-            gas = 75;
-            supply = 2;
-            maxProgress = 42;
-            break;
-        default:
-            return false;
-    }
-
     if (state.hasEnough(minerals, gas, supply))
     {
-        state.consumeEnoughMinerals(minerals);
-        state.consumeEnoughVespine(gas);
-        state.consumeEnoughSupply(supply);
+        state.consumeEnough(minerals, gas, supply);
+        state.notifyEntityIsBeingProduced(type);
         this->state = UPState::PRODUCING;
         currentProgress = 0;
+        maxProgress = time;
         product = type;
         return true;
     }
@@ -452,7 +491,81 @@ bool Starport::produceEntityIfPossible(EntityType type, GameState &state)
 
 bool Starport::upgradeIfPossible(EntityType type, GameState &state)
 {
-    // TODO
+    if(isBusy() || this->getType() != TERRAN_STARPORT)
+    {
+        return false;
+    }
+
+    unsigned int minerals = 0;
+    unsigned int gas = 0;
+    unsigned int time = 0;
+
+    switch (type)
+    {
+        case TERRAN_STARPORT_TECH_LAB:
+            minerals = 50;
+            gas = 25;
+            time = 25;
+            break;
+        case TERRAN_STARPORT_REACTOR:
+            minerals = 50;
+            gas = 50;
+            time = 50;
+            break;
+        default:
+            return false;
+    }
+
+    if(state.hasEnough(minerals, gas, 0))
+    {
+        this->state = UPState::UPGRADING;
+        state.consumeEnoughMinerals(minerals);
+        state.consumeEnoughVespine(gas);
+        product = type;
+        currentProgress = 0;
+        maxProgress = time;
+        printBuildStartMessage(product, state.getSimulationTime());
+        return true;
+    }
+
     return false;
 }
 
+void Starport::update(GameState& state){
+    switch(this->state)
+    {
+        case UPState::PRODUCING:
+            currentProgress ++;
+
+            if (currentProgress >= maxProgress)
+            {
+                state.addEntity(product, 1);
+                this->state = UPState::IDLE;
+            }
+            break;
+        case UPState::UPGRADING:
+            currentProgress ++;
+
+            if (currentProgress >= maxProgress)
+            {
+                // TODO We should remove ourself from the Upgradables Vector in GameState
+                //just switch our own entitytype and notify gamestate of the new type
+                this->setType(product);
+                state.setAvailableEntityType(product);
+                //if we have a reactor as upgrade add a second instance to gamestate since
+                //reactor doubles the capacity
+                if (product == TERRAN_STARPORT_REACTOR)
+                {
+                    Entity* secondStarport = new Starport();
+                    // TODO remove Upgradable in secondBarrack
+                    secondStarport->setType(TERRAN_STARPORT_REACTOR);
+                    state.addCreatedEntity(secondStarport);
+                }
+
+                this->state = UPState::IDLE;
+                printBuildEndMessage(product, state.getSimulationTime());
+            }
+        default:
+            return;
+    }
+}

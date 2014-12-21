@@ -56,4 +56,5 @@ class Starport : public Entity,
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
         virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+        virtual void update(GameState& state) override;
 };

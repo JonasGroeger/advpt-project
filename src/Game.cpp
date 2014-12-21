@@ -89,6 +89,8 @@ int Game::loop()
     if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
         //buildlist did not succeed so return non zero and print error message
         std::cerr << "Reached maximum Time - aborting..." << std::endl;
+        printWorkerMessage();
+        printResourcesMessage();
         return -1;
     }
     printResourcesMessage();
@@ -192,7 +194,7 @@ void Game::printResourcesMessage() const
 Game::Game(char *file)
     :buildOrder(BuildOrder(file))
 {
-    currentState.setMaxSimTime(1000);
+    currentState.setMaxSimTime(3000);
 
     currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
     currentState.addEntity(TERRAN_SCV, 5);
