@@ -1,4 +1,5 @@
 #include <entities/protoss/ProductionBuildings.hpp>
+#include <entities/protoss/Probe.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
 
@@ -272,7 +273,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new Zealot();
 				break;
 			case PROTOSS_PROBE:
-				//new_unit = new Probe();
+				new_unit = new Probe();
 				break;
 			case PROTOSS_GATEWAY:
 				new_unit = new Gateway();
