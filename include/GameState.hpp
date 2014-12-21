@@ -108,6 +108,7 @@ public:
     void incrementSimulationTime();
 
     bool hasOpenVespeneSlot();
+    void reassignWorkers();
 
     //contains all created entities
     const vector<EntityType>& getEntities(EntityType& type) const;

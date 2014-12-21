@@ -1,7 +1,6 @@
 scv
 scv
 refinery
-refinery
 supply_depot
 scv
 scv

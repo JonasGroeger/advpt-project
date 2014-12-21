@@ -78,6 +78,8 @@ int Game::loop()
             }
         }
 
+        currentState.reassignWorkers();
+
         if(somethingHappened){
             printResourcesMessage();
             printWorkerMessage();
