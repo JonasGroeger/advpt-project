@@ -97,7 +97,6 @@ enum EntityType
     PROTOSS_CYBERNETICS_CORE,
     PROTOSS_ROBOTICS_FACILITY,
     //Not to be implemented (according to assignment)
-    PROTOSS_WARPGATE,
     PROTOSS_HIGH_TEMPLAR,
     PROTOSS_DARK_TEMPLAR,
     PROTOSS_TWILIGHT_COUNCIL,

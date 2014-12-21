@@ -1,3 +1,4 @@
+#include <entities/protoss/ProductionBuildings.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
 
@@ -103,6 +104,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
     for (unsigned long i = 0; i < amount; i++)
     {
 		switch(type) {
+			//TERRAN START
 			case TERRAN_COMMAND_CENTER:
 				new_unit = new CommandCenter();
                 increaseSupply(11);
@@ -213,6 +215,91 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case TERRAN_SENSOR_TOWER:
 				new_unit = new SensorTower();
+				break;
+				//TERRAN END
+			case PROTOSS_FORGE:
+				new_unit = new Forge();
+				break;
+			case PROTOSS_ASSIMILATOR:
+				new_unit = new Assimilator();
+				break;
+			case PROTOSS_COLOSSUS:
+				new_unit = new Colossus();
+				break;
+			case PROTOSS_PYLON:
+				new_unit = new Pylon();
+				break;
+			case PROTOSS_NEXUS:
+				new_unit = new Nexus();
+				break;
+			case PROTOSS_PHOTON_CANNON:
+				new_unit = new PhotonCannon();
+				break;
+			case PROTOSS_PHOENIX:
+				new_unit = new Phoenix();
+				break;
+			case PROTOSS_VOID_RAY:
+				new_unit = new VoidRay();
+				break;
+			case PROTOSS_CARRIER:
+				new_unit = new Carrier();
+				break;
+			case PROTOSS_FLEET_BEACON:
+				new_unit = new FleetBeacon();
+				break;
+			case PROTOSS_DARK_SHRINE:
+				new_unit = new DarkShrine();
+				break;
+			case PROTOSS_TEMPLAR_ARCHIVES:
+				new_unit = new TemplarArchives();
+				break;
+			case PROTOSS_ROBOTICS_BAY:
+				new_unit = new RoboticsBay();
+				break;
+			case PROTOSS_OBSERVER:
+				new_unit = new Observer();
+				break;
+			case PROTOSS_IMMORTAL:
+				new_unit = new Immortal();
+				break;
+			case PROTOSS_WARP_PRISM:
+				new_unit = new WarpPrism();
+				break;
+			case PROTOSS_SENTRY:
+				new_unit = new Sentry();
+				break;
+			case PROTOSS_ZEALOT:
+				new_unit = new Zealot();
+				break;
+			case PROTOSS_PROBE:
+				//new_unit = new Probe();
+				break;
+			case PROTOSS_GATEWAY:
+				new_unit = new Gateway();
+				break;
+			case PROTOSS_CYBERNETICS_CORE:
+				new_unit = new CyberneticsCore();
+				break;
+			case PROTOSS_ROBOTICS_FACILITY:
+				new_unit = new RoboticsFacility();
+				break;
+			case PROTOSS_HIGH_TEMPLAR:
+				new_unit = new HighTemplar();
+				break;
+			case PROTOSS_DARK_TEMPLAR:
+				new_unit = new DarkTemplar();
+				break;
+			case PROTOSS_TWILIGHT_COUNCIL:
+				new_unit = new TwilightCouncil();
+				break;
+			case PROTOSS_STARGATE:
+				new_unit = new Stargate();
+				break;
+			case PROTOSS_ARCHON:
+				new_unit = new Archon();
+				break;
+			case PROTOSS_MOTHERSHIP:
+				new_unit = new MotherShip();
 				break;
 			case NONE:
 				return;
