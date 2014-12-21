@@ -30,40 +30,12 @@ public:
     /*
     The following methods will return if a specific interface is implemented by this instance
     addEntity inside GameState has to check if a entity is of a specific type by calling them
-     */
-    bool isWorker(){
-        bool hasInterface = (interfaceBitmask & WORKER_INTERFACE);
-        return hasInterface;
-    }
+    */
+    bool isWorker();
+    bool isProducer();
+    bool isUpdatable();
+    bool isUpgradable();
 
-    bool isProducer() {
-        bool hasInterface = (interfaceBitmask & PRODUCER_INTERFACE);
-        return hasInterface;
-    };
-
-    bool isUpdatable() {
-        bool hasInterface = (interfaceBitmask & UPDATABLE_INTERFACE);
-        return hasInterface;
-    };
-
-    bool isUpgradable() {
-        bool hasInterface = (interfaceBitmask & UPGRADABLE_INTERFACE);
-        return hasInterface;
-    };
-
-    EntityType getRace()
-    {
-            if (NONE < this->type && this->type <= TERRAN)
-            {
-                    return TERRAN;
-            }
-            else if (TERRAN < this->type && this->type <= ZERG)
-            {
-                    return ZERG;
-            }
-            else if (ZERG < this->type && this->type <= PROTOSS)
-            {
-                    return PROTOSS;
-            }
-    }
+    EntityType getRace();
+    static EntityType typeToRace(EntityType type);
 };
