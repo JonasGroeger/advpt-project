@@ -87,7 +87,8 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
     unsigned long supply = 0;
     unsigned long time = 0;
 
-    switch(type){
+    switch (type)
+    {
         case EntityType::TERRAN_MARINE:
             if(state.hasEnough(50, 0, 1)){
                 state.consumeEnoughMinerals(50);
@@ -100,42 +101,46 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
                 return true;
             }
             break;
-        case EntityType::TERRAN_MARAUDER:
-            if(barrackType != TERRAN_BARRACKS_TECH_LAB){
-                return false;
-            }
-            minerals = 100;
-            gas = 25;
-            time = 30;
-            supply = 2;
-            break;
-        case EntityType::TERRAN_REAPER:
-            if(barrackType != TERRAN_BARRACKS_TECH_LAB){
-                return false;
-            }
-            minerals = 50;
-            gas = 50;
-            time = 45;
-            supply = 1;
-            break;
-
-        case EntityType::TERRAN_GHOST:
-            if(barrackType != TERRAN_BARRACKS_TECH_LAB){
-                return false;
-            }
-            if(!state.hasEntity(EntityType::TERRAN_GHOST_ACADEMY)){
-                return false;
-            }
-            minerals = 200;
-            gas = 100;
-            time = 40;
-            supply = 2;
-            break;
         default:
-            return false;
+            break;
+    }
+    if (barrackType == TERRAN_BARRACKS_TECH_LAB)
+    {
+        switch (type)
+        {
+            case EntityType::TERRAN_MARAUDER:
+                minerals = 100;
+                gas = 25;
+                time = 30;
+                supply = 2;
+                break;
+            case EntityType::TERRAN_REAPER:
+                minerals = 50;
+                gas = 50;
+                time = 45;
+                supply = 1;
+                break;
+
+            case EntityType::TERRAN_GHOST:
+                if(!state.hasEntity(EntityType::TERRAN_GHOST_ACADEMY)){
+                    return false;
+                }
+                minerals = 200;
+                gas = 100;
+                time = 40;
+                supply = 2;
+                break;
+            default:
+                return false;
+        }
+    } 
+    else
+    {
+        return false;
     }
 
-    if(state.hasEnough(minerals, gas, supply)){
+    if (state.hasEnough(minerals, gas, supply))
+    {
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
         state.consumeEnoughSupply(supply);
@@ -152,9 +157,7 @@ bool Barracks::produceEntityIfPossible(EntityType type, GameState& state)
 
 bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
 {
-    if(isBusy()
-            || this->getType() == TERRAN_BARRACKS_TECH_LAB
-            || this->getType() == TERRAN_BARRACKS_REACTOR)
+    if(isBusy() || this->getType() != TERRAN_BARRACKS)
     {
         return false;
     }
@@ -179,10 +182,11 @@ bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
             return false;
     }
 
-    if(state.hasEnough(minerals, gas, 0)){
+    if(state.hasEnough(minerals, gas, 0))
+    {
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
-        state.consumeEnoughVespine(0);
+        state.consumeEnoughVespine(gas);
         product = type;
         currentProgress = 0;
         maxProgress = time;
@@ -210,17 +214,20 @@ void Barracks::update(GameState& state){
 
             if (currentProgress >= maxProgress)
             {
+                // TODO We should remove ourself from the Upgradables Vector in GameState
                 //just switch our own entitytype and notify gamestate of the new type
                 this->setType(product);
                 state.setAvailableEntityType(product);
                 //if we have a reactor as upgrade add a second instance to gamestate since
                 //reactor doubles the capacity
-                if(product == TERRAN_BARRACKS_REACTOR){
+                if (product == TERRAN_BARRACKS_REACTOR)
+                {
                     Entity* secondBarrack = new Barracks();
+                    // TODO remove Upgradable in secondBarrack
                     secondBarrack->setType(TERRAN_BARRACKS_REACTOR);
                     state.addCreatedEntity(secondBarrack);
                 }
-                //gameState.addEntity(product, 1);
+
                 this->state = UPState::IDLE;
                 printBuildEndMessage(product, state.getSimulationTime());
 
@@ -229,9 +236,6 @@ void Barracks::update(GameState& state){
             return;
     }
 }
-
-
-
 
 Factory::Factory()
 {
