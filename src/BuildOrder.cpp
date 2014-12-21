@@ -10,11 +10,36 @@ BuildOrder::BuildOrder(const char *file)
     }
 
     iterator = buildSteps.begin();
+
+    doSanityCheck();
 }
 
 BuildOrder::~BuildOrder()
 {
     std::for_each(buildSteps.begin(), buildSteps.end(), [](BuildStep* bs) {delete bs;});
+}
+
+bool BuildOrder::doSanityCheck()
+{
+    if (buildSteps.size() == 0)
+    {
+        throw std::invalid_argument("There are no steps in the build list!");
+    }
+
+    EntityType race = Entity::typeToRace(buildSteps[0]->getEntityType());
+    for (BuildStep* step : buildSteps)
+    {
+        if (race != Entity::typeToRace(step->getEntityType()))
+        {
+            throw std::invalid_argument("Race mismatch: TODO MEANINGFUL ERROR MESSAGE");
+        }
+    }
+
+    // TODO calculate max time and set this in BuildOrder maybe?
+    // TODO calculate if supply is possible
+    // TODO calculate if basic dependencies are possible
+
+    return true;
 }
 
 BuildStep* BuildOrder::getNextStep()
