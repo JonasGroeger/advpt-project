@@ -194,6 +194,7 @@ void Game::printResourcesMessage() const
 Game::Game(char *file)
     :buildOrder(BuildOrder(file))
 {
+    //TODO maxSimTime == 1000 should fit this assignments requirements
     currentState.setMaxSimTime(3000);
 
     currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
