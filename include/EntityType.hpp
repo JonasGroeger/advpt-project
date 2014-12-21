@@ -102,5 +102,7 @@ enum EntityType
     PROTOSS_STARGATE,
     PROTOSS_ARCHON,
     PROTOSS_MOTHERSHIP,
-    PROTOSS
+    PROTOSS,
+
+    NONE
 };
