@@ -25,7 +25,7 @@ protected:
 public:
     virtual EntityType getType(){ return this->type; };
     virtual void setType(EntityType newType){ this->type = newType; }
-    virtual ~Entity() = 0;
+    virtual ~Entity() {};
 
     /*
     The following methods will return if a specific interface is implemented by this instance
@@ -50,4 +50,20 @@ public:
         bool hasInterface = (interfaceBitmask & UPGRADABLE_INTERFACE);
         return hasInterface;
     };
+
+    EntityType getRace()
+    {
+            if (NONE < this->type && this->type <= TERRAN)
+            {
+                    return TERRAN;
+            }
+            else if (TERRAN < this->type && this->type <= ZERG)
+            {
+                    return ZERG;
+            }
+            else if (ZERG < this->type && this->type <= PROTOSS)
+            {
+                    return PROTOSS;
+            }
+    }
 };

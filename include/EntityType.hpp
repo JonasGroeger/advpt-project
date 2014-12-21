@@ -2,6 +2,8 @@
 
 enum EntityType
 {
+    NONE,
+
     TERRAN_REFINERY,
     TERRAN_SUPPLY_DEPOT,
     TERRAN_BARRACKS,
@@ -102,7 +104,5 @@ enum EntityType
     PROTOSS_STARGATE,
     PROTOSS_ARCHON,
     PROTOSS_MOTHERSHIP,
-    PROTOSS,
-
-    NONE
+    PROTOSS
 };
