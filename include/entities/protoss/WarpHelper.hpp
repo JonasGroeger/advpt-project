@@ -35,7 +35,7 @@ private :
             return product;
         }
     };
-    vector<WarpTask*> warpTasks;
+    std::vector<WarpTask*> warpTasks;
     static WarpHelper *_instance;
 
 protected:
@@ -56,8 +56,7 @@ public :
     /* Updatable */
     virtual void update(GameState &state);
 
-    virtual void warpBuilding(int duration, EntityType type);
-
+    virtual void warpBuilding(int duration, EntityType type, GameState& state);
 };
 
 
