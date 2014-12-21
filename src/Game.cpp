@@ -215,7 +215,7 @@ Game::Game(char *file)
             currentState.addEntity(ZERG_OVERLORD, 1);
             break;
         default:
-            throw invalid_argument("Uncrecognized race");
+            throw invalid_argument("Unrecognized race");
             break;
     }
 
