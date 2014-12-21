@@ -253,14 +253,7 @@ void GameState::addEntityToVectors(Entity* entity)
 	{
 		Worker *worker = dynamic_cast<Worker*> (entity);
 		workers.push_back(worker);
-		if (hasOpenVespeneSlot())
-		{
-			worker->setTypeOfWork(TypeOfWork::Vespine);
-		}
-		else
-		{
-			worker->setTypeOfWork(TypeOfWork::Minerals);
-		}
+        worker->setTypeOfWork(TypeOfWork::Minerals);
 	}
 
 	if (logger != nullptr)
@@ -313,6 +306,34 @@ bool GameState::hasOpenVespeneSlot()
     }
 
     return vespeneSlots > usedSlots;
+}
+
+void GameState::reassignWorkers()
+{
+    unsigned int openSlots = vespeneSlots;
+    bool first = true; // Always have at least one scv harvesting minerals
+    for (Worker* wrk : workers)
+    {
+        switch (wrk->getTypeOfWork())
+        {
+            case TypeOfWork::Minerals:
+            case TypeOfWork::Vespine:
+            case TypeOfWork::Idle:
+                if (openSlots > 0 && !first)
+                {
+                    wrk->setTypeOfWork(TypeOfWork::Vespine);
+                    openSlots --;
+                }
+                else 
+                {
+                    wrk->setTypeOfWork(TypeOfWork::Minerals);
+                    first = false;
+                }
+                break;
+            case TypeOfWork::Producing:
+                break;
+        }
+    }
 }
 
 const vector<EntityType>& GameState::getEntities(EntityType& type) const

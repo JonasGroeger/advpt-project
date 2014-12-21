@@ -23,14 +23,7 @@ void SCV::update(GameState& state)
             if (currentProgress >= maxProgress)
             {
                 state.addEntity(product, 1);
-                if (state.hasOpenVespeneSlot())
-                {
-                    w->setTypeOfWork(TypeOfWork::Vespine);
-                }
-                else
-                {
-                    w->setTypeOfWork(TypeOfWork::Minerals);
-                }
+                w->setTypeOfWork(TypeOfWork::Idle);
             }
             break;
     }
