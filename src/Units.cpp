@@ -8,7 +8,7 @@ SCV::SCV()
 
 void SCV::update(GameState& state)
 {
-    Worker* w = dynamic_cast<Worker*>(this);
+    Worker* w = static_cast<Worker*>(this);
     switch (w->getTypeOfWork()){
         case TypeOfWork::Idle:
             break;
@@ -38,7 +38,7 @@ void SCV::update(GameState& state)
 
 bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
 {
-    Worker* w = dynamic_cast<Worker*>(this);
+    Worker* w = static_cast<Worker*>(this);
     TypeOfWork current = w->getTypeOfWork();
     if(current == TypeOfWork::Producing)
     {
@@ -159,7 +159,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
 
 long SCV::getTimeToFinish()
 {
-    Worker* w = dynamic_cast<Worker*>(this);
+    Worker* w = static_cast<Worker*>(this);
 
     if (w->getTypeOfWork() == TypeOfWork::Producing)
     {
