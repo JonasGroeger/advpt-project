@@ -104,5 +104,6 @@ enum EntityType
     PROTOSS_STARGATE,
     PROTOSS_ARCHON,
     PROTOSS_MOTHERSHIP,
+    PROTOSS_WARP_HELPER, //Custom Type to handle warping
     PROTOSS
 };

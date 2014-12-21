@@ -5,6 +5,7 @@
 #include <vector>
 
 class WarpHelper : public Updatable,
+                   public Entity,
                    public Producer
 {
 
@@ -47,7 +48,8 @@ private :
 
 protected:
     WarpHelper(){
-
+        type = PROTOSS_WARP_HELPER;
+        interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
     }
 
 public :
@@ -62,7 +64,6 @@ public :
 
     virtual void warpBuilding(int duration, EntityType type, GameState& state);
 
-
     /* Updatable */
     virtual void update(GameState &state);
 
@@ -71,6 +72,3 @@ public :
     virtual long getTimeToFinish();
 
 };
-
-
-

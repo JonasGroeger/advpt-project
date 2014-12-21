@@ -7,6 +7,7 @@
 #include "BuildStep.hpp"
 #include "GameState.hpp"
 #include "EntityType.hpp"
+#include "entities/protoss/WarpHelper.hpp"
 
 class Game
 {
