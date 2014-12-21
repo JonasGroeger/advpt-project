@@ -1,0 +1,13 @@
+scv
+scv
+supply_depot
+refinery
+scv
+scv
+scv
+barracks
+factory
+factory_reactor
+hellion
+hellion
+hellion

@@ -21,7 +21,6 @@ supply_depot
 supply_depot
 ghost
 marine
-ghost
 bunker
 starport
 fusion_core
