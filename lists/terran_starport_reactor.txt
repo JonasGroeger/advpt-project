@@ -1,0 +1,10 @@
+refinery
+refinery
+supply_depot
+barracks
+factory
+starport
+starport_reactor
+medivac
+medivac
+viking

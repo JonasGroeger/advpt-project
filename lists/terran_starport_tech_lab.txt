@@ -1,0 +1,16 @@
+scv
+scv
+refinery
+refinery
+supply_depot
+scv
+scv
+scv
+scv
+barracks
+factory
+starport
+starport_tech_lab
+raven
+fusion_core
+battlecruiser
