@@ -4,7 +4,8 @@
 #include <GameState.hpp>
 #include <vector>
 
-class WarpHelper : public Updatable
+class WarpHelper : public Updatable,
+                   public Producer
 {
 
 private :
@@ -53,10 +54,16 @@ public :
         return _instance;
     }
 
+    virtual void warpBuilding(int duration, EntityType type, GameState& state);
+
+
     /* Updatable */
     virtual void update(GameState &state);
 
-    virtual void warpBuilding(int duration, EntityType type, GameState& state);
+    /* Producer */
+    virtual bool produceEntityIfPossible(EntityType type, GameState& state);
+    virtual long getTimeToFinish() {return 0;}
+
 };
 
 

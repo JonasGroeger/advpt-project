@@ -18,6 +18,11 @@ void WarpHelper::update(GameState &state){
     }
 }
 
+bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state){
+    //TODO
+}
+
+
 void WarpHelper::warpBuilding(int duration, EntityType type, GameState &state){
     WarpTask* newTask = new WarpTask(duration, type);
     warpTasks.push_back(newTask);
