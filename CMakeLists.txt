@@ -68,6 +68,7 @@ set( CPP_FILES
   src/GameState.cpp
   src/main.cpp
   src/Updatable.cpp
+  src/Entity.cpp
   src/entities/Worker.cpp
   src/entities/SimpleProducer.cpp
   src/entities/UpgradableProducer.cpp
