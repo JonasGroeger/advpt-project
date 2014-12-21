@@ -58,6 +58,8 @@ set( HPP_FILES
   include/entities/UpgradableProducer.hpp
   include/entities/terran/Units.hpp
   include/entities/terran/ProductionBuildings.hpp
+  include/entities/protoss/Units.hpp
+  include/entities/zerg/Units.hpp
 )
 
 # ... and source files ...
@@ -74,6 +76,8 @@ set( CPP_FILES
   src/entities/UpgradableProducer.cpp
   src/entities/terran/Units.cpp
   src/entities/terran/ProductionBuildings.cpp
+  src/entities/protoss/Units.cpp
+  src/entities/zerg/Units.cpp
 )
 
 source_group( "src" FILES ${CPP_FILES} )
