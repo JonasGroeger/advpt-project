@@ -28,7 +28,7 @@ class Barracks: public Entity,
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
         virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
-        void update(GameState& state) override;
+        virtual void update(GameState& state) override;
 
 };
 
@@ -43,6 +43,7 @@ class Factory : public Entity,
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
         virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+        virtual void update(GameState& state) override;
 };
 
 class Starport : public Entity,
