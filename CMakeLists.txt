@@ -69,7 +69,6 @@ set( CPP_FILES
   src/main.cpp
   src/Updatable.cpp
   src/Units.cpp
-  src/Entity.cpp
   src/entities/Worker.cpp
   src/entities/SimpleProducer.cpp
   src/entities/UpgradableProducer.cpp
