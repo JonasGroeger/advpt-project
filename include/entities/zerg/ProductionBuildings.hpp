@@ -18,6 +18,8 @@ public:
 public:
     virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
     virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+    //overrides update here to produce larva
+    virtual void update(GameState& state) override;
 };
 
 
