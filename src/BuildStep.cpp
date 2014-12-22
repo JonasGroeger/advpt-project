@@ -112,7 +112,7 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
         {"phoenix", BuildStepType::PRODUCE},
         {"void_ray", BuildStepType::PRODUCE},
         {"carrier", BuildStepType::PRODUCE},
-        {"fleet_bacon", BuildStepType::PRODUCE},
+        {"fleet_beacon", BuildStepType::PRODUCE},
         {"dark_shrine", BuildStepType::PRODUCE},
         {"templar_archives", BuildStepType::PRODUCE},
         {"robotics_bay", BuildStepType::PRODUCE},
