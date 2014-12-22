@@ -15,4 +15,3 @@ high_templar
 nexus
 high_templar
 pylon
-archon
