@@ -148,7 +148,9 @@ void Game::printBuildEndMessage(EntityType type) const
     std::cout << "build-end";
     std::cout << BuildStep::entityTypeToString[type];
     std::cout << std::endl;
-    //printResourcesMessage(); // TODO this is only for debugging
+#ifdef DEBUG
+    printResourcesMessage();
+#endif
 }
 
 void Game::printWorkerMessage() const
@@ -197,7 +199,6 @@ void Game::printResourcesMessage() const
     std::cout << std::endl;
 }
 
-// TODO remove these debug values of gamestate
 Game::Game(char *file)
     :buildOrder(BuildOrder(file))
 {

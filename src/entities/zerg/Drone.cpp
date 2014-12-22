@@ -43,15 +43,27 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
             time = 65;
             break;
         case ZERG_SPORE_CRAWLER:
+            if (!state.hasEntity(ZERG_EVOLUTION_CHAMBER))
+            {
+                return false;
+            }
             minerals = 75;
             time = 30;
             break;
         case ZERG_HYDRALISK_DEN:
+            if (!state.hasEntity(ZERG_LAIR))
+            {
+                return false;
+            }
             minerals = 100;
             gas = 100;
             time = 40;
             break;
         case ZERG_NYDUS_NETWORK:
+            if (!state.hasEntity(ZERG_LAIR))
+            {
+                return false;
+            }
             minerals = 150;
             gas  = 200;
             time = 50;
@@ -61,6 +73,10 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
             time = 35;
             break;
         case ZERG_INFESTATION_PIT:
+            if (!state.hasEntity(ZERG_LAIR))
+            {
+                return false;
+            }
             minerals = 100;
             gas = 100;
             time = 50;
@@ -70,19 +86,44 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
             time = 30;
             break;
         case ZERG_SPINE_CRAWLER:
+            if (!state.hasEntity(ZERG_SPAWNING_POOL))
+            {
+                return false;
+            }
             minerals = 100;
             time = 50;
             break;
         case ZERG_ROACH_WARREN:
+            if (!state.hasEntity(ZERG_SPAWNING_POOL))
+            {
+                return false;
+            }
             minerals = 180;
             time = 55;
             break;
         case ZERG_BANELING_NEST:
+            if (!state.hasEntity(ZERG_SPAWNING_POOL))
+            {
+                return false;
+            }
             minerals = 100;
             gas = 50;
             time = 60;
             break;
+        case ZERG_ULTRALIK_CAVERN:
+            if (!state.hasEntity(ZERG_HIVE))
+            {
+                return false;
+            }
+            minerals = 150;
+            gas = 200;
+            time = 65;
+            break;
         case ZERG_SPIRE:
+            if (!state.hasEntity(ZERG_LAIR))
+            {
+                return false;
+            }
             minerals = 200;
             gas = 200;
             time = 100;

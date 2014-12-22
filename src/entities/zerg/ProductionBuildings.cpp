@@ -1,5 +1,6 @@
 #include <entities/zerg/ProductionBuildings.hpp>
 #include <GameState.hpp>
+#include <iostream>
 
 bool Hatchery::produceEntityIfPossible(EntityType type, GameState& state)
 {
@@ -14,7 +15,6 @@ bool Hatchery::produceEntityIfPossible(EntityType type, GameState& state)
 }
 bool Hatchery::upgradeIfPossible(EntityType type, GameState &state)
 {
-
     if(isBusy() || this->getType() == ZERG_HIVE){
         return false;
     }
@@ -46,7 +46,7 @@ bool Hatchery::upgradeIfPossible(EntityType type, GameState &state)
 }
 
 void Hatchery::update(GameState& state){
-
+    // TODO production should be suspended while the larva limit is reached (not very important)
     //larva production every 15 seconds
     if(state.getSimulationTime() % 15 == 0){
         state.increaseLarva();

@@ -456,6 +456,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case ZERG_EXTRACTOR:
 				new_unit = new Extractor();
+                vespeneSlots += 3;
 				break;
 			case ZERG_ZERGLING:
 				new_unit = new Zergling();
