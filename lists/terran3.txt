@@ -5,6 +5,4 @@ barracks
 refinery
 factory
 starport
-fusion_core
-starport_tech_lab
 battlecruiser
