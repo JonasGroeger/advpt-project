@@ -92,6 +92,24 @@ void GameState::consumeDrone(Drone *drone)
         }
     }
 
+    for (auto it = entities.begin(); it != entities.end(); it++)
+    {
+        if (*it == drone)
+        {
+            entities.erase(it);
+            break;
+        }
+    }
+
+    for (auto it = upgradeables.begin(); it != upgradeables.end(); it++)
+    {
+        if (*it == drone)
+        {
+            upgradeables.erase(it);
+            break;
+        }
+    }
+
     delete drone;
 }
 

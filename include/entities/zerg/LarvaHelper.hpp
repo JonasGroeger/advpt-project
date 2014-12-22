@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <vector>
+#include <iostream>
 
 #include "Entity.hpp"
 #include "Updatable.hpp"

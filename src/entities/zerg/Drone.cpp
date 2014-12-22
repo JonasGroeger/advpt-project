@@ -2,7 +2,7 @@
 
 Drone::Drone()
 {
-    interfaceBitmask = UPDATABLE_INTERFACE | WORKER_INTERFACE;
+    interfaceBitmask = UPDATABLE_INTERFACE | WORKER_INTERFACE | UPGRADABLE_INTERFACE;
     type = ZERG_DRONE;
 }
 
@@ -14,7 +14,8 @@ void Drone::update(GameState &state)
         if (currentProgress >= maxProgress)
         {
             // TODO turn this into a spawning pool
-            std::cout << "SPAWNING POOL BUILT" << std::endl;
+            state.addEntity(product, 1);
+            state.consumeDrone(this);
         }
         return;
     }
@@ -41,6 +42,7 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
                 currentProgress = 0;
                 maxProgress = 65;
                 morphing = true;
+                product = type;
                 return true;
         }
         return false;
