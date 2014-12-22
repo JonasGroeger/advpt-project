@@ -7,6 +7,7 @@
 #include "GameState.hpp"
 
 #include <iostream>
+#include <BuildOrder.hpp>
 
 
 /*
@@ -35,6 +36,15 @@ public:
 public:
     virtual bool upgradeIfPossible(EntityType type, GameState &state) override
     {
+        //Get the dependencies of the unit we want to uprade to (second)
+        auto dependencies = BuildOrder::dependencies[second];
+        for(auto dependency : dependencies){
+            if(!state.hasEntity(dependency)){
+                //if we cant resolve all dependencies --> false
+                return false;
+            }
+        }
+
         // TODO ugly as fuck
         if (!morphing && this->getType() == first && type == second && state.hasEnough(minerals, gas, supply))
         {

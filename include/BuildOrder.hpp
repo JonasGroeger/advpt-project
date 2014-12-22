@@ -21,14 +21,15 @@ private:
     vector<BuildStep*> buildSteps;
     vector<BuildStep*>::iterator iterator;
     EntityType race;
-
-    static map<EntityType, vector<EntityType>> dependencies;
+    
     static map<EntityType, int> supply;
 
 public:
     BuildOrder(const char* file);
     ~BuildOrder();
-    
+
+    static map<EntityType, vector<EntityType>> dependencies;
+
     // This will check for basic dependencies
     bool doSanityCheck();
 
