@@ -1,5 +1,8 @@
 # Starcraft 2 build order simulator
 
+# Stoff
+Leere Zeilen sind in buildlists nicht erwünscht.
+
 # Mailing list
 advpt@googlegroups.com
 
