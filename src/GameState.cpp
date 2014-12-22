@@ -4,6 +4,20 @@
 #include "GameState.hpp"
 #include "Game.hpp"
 
+bool GameState::hasEnoughEntities(EntityType type, int amount){
+	int count = 0;
+	for(auto entry : entities){
+		if(entry->getType() == type){
+			++count;
+		}
+	}
+	if(count >= amount){
+		return true;
+	}
+	return false;
+}
+
+
 bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply){
 	return hasEnoughMinerals(minerals)
 			&& hasEnoughVespine(vespine)
@@ -34,6 +48,30 @@ bool GameState::hasEntityInProduction(EntityType type) const
 {
     return entitiesInConstruction.test(type);
 }
+
+void GameState::consumeEnoughEntities(EntityType type, int amount){
+
+	int num_entites = std::count_if(entities.begin(), entities.end(), [type](Entity* entry)
+	{
+		return entry->getType() == type;
+	});
+
+	//If we removed all occurences, we dont have that entity anymore
+	if(num_entites <= amount){
+		constructedBitset.reset(type);
+	}
+
+	int deletedCount = 0;
+	auto it = std::remove_if (entities.begin(), entities.end(), [amount, &deletedCount, type](Entity* entry){
+		if (deletedCount < amount && (entry->getType() == type)) {
+			++deletedCount;
+			return true;
+		}
+		return false;
+	});
+	entities.erase(it, entities.end());
+}
+
 
 void GameState::consumeEnoughMinerals(unsigned long amount)
 {
@@ -235,7 +273,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case PROTOSS_NEXUS:
 				new_unit = new Nexus();
-                increaseSupply(10);
+                increaseSupply(9);
 				break;
 			case PROTOSS_PHOTON_CANNON:
 				new_unit = new PhotonCannon();
@@ -275,6 +313,9 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case PROTOSS_ZEALOT:
 				new_unit = new Zealot();
+				break;
+			case PROTOSS_STALKER:
+				new_unit = new Stalker();
 				break;
 			case PROTOSS_PROBE:
 				new_unit = new Probe();

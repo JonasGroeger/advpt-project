@@ -42,6 +42,9 @@ private :
         }
     };
 
+    enum ArchonFuseType {NO_FUSE, DOUBLE_HIGH, DOUBLE_DARK, DIFFERENT};
+    ArchonFuseType archonFuseType = ArchonFuseType::NO_FUSE;
+
     long maxTime = 0;
     std::vector<WarpTask*> warpTasks;
     static WarpHelper *_instance;

@@ -8,8 +8,10 @@ gateway
 probe
 assimilator
 probe
+pylon
 cybernetics_core
 probe
 probe
 probe
+stalker
 stalker
