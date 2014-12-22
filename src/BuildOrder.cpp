@@ -204,15 +204,25 @@ bool BuildOrder::doSanityCheck()
     int currentSupply = 0;
 
     this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
+    set<EntityType> builtTypes;
 
     switch (this->race)
     {
         // Protoss and Zergonly has 10 supply at the start
         case EntityType::ZERG:
+            currentSupply = 10;
+            builtTypes.insert(ZERG_HATCHERY);
+            builtTypes.insert(ZERG_OVERLORD);
+            builtTypes.insert(ZERG_DRONE);
+        break;
         case EntityType::PROTOSS:
             currentSupply = 10;
+            builtTypes.insert(PROTOSS_NEXUS);
+            builtTypes.insert(PROTOSS_PROBE);
             break;
         case EntityType::TERRAN:
+            builtTypes.insert(TERRAN_COMMAND_CENTER);
+            builtTypes.insert(TERRAN_SCV);
             currentSupply = 11;
             break;
         default:
@@ -253,7 +263,6 @@ bool BuildOrder::doSanityCheck()
     // TODO calculate if supply is possible
     // TODO calculate if basic dependencies are possible
 
-    set<EntityType> builtTypes;
 
     for (BuildStep* step : buildSteps)
     {

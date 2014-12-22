@@ -93,7 +93,9 @@ int Game::loop()
         //buildlist did not succeed so return non zero and print error message
         std::cerr << "Reached maximum Time - aborting..." << std::endl;
         currentState.printWorkerMessage();
+#ifdef DEBUG
         currentState.printResourcesMessage();
+#endif
         return -1;
     }
     currentState.printResourcesMessage();
