@@ -612,7 +612,7 @@ bool GameState::hasOpenVespeneSlot()
 
 void GameState::reassignWorkers()
 {
-    unsigned int openSlots = vespeneSlots;
+    unsigned long openSlots = vespeneSlots;
     bool first = true; // Always have at least one scv harvesting minerals
     for (Worker* wrk : workers)
     {
