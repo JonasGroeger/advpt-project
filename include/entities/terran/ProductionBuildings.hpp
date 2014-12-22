@@ -4,34 +4,31 @@
 #include "Entity.hpp"
 #include "entities/UpgradableProducer.hpp"
 
-class CommandCenter : public Entity,
-                      public UpgradableProducer
+class CommandCenter: public Entity,
+                     public UpgradableProducer
 {
     /* class Entity */
-public:
-    CommandCenter();
+    public:
+        CommandCenter();
 
     /* class UpgradableProducer */
-public:
-    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
-    virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+    public:
+        virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
 };
 
-class Barracks : public Entity,
-                 public UpgradableProducer
+class Barracks: public Entity,
+                public UpgradableProducer
 {
     /* class Entity */
-public:
-    Barracks();
+    public:
+        Barracks();
 
     /* class UpgradableProducer */
-public:
-    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
-    virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
-
-    virtual void update(GameState &state) override;
+    public:
+        virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+        virtual void update(GameState& state) override;
 
 };
 
@@ -39,29 +36,25 @@ class Factory : public Entity,
                 public UpgradableProducer
 {
     /* class Entity */
-public:
-    Factory();
+    public:
+        Factory();
 
     /* class UpgradableProducer */
-public:
-    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
-    virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
-
-    virtual void update(GameState &state) override;
+    public:
+        virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+        virtual void update(GameState& state) override;
 };
 
 class Starport : public Entity,
                  public UpgradableProducer
 {
     /* class Entity */
-public:
-    Starport();
+    public:
+        Starport();
     /* class UpgradableProducer */
-public:
-    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
-    virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
-
-    virtual void update(GameState &state) override;
+    public:
+        virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
+        virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
+        virtual void update(GameState& state) override;
 };

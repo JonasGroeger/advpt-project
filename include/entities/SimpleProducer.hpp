@@ -6,7 +6,6 @@
 #include "EntityType.hpp"
 
 class Producer;
-
 class Updatable;
 
 /*
@@ -18,13 +17,11 @@ class SimpleProducer : public Producer,
 {
 /* Updatable */
 public:
-    void update(GameState &state) final;
+    void update(GameState& state) final;
 
 /* Producer */
 public:
     virtual bool produceEntityIfPossible(EntityType type, GameState &state) = 0;
-
     long getTimeToFinish() final;
-
     void applyChronoBoost() final;
 };

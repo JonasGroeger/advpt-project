@@ -1,12 +1,12 @@
 #include "entities/SimpleProducer.hpp"
 #include "GameState.hpp"
 
-void SimpleProducer::update(GameState &state)
+void SimpleProducer::update(GameState& state)
 {
-    switch (this->state)
+    switch(this->state)
     {
         case UPState::PRODUCING:
-            currentProgress++;
+            currentProgress ++;
 
             if (currentProgress >= maxProgress)
             {

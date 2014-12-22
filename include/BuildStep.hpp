@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Entity.hpp"
 
 #include <map>
@@ -7,10 +6,7 @@
 
 using namespace std;
 
-enum class BuildStepType
-{
-    UPGRADE, PRODUCE, CONSTRUCT, CHRONO_BOOST
-};
+enum class BuildStepType { UPGRADE, PRODUCE, CONSTRUCT, CHRONO_BOOST };
 
 class BuildStep
 {
@@ -24,7 +20,6 @@ public:
     // DEBUGGING
     static map<EntityType, string> entityTypeToString;
     static map<BuildStepType, string> buildStepTypeToString;
-
     static void initMap(void)
     {
         for (auto it = BuildStep::stringToEntityType.begin(); it != BuildStep::stringToEntityType.end(); it++)
@@ -40,7 +35,6 @@ public:
     BuildStep(string value);
 
     BuildStepType getBuildStepType();
-
     EntityType getEntityType();
 
     //Just for testing

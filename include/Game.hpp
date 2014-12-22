@@ -17,26 +17,21 @@ private:
     GameState currentState;
     BuildOrder buildOrder;
 
-    bool executeBuildStep(BuildStep *step);
-
+    bool executeBuildStep(BuildStep* step);
     bool isAnybodyProducing() const;
 
     void printMessageProlog() const;
-
     void printBuildStartMessage(EntityType type) const;
-
     void printWorkerMessage() const;
-
     void printResourcesMessage() const;
 
 public:
     int loop();
-
     bool isFinished();
 
     void printBuildEndMessage(EntityType type) const;
 
-    GameState &getFinalState();
+    GameState& getFinalState();
 
     Game(char *file);
 };

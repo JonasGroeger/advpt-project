@@ -17,7 +17,6 @@
 class Game;
 
 class Updatable;
-
 class Upgradable;
 //class LarvaHelper;
 
@@ -48,16 +47,16 @@ private:
     unsigned int maxTime = 0;
 
     vector<EntityType> entityTypes;
-    vector<Upgradable *> upgradeables;
-    vector<Updatable *> updatables;
-    vector<Producer *> producers;
-    vector<Worker *> workers;
-    vector<Entity *> entities;
+    vector<Upgradable*> upgradeables;
+    vector<Updatable*> updatables;
+    vector<Producer*> producers;
+    vector<Worker*> workers;
+    vector<Entity*> entities;
 
     Game *logger = nullptr;
-    // LarvaHelper *larvaHelper = nullptr;
+   // LarvaHelper *larvaHelper = nullptr;
 
-    void addEntityToVectors(Entity *entity);
+    void addEntityToVectors(Entity* entity);
 
 
 // TODO this should be private but it won't compile anymore
@@ -70,14 +69,11 @@ public:
     std::bitset<100> constructedBitset = 0;
     //see above bitset comment - except this bitset holds entities not finished but in construction
     std::bitset<100> entitiesInConstruction = 0;
-
+    
     //All methods here receive the real value they need as we have no floats here
     bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
-
     bool hasEnoughMinerals(unsigned long amount) const;
-
     bool hasEnoughVespine(unsigned long amount) const;
-
     bool hasEnoughSupply(unsigned long amount) const;
 
     //This method checks if type is existing/already created in our current state
@@ -88,71 +84,52 @@ public:
 
     // Use actual amount
     void consumeEnoughMinerals(unsigned long amount);
-
     void consumeEnoughVespine(unsigned long amount);
-
     void consumeEnoughSupply(unsigned long amount);
-
     void consumeEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
 
     // Use amount * FACTOR
     void addMineralsWithFactor(unsigned long amount);
-
     void addVespineWithFactor(unsigned long amount);
-
     void increaseSupply(unsigned long amount);
 
     unsigned long getMinerals() const;
-
     unsigned long getVespine() const;
-
     unsigned long getUsedSupply() const;
-
     unsigned long getAvailableSupply() const;
 
     void notifyEntityIsBeingProduced(EntityType type);
-
     void setAvailableEntityType(EntityType type);
 
     //this method sets the value of type to 1 in the entitiesBeingProduced bitset
     void addEntity(EntityType type, unsigned long amount);
+    void addCreatedEntity(Entity* entity);
 
-    void addCreatedEntity(Entity *entity);
-
-    void removeEntity(Entity &entity); // TODO implement
-    void changeEntity(Entity &old, Entity &theNew); // TODO implement
+    void removeEntity(Entity& entity); // TODO implement
+    void changeEntity(Entity& old, Entity& theNew); // TODO implement
 
     //returns true if simTime >= maxTime, false otherwise
     void setMaxSimTime(int time);
-
     bool maxSimTimeReached() const;
-
     int getSimulationTime() const;
-
     void incrementSimulationTime();
 
     bool hasOpenVespeneSlot();
-
     void reassignWorkers();
 
     void increaseLarva();
-
     void addMaxLarva(unsigned long amount);
 
     //contains all created entities
-    const vector<EntityType> &getEntities(EntityType &type) const;
-
+    const vector<EntityType>& getEntities(EntityType& type) const;
+	
     //following three vectors only contain pointers to specific elements of the above one
     //contains references to the getEntities vector (views)
-    const vector<Upgradable *> &getUpgradeables() const;
-
-    const vector<Updatable *> &getUpdatables() const;
-
-    const vector<Producer *> &getProducers() const;
-
-    const vector<Worker *> &getWorkers() const;
+    const vector<Upgradable*>& getUpgradeables() const;
+    const vector<Updatable*>& getUpdatables() const;
+    const vector<Producer*>& getProducers() const;
+    const vector<Worker*>& getWorkers() const;
 
     void registerLogger(Game *newLogger);
-
     void unregisterLogger();
 };

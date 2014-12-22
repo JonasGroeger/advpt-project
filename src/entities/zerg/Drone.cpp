@@ -10,7 +10,7 @@ void Drone::update(GameState &state)
 {
     if (morphing)
     {
-        currentProgress++;
+        currentProgress ++;
         if (currentProgress >= maxProgress)
         {
             // TODO turn this into a spawning pool
@@ -34,14 +34,14 @@ void Drone::update(GameState &state)
 
 bool Drone::upgradeIfPossible(EntityType type, GameState &state)
 {
-    if (type == ZERG_SPAWNING_POOL && state.hasEnough(200, 0, 0))
-    {
-        state.consumeEnough(200, 0, 0);
-        state.notifyEntityIsBeingProduced(type);
-        currentProgress = 0;
-        maxProgress = 65;
-        morphing = true;
-        return true;
-    }
-    return false;
+        if (type == ZERG_SPAWNING_POOL && state.hasEnough(200, 0, 0))
+        {
+                state.consumeEnough(200, 0, 0);
+                state.notifyEntityIsBeingProduced(type);
+                currentProgress = 0;
+                maxProgress = 65;
+                morphing = true;
+                return true;
+        }
+        return false;
 }

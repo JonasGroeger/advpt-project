@@ -9,20 +9,17 @@ class Hatchery : public Entity,
 {
     /* class Entity */
 public:
-    Hatchery()
-    {
+    Hatchery(){
         interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE | UPGRADABLE_INTERFACE;
         type = ZERG_HATCHERY;
     }
 
     /* class UpgradableProducer */
 public:
-    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
-
+    virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
     virtual bool upgradeIfPossible(EntityType type, GameState &state) override;
-
     //overrides update here to produce larva
-    virtual void update(GameState &state) override;
+    virtual void update(GameState& state) override;
 };
 
 
@@ -31,13 +28,12 @@ class NydusNetwork : public Entity,
 {
     /* class Entity */
 public:
-    NydusNetwork()
-    {
+    NydusNetwork(){
         interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
         type = ZERG_NYDUS_NETWORK;
     }
 
     /* class UpgradableProducer */
 public:
-    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
+    virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
 };
