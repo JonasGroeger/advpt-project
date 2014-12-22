@@ -8,9 +8,8 @@ cybernetics_core
 stalker
 twilight_council
 templar_archives
+high_templar
 nexus
-dark_shrine
-dark_templar
 high_templar
 pylon
 archon
