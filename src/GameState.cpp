@@ -548,8 +548,6 @@ void GameState::addEntityToVectors(Entity* entity)
 	{
 		logger->printBuildEndMessage(entity->getType());
 	}
-
-
 }
 
 
