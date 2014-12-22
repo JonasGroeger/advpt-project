@@ -17,7 +17,7 @@ void LarvaHelper::update(GameState& state)
     }
 
     MorphObject *next = morphings.top();
-    while (next->finishTime >= currentTime)
+    while (next->finishTime <= currentTime)
     {
         // Zerglings are always produced in pairs of two
         if (next->product == ZERG_ZERGLING)
