@@ -102,3 +102,5 @@ if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
   # Creates a folder "executables" and adds target project (sc2sim.vcxproj) under it
   set_property( TARGET ${EXECUTABLE} PROPERTY FOLDER "executables" )
 endif()
+
+add_definitions(-DDEBUG)
