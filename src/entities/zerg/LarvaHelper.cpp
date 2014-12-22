@@ -9,6 +9,7 @@ LarvaHelper::LarvaHelper()
 
 void LarvaHelper::update(GameState& state)
 {
+    std::cerr<<morphings.size()<<std::endl;
     currentTime ++;
 
     if (morphings.size() == 0)
@@ -19,7 +20,16 @@ void LarvaHelper::update(GameState& state)
     MorphObject *next = morphings.top();
     while (next->finishTime >= currentTime)
     {
-        state.addEntity(next->product, 1);
+        // Zerglings are always produced in pairs of two
+        if (next->product == ZERG_ZERGLING)
+        {
+            state.addEntity(next->product, 2);
+        }
+        else
+        {
+            state.addEntity(next->product, 1);
+        }
+
         morphings.pop();
         if (morphings.size() == 0)
         {
@@ -57,6 +67,66 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState& state)
             minerals = 50;
             time = 24;
             supply = 1;
+            break;
+        case ZERG_HYDRALISK:
+            if (!state.hasEntity(ZERG_HYDRALISK_DEN))
+            {
+                return false;
+            }
+            minerals = 100;
+            gas = 50;
+            time = 33;
+            supply = 2;
+            break;
+        case ZERG_ULTRALISK:
+            if (!state.hasEntity(ZERG_ULTRALIK_CAVERN))
+            {
+                return false;
+            }
+            minerals = 300;
+            gas = 200;
+            time = 55;
+            supply = 6;
+            break;
+        case ZERG_INFESTOR:
+            if (!state.hasEntity(ZERG_INFESTATION_PIT))
+            {
+                return false;
+            }
+            minerals = 100;
+            gas = 150;
+            time = 50;
+            supply = 2;
+            break;
+        case ZERG_ROACH:
+            if (!state.hasEntity(ZERG_ROACH_WARREN))
+            {
+                return false;
+            }
+            minerals = 75;
+            gas = 25;
+            time = 27;
+            supply = 2;
+            break;
+        case ZERG_CORRUPTOR:
+            if (!state.hasEntity(ZERG_SPIRE))
+            {
+                return false;
+            }
+            minerals = 150;
+            gas = 100;
+            time = 40;
+            supply = 2;
+            break;
+        case ZERG_MUTALISK:
+            if (!state.hasEntity(ZERG_SPIRE))
+            {
+                return false;
+            }
+            minerals = 100;
+            gas = 100;
+            time = 33;
+            supply = 2;
             break;
         default:
             return false;
