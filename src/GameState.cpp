@@ -302,12 +302,32 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			case PROTOSS_MOTHERSHIP:
 				new_unit = new MotherShip();
 				break;
+            case ZERG_LARVA_HELPER:
+                larvaHelper = new LarvaHelper();
+                new_unit = static_cast<Entity*> (larvaHelper);
+                break;
 			case NONE:
 				return;
 			default:
 				return;
 		}
 		addEntityToVectors(new_unit);
+    }
+}
+
+void GameState::increaseLarva()
+{
+    if (larvaHelper != nullptr)
+    {
+        larvaHelper->increaseLarva();
+    }
+}
+
+void GameState::addMaxLarva(unsigned long amount)
+{
+    if (larvaHelper != nullptr)
+    {
+        larvaHelper->addMaxLarva(amount);
     }
 }
 

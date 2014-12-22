@@ -210,6 +210,7 @@ Game::Game(char *file)
             currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
             break;
         case ZERG:
+            currentState.addEntity(ZERG_LARVA_HELPER, 1);
             currentState.addEntity(ZERG_DRONE, 5);
             currentState.addEntity(ZERG_HATCHERY, 1);
             currentState.addEntity(ZERG_OVERLORD, 1);

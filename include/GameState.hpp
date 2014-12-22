@@ -5,6 +5,7 @@
 
 #include "entities/terran/Units.hpp"
 #include "entities/protoss/Units.hpp"
+#include "entities/zerg/LarvaHelper.hpp"
 #include "entities/zerg/Units.hpp"
 #include "entities/Producer.hpp"
 #include "Entity.hpp"
@@ -16,6 +17,7 @@ class Game;
 
 class Updatable;
 class Upgradable;
+class LarvaHelper;
 
 using std::vector;
 
@@ -51,6 +53,8 @@ private:
     vector<Entity*> entities;
 
     Game *logger = nullptr;
+    LarvaHelper *larvaHelper = nullptr;
+
     void addEntityToVectors(Entity* entity);
 
 
@@ -111,6 +115,9 @@ public:
 
     bool hasOpenVespeneSlot();
     void reassignWorkers();
+
+    void increaseLarva();
+    void addMaxLarva(unsigned long amount);
 
     //contains all created entities
     const vector<EntityType>& getEntities(EntityType& type) const;

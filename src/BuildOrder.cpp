@@ -32,6 +32,7 @@ bool BuildOrder::doSanityCheck()
         EntityType stepType = step->getEntityType();
         if (stepType == NONE)
         {
+            throw std::invalid_argument(step->getName());
             throw std::invalid_argument("Did not recognize entityType");
         }
 
