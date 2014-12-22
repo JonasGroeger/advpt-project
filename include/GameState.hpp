@@ -71,6 +71,7 @@ public:
     std::bitset<100> entitiesInConstruction = 0;
     
     //All methods here receive the real value they need as we have no floats here
+    bool hasEnoughEntities(EntityType type, int amount);
     bool hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply);
     bool hasEnoughMinerals(unsigned long amount) const;
     bool hasEnoughVespine(unsigned long amount) const;
@@ -83,6 +84,7 @@ public:
     bool hasEntityInProduction(EntityType type) const;
 
     // Use actual amount
+    void consumeEnoughEntities(EntityType type, int amount);
     void consumeEnoughMinerals(unsigned long amount);
     void consumeEnoughVespine(unsigned long amount);
     void consumeEnoughSupply(unsigned long amount);
