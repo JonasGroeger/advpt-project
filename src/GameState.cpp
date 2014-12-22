@@ -1,4 +1,5 @@
 #include <entities/protoss/ProductionBuildings.hpp>
+#include <entities/zerg/ProductionBuildings.hpp>
 #include <entities/protoss/Probe.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"

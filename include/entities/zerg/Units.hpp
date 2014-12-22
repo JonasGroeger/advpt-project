@@ -98,16 +98,6 @@ class Zergling : public Entity
         }
 };
 
-// TODO
-class Hatchery : public Entity
-{
-    /* class Entity */
-    public:
-        Hatchery(){
-            type = ZERG_HATCHERY;
-        }
-};
-
 class Extractor : public Entity
 {
     /* class Entity */
@@ -186,15 +176,6 @@ class HydraliskDen : public Entity
 public:
     HydraliskDen(){
         type = ZERG_HYDRALISK_DEN;
-    }
-};
-
-class NydusNetwork : public Entity
-{
-    /* class Entity */
-public:
-    NydusNetwork(){
-        type = ZERG_NYDUS_NETWORK;
     }
 };
 
