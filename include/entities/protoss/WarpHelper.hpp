@@ -45,6 +45,8 @@ private :
     long maxTime = 0;
     std::vector<WarpTask*> warpTasks;
     static WarpHelper *_instance;
+    virtual void warpBuilding(int duration, EntityType type, GameState& state);
+
 
 protected:
     WarpHelper(){
@@ -61,8 +63,6 @@ public :
         }
         return _instance;
     }
-
-    virtual void warpBuilding(int duration, EntityType type, GameState& state);
 
     /* Updatable */
     virtual void update(GameState &state);
