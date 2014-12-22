@@ -25,6 +25,7 @@ void WarpHelper::update(GameState &state)
 bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
 {
     //TODO
+    return false;
 }
 
 long WarpHelper::getTimeToFinish()
