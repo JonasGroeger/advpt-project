@@ -1,6 +1,6 @@
 #include <entities/protoss/ProductionBuildings.hpp>
 #include <entities/zerg/ProductionBuildings.hpp>
-#include <entities/zerg/UpgradableBuilding.hpp>
+#include <entities/UpgradableUnit.hpp>
 #include <entities/protoss/Probe.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
@@ -424,7 +424,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				//only via upgrade
 				break;
 			case ZERG_OVERLORD:
-                new_unit = new UpgradableUnit<ZERG_OVERLORD, ZERG_OVERSEER, 50, 50, 17>();
+                new_unit = new UpgradableUnit<ZERG_OVERLORD, ZERG_OVERSEER, 50, 50, 0, 17>();
 				increaseSupply(8);
 				break;
 			case ZERG_SPAWNING_POOL:
@@ -460,7 +460,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case ZERG_SPIRE:
 				//new_unit = new Spire();
-                new_unit = new UpgradableUnit<ZERG_SPIRE, ZERG_GREATER_SPIRE, 100, 150, 100>();
+                new_unit = new UpgradableUnit<ZERG_SPIRE, ZERG_GREATER_SPIRE, 100, 150, 0, 100>();
 				break;
 			case ZERG_GREATER_SPIRE:
 				//upgrade

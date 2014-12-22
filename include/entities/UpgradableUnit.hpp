@@ -9,7 +9,7 @@
 #include <iostream>
 
 template <EntityType first, EntityType second, int minerals, int gas, int supply, int time>
-class UpgradableBuilding : public Entity,
+class UpgradableUnit : public Entity,
                            public Updatable,
                            public Upgradable 
 {
@@ -19,7 +19,7 @@ private:
 
     /* class Entity */
 public:
-    UpgradableBuilding()
+    UpgradableUnit()
     {
         interfaceBitmask = UPDATABLE_INTERFACE | UPGRADABLE_INTERFACE;
         type = first;
