@@ -60,6 +60,11 @@ bool UpgradableProducer::isProducing()
     return false;
 }
 
+bool UpgradableProducer::isUpgrading()
+{
+    return state == UPState::UPGRADING;
+}
+
 void UpgradableProducer::applyChronoBoost()
 {
     // TODO implement

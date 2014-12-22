@@ -29,4 +29,5 @@ class Drone : public Entity,
     /* class Upgradable */
     public:
         bool upgradeIfPossible(EntityType type, GameState &state) final;
+        bool isUpgrading() final;
 };

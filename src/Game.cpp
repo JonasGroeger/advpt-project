@@ -113,6 +113,16 @@ bool Game::isAnybodyProducing() const
             return true;
         }
     }
+
+    auto upgradables = currentState.getUpgradeables();
+
+    for (Upgradable *upgr : upgradables)
+    {
+        if (upgr->isUpgrading())
+        {
+            return true;
+        }
+    }
     return false;
 }
 

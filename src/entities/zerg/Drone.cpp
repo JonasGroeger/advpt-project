@@ -144,3 +144,8 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
     }
     return false;
 }
+
+bool Drone::isUpgrading()
+{
+    return morphing;
+}

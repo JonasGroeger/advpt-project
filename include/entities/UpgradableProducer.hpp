@@ -28,6 +28,7 @@ public:
 public:
     virtual bool produceEntityIfPossible(EntityType type, GameState &state) = 0;
     virtual bool upgradeIfPossible(EntityType type, GameState &state) = 0;
-    bool isProducing() final;
+    virtual bool isUpgrading() override;
+    virtual bool isProducing() final;
     void applyChronoBoost() final;
 };

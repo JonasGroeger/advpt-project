@@ -42,6 +42,11 @@ public:
         return false;
     }
 
+    virtual bool isUpgrading() override
+    {
+        return morphing;
+    }
+
     /* class Updatable */
 public:
     virtual void update(GameState &state) override
