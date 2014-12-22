@@ -97,7 +97,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             if(!state.hasEntity(TERRAN_FACTORY)){
                 return false;
             }
-            maxProgress = 35;
+            maxProgress = 65;
             minerals = 150;
             gas = 100;
             break;
