@@ -50,8 +50,42 @@ bool Gateway::produceEntityIfPossible(EntityType type, GameState& state)
     }
 
     int minerals = 0, gas = 0, time = 0, supply = 0;
+    bool hit = false;
 
-    if(state.hasEntity(PROTOSS_CYBERNETICS_CORE))
+    switch (type)
+    {
+        case PROTOSS_ZEALOT:
+            minerals = 100;
+            time = 38;
+            supply = 2;
+            hit = true;
+            break;
+        case PROTOSS_HIGH_TEMPLAR:
+            if (!state.hasEntity(PROTOSS_TEMPLAR_ARCHIVES))
+            {
+                return false;
+            }
+            minerals = 50;
+            gas = 150;
+            time = 55;
+            supply = 2;
+            hit = true;
+            break;
+        case PROTOSS_DARK_TEMPLAR:
+            if (!state.hasEntity(PROTOSS_DARK_SHRINE))
+            {
+                return false;
+            }
+            minerals = 125;
+            gas = 125;
+            time = 55;
+            supply = 2;
+            hit = true;
+            break;
+        default:
+            break;
+    }
+    if(state.hasEntity(PROTOSS_CYBERNETICS_CORE) && !hit)
     {
         switch (type){
             case PROTOSS_STALKER:
@@ -59,49 +93,22 @@ bool Gateway::produceEntityIfPossible(EntityType type, GameState& state)
                 gas = 50;
                 time = 42;
                 supply = 2;
+                hit = true;
                 break;
             case PROTOSS_SENTRY:
                 minerals = 50;
                 gas = 100;
                 time = 37;
                 supply = 2;
-                break;
-            default:
-                break;
-        }
-    }
-    else
-    {
-        switch (type){
-            case PROTOSS_ZEALOT:
-                minerals = 100;
-                time = 38;
-                supply = 2;
-                break;
-            case PROTOSS_HIGH_TEMPLAR:
-                if(!state.hasEntity(PROTOSS_TEMPLAR_ARCHIVES)){
-                    return false;
-                }
-                minerals = 50;
-                gas = 150;
-                time = 55;
-                supply = 2;
-                break;
-            case PROTOSS_DARK_TEMPLAR:
-                if(!state.hasEntity(PROTOSS_DARK_SHRINE)){
-                    return false;
-                }
-                minerals = 125;
-                gas = 125;
-                time = 55;
-                supply = 2;
+                hit = true;
                 break;
             default:
                 return false;
         }
     }
 
-    if(state.hasEnough(minerals, gas, supply)){
+
+    if(state.hasEnough(minerals, gas, supply) && hit){
         currentProgress = 0;
         maxProgress = time;
         state.consumeEnough(minerals, gas, supply);
