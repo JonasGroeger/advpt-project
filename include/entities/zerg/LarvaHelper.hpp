@@ -30,6 +30,7 @@ class LarvaHelper : public Entity,
         };
 
         int currentTime = 0;
+        int maxTime = 0;
         int maxLarva = 16; // TODO GameState should increase this in addEntity
         int currentLarva = 16; // TODO GameState should increase this in addEntity
 

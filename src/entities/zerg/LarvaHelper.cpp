@@ -9,7 +9,6 @@ LarvaHelper::LarvaHelper()
 
 void LarvaHelper::update(GameState& state)
 {
-    std::cerr<<morphings.size()<<std::endl;
     currentTime ++;
 
     if (morphings.size() == 0)
@@ -141,6 +140,7 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState& state)
         obj->product = type;
         morphings.push(obj);
         currentLarva --;
+        maxTime = (obj->finishTime > maxTime) ? (obj->finishTime) : (maxTime);
         
         return true;
     }
@@ -150,7 +150,7 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState& state)
 
 long LarvaHelper::getTimeToFinish()
 {
-    return 0; // TODO
+    return maxTime;
 }
 
 void LarvaHelper::increaseLarva()
