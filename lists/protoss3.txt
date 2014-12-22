@@ -2,7 +2,9 @@ probe
 probe
 probe
 pylon
+assimilator
 probe
+gateway
 probe
 cybernetics_core
 stalker
