@@ -5,7 +5,7 @@
 
 #include "entities/terran/Units.hpp"
 #include "entities/protoss/Units.hpp"
-#include "entities/zerg/LarvaHelper.hpp"
+//#include "entities/zerg/LarvaHelper.hpp"
 #include "entities/zerg/Units.hpp"
 #include "entities/zerg/Drone.hpp"
 #include "entities/Producer.hpp"
@@ -18,7 +18,7 @@ class Game;
 
 class Updatable;
 class Upgradable;
-class LarvaHelper;
+//class LarvaHelper;
 
 using std::vector;
 
@@ -54,7 +54,7 @@ private:
     vector<Entity*> entities;
 
     Game *logger = nullptr;
-    LarvaHelper *larvaHelper = nullptr;
+   // LarvaHelper *larvaHelper = nullptr;
 
     void addEntityToVectors(Entity* entity);
 
