@@ -7,6 +7,7 @@
 #include "entities/protoss/Units.hpp"
 #include "entities/zerg/LarvaHelper.hpp"
 #include "entities/zerg/Units.hpp"
+#include "entities/zerg/Drone.hpp"
 #include "entities/Producer.hpp"
 #include "Entity.hpp"
 #include "EntityType.hpp"

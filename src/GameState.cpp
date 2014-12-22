@@ -229,9 +229,11 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case PROTOSS_PYLON:
 				new_unit = new Pylon();
+                increaseSupply(8);
 				break;
 			case PROTOSS_NEXUS:
 				new_unit = new Nexus();
+                increaseSupply(9);
 				break;
 			case PROTOSS_PHOTON_CANNON:
 				new_unit = new PhotonCannon();
@@ -305,6 +307,23 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             case ZERG_LARVA_HELPER:
                 larvaHelper = new LarvaHelper();
                 new_unit = static_cast<Entity*> (larvaHelper);
+                break;
+            case ZERG_HATCHERY:
+                new_unit = new Hatchery();
+                increaseSupply(2);
+                break;
+            case ZERG_DRONE:
+                new_unit = new Drone();
+                break;
+            case ZERG_SPAWNING_POOL:
+                new_unit = new SpawningPool();
+                break;
+            case ZERG_OVERLORD:
+                new_unit = new Overlord();
+                increaseSupply(8);
+                break;
+            case ZERG_ZERGLING:
+                new_unit = new Zergling();
                 break;
 			case NONE:
 				return;
