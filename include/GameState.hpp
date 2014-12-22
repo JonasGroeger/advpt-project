@@ -5,7 +5,7 @@
 
 #include "entities/terran/Units.hpp"
 #include "entities/protoss/Units.hpp"
-//#include "entities/zerg/LarvaHelper.hpp"
+#include "entities/zerg/LarvaHelper.hpp"
 #include "entities/zerg/Units.hpp"
 #include "entities/zerg/Drone.hpp"
 #include "entities/Producer.hpp"
@@ -18,7 +18,8 @@ class Game;
 
 class Updatable;
 class Upgradable;
-//class LarvaHelper;
+class Drone;
+class LarvaHelper;
 
 using std::vector;
 
@@ -54,7 +55,7 @@ private:
     vector<Entity*> entities;
 
     Game *logger = nullptr;
-   // LarvaHelper *larvaHelper = nullptr;
+    LarvaHelper *larvaHelper = nullptr;
 
     void addEntityToVectors(Entity* entity);
 
@@ -85,6 +86,8 @@ public:
 
     // Use actual amount
     void consumeEnoughEntities(EntityType type, int amount);
+    // This method removes the drone DO NOT ACCESS AGAIN
+    void consumeDrone(Drone *drone);
     void consumeEnoughMinerals(unsigned long amount);
     void consumeEnoughVespine(unsigned long amount);
     void consumeEnoughSupply(unsigned long amount);

@@ -72,6 +72,29 @@ void GameState::consumeEnoughEntities(EntityType type, int amount){
 	entities.erase(it, entities.end());
 }
 
+void GameState::consumeDrone(Drone *drone)
+{
+    for (auto it = updatables.begin(); it != updatables.end(); it++)
+    {
+        if (*it == drone)
+        {
+            updatables.erase(it);
+            break;
+        }
+    }
+
+    for (auto it = workers.begin(); it != workers.end(); it++)
+    {
+        if (*it == drone)
+        {
+            workers.erase(it);
+            break;
+        }
+    }
+
+    delete drone;
+}
+
 
 void GameState::consumeEnoughMinerals(unsigned long amount)
 {
@@ -349,8 +372,8 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 				//ZERG
             case ZERG_LARVA_HELPER:
-                //larvaHelper = new LarvaHelper();
-                //new_unit = static_cast<Entity*> (larvaHelper);
+                larvaHelper = new LarvaHelper();
+                new_unit = static_cast<Entity*> (larvaHelper);
                 break;
 			case ZERG_HATCHERY:
 				new_unit = new Hatchery();
@@ -455,18 +478,18 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 
 void GameState::increaseLarva()
 {
-	/*if (larvaHelper != nullptr)
+	if (larvaHelper != nullptr)
     {
         larvaHelper->increaseLarva();
-    }*/
+    }
 }
 
 void GameState::addMaxLarva(unsigned long amount)
 {
-   /* if (larvaHelper != nullptr)
+    if (larvaHelper != nullptr)
     {
         larvaHelper->addMaxLarva(amount);
-    }*/
+    }
 }
 
 void GameState::addCreatedEntity(Entity* entity)
