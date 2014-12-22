@@ -86,6 +86,7 @@ map<EntityType, int> BuildOrder::supply =
     // Buildings created from a Drone give +1 supply
     {ZERG_DRONE, 1},
     {ZERG_OVERLORD, -8},
+    {ZERG_SPAWNING_POOL, -1},
     {ZERG_HATCHERY, 2},
     {ZERG_EXTRACTOR, -1},
     {ZERG_OVERSEER, 0},
@@ -214,6 +215,8 @@ bool BuildOrder::doSanityCheck()
         default:
             throw std::invalid_argument("Unknown race");
     }
+
+    currentSupply -= 5; // Subtract supply for the workers
 
     for (BuildStep* step : buildSteps)
     {
