@@ -1,5 +1,6 @@
 #include <entities/protoss/ProductionBuildings.hpp>
 #include <entities/zerg/ProductionBuildings.hpp>
+#include <entities/zerg/UpgradableBuilding.hpp>
 #include <entities/protoss/Probe.hpp>
 #include "GameState.hpp"
 #include "Game.hpp"
@@ -477,7 +478,8 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				//upgrade
 				break;
 			case ZERG_SPIRE:
-				new_unit = new Spire();
+				//new_unit = new Spire();
+                new_unit = new UpgradableBuilding<ZERG_SPIRE, ZERG_GREATER_SPIRE, 100, 150, 100>();
 				break;
 			case ZERG_GREATER_SPIRE:
 				//upgrade

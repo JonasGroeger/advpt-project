@@ -10,3 +10,4 @@ drone
 lair
 spire
 mutalisk
+greater_spire

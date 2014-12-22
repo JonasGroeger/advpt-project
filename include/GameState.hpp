@@ -21,6 +21,9 @@ class Upgradable;
 class Drone;
 class LarvaHelper;
 
+template <EntityType first, EntityType second, int minerals, int gas, int time>
+class UpgradableBuilding;
+
 using std::vector;
 
 class GameState
