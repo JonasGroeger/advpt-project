@@ -19,11 +19,9 @@ void SimpleProducer::update(GameState& state)
     }
 }
 
-long SimpleProducer::getTimeToFinish()
+bool SimpleProducer::isProducing()
 {
-    return (state == UPState::PRODUCING)
-            ? maxProgress - currentProgress
-            : 0;
+    return state == UPState::PRODUCING;
 }
 
 void SimpleProducer::applyChronoBoost()

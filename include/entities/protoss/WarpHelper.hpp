@@ -72,6 +72,6 @@ public :
 
     /* Producer */
     virtual bool produceEntityIfPossible(EntityType type, GameState& state);
-    virtual long getTimeToFinish();
+    virtual bool isProducing();
 
 };

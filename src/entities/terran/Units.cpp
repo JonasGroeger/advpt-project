@@ -150,15 +150,15 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     return false;
 }
 
-long SCV::getTimeToFinish()
+bool SCV::isProducing()
 {
     Worker* w = static_cast<Worker*>(this);
 
     if (w->getTypeOfWork() == TypeOfWork::Producing)
     {
-        return maxProgress - currentProgress;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 void SCV::applyChronoBoost()
@@ -170,8 +170,8 @@ bool PlanetaryFortress::produceEntityIfPossible(EntityType type, GameState &stat
 	return true;
 }
 
-long PlanetaryFortress::getTimeToFinish() {
-	return 0;
+bool PlanetaryFortress::isProducing() {
+	return false;
 }
 void PlanetaryFortress::applyChronoBoost() 
 {

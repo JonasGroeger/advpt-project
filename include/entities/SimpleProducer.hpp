@@ -22,6 +22,6 @@ public:
 /* Producer */
 public:
     virtual bool produceEntityIfPossible(EntityType type, GameState &state) = 0;
-    long getTimeToFinish() final;
+    bool isProducing() final;
     void applyChronoBoost() final;
 };

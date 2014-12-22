@@ -148,9 +148,16 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState& state)
     return false;
 }
 
-long LarvaHelper::getTimeToFinish()
+bool LarvaHelper::isProducing()
 {
-    return maxTime;
+    if (morphings.size() > 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void LarvaHelper::increaseLarva()

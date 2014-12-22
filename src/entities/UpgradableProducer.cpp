@@ -51,13 +51,13 @@ void UpgradableProducer::printBuildEndMessage(EntityType type, unsigned int time
     std::cout << std::endl;
 }
 
-long UpgradableProducer::getTimeToFinish()
+bool UpgradableProducer::isProducing()
 {
     if (isBusy())
     {
-        return maxProgress - currentProgress;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 void UpgradableProducer::applyChronoBoost()
