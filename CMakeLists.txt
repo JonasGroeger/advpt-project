@@ -66,7 +66,7 @@ set( HPP_FILES
   include/entities/zerg/ProductionBuildings.hpp
   include/entities/zerg/LarvaHelper.hpp
   include/entities/zerg/Drone.hpp
-  include/entities/zerg/UpgradableBuilding.hpp
+  include/entities/UpgradableUnit.hpp
 )
 
 # ... and source files ...
@@ -91,7 +91,6 @@ set( CPP_FILES
   src/entities/zerg/ProductionBuildings.cpp
   src/entities/zerg/LarvaHelper.cpp
   src/entities/zerg/Drone.cpp
-  src/entities/zerg/UpgradableBuilding.cpp
 )
 
 source_group( "src" FILES ${CPP_FILES} )

@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-template <EntityType first, EntityType second, int minerals, int gas, int time>
+template <EntityType first, EntityType second, int minerals, int gas, int supply, int time>
 class UpgradableBuilding : public Entity,
                            public Updatable,
                            public Upgradable 
@@ -30,10 +30,10 @@ public:
     virtual bool upgradeIfPossible(EntityType type, GameState &state) override
     {
         // TODO ugly as fuck
-        if (!morphing && this->getType() == first && type == second && state.hasEnough(minerals, gas, 0))
+        if (!morphing && this->getType() == first && type == second && state.hasEnough(minerals, gas, supply))
         {
             morphing = true;
-            state.consumeEnough(minerals, gas, 0);
+            state.consumeEnough(minerals, gas, supply);
             state.notifyEntityIsBeingProduced(second);
             currentProgress = 0;
             maxProgress = time;
