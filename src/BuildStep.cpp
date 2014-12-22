@@ -45,7 +45,7 @@ map<string, EntityType> BuildStep::stringToEntityType =
         {"phoenix", PROTOSS_PHOENIX},
         {"void_ray", PROTOSS_VOID_RAY},
         {"carrier", PROTOSS_CARRIER},
-        {"fleet_bacon", PROTOSS_FLEET_BEACON},
+        {"fleet_beacon", PROTOSS_FLEET_BEACON},
         {"dark_shrine", PROTOSS_DARK_SHRINE},
         {"templar_archives", PROTOSS_TEMPLAR_ARCHIVES},
         {"robotics_bay", PROTOSS_ROBOTICS_BAY},
