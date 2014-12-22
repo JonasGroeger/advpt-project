@@ -313,6 +313,9 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			case PROTOSS_ZEALOT:
 				new_unit = new Zealot();
 				break;
+			case PROTOSS_STALKER:
+				new_unit = new Stalker();
+				break;
 			case PROTOSS_PROBE:
 				new_unit = new Probe();
 				break;
