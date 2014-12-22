@@ -131,17 +131,29 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState &state)
             if (state.hasEnoughEntities(PROTOSS_HIGH_TEMPLAR, 2))
             {
                 archonFuseType = ArchonFuseType::DOUBLE_HIGH;
+                minerals = 100;
+                gas = 300;
+                time = 12;
+                supply = 4;
                 break;
             }
             else if (state.hasEnoughEntities(PROTOSS_DARK_TEMPLAR, 2))
             {
                 archonFuseType = ArchonFuseType::DOUBLE_DARK;
+                minerals = 175;
+                gas = 275;
+                time = 12;
+                supply = 4;
                 break;
             }
             else if (state.hasEnoughEntities(PROTOSS_HIGH_TEMPLAR, 1)
                     && state.hasEnoughEntities(PROTOSS_DARK_TEMPLAR, 1))
             {
                 archonFuseType = ArchonFuseType::DIFFERENT;
+                minerals = 250;
+                gas = 250;
+                time = 12;
+                supply = 4;
                 break;
             }
         default:
@@ -150,33 +162,6 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState &state)
 
     if (state.hasEnough(minerals, gas, supply))
     {
-        switch (archonFuseType)
-        {
-            case ArchonFuseType::DOUBLE_HIGH:
-                state.consumeEnoughEntities(PROTOSS_HIGH_TEMPLAR, 2);
-                minerals = 100;
-                gas = 300;
-                time = 12;
-                supply = 4;
-                break;
-            case ArchonFuseType::DOUBLE_DARK:
-                state.consumeEnoughEntities(PROTOSS_DARK_TEMPLAR, 2);
-                minerals = 175;
-                gas = 275;
-                time = 12;
-                supply = 4;
-                break;
-            case ArchonFuseType::DIFFERENT:
-                state.consumeEnoughEntities(PROTOSS_DARK_TEMPLAR, 1);
-                state.consumeEnoughEntities(PROTOSS_HIGH_TEMPLAR, 1);
-                minerals = 250;
-                gas = 250;
-                time = 12;
-                supply = 4;
-                break;
-            default:
-                break;
-        }
         state.consumeEnough(minerals, gas, supply);
         warpBuilding(time, type, state);
         return true;
