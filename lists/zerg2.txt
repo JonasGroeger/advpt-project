@@ -3,7 +3,9 @@ drone
 drone
 overlord
 spawning_pool
+zergling
 extractor
+zergling
 extractor
 drone
 drone

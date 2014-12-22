@@ -13,7 +13,6 @@ void Drone::update(GameState &state)
         currentProgress ++;
         if (currentProgress >= maxProgress)
         {
-            // TODO turn this into a spawning pool
             state.addEntity(product, 1);
             state.consumeDrone(this);
         }
@@ -35,6 +34,8 @@ void Drone::update(GameState &state)
 
 bool Drone::upgradeIfPossible(EntityType type, GameState &state)
 {
+    if (morphing) return false;
+
     int minerals = 0, gas = 0, time = 0;
     switch (type)
     {
