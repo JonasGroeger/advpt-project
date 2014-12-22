@@ -105,14 +105,15 @@ int Game::loop()
 bool Game::isAnybodyProducing() const
 {
     auto producers = currentState.getProducers();
-    bool result = false;
-    std::for_each(producers.begin(), producers.end(),
-        [&result] (Producer* prod) 
-        { 
-            if (prod->getTimeToFinish() > 0) result = true;
+
+    for (Producer *prod : producers)
+    {
+        if (prod->isProducing())
+        {
+            return true;
         }
-    );
-    return result;
+    }
+    return false;
 }
 
 bool Game::isFinished()

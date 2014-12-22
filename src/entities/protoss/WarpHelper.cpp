@@ -184,13 +184,11 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState &state)
     return false;
 }
 
-long WarpHelper::getTimeToFinish()
+bool WarpHelper::isProducing()
 {
     for (auto task : warpTasks)
     {
-        maxTime = (task->getTimeToFinish() > maxTime)
-                ? task->getTimeToFinish()
-                : maxTime;
+        if (task->getTimeToFinish() > 0) return true;
     }
 
     return maxTime;

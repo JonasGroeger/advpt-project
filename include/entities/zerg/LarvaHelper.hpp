@@ -40,7 +40,7 @@ class LarvaHelper : public Entity,
         LarvaHelper();
         void update(GameState& state) final;
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
-        virtual long getTimeToFinish() override;
+        virtual bool isProducing() override;
         virtual void applyChronoBoost() {}
 
         void increaseLarva();

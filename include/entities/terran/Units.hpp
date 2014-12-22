@@ -32,7 +32,7 @@ class SCV : public Entity,
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state);
         virtual void applyChronoBoost();
-        virtual long getTimeToFinish();
+        virtual bool isProducing();
 };
 
 class SupplyDepot: public Entity
@@ -213,7 +213,7 @@ class PlanetaryFortress : public Entity,
 		/* class Producer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state);
-        virtual long getTimeToFinish() override;
+        virtual bool isProducing() override;
         virtual void applyChronoBoost() override;
 	
 };
