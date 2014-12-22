@@ -140,9 +140,13 @@ public:
 
     void registerLogger(Game *newLogger);
     void unregisterLogger();
+
+    void printMessageProlog() const;
+    void printBuildStartMessage(EntityType type) const;
+    void printBuildEndMessage(EntityType type) const;
+    void printWorkerMessage() const;
+    void printResourcesMessage() const;
+
     int getCurrentLarva() const;
     int getMaxLarva() const;
-
-    //void printMessageProlog() const;
-    //void printBuildStartMessage(EntityType type) const;
 };

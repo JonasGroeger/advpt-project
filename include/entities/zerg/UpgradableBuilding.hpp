@@ -6,11 +6,17 @@
 #include "Updatable.hpp"
 #include "GameState.hpp"
 
+#include <iostream>
+
 template <EntityType first, EntityType second, int minerals, int gas, int time>
 class UpgradableBuilding : public Entity,
                            public Updatable,
                            public Upgradable 
 {
+private:
+    int maxProgress = 0, currentProgress = 0;
+    bool morphing = false;
+
     /* class Entity */
 public:
     UpgradableBuilding()
@@ -23,11 +29,14 @@ public:
 public:
     virtual bool upgradeIfPossible(EntityType type, GameState &state) override
     {
-        if (type == second)
+        // TODO ugly as fuck
+        if (!morphing && this->getType() == first && type == second && state.hasEnough(minerals, gas, 0))
         {
-            this->setType(second);
-            state.setAvailableEntityType(second);
-            //state.printBuildEndMessage(second);
+            morphing = true;
+            state.consumeEnough(minerals, gas, 0);
+            state.notifyEntityIsBeingProduced(second);
+            currentProgress = 0;
+            maxProgress = time;
             return true;
         }
         return false;
@@ -37,6 +46,19 @@ public:
 public:
     virtual void update(GameState &state) override
     {
+        if (morphing)
+        {
+            currentProgress ++;
+            
+            if (currentProgress > maxProgress)
+            {
+                state.printBuildEndMessage(second);
+                this->setType(second);
+                state.setAvailableEntityType(second);
+                morphing = false;
+                // TODO remove from ugpradables
+            }
+        }
     }
 
 };

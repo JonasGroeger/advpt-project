@@ -12,7 +12,7 @@ bool Game::executeBuildStep(BuildStep* step)
         {
             if (upgrd->upgradeIfPossible(step->getEntityType(), currentState))
             {
-                printBuildStartMessage(step->getEntityType());
+                currentState.printBuildStartMessage(step->getEntityType());
                 return true;
             }
         }
@@ -28,7 +28,7 @@ bool Game::executeBuildStep(BuildStep* step)
 
             if (prod->produceEntityIfPossible(step->getEntityType(), currentState))
             {
-                printBuildStartMessage(step->getEntityType());
+                currentState.printBuildStartMessage(step->getEntityType());
                 return true;
             }
         }
@@ -82,8 +82,8 @@ int Game::loop()
         currentState.reassignWorkers();
 
         if(somethingHappened){
-            printResourcesMessage();
-            printWorkerMessage();
+            currentState.printResourcesMessage();
+            currentState.printWorkerMessage();
         }
 
         currentState.incrementSimulationTime();
@@ -92,11 +92,11 @@ int Game::loop()
     if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
         //buildlist did not succeed so return non zero and print error message
         std::cerr << "Reached maximum Time - aborting..." << std::endl;
-        printWorkerMessage();
-        printResourcesMessage();
+        currentState.printWorkerMessage();
+        currentState.printResourcesMessage();
         return -1;
     }
-    printResourcesMessage();
+    currentState.printResourcesMessage();
 
     //all fine, return 0
     return 0;
@@ -124,79 +124,6 @@ bool Game::isFinished()
 GameState& Game::getFinalState()
 {
     return currentState;
-}
-
-void Game::printMessageProlog() const
-{
-    std::cout << std::left;
-    std::cout << std::setw(5);
-    std::cout << currentState.getSimulationTime();
-    std::cout << std::setw(14);
-}
-
-void Game::printBuildStartMessage(EntityType type) const
-{
-    printMessageProlog();
-    std::cout << "build-start";
-    std::cout << BuildStep::entityTypeToString[type];
-    std::cout << std::endl;
-}
-
-void Game::printBuildEndMessage(EntityType type) const
-{
-    printMessageProlog();
-    std::cout << "build-end";
-    std::cout << BuildStep::entityTypeToString[type];
-    std::cout << std::endl;
-#ifdef DEBUG
-    printResourcesMessage();
-#endif
-}
-
-void Game::printWorkerMessage() const
-{
-    int idleWorkers = 0;
-    int vespineWorkers = 0;
-    int mineralWorkers = 0;
-    int producingWorkers = 0;
-    auto workers = currentState.getWorkers();
-
-    for(auto* worker : workers){
-        switch(worker->getTypeOfWork()){
-            case TypeOfWork::Idle:
-                idleWorkers++;
-                break;
-            case TypeOfWork::Vespine:
-                vespineWorkers++;
-                break;
-            case TypeOfWork::Minerals:
-                mineralWorkers++;
-                break;
-            case TypeOfWork::Producing:
-                producingWorkers++;
-                break;
-        }
-    }
-
-    printMessageProlog();
-    std::cout << "workers";
-    std::cout << "minerals:" << mineralWorkers;
-    std::cout << ",vespene:" << vespineWorkers;
-    std::cout << std::endl;
-}
-
-void Game::printResourcesMessage() const
-{
-    printMessageProlog();
-    std::cout << "resources";
-    std::cout << "minerals:" << currentState.getMinerals();
-    std::cout << ",vespene:" << currentState.getVespine();
-    std::cout << ",usedSupply:" << currentState.getUsedSupply();
-    std::cout << ",availableSupply:" << currentState.getAvailableSupply();
-#ifdef DEBUG
-    std::cout << ",larva:" << currentState.getCurrentLarva() << '/' << currentState.getMaxLarva();
-#endif
-    std::cout << std::endl;
 }
 
 Game::Game(char *file)

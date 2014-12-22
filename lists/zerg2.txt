@@ -11,3 +11,4 @@ lair
 spire
 mutalisk
 greater_spire
+zergling

@@ -177,26 +177,7 @@ unsigned long GameState::getAvailableSupply() const
 
 void GameState::notifyEntityIsBeingProduced(EntityType type){
     entitiesInConstruction.set(type);
-    //printBuildStartMessage(type);
 }
-
-/*
-void GameState::printMessageProlog() const
-{
-    std::cout << std::left;
-    std::cout << std::setw(5);
-    std::cout << getSimulationTime();
-    std::cout << std::setw(14);
-}
-
-void GameState::printBuildStartMessage(EntityType type) const
-{
-    printMessageProlog();
-    std::cout << "build-start";
-    std::cout << BuildStep::entityTypeToString[type];
-    std::cout << std::endl;
-}
-*/
 
 void GameState::setAvailableEntityType(EntityType type){
 	constructedBitset.set(type);
@@ -521,7 +502,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
     // The message should only be printed once
 	if (logger != nullptr)
 	{
-		logger->printBuildEndMessage(type);
+		printBuildEndMessage(type);
 	}
 }
 
@@ -697,4 +678,77 @@ void GameState::registerLogger(Game *newLogger)
 void GameState::unregisterLogger()
 {
     logger = nullptr;
+}
+
+void GameState::printMessageProlog() const
+{
+    std::cout << std::left;
+    std::cout << std::setw(5);
+    std::cout << getSimulationTime();
+    std::cout << std::setw(14);
+}
+
+void GameState::printBuildStartMessage(EntityType type) const
+{
+    printMessageProlog();
+    std::cout << "build-start";
+    std::cout << BuildStep::entityTypeToString[type];
+    std::cout << std::endl;
+}
+
+void GameState::printBuildEndMessage(EntityType type) const
+{
+    printMessageProlog();
+    std::cout << "build-end";
+    std::cout << BuildStep::entityTypeToString[type];
+    std::cout << std::endl;
+#ifdef DEBUG
+    printResourcesMessage();
+#endif
+}
+
+void GameState::printWorkerMessage() const
+{
+    int idleWorkers = 0;
+    int vespineWorkers = 0;
+    int mineralWorkers = 0;
+    int producingWorkers = 0;
+    auto workers = getWorkers();
+
+    for(auto* worker : workers){
+        switch(worker->getTypeOfWork()){
+            case TypeOfWork::Idle:
+                idleWorkers++;
+                break;
+            case TypeOfWork::Vespine:
+                vespineWorkers++;
+                break;
+            case TypeOfWork::Minerals:
+                mineralWorkers++;
+                break;
+            case TypeOfWork::Producing:
+                producingWorkers++;
+                break;
+        }
+    }
+
+    printMessageProlog();
+    std::cout << "workers";
+    std::cout << "minerals:" << mineralWorkers;
+    std::cout << ",vespene:" << vespineWorkers;
+    std::cout << std::endl;
+}
+
+void GameState::printResourcesMessage() const
+{
+    printMessageProlog();
+    std::cout << "resources";
+    std::cout << "minerals:" << getMinerals();
+    std::cout << ",vespene:" << getVespine();
+    std::cout << ",usedSupply:" << getUsedSupply();
+    std::cout << ",availableSupply:" << getAvailableSupply();
+#ifdef DEBUG
+    std::cout << ",larva:" << getCurrentLarva() << '/' << getMaxLarva();
+#endif
+    std::cout << std::endl;
 }
