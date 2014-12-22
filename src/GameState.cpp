@@ -319,7 +319,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case PROTOSS_NEXUS:
 				new_unit = new Nexus();
-                increaseSupply(9);
+                increaseSupply(10);
 				break;
 			case PROTOSS_PHOTON_CANNON:
 				new_unit = new PhotonCannon();
