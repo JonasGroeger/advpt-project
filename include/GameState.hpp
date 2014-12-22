@@ -123,7 +123,7 @@ public:
     void reassignWorkers();
 
     void increaseLarva();
-    void addMaxLarva(unsigned long amount);
+    void addHatchery();
 
     //contains all created entities
     const vector<EntityType>& getEntities(EntityType& type) const;
@@ -137,6 +137,9 @@ public:
 
     void registerLogger(Game *newLogger);
     void unregisterLogger();
+    int getCurrentLarva() const;
+    int getMaxLarva() const;
+
     //void printMessageProlog() const;
     //void printBuildStartMessage(EntityType type) const;
 };

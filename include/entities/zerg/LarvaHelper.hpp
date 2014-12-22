@@ -31,8 +31,8 @@ class LarvaHelper : public Entity,
 
         int currentTime = 0;
         int maxTime = 0;
-        int maxLarva = 16; // TODO GameState should increase this in addEntity
-        int currentLarva = 16; // TODO GameState should increase this in addEntity
+        int numHatcheries = 0; // TODO GameState should increase this in addEntity
+        int currentLarva = 0; // TODO GameState should increase this in addEntity
 
         std::priority_queue<MorphObject*, std::vector<MorphObject*>, MorphObjectComparator> morphings;
 
@@ -44,5 +44,8 @@ class LarvaHelper : public Entity,
         virtual void applyChronoBoost() {}
 
         void increaseLarva();
-        void addMaxLarva(unsigned long);
+        void addHatchery();
+
+        int getMaxLarva();
+        int getCurrentLarva();
 };

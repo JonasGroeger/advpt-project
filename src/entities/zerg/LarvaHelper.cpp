@@ -163,13 +163,23 @@ bool LarvaHelper::isProducing()
 void LarvaHelper::increaseLarva()
 {
     currentLarva ++;
-    if (currentLarva > maxLarva)
+    if (currentLarva > numHatcheries * 3)
     {
-        currentLarva = maxLarva;
+        currentLarva = numHatcheries * 3;
     }
 }
 
-void LarvaHelper::addMaxLarva(unsigned long amount)
+void LarvaHelper::addHatchery()
 {
-    maxLarva += amount;
+    numHatcheries ++;
+}
+
+int LarvaHelper::getMaxLarva()
+{
+    return numHatcheries * 3;
+}
+
+int LarvaHelper::getCurrentLarva()
+{
+    return currentLarva;
 }

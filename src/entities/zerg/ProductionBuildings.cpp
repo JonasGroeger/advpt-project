@@ -3,12 +3,12 @@
 
 bool Hatchery::produceEntityIfPossible(EntityType type, GameState& state)
 {
-    if(isBusy()){
+    if (isBusy()){
         return false;
     }
 
     if(type == ZERG_QUEEN){
-
+            // TODO
     }
     return false;
 }
@@ -50,6 +50,7 @@ void Hatchery::update(GameState& state){
     //larva production every 15 seconds
     if(state.getSimulationTime() % 15 == 0){
         //TODO add larva to LarvaHelper is currentLarva < 3 ?
+        state.increaseLarva();
     }
 
     switch(this->state)

@@ -418,6 +418,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			case ZERG_HATCHERY:
 				new_unit = new Hatchery();
 				increaseSupply(2);
+                addHatchery();
 				break;
 			case ZERG_LARVA:
 				//do we need that here ?
@@ -529,12 +530,30 @@ void GameState::increaseLarva()
     }
 }
 
-void GameState::addMaxLarva(unsigned long amount)
+void GameState::addHatchery()
 {
     if (larvaHelper != nullptr)
     {
-        larvaHelper->addMaxLarva(amount);
+        larvaHelper->addHatchery();
     }
+}
+
+int GameState::getMaxLarva() const
+{
+    if (larvaHelper != nullptr)
+    {
+        return larvaHelper->getMaxLarva();
+    }
+    return -1;
+}
+
+int GameState::getCurrentLarva() const
+{
+    if (larvaHelper != nullptr)
+    {
+        return larvaHelper->getCurrentLarva();
+    }
+    return -1;
 }
 
 void GameState::addCreatedEntity(Entity* entity)

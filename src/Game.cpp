@@ -191,6 +191,9 @@ void Game::printResourcesMessage() const
     std::cout << ",vespene:" << currentState.getVespine();
     std::cout << ",usedSupply:" << currentState.getUsedSupply();
     std::cout << ",availableSupply:" << currentState.getAvailableSupply();
+#ifdef DEBUG
+    std::cout << ",larva:" << currentState.getCurrentLarva() << '/' << currentState.getMaxLarva();
+#endif
     std::cout << std::endl;
 }
 
