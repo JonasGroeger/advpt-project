@@ -306,27 +306,103 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 			case PROTOSS_MOTHERSHIP:
 				new_unit = new MotherShip();
 				break;
+				//ZERG
             case ZERG_LARVA_HELPER:
                 //larvaHelper = new LarvaHelper();
                 //new_unit = static_cast<Entity*> (larvaHelper);
                 break;
-            case ZERG_HATCHERY:
-                new_unit = new Hatchery();
-                increaseSupply(2);
-                break;
-            case ZERG_DRONE:
-                new_unit = new Drone();
-                break;
-            case ZERG_SPAWNING_POOL:
-                new_unit = new SpawningPool();
-                break;
-            case ZERG_OVERLORD:
-                new_unit = new Overlord();
-                increaseSupply(8);
-                break;
-            case ZERG_ZERGLING:
-                new_unit = new Zergling();
-                break;
+			case ZERG_HATCHERY:
+				new_unit = new Hatchery();
+				increaseSupply(2);
+				break;
+			case ZERG_LARVA:
+				//do we need that here ?
+				break;
+			case ZERG_EVOLUTION_CHAMBER:
+				new_unit = new EvolutionChamber();
+				break;
+			case ZERG_SPORE_CRAWLER:
+				new_unit = new SporeCrawler();
+				break;
+			case ZERG_DRONE:
+				new_unit = new Drone();
+				break;
+			case ZERG_QUEEN:
+				//new_unit = new Queen();
+				break;
+			case ZERG_LAIR:
+				//only via upgrade
+				break;
+			case ZERG_OVERSEER:
+				//only via upgrade
+				break;
+			case ZERG_OVERLORD:
+				new_unit = new Overlord();
+				increaseSupply(8);
+				break;
+			case ZERG_SPAWNING_POOL:
+				new_unit = new SpawningPool();
+				break;
+			case ZERG_SPINE_CRAWLER:
+				new_unit = new SpineCrawler();
+				break;
+			case ZERG_ROACH_WARREN:
+				new_unit = new RoachWarren();
+				break;
+			case ZERG_EXTRACTOR:
+				new_unit = new Extractor();
+				break;
+			case ZERG_ZERGLING:
+				new_unit = new Zergling();
+				break;
+			case ZERG_ROACH:
+				new_unit = new Roach();
+				break;
+			case ZERG_BANELING:
+				//upgrade
+				break;
+			case ZERG_INFESTATION_PIT:
+				new_unit = new InfestationPit();
+				break;
+			case ZERG_INFESTOR:
+				new_unit = new Infestor();
+				break;
+			case ZERG_HIVE:
+				//upgrade
+				break;
+			case ZERG_SPIRE:
+				new_unit = new Spire();
+				break;
+			case ZERG_GREATER_SPIRE:
+				//upgrade
+				break;
+			case ZERG_CORRUPTOR:
+				new_unit = new Corruptor();
+				break;
+			case ZERG_MUTALISK:
+				new_unit = new Mutalisk();
+				break;
+			case ZERG_BROOD_LORD:
+				//upgrade
+				break;
+			case ZERG_ULTRALIK_CAVERN:
+				new_unit = new UltraliskCavern();
+				break;
+			case ZERG_ULTRALISK:
+				new_unit = new Ultralisk();
+				break;
+			case ZERG_NYDUS_WORM:
+				new_unit = new NydusWorm();
+				break;
+			case ZERG_NYDUS_NETWORK:
+				new_unit = new NydusNetwork();
+				break;
+			case ZERG_HYDRALISK_DEN:
+				new_unit = new HydraliskDen();
+				break;
+			case ZERG_HYDRALISK:
+				new_unit = new Hydralisk();
+				break;
 			case NONE:
 				return;
 			default:
