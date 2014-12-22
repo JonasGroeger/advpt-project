@@ -74,6 +74,7 @@ void GameState::consumeEnoughEntities(EntityType type, int amount){
 
 void GameState::consumeDrone(Drone *drone)
 {
+    // We can be sure the drone is idle because the drone itself called this method
     for (auto it = updatables.begin(); it != updatables.end(); it++)
     {
         if (*it == drone)
@@ -109,6 +110,8 @@ void GameState::consumeDrone(Drone *drone)
             break;
         }
     }
+
+    usedSupply -= 1;
 
     delete drone;
 }
@@ -511,6 +514,11 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 		}
 		addEntityToVectors(new_unit);
     }
+    // The message should only be printed once
+	if (logger != nullptr)
+	{
+		logger->printBuildEndMessage(type);
+	}
 }
 
 void GameState::increaseLarva()
@@ -560,11 +568,6 @@ void GameState::addEntityToVectors(Entity* entity)
 		Worker *worker = dynamic_cast<Worker*> (entity);
 		workers.push_back(worker);
         worker->setTypeOfWork(TypeOfWork::Minerals);
-	}
-
-	if (logger != nullptr)
-	{
-		logger->printBuildEndMessage(entity->getType());
 	}
 }
 
