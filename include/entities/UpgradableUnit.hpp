@@ -8,6 +8,12 @@
 
 #include <iostream>
 
+
+/*
+ * This class does not check for extra dependencies.
+ * THIS IS WRONG TODO
+ */
+
 template <EntityType first, EntityType second, int minerals, int gas, int supply, int time>
 class UpgradableUnit : public Entity,
                            public Updatable,

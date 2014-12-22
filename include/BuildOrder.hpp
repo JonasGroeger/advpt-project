@@ -1,11 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <set>
 #include <iostream>
 //#include <exception>
 #include <fstream>
 #include <algorithm>
 #include <string>
+#include <sstream>
 
 #include "BuildStep.hpp"
 #include "EntityType.hpp"
@@ -19,6 +21,8 @@ private:
     vector<BuildStep*> buildSteps;
     vector<BuildStep*>::iterator iterator;
     EntityType race;
+
+    static map<EntityType, vector<EntityType>> dependencies;
 
 public:
     BuildOrder(const char* file);
