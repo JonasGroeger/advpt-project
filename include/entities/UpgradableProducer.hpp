@@ -7,6 +7,7 @@
 #include "EntityType.hpp"
 
 class Producer;
+
 class Updatable;
 
 
@@ -20,16 +21,22 @@ class UpgradableProducer : public Producer,
 {
 /* Updatable */
 public:
-    virtual void update(GameState& state);
+    virtual void update(GameState &state);
+
     virtual void printMessageProlog(unsigned int time) const;
+
     virtual void printBuildStartMessage(EntityType type, unsigned int time) const;
+
     virtual void printBuildEndMessage(EntityType type, unsigned int time) const;
 
 
 /* Producer */
 public:
     virtual bool produceEntityIfPossible(EntityType type, GameState &state) = 0;
+
     virtual bool upgradeIfPossible(EntityType type, GameState &state) = 0;
+
     long getTimeToFinish() final;
+
     void applyChronoBoost() final;
 };

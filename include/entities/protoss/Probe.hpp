@@ -10,10 +10,10 @@ class Probe : public Entity,
               public Updatable
 {
     /* class Entity */
-    public:
-        Probe();
+public:
+    Probe();
 
     /* class Updatable */
-    public:
-        void update(GameState &state);
+public:
+    void update(GameState &state);
 };

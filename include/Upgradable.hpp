@@ -1,4 +1,5 @@
 #pragma once
+
 #include "EntityType.hpp"
 
 class GameState;
@@ -6,6 +7,9 @@ class GameState;
 class Upgradable
 {
 public:
-    virtual ~Upgradable() {}
+    virtual ~Upgradable()
+    {
+    }
+
     virtual bool upgradeIfPossible(EntityType type, GameState &state) = 0;
 };

@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-bool Game::executeBuildStep(BuildStep* step)
+bool Game::executeBuildStep(BuildStep *step)
 {
     //std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
     //std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
@@ -21,7 +21,7 @@ bool Game::executeBuildStep(BuildStep* step)
         auto producers = currentState.getProducers();
         for (auto it = producers.begin(); it != producers.end(); it++)
         {
-            Producer* prod = *it;
+            Producer *prod = *it;
 
             //TODO fix produce interface
 
@@ -45,8 +45,8 @@ bool Game::executeBuildStep(BuildStep* step)
 
 int Game::loop()
 {
-    while ( (!buildOrder.isDone() || isAnybodyProducing())
-          && !currentState.maxSimTimeReached())
+    while ((!buildOrder.isDone() || isAnybodyProducing())
+            && !currentState.maxSimTimeReached())
     {
         bool somethingHappened = false;
 
@@ -55,14 +55,17 @@ int Game::loop()
          * that finishes this tick is cleared to produce something new
          */
         auto updatables = currentState.getUpdatables();
-        std::for_each(updatables.begin(), updatables.end(), 
-            [this] (Updatable* updt) { updt->update(this->currentState); }
+        std::for_each(updatables.begin(), updatables.end(),
+                [this](Updatable *updt)
+                {
+                    updt->update(this->currentState);
+                }
         );
 
         // As long as there are still steps left
         while (!buildOrder.isDone())
         {
-            BuildStep* nextStep = buildOrder.getNextStep();
+            BuildStep *nextStep = buildOrder.getNextStep();
 
             // We try to execute the first one
             if (executeBuildStep(nextStep))
@@ -80,7 +83,8 @@ int Game::loop()
 
         currentState.reassignWorkers();
 
-        if(somethingHappened){
+        if (somethingHappened)
+        {
             printResourcesMessage();
             printWorkerMessage();
         }
@@ -88,7 +92,8 @@ int Game::loop()
         currentState.incrementSimulationTime();
     }
 
-    if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
+    if (currentState.maxSimTimeReached() && !buildOrder.isDone())
+    {
         //buildlist did not succeed so return non zero and print error message
         std::cerr << "Reached maximum Time - aborting..." << std::endl;
         printWorkerMessage();
@@ -106,10 +111,10 @@ bool Game::isAnybodyProducing() const
     auto producers = currentState.getProducers();
     bool result = false;
     std::for_each(producers.begin(), producers.end(),
-        [&result] (Producer* prod) 
-        { 
-            if (prod->getTimeToFinish() > 0) result = true;
-        }
+            [&result](Producer *prod)
+            {
+                if (prod->getTimeToFinish() > 0) result = true;
+            }
     );
     return result;
 }
@@ -119,7 +124,7 @@ bool Game::isFinished()
     return (buildOrder.getNextStep() == nullptr);
 }
 
-GameState& Game::getFinalState()
+GameState &Game::getFinalState()
 {
     return currentState;
 }
@@ -157,8 +162,10 @@ void Game::printWorkerMessage() const
     int producingWorkers = 0;
     auto workers = currentState.getWorkers();
 
-    for(auto* worker : workers){
-        switch(worker->getTypeOfWork()){
+    for (auto *worker : workers)
+    {
+        switch (worker->getTypeOfWork())
+        {
             case TypeOfWork::Idle:
                 idleWorkers++;
                 break;
@@ -194,7 +201,7 @@ void Game::printResourcesMessage() const
 
 // TODO remove these debug values of gamestate
 Game::Game(char *file)
-    :buildOrder(BuildOrder(file))
+        : buildOrder(BuildOrder(file))
 {
     //TODO maxSimTime == 1000 should fit this assignments requirements
     //
@@ -221,7 +228,7 @@ Game::Game(char *file)
     }
 
     currentState.setMaxSimTime(3000);
-    currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
+    currentState.addMineralsWithFactor(50 * GameState::FACTOR);
     currentState.consumeEnoughSupply(5 * 1); // Each Worker consumes 1 supply 
 
     currentState.registerLogger(this);

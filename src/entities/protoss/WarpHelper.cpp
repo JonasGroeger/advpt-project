@@ -1,32 +1,36 @@
 #include <entities/protoss/WarpHelper.hpp>
 
-WarpHelper* WarpHelper::_instance = 0;
+WarpHelper *WarpHelper::_instance = 0;
 
 /* Updatable */
 void WarpHelper::update(GameState &state)
 {
     auto it = warpTasks.begin();
     auto end = warpTasks.end();
-    while (it != end) {
+    while (it != end)
+    {
         // do some stuff
-        if((*it)->isFinished()){
+        if ((*it)->isFinished())
+        {
             state.addEntity((*it)->getType(), 1);
 
-            WarpTask* toDelete = *it;
+            WarpTask *toDelete = *it;
             warpTasks.erase(it);
             delete(toDelete);
         }
-        else{
+        else
+        {
             (*it)->update();
         }
         it++;
     }
 }
 
-bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
+bool WarpHelper::produceEntityIfPossible(EntityType type, GameState &state)
 {
     int minerals = 0, gas = 0, time = 0;
-    switch(type){
+    switch (type)
+    {
         case PROTOSS_NEXUS:
             minerals = 400;
             time = 100;
@@ -40,35 +44,40 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 30;
             break;
         case PROTOSS_GATEWAY:
-            if(!state.hasEntity(PROTOSS_NEXUS) || !state.hasEntity(PROTOSS_PYLON)){
+            if (!state.hasEntity(PROTOSS_NEXUS) || !state.hasEntity(PROTOSS_PYLON))
+            {
                 return false;
             }
             minerals = 150;
             time = 65;
             break;
         case PROTOSS_FORGE:
-            if(!state.hasEntity(PROTOSS_NEXUS) || !state.hasEntity(PROTOSS_PYLON)){
+            if (!state.hasEntity(PROTOSS_NEXUS) || !state.hasEntity(PROTOSS_PYLON))
+            {
                 return false;
             }
             minerals = 150;
             time = 45;
             break;
         case PROTOSS_CYBERNETICS_CORE:
-            if(!state.hasEntity(PROTOSS_GATEWAY)){
+            if (!state.hasEntity(PROTOSS_GATEWAY))
+            {
                 return false;
             }
             minerals = 150;
             time = 50;
             break;
         case PROTOSS_PHOTON_CANNON:
-            if(!state.hasEntity(PROTOSS_FORGE)){
+            if (!state.hasEntity(PROTOSS_FORGE))
+            {
                 return false;
             }
             minerals = 150;
             time = 40;
             break;
         case PROTOSS_ROBOTICS_FACILITY:
-            if(!state.hasEntity(PROTOSS_CYBERNETICS_CORE)){
+            if (!state.hasEntity(PROTOSS_CYBERNETICS_CORE))
+            {
                 return false;
             }
             minerals = 200;
@@ -76,7 +85,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 60;
             break;
         case PROTOSS_TWILIGHT_COUNCIL:
-            if(!state.hasEntity(PROTOSS_CYBERNETICS_CORE)){
+            if (!state.hasEntity(PROTOSS_CYBERNETICS_CORE))
+            {
                 return false;
             }
             minerals = 150;
@@ -84,7 +94,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 50;
             break;
         case PROTOSS_STARGATE:
-            if(!state.hasEntity(PROTOSS_CYBERNETICS_CORE)){
+            if (!state.hasEntity(PROTOSS_CYBERNETICS_CORE))
+            {
                 return false;
             }
             minerals = 150;
@@ -92,7 +103,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 60;
             break;
         case PROTOSS_ROBOTICS_BAY:
-            if(!state.hasEntity(PROTOSS_ROBOTICS_FACILITY)){
+            if (!state.hasEntity(PROTOSS_ROBOTICS_FACILITY))
+            {
                 return false;
             }
             minerals = 200;
@@ -100,7 +112,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 65;
             break;
         case PROTOSS_TEMPLAR_ARCHIVES:
-            if(!state.hasEntity(PROTOSS_TWILIGHT_COUNCIL)){
+            if (!state.hasEntity(PROTOSS_TWILIGHT_COUNCIL))
+            {
                 return false;
             }
             minerals = 150;
@@ -108,7 +121,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 50;
             break;
         case PROTOSS_DARK_SHRINE:
-            if(!state.hasEntity(PROTOSS_TWILIGHT_COUNCIL)){
+            if (!state.hasEntity(PROTOSS_TWILIGHT_COUNCIL))
+            {
                 return false;
             }
             minerals = 100;
@@ -116,7 +130,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             time = 100;
             break;
         case PROTOSS_FLEET_BEACON:
-            if(!state.hasEntity(PROTOSS_STARGATE)){
+            if (!state.hasEntity(PROTOSS_STARGATE))
+            {
                 return false;
             }
             minerals = 300;
@@ -127,7 +142,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
             return false;
     }
 
-    if(state.hasEnough(minerals, gas, 0)){
+    if (state.hasEnough(minerals, gas, 0))
+    {
         state.consumeEnough(minerals, gas, 0);
         warpBuilding(time, type, state);
         return true;
@@ -137,7 +153,8 @@ bool WarpHelper::produceEntityIfPossible(EntityType type, GameState& state)
 
 long WarpHelper::getTimeToFinish()
 {
-    for(auto task : warpTasks){
+    for (auto task : warpTasks)
+    {
         maxTime = (task->getTimeToFinish() > maxTime)
                 ? task->getTimeToFinish()
                 : maxTime;
@@ -149,7 +166,7 @@ long WarpHelper::getTimeToFinish()
 
 void WarpHelper::warpBuilding(int duration, EntityType type, GameState &state)
 {
-    WarpTask* newTask = new WarpTask(duration, type);
+    WarpTask *newTask = new WarpTask(duration, type);
     warpTasks.push_back(newTask);
     state.notifyEntityIsBeingProduced(type);
 }

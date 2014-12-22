@@ -11,107 +11,119 @@
 class Overlord : public Entity
 {
     /* class Entity */
-    public:
-        Overlord(){
-            type = ZERG_OVERLORD;
-        }
+public:
+    Overlord()
+    {
+        type = ZERG_OVERLORD;
+    }
 };
 
 class SpawningPool : public Entity
 {
     /* class Entity */
-    public:
-        SpawningPool(){
-            type = ZERG_SPAWNING_POOL;
-        }
+public:
+    SpawningPool()
+    {
+        type = ZERG_SPAWNING_POOL;
+    }
 };
 
 class Roach : public Entity
 {
     /* class Entity */
-    public:
-        Roach(){
-            type = ZERG_ROACH;
-        }
+public:
+    Roach()
+    {
+        type = ZERG_ROACH;
+    }
 };
 
 class Hydralisk : public Entity
 {
     /* class Entity */
-    public:
-        Hydralisk(){
-            type = ZERG_HYDRALISK;
-        }
+public:
+    Hydralisk()
+    {
+        type = ZERG_HYDRALISK;
+    }
 };
 
 class NydusWorm : public Entity
 {
     /* class Entity */
-    public:
-        NydusWorm(){
-            type = ZERG_NYDUS_WORM;
-        }
+public:
+    NydusWorm()
+    {
+        type = ZERG_NYDUS_WORM;
+    }
 };
 
 class Ultralisk : public Entity
 {
     /* class Entity */
-    public:
-        Ultralisk(){
-            type = ZERG_ULTRALISK;
-        }
+public:
+    Ultralisk()
+    {
+        type = ZERG_ULTRALISK;
+    }
 };
 
 class Infestor : public Entity
 {
     /* class Entity */
-    public:
-        Infestor(){
-            type = ZERG_INFESTOR;
-        }
+public:
+    Infestor()
+    {
+        type = ZERG_INFESTOR;
+    }
 };
 
 class Corruptor : public Entity
 {
     /* class Entity */
-    public:
-        Corruptor(){
-            type = ZERG_CORRUPTOR;
-        }
+public:
+    Corruptor()
+    {
+        type = ZERG_CORRUPTOR;
+    }
 };
 
 class Mutalisk : public Entity
 {
     /* class Entity */
-    public:
-        Mutalisk(){
-            type = ZERG_MUTALISK;
-        }
+public:
+    Mutalisk()
+    {
+        type = ZERG_MUTALISK;
+    }
 };
 
 class Zergling : public Entity
 {
     /* class Entity */
-    public:
-        Zergling(){
-            type = ZERG_ZERGLING;
-        }
+public:
+    Zergling()
+    {
+        type = ZERG_ZERGLING;
+    }
 };
 
 class Extractor : public Entity
 {
     /* class Entity */
-    public:
-        Extractor(){
-            type = ZERG_EXTRACTOR;
-        }
+public:
+    Extractor()
+    {
+        type = ZERG_EXTRACTOR;
+    }
 };
 
 class SpineCrawler : public Entity
 {
     /* class Entity */
 public:
-    SpineCrawler(){
+    SpineCrawler()
+    {
         type = ZERG_SPINE_CRAWLER;
     }
 };
@@ -120,7 +132,8 @@ class RoachWarren : public Entity
 {
     /* class Entity */
 public:
-    RoachWarren(){
+    RoachWarren()
+    {
         type = ZERG_ROACH_WARREN;
     }
 };
@@ -129,7 +142,8 @@ class BanelingNest : public Entity
 {
     /* class Entity */
 public:
-    BanelingNest(){
+    BanelingNest()
+    {
         type = ZERG_BANELING_NEST;
     }
 };
@@ -138,7 +152,8 @@ class Spire : public Entity
 {
     /* class Entity */
 public:
-    Spire(){
+    Spire()
+    {
         type = ZERG_SPIRE;
     }
 };
@@ -147,7 +162,8 @@ class InfestationPit : public Entity
 {
     /* class Entity */
 public:
-    InfestationPit(){
+    InfestationPit()
+    {
         type = ZERG_INFESTATION_PIT;
     }
 };
@@ -156,7 +172,8 @@ class EvolutionChamber : public Entity
 {
     /* class Entity */
 public:
-    EvolutionChamber(){
+    EvolutionChamber()
+    {
         type = ZERG_EVOLUTION_CHAMBER;
     }
 };
@@ -165,7 +182,8 @@ class SporeCrawler : public Entity
 {
     /* class Entity */
 public:
-    SporeCrawler(){
+    SporeCrawler()
+    {
         type = ZERG_SPORE_CRAWLER;
     }
 };
@@ -174,7 +192,8 @@ class HydraliskDen : public Entity
 {
     /* class Entity */
 public:
-    HydraliskDen(){
+    HydraliskDen()
+    {
         type = ZERG_HYDRALISK_DEN;
     }
 };
@@ -183,7 +202,8 @@ class UltraliskCavern : public Entity
 {
     /* class Entity */
 public:
-    UltraliskCavern(){
+    UltraliskCavern()
+    {
         type = ZERG_ULTRALIK_CAVERN;
     }
 };

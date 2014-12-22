@@ -1,27 +1,32 @@
 #include <entities/zerg/ProductionBuildings.hpp>
 #include <GameState.hpp>
 
-bool Hatchery::produceEntityIfPossible(EntityType type, GameState& state)
+bool Hatchery::produceEntityIfPossible(EntityType type, GameState &state)
 {
-    if(isBusy()){
+    if (isBusy())
+    {
         return false;
     }
 
-    if(type == ZERG_QUEEN){
+    if (type == ZERG_QUEEN)
+    {
 
     }
     return false;
 }
+
 bool Hatchery::upgradeIfPossible(EntityType type, GameState &state)
 {
 
-    if(isBusy() || this->getType() == ZERG_HIVE){
+    if (isBusy() || this->getType() == ZERG_HIVE)
+    {
         return false;
     }
 
-    if(type == ZERG_LAIR && this->getType() == ZERG_HATCHERY)
+    if (type == ZERG_LAIR && this->getType() == ZERG_HATCHERY)
     {
-        if(state.hasEnough(150, 100, 0)){
+        if (state.hasEnough(150, 100, 0))
+        {
             state.consumeEnough(150, 100, 0);
             product = type;
             maxProgress = 80;
@@ -30,9 +35,10 @@ bool Hatchery::upgradeIfPossible(EntityType type, GameState &state)
             return true;
         }
     }
-    else if(type == ZERG_HIVE && this->getType() == ZERG_LAIR)
+    else if (type == ZERG_HIVE && this->getType() == ZERG_LAIR)
     {
-        if(state.hasEnough(200, 150, 0)){
+        if (state.hasEnough(200, 150, 0))
+        {
             state.consumeEnough(200, 150, 0);
             product = type;
             maxProgress = 100;
@@ -45,17 +51,19 @@ bool Hatchery::upgradeIfPossible(EntityType type, GameState &state)
     return false;
 }
 
-void Hatchery::update(GameState& state){
+void Hatchery::update(GameState &state)
+{
 
     //larva production every 15 seconds
-    if(state.getSimulationTime() % 15 == 0){
+    if (state.getSimulationTime() % 15 == 0)
+    {
         //TODO add larva to LarvaHelper is currentLarva < 3 ?
     }
 
-    switch(this->state)
+    switch (this->state)
     {
         case UPState::PRODUCING:
-            currentProgress ++;
+            currentProgress++;
 
             if (currentProgress >= maxProgress)
             {
@@ -64,7 +72,7 @@ void Hatchery::update(GameState& state){
             }
             break;
         case UPState::UPGRADING:
-            currentProgress ++;
+            currentProgress++;
 
             if (currentProgress >= maxProgress)
             {
@@ -82,14 +90,18 @@ void Hatchery::update(GameState& state){
 }
 
 
-bool NydusNetwork::produceEntityIfPossible(EntityType type, GameState& state){
+bool NydusNetwork::produceEntityIfPossible(EntityType type, GameState &state)
+{
 
-    if(isBusy()){
+    if (isBusy())
+    {
         return false;
     }
 
-    if(type == ZERG_NYDUS_WORM){
-        if(state.hasEnough(100, 100, 0)){
+    if (type == ZERG_NYDUS_WORM)
+    {
+        if (state.hasEnough(100, 100, 0))
+        {
             state.consumeEnough(100, 100, 0);
             maxProgress = 20;
             currentProgress = 0;

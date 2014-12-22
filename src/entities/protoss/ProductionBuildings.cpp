@@ -1,7 +1,7 @@
 #include "entities/protoss/ProductionBuildings.hpp"
 #include "GameState.hpp"
 
-bool Nexus::produceEntityIfPossible(EntityType type, GameState& state)
+bool Nexus::produceEntityIfPossible(EntityType type, GameState &state)
 {
     if (isBusy())
     {
@@ -9,7 +9,8 @@ bool Nexus::produceEntityIfPossible(EntityType type, GameState& state)
     }
 
     int minerals = 0, gas = 0, time = 0, supply = 0;
-    switch (type){
+    switch (type)
+    {
         case PROTOSS_PROBE:
             minerals = 50;
             time = 17;
@@ -17,7 +18,8 @@ bool Nexus::produceEntityIfPossible(EntityType type, GameState& state)
             break;
 
         case PROTOSS_MOTHERSHIP:
-            if(state.hasEntity(PROTOSS_MOTHERSHIP) || !state.hasEntity(PROTOSS_FLEET_BEACON)){
+            if (state.hasEntity(PROTOSS_MOTHERSHIP) || !state.hasEntity(PROTOSS_FLEET_BEACON))
+            {
                 //only allowed once
                 return false;
             }
@@ -30,7 +32,8 @@ bool Nexus::produceEntityIfPossible(EntityType type, GameState& state)
             return false;
     }
 
-    if(state.hasEnough(minerals, gas, supply)){
+    if (state.hasEnough(minerals, gas, supply))
+    {
         currentProgress = 0;
         maxProgress = time;
         state.consumeEnough(minerals, gas, supply);
@@ -42,7 +45,7 @@ bool Nexus::produceEntityIfPossible(EntityType type, GameState& state)
     return false;
 }
 
-bool Gateway::produceEntityIfPossible(EntityType type, GameState& state)
+bool Gateway::produceEntityIfPossible(EntityType type, GameState &state)
 {
     if (isBusy())
     {
@@ -85,9 +88,10 @@ bool Gateway::produceEntityIfPossible(EntityType type, GameState& state)
         default:
             break;
     }
-    if(state.hasEntity(PROTOSS_CYBERNETICS_CORE) && !hit)
+    if (state.hasEntity(PROTOSS_CYBERNETICS_CORE) && !hit)
     {
-        switch (type){
+        switch (type)
+        {
             case PROTOSS_STALKER:
                 minerals = 125;
                 gas = 50;
@@ -108,7 +112,8 @@ bool Gateway::produceEntityIfPossible(EntityType type, GameState& state)
     }
 
 
-    if(state.hasEnough(minerals, gas, supply) && hit){
+    if (state.hasEnough(minerals, gas, supply) && hit)
+    {
         currentProgress = 0;
         maxProgress = time;
         state.consumeEnough(minerals, gas, supply);
@@ -120,15 +125,17 @@ bool Gateway::produceEntityIfPossible(EntityType type, GameState& state)
     return false;
 }
 
-bool RoboticsFacility::produceEntityIfPossible(EntityType type, GameState& state)
+bool RoboticsFacility::produceEntityIfPossible(EntityType type, GameState &state)
 {
 
-    if(isBusy()){
+    if (isBusy())
+    {
         return false;
     }
 
     int minerals = 0, gas = 0, time = 0, supply = 0;
-    switch (type){
+    switch (type)
+    {
         case PROTOSS_WARP_PRISM:
             minerals = 200;
             time = 50;
@@ -147,7 +154,8 @@ bool RoboticsFacility::produceEntityIfPossible(EntityType type, GameState& state
             supply = 1;
             break;
         case PROTOSS_COLOSSUS:
-            if(!state.hasEntity(PROTOSS_ROBOTICS_BAY)){
+            if (!state.hasEntity(PROTOSS_ROBOTICS_BAY))
+            {
                 return false;
             }
             minerals = 300;
@@ -159,7 +167,8 @@ bool RoboticsFacility::produceEntityIfPossible(EntityType type, GameState& state
             return false;
     }
 
-    if(state.hasEnough(minerals, gas, supply)){
+    if (state.hasEnough(minerals, gas, supply))
+    {
         currentProgress = 0;
         maxProgress = time;
         state.consumeEnough(minerals, gas, supply);
@@ -171,14 +180,16 @@ bool RoboticsFacility::produceEntityIfPossible(EntityType type, GameState& state
     return false;
 }
 
-bool Stargate::produceEntityIfPossible(EntityType type, GameState& state)
+bool Stargate::produceEntityIfPossible(EntityType type, GameState &state)
 {
-    if(isBusy()){
+    if (isBusy())
+    {
         return false;
     }
 
     int minerals = 0, gas = 0, time = 0, supply = 0;
-    switch (type){
+    switch (type)
+    {
         case PROTOSS_PHOENIX:
             minerals = 150;
             gas = 100;
@@ -192,7 +203,8 @@ bool Stargate::produceEntityIfPossible(EntityType type, GameState& state)
             supply = 3;
             break;
         case PROTOSS_CARRIER:
-            if(!state.hasEntity(PROTOSS_FLEET_BEACON)){
+            if (!state.hasEntity(PROTOSS_FLEET_BEACON))
+            {
                 return false;
             }
             minerals = 350;
@@ -204,7 +216,8 @@ bool Stargate::produceEntityIfPossible(EntityType type, GameState& state)
             return false;
     }
 
-    if(state.hasEnough(minerals, gas, supply)){
+    if (state.hasEnough(minerals, gas, supply))
+    {
         currentProgress = 0;
         maxProgress = time;
         state.consumeEnough(minerals, gas, supply);

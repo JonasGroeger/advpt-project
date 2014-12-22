@@ -16,7 +16,10 @@ BuildOrder::BuildOrder(const char *file)
 
 BuildOrder::~BuildOrder()
 {
-    std::for_each(buildSteps.begin(), buildSteps.end(), [](BuildStep* bs) {delete bs;});
+    std::for_each(buildSteps.begin(), buildSteps.end(), [](BuildStep *bs)
+    {
+        delete bs;
+    });
 }
 
 bool BuildOrder::doSanityCheck()
@@ -27,7 +30,7 @@ bool BuildOrder::doSanityCheck()
     }
 
     this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
-    for (BuildStep* step : buildSteps)
+    for (BuildStep *step : buildSteps)
     {
         EntityType stepType = step->getEntityType();
         if (stepType == NONE)
@@ -49,9 +52,9 @@ bool BuildOrder::doSanityCheck()
     return true;
 }
 
-BuildStep* BuildOrder::getNextStep()
+BuildStep *BuildOrder::getNextStep()
 {
-    if(iterator != buildSteps.end())
+    if (iterator != buildSteps.end())
     {
         return *iterator;
     }
@@ -60,7 +63,7 @@ BuildStep* BuildOrder::getNextStep()
 
 bool BuildOrder::isDone()
 {
-        return iterator == buildSteps.end();
+    return iterator == buildSteps.end();
 }
 
 void BuildOrder::advance()

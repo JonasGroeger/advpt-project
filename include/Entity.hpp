@@ -1,7 +1,9 @@
 #pragma once
+
 #include "EntityType.hpp"
 
-class Entity {
+class Entity
+{
 protected:
     EntityType type = NONE;
 
@@ -23,19 +25,33 @@ protected:
     unsigned char interfaceBitmask = 0;
 
 public:
-    virtual EntityType getType(){ return this->type; };
-    virtual void setType(EntityType newType){ this->type = newType; }
-    virtual ~Entity() {};
+    virtual EntityType getType()
+    {
+        return this->type;
+    };
+
+    virtual void setType(EntityType newType)
+    {
+        this->type = newType;
+    }
+
+    virtual ~Entity()
+    {
+    };
 
     /*
     The following methods will return if a specific interface is implemented by this instance
     addEntity inside GameState has to check if a entity is of a specific type by calling them
     */
     bool isWorker();
+
     bool isProducer();
+
     bool isUpdatable();
+
     bool isUpgradable();
 
     EntityType getRace();
+
     static EntityType typeToRace(EntityType type);
 };
