@@ -186,7 +186,6 @@ bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
         product = type;
         currentProgress = 0;
         maxProgress = time;
-        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
@@ -385,10 +384,10 @@ bool Factory::upgradeIfPossible(EntityType type, GameState &state)
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
+        state.notifyEntityIsBeingProduced(type);
         product = type;
         currentProgress = 0;
         maxProgress = time;
-        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
@@ -521,10 +520,10 @@ bool Starport::upgradeIfPossible(EntityType type, GameState &state)
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
+        state.notifyEntityIsBeingProduced(type);
         product = type;
         currentProgress = 0;
         maxProgress = time;
-        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 

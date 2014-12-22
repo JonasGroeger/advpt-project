@@ -155,7 +155,26 @@ unsigned long GameState::getAvailableSupply() const
 
 void GameState::notifyEntityIsBeingProduced(EntityType type){
     entitiesInConstruction.set(type);
+    //printBuildStartMessage(type);
 }
+
+/*
+void GameState::printMessageProlog() const
+{
+    std::cout << std::left;
+    std::cout << std::setw(5);
+    std::cout << getSimulationTime();
+    std::cout << std::setw(14);
+}
+
+void GameState::printBuildStartMessage(EntityType type) const
+{
+    printMessageProlog();
+    std::cout << "build-start";
+    std::cout << BuildStep::entityTypeToString[type];
+    std::cout << std::endl;
+}
+*/
 
 void GameState::setAvailableEntityType(EntityType type){
 	constructedBitset.set(type);

@@ -137,4 +137,6 @@ public:
 
     void registerLogger(Game *newLogger);
     void unregisterLogger();
+    //void printMessageProlog() const;
+    //void printBuildStartMessage(EntityType type) const;
 };

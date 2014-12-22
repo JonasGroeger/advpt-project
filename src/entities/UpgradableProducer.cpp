@@ -43,14 +43,6 @@ void UpgradableProducer::printMessageProlog(unsigned int time) const
     std::cout << std::setw(14);
 }
 
-void UpgradableProducer::printBuildStartMessage(EntityType type, unsigned int time) const
-{
-    printMessageProlog(time);
-    std::cout << "build-start";
-    std::cout << BuildStep::entityTypeToString[type];
-    std::cout << std::endl;
-}
-
 void UpgradableProducer::printBuildEndMessage(EntityType type, unsigned int time) const
 {
     printMessageProlog(time);
