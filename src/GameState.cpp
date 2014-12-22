@@ -433,7 +433,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 vespeneSlots += 3;
 				break;
 			case ZERG_ZERGLING:
-				new_unit = new Zergling();
+				new_unit = new Upgradable<ZERG_ZERGLING, ZERG_BANELING, 25,25, 1, 20>();
 				break;
 			case ZERG_ROACH:
 				new_unit = new Roach();
@@ -458,7 +458,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				//upgrade
 				break;
 			case ZERG_CORRUPTOR:
-				new_unit = new Corruptor();
+				new_unit = new UpgradableUnit<ZERG_CORRUPTOR, ZERG_BROOD_LORD, 150, 150, 2, 34>();
 				break;
 			case ZERG_MUTALISK:
 				new_unit = new Mutalisk();
