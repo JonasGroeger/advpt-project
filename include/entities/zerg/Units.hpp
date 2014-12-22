@@ -187,3 +187,12 @@ public:
         type = ZERG_ULTRALIK_CAVERN;
     }
 };
+
+class Queen : public Entity
+{
+    /* class Entity */
+public:
+    Queen(){
+        type = ZERG_QUEEN;
+    }
+};

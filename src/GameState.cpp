@@ -112,7 +112,8 @@ void GameState::consumeDrone(Drone *drone)
         }
     }
 
-    usedSupply -= 1;
+    // This is done by the drone itself
+    //usedSupply -= 1;
 
     delete drone;
 }
@@ -402,9 +403,6 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				increaseSupply(2);
                 addHatchery();
 				break;
-			case ZERG_LARVA:
-				//do we need that here ?
-				break;
 			case ZERG_EVOLUTION_CHAMBER:
 				new_unit = new EvolutionChamber();
 				break;
@@ -415,13 +413,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				new_unit = new Drone();
 				break;
 			case ZERG_QUEEN:
-				//new_unit = new Queen();
-				break;
-			case ZERG_LAIR:
-				//only via upgrade
-				break;
-			case ZERG_OVERSEER:
-				//only via upgrade
+				new_unit = new Queen();
 				break;
 			case ZERG_OVERLORD:
                 new_unit = new UpgradableUnit<ZERG_OVERLORD, ZERG_OVERSEER, 50, 50, 0, 17>();

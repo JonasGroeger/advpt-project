@@ -141,6 +141,7 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
         maxProgress = time;
         morphing = true;
         product = type;
+        state.increaseSupply(1);
         return true;
     }
     return false;

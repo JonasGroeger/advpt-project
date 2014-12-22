@@ -9,8 +9,17 @@ bool Hatchery::produceEntityIfPossible(EntityType type, GameState& state)
     }
 
     if(type == ZERG_QUEEN){
-            // TODO
+        if (state.hasEnough(150, 0, 2))
+        {
+            state.consumeEnough(150, 0, 2);
+            product = type;
+            maxProgress = 50;
+            currentProgress = 0;
+            this->state = UPState::PRODUCING;
+            return true;
+        }
     }
+
     return false;
 }
 bool Hatchery::upgradeIfPossible(EntityType type, GameState &state)
