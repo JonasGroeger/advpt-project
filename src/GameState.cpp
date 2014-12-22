@@ -72,6 +72,47 @@ void GameState::consumeEnoughEntities(EntityType type, int amount){
 	entities.erase(it, entities.end());
 }
 
+void GameState::consumeDrone(Drone *drone)
+{
+    for (auto it = updatables.begin(); it != updatables.end(); it++)
+    {
+        if (*it == drone)
+        {
+            updatables.erase(it);
+            break;
+        }
+    }
+
+    for (auto it = workers.begin(); it != workers.end(); it++)
+    {
+        if (*it == drone)
+        {
+            workers.erase(it);
+            break;
+        }
+    }
+
+    for (auto it = entities.begin(); it != entities.end(); it++)
+    {
+        if (*it == drone)
+        {
+            entities.erase(it);
+            break;
+        }
+    }
+
+    for (auto it = upgradeables.begin(); it != upgradeables.end(); it++)
+    {
+        if (*it == drone)
+        {
+            upgradeables.erase(it);
+            break;
+        }
+    }
+
+    delete drone;
+}
+
 
 void GameState::consumeEnoughMinerals(unsigned long amount)
 {
@@ -132,7 +173,26 @@ unsigned long GameState::getAvailableSupply() const
 
 void GameState::notifyEntityIsBeingProduced(EntityType type){
     entitiesInConstruction.set(type);
+    //printBuildStartMessage(type);
 }
+
+/*
+void GameState::printMessageProlog() const
+{
+    std::cout << std::left;
+    std::cout << std::setw(5);
+    std::cout << getSimulationTime();
+    std::cout << std::setw(14);
+}
+
+void GameState::printBuildStartMessage(EntityType type) const
+{
+    printMessageProlog();
+    std::cout << "build-start";
+    std::cout << BuildStep::entityTypeToString[type];
+    std::cout << std::endl;
+}
+*/
 
 void GameState::setAvailableEntityType(EntityType type){
 	constructedBitset.set(type);
@@ -349,8 +409,8 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 				//ZERG
             case ZERG_LARVA_HELPER:
-                //larvaHelper = new LarvaHelper();
-                //new_unit = static_cast<Entity*> (larvaHelper);
+                larvaHelper = new LarvaHelper();
+                new_unit = static_cast<Entity*> (larvaHelper);
                 break;
 			case ZERG_HATCHERY:
 				new_unit = new Hatchery();
@@ -455,18 +515,18 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 
 void GameState::increaseLarva()
 {
-	/*if (larvaHelper != nullptr)
+	if (larvaHelper != nullptr)
     {
         larvaHelper->increaseLarva();
-    }*/
+    }
 }
 
 void GameState::addMaxLarva(unsigned long amount)
 {
-   /* if (larvaHelper != nullptr)
+    if (larvaHelper != nullptr)
     {
         larvaHelper->addMaxLarva(amount);
-    }*/
+    }
 }
 
 void GameState::addCreatedEntity(Entity* entity)
@@ -506,8 +566,6 @@ void GameState::addEntityToVectors(Entity* entity)
 	{
 		logger->printBuildEndMessage(entity->getType());
 	}
-
-
 }
 
 

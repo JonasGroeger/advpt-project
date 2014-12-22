@@ -174,34 +174,34 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
         {"scv", BuildStepType::PRODUCE},
         {"hatchery", BuildStepType::PRODUCE},
         // TODO change a lot to UPGRADE
-        {"evolution_chamber", BuildStepType::PRODUCE},
-        {"crawler", BuildStepType::PRODUCE},
+        {"evolution_chamber", BuildStepType::UPGRADE},
+        {"crawler", BuildStepType::UPGRADE},
         {"drone", BuildStepType::PRODUCE},
         {"Queen", BuildStepType::PRODUCE},
         {"lair", BuildStepType::UPGRADE},
         {"overseer", BuildStepType::UPGRADE},
         {"overlord", BuildStepType::PRODUCE},
-        {"spawning_pool", BuildStepType::PRODUCE},
-        {"spine_crawler", BuildStepType::PRODUCE},
-        {"roach_warren", BuildStepType::PRODUCE},
-        {"baneling_nest", BuildStepType::PRODUCE},
-        {"extractor", BuildStepType::PRODUCE},
+        {"spawning_pool", BuildStepType::UPGRADE},
+        {"spine_crawler", BuildStepType::UPGRADE},
+        {"roach_warren", BuildStepType::UPGRADE},
+        {"baneling_nest", BuildStepType::UPGRADE},
+        {"extractor", BuildStepType::UPGRADE},
         {"zergling", BuildStepType::PRODUCE},
         {"roach", BuildStepType::PRODUCE},
-        {"baneling", BuildStepType::PRODUCE}, //and upgrade?
-        {"infestation_pit", BuildStepType::PRODUCE},
+        {"baneling", BuildStepType::UPGRADE}, //and upgrade?
+        {"infestation_pit", BuildStepType::UPGRADE},
         {"infestor", BuildStepType::PRODUCE},
-        {"hive", BuildStepType::PRODUCE},
-        {"spire", BuildStepType::PRODUCE},
-        {"greater_spire", BuildStepType::PRODUCE},//and upgrade?
+        {"hive", BuildStepType::UPGRADE},
+        {"spire", BuildStepType::UPGRADE},
+        {"greater_spire", BuildStepType::UPGRADE},//and upgrade?
         {"corruptor", BuildStepType::PRODUCE },
         {"mutalisk", BuildStepType::PRODUCE},
-        {"brood_lord", BuildStepType::PRODUCE}, //and upgrade?
-        {"ultralisk_cavern", BuildStepType::PRODUCE},
+        {"brood_lord", BuildStepType::UPGRADE}, //and upgrade?
+        {"ultralisk_cavern", BuildStepType::UPGRADE},
         {"ultralisk", BuildStepType::PRODUCE},
-        {"nydus_worm", BuildStepType::PRODUCE},
-        {"nydus_network", BuildStepType::PRODUCE},
-        {"hydralisk_den", BuildStepType::PRODUCE},
+        {"nydus_worm", BuildStepType::UPGRADE},
+        {"nydus_network", BuildStepType::UPGRADE},
+        {"hydralisk_den", BuildStepType::UPGRADE},
         {"hydralisk", BuildStepType::PRODUCE},
 };
 map<BuildStepType, string> BuildStep::buildStepTypeToString;

@@ -16,6 +16,7 @@ class Drone : public Entity,
         int currentProgress = 0;
         int maxProgress = 0;
         bool morphing = false;
+        EntityType product = NONE;
 
     /* class Entity */
     public:

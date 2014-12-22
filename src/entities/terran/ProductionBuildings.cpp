@@ -186,7 +186,6 @@ bool Barracks::upgradeIfPossible(EntityType type, GameState &state)
         product = type;
         currentProgress = 0;
         maxProgress = time;
-        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
@@ -221,12 +220,13 @@ void Barracks::update(GameState& state){
                     Entity* secondBarrack = new Barracks();
                     // TODO remove Upgradable in secondBarrack
                     secondBarrack->setType(TERRAN_BARRACKS_REACTOR);
-                    state.addCreatedEntity(secondBarrack);
+                    state.addCreatedEntity(secondBarrack); // this will call printBuildEndMessage
                 }
-
+                else
+                {
+                    printBuildEndMessage(product, state.getSimulationTime());
+                }
                 this->state = UPState::IDLE;
-                printBuildEndMessage(product, state.getSimulationTime());
-
             }
         default:
             return;
@@ -269,9 +269,12 @@ void Factory::update(GameState& state){
                     secondFactory->setType(TERRAN_FACTORY_REACTOR);
                     state.addCreatedEntity(secondFactory);
                 }
+                else
+                {
+                    printBuildEndMessage(product, state.getSimulationTime());
+                }
 
                 this->state = UPState::IDLE;
-                printBuildEndMessage(product, state.getSimulationTime());
 
             }
         default:
@@ -385,10 +388,10 @@ bool Factory::upgradeIfPossible(EntityType type, GameState &state)
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
+        state.notifyEntityIsBeingProduced(type);
         product = type;
         currentProgress = 0;
         maxProgress = time;
-        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
@@ -521,10 +524,10 @@ bool Starport::upgradeIfPossible(EntityType type, GameState &state)
         this->state = UPState::UPGRADING;
         state.consumeEnoughMinerals(minerals);
         state.consumeEnoughVespine(gas);
+        state.notifyEntityIsBeingProduced(type);
         product = type;
         currentProgress = 0;
         maxProgress = time;
-        printBuildStartMessage(product, state.getSimulationTime());
         return true;
     }
 
@@ -561,9 +564,12 @@ void Starport::update(GameState& state){
                     secondStarport->setType(TERRAN_STARPORT_REACTOR);
                     state.addCreatedEntity(secondStarport);
                 }
+                else
+                {
+                    printBuildEndMessage(product, state.getSimulationTime());
+                }
 
                 this->state = UPState::IDLE;
-                printBuildEndMessage(product, state.getSimulationTime());
             }
         default:
             return;

@@ -12,6 +12,7 @@ bool Game::executeBuildStep(BuildStep* step)
         {
             if (upgrd->upgradeIfPossible(step->getEntityType(), currentState))
             {
+                printBuildStartMessage(step->getEntityType());
                 return true;
             }
         }
@@ -146,7 +147,7 @@ void Game::printBuildEndMessage(EntityType type) const
     std::cout << "build-end";
     std::cout << BuildStep::entityTypeToString[type];
     std::cout << std::endl;
-    printResourcesMessage(); // TODO this is only for debugging
+    //printResourcesMessage(); // TODO this is only for debugging
 }
 
 void Game::printWorkerMessage() const
