@@ -5,5 +5,5 @@ assimilator
 gateway
 cybernetics_core
 stargate
-fleat_bacon
+fleet_beacon
 mothership

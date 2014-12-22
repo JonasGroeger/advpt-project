@@ -7,5 +7,5 @@ overlord
 zergling
 zergling
 zergling
-Queen
+queen
 

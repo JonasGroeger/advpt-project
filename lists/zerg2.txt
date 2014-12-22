@@ -3,14 +3,10 @@ drone
 drone
 overlord
 spawning_pool
-zergling
 extractor
-zergling
 extractor
 drone
 drone
 lair
-infestation_pit
 spire
-hive
-greater_spire
+mutalisk

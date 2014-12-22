@@ -1,7 +1,7 @@
 scv
 scv
 scv
-supply_depot
+supply_sepot
 barracks
 refinery
 factory
