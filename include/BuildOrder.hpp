@@ -23,6 +23,7 @@ private:
     EntityType race;
 
     static map<EntityType, vector<EntityType>> dependencies;
+    static map<EntityType, int> supply;
 
 public:
     BuildOrder(const char* file);

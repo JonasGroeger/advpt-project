@@ -80,6 +80,97 @@ map<EntityType, vector<EntityType>> BuildOrder::dependencies =
     {TERRAN_BANSHEE, {TERRAN_STARPORT_TECH_LAB}}
 };
 
+
+map<EntityType, int> BuildOrder::supply =
+{
+    // Buildings created from a Drone give +1 supply
+    {ZERG_DRONE, 1},
+    {ZERG_OVERLORD, -8},
+    {ZERG_HATCHERY, 2},
+    {ZERG_EXTRACTOR, -1},
+    {ZERG_OVERSEER, 0},
+    {ZERG_SPORE_CRAWLER, -1}, 
+    {ZERG_QUEEN, 2},
+    {ZERG_ZERGLING, 1},
+    {ZERG_LAIR, 0},
+    {ZERG_SPINE_CRAWLER, -1},
+    {ZERG_ROACH_WARREN, -1},
+    {ZERG_BANELING_NEST, -1},
+    {ZERG_HYDRALISK_DEN, -1},
+    {ZERG_INFESTATION_PIT, -1},
+    {ZERG_ROACH, 2},
+    {ZERG_BANELING, 1},
+    {ZERG_HYDRALISK, 2},
+    {ZERG_NYDUS_NETWORK, -1},
+    {ZERG_ULTRALIK_CAVERN, -1},
+    {ZERG_INFESTOR, 2},
+    {ZERG_SPIRE, -1},
+    {ZERG_NYDUS_WORM, 0},
+    {ZERG_ULTRALISK, 6},
+    {ZERG_GREATER_SPIRE, 0},
+    {ZERG_BROOD_LORD, 2},
+    {ZERG_CORRUPTOR, 2},
+    {ZERG_MUTALISK, 2},
+
+    {PROTOSS_PYLON, -8},
+    {PROTOSS_NEXUS, -10},
+    {PROTOSS_PROBE, 1},
+    {PROTOSS_ZEALOT, 2},
+    {PROTOSS_STALKER, 2},
+    {PROTOSS_SENTRY, 2},
+    {PROTOSS_WARP_PRISM, 2},
+    {PROTOSS_IMMORTAL, 4},
+    {PROTOSS_OBSERVER, 1},
+    {PROTOSS_COLOSSUS, 6},
+    {PROTOSS_GATEWAY, 0},
+    {PROTOSS_CYBERNETICS_CORE, 0},
+    {PROTOSS_ROBOTICS_FACILITY, 0},
+    {PROTOSS_ROBOTICS_BAY, 0},
+    {PROTOSS_HIGH_TEMPLAR, 2},
+    {PROTOSS_TEMPLAR_ARCHIVES, 0},
+    {PROTOSS_TWILIGHT_COUNCIL, 0},
+    {PROTOSS_DARK_TEMPLAR, 2},
+    {PROTOSS_DARK_SHRINE, 0},
+    {PROTOSS_STARGATE, 0},
+    {PROTOSS_MOTHERSHIP, 8},
+    {PROTOSS_FLEET_BEACON, 0},
+    {PROTOSS_FORGE, 0},
+    {PROTOSS_PHOTON_CANNON, 0},
+    {PROTOSS_PHOENIX, 2},
+    {PROTOSS_VOID_RAY, 3},
+    {PROTOSS_CARRIER, 6},
+
+    {TERRAN_SCV, 1},
+    {TERRAN_COMMAND_CENTER, -11},
+    {TERRAN_SUPPLY_DEPOT, -8},
+    {TERRAN_PLANETARY_FORTRESS, 0},
+    {TERRAN_MISSILE_TURRET, 0},
+    {TERRAN_SENSOR_TOWER, 0},
+    {TERRAN_MARINE, 1},
+    {TERRAN_BARRACKS_TECH_LAB, 0},
+    {TERRAN_MARAUDER, 2},
+    {TERRAN_REAPER, 1},
+    {TERRAN_GHOST, 2},
+    {TERRAN_BARRACKS_REACTOR, 0},
+    {TERRAN_FACTORY, 0},
+    {TERRAN_FACTORY_TECH_LAB, 0},
+    {TERRAN_FACTORY_REACTOR, 0},
+    {TERRAN_SIEGE_TANK, 3},
+    {TERRAN_THOR, 6},
+    {TERRAN_HELLION, 2},
+    {TERRAN_BUNKER, 0},
+    {TERRAN_GHOST_ACADEMY, 0},
+    {TERRAN_STARPORT, 0},
+    {TERRAN_MEDIVAC, 2},
+    {TERRAN_VIKING, 2},
+    {TERRAN_FUSION_CORE, 0},
+    {TERRAN_STARPORT_TECH_LAB, 0},
+    {TERRAN_STARPORT_REACTOR, 0},
+    {TERRAN_RAVEN, 2},
+    {TERRAN_BATTLECRUISER, 6},
+    {TERRAN_BANSHEE, 3}
+};
+
 BuildOrder::BuildOrder(const char *file)
 {
     ifstream infile(file);
@@ -106,7 +197,24 @@ bool BuildOrder::doSanityCheck()
         throw std::invalid_argument("There are no steps in the build list!");
     }
 
+    int currentSupply = 0;
+
     this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
+
+    switch (this->race)
+    {
+        // Protoss and Zergonly has 10 supply at the start
+        case EntityType::ZERG:
+        case EntityType::PROTOSS:
+            currentSupply = 10;
+            break;
+        case EntityType::TERRAN:
+            currentSupply = 11;
+            break;
+        default:
+            throw std::invalid_argument("Unknown race");
+    }
+
     for (BuildStep* step : buildSteps)
     {
         EntityType stepType = step->getEntityType();
@@ -119,6 +227,19 @@ bool BuildOrder::doSanityCheck()
         if (this->race != Entity::typeToRace(stepType))
         {
             throw std::invalid_argument("Race mismatch: TODO MEANINGFUL ERROR MESSAGE");
+        }
+
+        currentSupply -= supply[stepType];
+#ifdef DEBUG
+        std::cerr << "Parsed: " 
+                  << BuildStep::entityTypeToString[stepType] 
+                  << " current supply: " 
+                  << currentSupply 
+                  << std::endl;;
+#endif
+        if (currentSupply < 0)
+        {
+            throw std::invalid_argument("Not enough supply");
         }
     }
 
