@@ -104,4 +104,4 @@ if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
   set_property( TARGET ${EXECUTABLE} PROPERTY FOLDER "executables" )
 endif()
 
-#add_definitions(-DDEBUG)
+add_definitions(-DDEBUG)

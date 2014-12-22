@@ -82,7 +82,9 @@ int Game::loop()
         currentState.reassignWorkers();
 
         if(somethingHappened){
+#ifdef DEBUG
             currentState.printResourcesMessage();
+#endif
             currentState.printWorkerMessage();
         }
 
@@ -151,7 +153,7 @@ Game::Game(char *file)
             currentState.addCreatedEntity(WarpHelper::Instance());
             break;
         case TERRAN:
-            currentState.addEntity(TERRAN_SCV, 5);
+            currentState.addEntity(TERRAN_SCV, 6);
             currentState.addEntity(TERRAN_COMMAND_CENTER, 1);
             break;
         case ZERG:
