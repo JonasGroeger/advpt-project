@@ -433,7 +433,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 vespeneSlots += 3;
 				break;
 			case ZERG_ZERGLING:
-				new_unit = new Upgradable<ZERG_ZERGLING, ZERG_BANELING, 25,25, 1, 20>();
+				new_unit = new UpgradableUnit<ZERG_ZERGLING, ZERG_BANELING, 25,25, 1, 20>();
 				break;
 			case ZERG_ROACH:
 				new_unit = new Roach();
