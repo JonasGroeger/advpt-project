@@ -206,7 +206,7 @@ Game::Game(char *file)
     switch (buildOrder.getRace())
     {
         case PROTOSS:
-            currentState.addEntity(PROTOSS_PROBE, 5);
+            currentState.addEntity(PROTOSS_PROBE, 6);
             currentState.addEntity(PROTOSS_NEXUS, 1);
             currentState.addCreatedEntity(WarpHelper::Instance());
             break;
@@ -216,8 +216,12 @@ Game::Game(char *file)
             break;
         case ZERG:
             currentState.addEntity(ZERG_LARVA_HELPER, 1);
-            currentState.addEntity(ZERG_DRONE, 5);
+            currentState.addEntity(ZERG_DRONE, 6);
+            // Only the first hatchery starts with 3 larva
             currentState.addEntity(ZERG_HATCHERY, 1);
+            currentState.increaseLarva();
+            currentState.increaseLarva();
+            currentState.increaseLarva();
             currentState.addEntity(ZERG_OVERLORD, 1);
             break;
         default:
@@ -227,7 +231,7 @@ Game::Game(char *file)
 
     currentState.setMaxSimTime(3000);
     currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
-    currentState.consumeEnoughSupply(5 * 1); // Each Worker consumes 1 supply 
+    currentState.consumeEnoughSupply(6 * 1); // Each Worker consumes 1 supply 
 
     currentState.registerLogger(this);
 }
