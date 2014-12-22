@@ -1,5 +1,6 @@
 probe
 probe
+pylon
 assimilator
 probe
 nexus
@@ -10,6 +11,8 @@ twilight_council
 templar_archives
 high_templar
 nexus
+dark_shrine
+high_templar
 high_templar
 pylon
 archon
