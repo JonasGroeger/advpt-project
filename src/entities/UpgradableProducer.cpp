@@ -29,6 +29,7 @@ void UpgradableProducer::update(GameState& gameState)
                 //gameState.addEntity(product, 1);
                 this->state = UPState::IDLE;
                 printBuildEndMessage(product, gameState.getSimulationTime());
+                gameState.printWorkerMessage(); // Every last message has to be ressources
             }
         default:
             return;

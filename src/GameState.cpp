@@ -697,6 +697,7 @@ void GameState::printBuildEndMessage(EntityType type) const
 #ifdef DEBUG
     printResourcesMessage();
 #endif
+    printWorkerMessage();
 }
 
 void GameState::printWorkerMessage() const
