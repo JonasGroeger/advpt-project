@@ -26,6 +26,7 @@ private:
 
 public:
     BuildOrder(const char* file);
+    BuildOrder(vector<BuildStep*> buildList);
     ~BuildOrder();
 
     static map<EntityType, vector<EntityType>> dependencies;

@@ -47,6 +47,8 @@ set( HPP_FILES
   include/BuildStep.hpp
   include/Entity.hpp
   include/EntityType.hpp
+  include/BuildListTester.hpp
+  include/DFBB.hpp
   include/Game.hpp
   include/GameState.hpp
   include/entities/Producer.hpp
@@ -73,6 +75,8 @@ set( HPP_FILES
 set( CPP_FILES
   src/BuildOrder.cpp
   src/BuildStep.cpp
+  src/BuildListTester.cpp
+  src/DFBB.cpp
   src/Game.cpp
   src/GameState.cpp
   src/main.cpp

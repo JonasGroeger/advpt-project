@@ -140,9 +140,8 @@ GameState& Game::getFinalState()
     return currentState;
 }
 
-Game::Game(char *file)
-    :buildOrder(BuildOrder(file))
-{
+
+void Game::prepareGame() {
     //TODO maxSimTime == 1000 should fit this assignments requirements
     //
     switch (buildOrder.getRace())
@@ -176,4 +175,16 @@ Game::Game(char *file)
     currentState.consumeEnoughSupply(6 * 1); // Each Worker consumes 1 supply 
 
     currentState.registerLogger(this);
+
+}
+
+Game::Game(char *file)
+    :buildOrder(BuildOrder(file))
+{
+    prepareGame();
+}
+
+Game::Game(std::vector<BuildStep*> buildList) 
+    :buildOrder(buildList) {
+    prepareGame();
 }

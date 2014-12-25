@@ -186,6 +186,15 @@ map<EntityType, int> BuildOrder::supply =
     {TERRAN_BANSHEE, 3}
 };
 
+
+BuildOrder::BuildOrder(std::vector<BuildStep*> buildList) 
+{
+    buildSteps = buildList;
+    iterator = buildSteps.begin();
+
+    doSanityCheck();
+}
+
 BuildOrder::BuildOrder(const char *file)
 {
     ifstream infile(file);
