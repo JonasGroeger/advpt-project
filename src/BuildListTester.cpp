@@ -1,5 +1,6 @@
 #include "BuildListTester.hpp"
 #include "Game.hpp"
+#include <fstream>
 
 BuildListTester::BuildListTester() { }
 BuildListTester::~BuildListTester() {}
@@ -16,14 +17,26 @@ vector<string> BuildListTester::testBuildList(vector<BuildStep*> list)
 	std::cout.rdbuf(gameResultBuffer.rdbuf());
 
 	// Execute Gameloop
-	game.loop();
+	bool success=true;
+	try {
+		game.loop();
+	} catch(...) {
+		success = false;
+	} 
 
 	// Restore cout
 	std::cout.rdbuf(originalBuffer);
+	
 
 	// Retrieve result
-	string strBuffer = gameResultBuffer.str();
 	vector<string> result;
+
+	// If Buildlist was invalid, stop here
+	if(!success)
+		return result;
+
+	string strBuffer = gameResultBuffer.str();
+	
 	while(!gameResultBuffer.eof()) {
 		std::string strTemp;
 		getline(gameResultBuffer, strTemp);
@@ -45,7 +58,7 @@ BuildLogResult BuildListTester::analyzeBuildLog(vector<string> log, string entit
 		if(i.length()>0) {
 		
 			vector<string> parts = splitString(i, ' ');
-			cout << "Entity: " << parts[1] << endl;
+			
 			int time = atoi(parts[0].c_str());
 			string type = parts[1];
 			string message = parts[2];
@@ -54,7 +67,7 @@ BuildLogResult BuildListTester::analyzeBuildLog(vector<string> log, string entit
 					result.result++;
 				}
 			} else {
-				if(type==entity) {
+				if(type=="build-end"&&message==entity) {
 					result.executionTime = time;
 					return result;
 				}
@@ -67,15 +80,25 @@ BuildLogResult BuildListTester::analyzeBuildLog(vector<string> log, string entit
 }
 
 // Writes Log to file
-void BuildListTester::writeLog(vector<string> log, char* filename) 
+void BuildListTester::writeLog(vector<string> log, string filename) 
 {
-	// TODO
+	ofstream outputFile;
+	outputFile.open(filename);
+	for(auto l: log) {
+		outputFile << l << endl;
+	}
+	outputFile.close();
 }
 
 // Writes BuildList to file
-void BuildListTester::writeBuildList(vector<BuildStep*> list, char* filename) 
+void BuildListTester::writeBuildList(vector<BuildStep*> list, string filename) 
 {
-	// TODO
+	ofstream outputFile;
+	outputFile.open(filename);
+	for(auto l = list.begin(); l != list.end(); ++l) {
+		outputFile << (*l)->getName() << endl;
+	}
+	outputFile.close();
 }
 
 vector<string>  BuildListTester::splitString(string input, char splitter) {

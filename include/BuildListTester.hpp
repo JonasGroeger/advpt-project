@@ -28,9 +28,9 @@ public:
 	BuildLogResult analyzeBuildLog(vector<string>log, string entity, string mode);
 
 	// Writes Log to file
-	void writeLog(vector<string> log, char* filename);
+	void writeLog(vector<string> log, string filename);
 
 	// Writes BuildList to file
-	void writeBuildList(vector<BuildStep*> list, char* filename);
+	void writeBuildList(vector<BuildStep*> list, string filename);
 
 };
