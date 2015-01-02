@@ -1,45 +1,52 @@
 #include "Game.hpp"
+#include "Debug.hpp"
 
 bool Game::executeBuildStep(BuildStep* step)
 {
-    //std::cerr << "[TIME " << currentState.getSimulationTime()<< "] ";
-    //std::cerr << "[Minerals " << currentState.getMinerals()<< "] ";
-    // Switch is not possible here
-    if (step->getBuildStepType() == BuildStepType::UPGRADE)
-    {
-        auto upgradables = currentState.getUpgradeables();
-        for (Upgradable *upgrd : upgradables)
-        {
-            if (upgrd->upgradeIfPossible(step->getEntityType(), currentState))
-            {
-                currentState.printBuildStartMessage(step->getEntityType());
-                return true;
+    LOG_DEBUG("Time=" << currentState.getSimulationTime()<< ", Minerals=" << currentState.getMinerals());
+
+    BuildStepType buildStepType = step->getBuildStepType();
+
+    /* Because we assign variables inside the switch (auto upgradables, auto producers, ...) we need to
+       scope the cases like so: "case x: {...}". See http://stackoverflow.com/q/7562199 */
+    switch(buildStepType) {
+
+        case BuildStepType::UPGRADE: {
+            auto upgradables = currentState.getUpgradeables();
+            for (Upgradable *upgrd : upgradables) {
+                if (upgrd->upgradeIfPossible(step->getEntityType(), currentState)) {
+                    currentState.printBuildStartMessage(step->getEntityType());
+                    return true;
+                }
             }
+            break;
+        }
+
+        case BuildStepType::PRODUCE: {
+            auto producers = currentState.getProducers();
+            for (auto it = producers.begin(); it != producers.end(); it++) {
+                Producer *prod = *it;
+
+                //TODO fix produce interface
+
+                if (prod->produceEntityIfPossible(step->getEntityType(), currentState)) {
+                    currentState.printBuildStartMessage(step->getEntityType());
+                    return true;
+                }
+            }
+            break;
+        }
+
+        case BuildStepType::CONSTRUCT: {
+            // TODO: Was ist Construct?
+            break;
+        }
+        case BuildStepType::CHRONO_BOOST: {
+            std::cerr << "chrono boosting a: ";
+            // TODO
+            break;
         }
     }
-    else if (step->getBuildStepType() == BuildStepType::PRODUCE)
-    {
-        auto producers = currentState.getProducers();
-        for (auto it = producers.begin(); it != producers.end(); it++)
-        {
-            Producer* prod = *it;
-
-            //TODO fix produce interface
-
-            if (prod->produceEntityIfPossible(step->getEntityType(), currentState))
-            {
-                currentState.printBuildStartMessage(step->getEntityType());
-                return true;
-            }
-        }
-    }
-    else if (step->getBuildStepType() == BuildStepType::CHRONO_BOOST)
-    {
-        std::cerr << "chrono boosting a: ";
-        // TODO
-    }
-    //std::cerr << BuildStep::entityTypeToString[step->getWhich()] << std::endl;
-    //std::cerr << "FAILURE" << std::endl;
 
     return false;
 }
