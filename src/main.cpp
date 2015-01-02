@@ -9,7 +9,6 @@ int main(int argc, char** argv)
     if(argc==2) 
     {
 	    Game game(argv[1]);
-	    cout << "Hallo Welt";
 	    return game.loop();
 	}
 	else
