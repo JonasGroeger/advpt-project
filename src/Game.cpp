@@ -36,11 +36,6 @@ bool Game::executeBuildStep(BuildStep* step)
             }
             break;
         }
-
-        case BuildStepType::CONSTRUCT: {
-            // TODO: Was ist Construct?
-            break;
-        }
         case BuildStepType::CHRONO_BOOST: {
             std::cerr << "chrono boosting a: ";
             // TODO

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum class BuildStepType { UPGRADE, PRODUCE, CONSTRUCT, CHRONO_BOOST };
+enum class BuildStepType { UPGRADE, PRODUCE, CHRONO_BOOST };
 
 class BuildStep
 {
