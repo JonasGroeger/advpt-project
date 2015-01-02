@@ -23,11 +23,6 @@ private:
 
 public:
     int loop();
-    bool isFinished();
-
-
-    GameState& getFinalState();
-
     Game(char *file);
 
     // In case of optimization, we don't start with file but with vector<BuildOrder>

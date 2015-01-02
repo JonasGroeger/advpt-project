@@ -130,17 +130,6 @@ bool Game::isAnybodyProducing() const
     return false;
 }
 
-bool Game::isFinished()
-{
-    return (buildOrder.getNextStep() == nullptr);
-}
-
-GameState& Game::getFinalState()
-{
-    return currentState;
-}
-
-
 void Game::prepareGame() {
     //TODO maxSimTime == 1000 should fit this assignments requirements
     //
