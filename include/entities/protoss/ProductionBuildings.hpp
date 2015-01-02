@@ -22,14 +22,14 @@ class Nexus : public Entity,
 class Gateway : public Entity,
                 public SimpleProducer
 {
-        /* class Entity */
+    /* class Entity */
     public:
         Gateway(){
             interfaceBitmask = PRODUCER_INTERFACE | UPDATABLE_INTERFACE;
             type = PROTOSS_GATEWAY;
         }
 
-        /* class UpgradableProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
 };
@@ -44,7 +44,7 @@ class RoboticsFacility : public Entity,
             type = PROTOSS_ROBOTICS_FACILITY;
         }
 
-        /* class UpgradableProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
 };
@@ -59,7 +59,7 @@ class Stargate : public Entity,
             type = PROTOSS_STARGATE;
         }
 
-        /* class UpgradableProducer */
+    /* class UpgradableProducer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
 };

@@ -5,13 +5,16 @@
 // Forward declaration of GameState so this compiles
 class GameState;
 
+enum class UPState
+{
+    IDLE,
+    PRODUCING,
+    UPGRADING
+};
+
 class Producer
 {
 protected:
-
-    enum class UPState {IDLE, PRODUCING, UPGRADING};
-
-
     UPState state = UPState::IDLE;
     int currentProgress = 0;
     int maxProgress = 0;
@@ -19,10 +22,9 @@ protected:
 
     bool isBusy()
     {
-        return state == UPState::PRODUCING || state == UPState::UPGRADING;
+        return state != UPState::IDLE;
     }
 public:
-
     // The virtual functions must have a definition
     // See: http://stackoverflow.com/questions/9406580/c-undefined-reference-to-vtable-and-inheritance
     virtual ~Producer() {}

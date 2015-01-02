@@ -9,16 +9,17 @@ void UpgradableProducer::update(GameState& gameState)
     switch(this->state)
     {
         case UPState::PRODUCING:
-            currentProgress ++;
+            ++currentProgress;
 
             if (currentProgress >= maxProgress)
             {
                 gameState.addEntity(product, 1);
                 this->state = UPState::IDLE;
             }
-        break;
+            break;
+
         case UPState::UPGRADING:
-            currentProgress ++;
+            ++currentProgress;
 
             if (currentProgress >= maxProgress)
             {
@@ -31,8 +32,9 @@ void UpgradableProducer::update(GameState& gameState)
                 printBuildEndMessage(product, gameState.getSimulationTime());
                 gameState.printWorkerMessage(); // Every last message has to be ressources
             }
-        default:
-            return;
+            break;
+        case UPState::IDLE:
+            break;
     }
 }
 
@@ -54,11 +56,7 @@ void UpgradableProducer::printBuildEndMessage(EntityType type, unsigned int time
 
 bool UpgradableProducer::isProducing()
 {
-    if (isBusy())
-    {
-        return true;
-    }
-    return false;
+    return isBusy();
 }
 
 bool UpgradableProducer::isUpgrading()
