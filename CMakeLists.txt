@@ -48,6 +48,7 @@ set( HPP_FILES
   include/Entity.hpp
   include/EntityType.hpp
   include/BuildListTester.hpp
+  include/Debug.hpp
   include/DFBB.hpp
   include/Game.hpp
   include/GameState.hpp
@@ -108,4 +109,5 @@ if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
   set_property( TARGET ${EXECUTABLE} PROPERTY FOLDER "executables" )
 endif()
 
-#add_definitions(-DDEBUG)
+# Uncomment (to enable) or Comment (to disable) the debug output (see includes/Debug.hpp)
+add_definitions(-DDEBUG)
