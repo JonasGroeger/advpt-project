@@ -52,7 +52,7 @@ bool GameState::hasEntityInProduction(EntityType type) const
 
 void GameState::consumeEnoughEntities(EntityType type, int amount){
 
-	int num_entites = std::count_if(entities.begin(), entities.end(), [type](Entity* entry)
+	long num_entites = std::count_if(entities.begin(), entities.end(), [type](Entity* entry)
 	{
 		return entry->getType() == type;
 	});
@@ -239,7 +239,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case TERRAN_BARRACKS_TECH_LAB:
 				// Ignore, we only get these entity out of an upgrade
-				//new_unit = new BarracksTechLab();
+				// new_unit = new BarracksTechLab();
 				break;
 			case TERRAN_BUNKER:
 				new_unit = new Bunker();
@@ -255,19 +255,19 @@ void GameState::addEntity(EntityType type, unsigned long amount)
 				break;
 			case TERRAN_FACTORY_TECH_LAB:
 				// Ignore, we only get these entity out of an upgrade
-				//new_unit = new FactoryTechLab();
+				// new_unit = new FactoryTechLab();
 				break;
 			case TERRAN_FACTORY_REACTOR:
 				// Ignore, we only get these entity out of an upgrade
-				//new_unit = new FactoryReactor();
+				// new_unit = new FactoryReactor();
 				break;
 			case TERRAN_STARPORT_TECH_LAB:
 				// Ignore, we only get these entity out of an upgrade
-				//new_unit = new StarportTechLab();
+				// new_unit = new StarportTechLab();
 				break;
 			case TERRAN_STARPORT_REACTOR:
 				// Ignore, we only get these entity out of an upgrade
-				//new_unit = new StarportReactor();
+				// new_unit = new StarportReactor();
 				break;
 			case TERRAN_RAVEN:
 				new_unit = new Raven();

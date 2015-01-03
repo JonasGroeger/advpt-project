@@ -1,4 +1,5 @@
 #include "BuildOrder.hpp"
+#include "Debug.hpp"
 
 
 map<EntityType, vector<EntityType>> BuildOrder::dependencies =
@@ -256,26 +257,25 @@ bool BuildOrder::doSanityCheck()
         EntityType stepType = step->getEntityType();
         if (stepType == NONE)
         {
-            throw std::invalid_argument(step->getName());
-            throw std::invalid_argument("Did not recognize entityType");
+            std::string msg = "Did not recognize EntityType '" + step->getName() + "'.";
+            throw std::invalid_argument(msg);
         }
 
-        if (this->race != Entity::typeToRace(stepType))
+        auto newEntityRace = Entity::typeToRace(stepType);
+        if (this->race != newEntityRace)
         {
-            throw std::invalid_argument("Race mismatch: TODO MEANINGFUL ERROR MESSAGE");
+            std::string msg = "You cannot build unit '" + step->getName() + "' with your race.";
+            throw std::invalid_argument(msg);
         }
 
         currentSupply -= supply[stepType];
-#ifdef DEBUG
-        std::cerr << "Parsed: " 
-                  << BuildStep::entityTypeToString[stepType] 
-                  << " current supply: " 
-                  << currentSupply 
-                  << std::endl;;
-#endif
+
+        LOG_DEBUG("Parsed: " << BuildStep::entityTypeToString[stepType] << " current supply: " << currentSupply);
+
         if (currentSupply < 0)
         {
-            throw std::invalid_argument("Not enough supply");
+            std::string msg = "Not enough supply to build '" + step->getName() + "'.";
+            throw std::invalid_argument(msg);
         }
     }
 
