@@ -88,11 +88,9 @@ set( CPP_FILES
   src/entities/UpgradableProducer.cpp
   src/entities/terran/Units.cpp
   src/entities/terran/ProductionBuildings.cpp
-  src/entities/protoss/Units.cpp
   src/entities/protoss/Probe.cpp
   src/entities/protoss/ProductionBuildings.cpp
   src/entities/protoss/WarpHelper.cpp
-  src/entities/zerg/Units.cpp
   src/entities/zerg/ProductionBuildings.cpp
   src/entities/zerg/LarvaHelper.cpp
   src/entities/zerg/Drone.cpp
