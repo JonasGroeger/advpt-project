@@ -167,11 +167,11 @@ void SCV::applyChronoBoost()
 
 bool PlanetaryFortress::produceEntityIfPossible(EntityType type, GameState &state)
 {
-	return true;
+    return true;
 }
 
 bool PlanetaryFortress::isProducing() {
-	return false;
+    return false;
 }
 void PlanetaryFortress::applyChronoBoost() 
 {

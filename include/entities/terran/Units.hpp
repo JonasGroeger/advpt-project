@@ -88,7 +88,7 @@ class BattleCruiser : public Entity
 
 class Armory : public Entity
 {
-	public:
+    public:
         Armory(){
             type = TERRAN_ARMORY;
         }
@@ -96,7 +96,7 @@ class Armory : public Entity
 
 class Banshee : public Entity
 {
-	public:
+    public:
         Banshee(){
             type = TERRAN_BANSHEE;
         }
@@ -104,7 +104,7 @@ class Banshee : public Entity
 
 class Bunker : public Entity
 {
-	public:
+    public:
         Bunker(){
             type = TERRAN_BUNKER;
         }
@@ -113,7 +113,7 @@ class Bunker : public Entity
 
 class Reaper : public Entity
 {
-	public:
+    public:
         Reaper(){
             type = TERRAN_REAPER;
         }
@@ -121,7 +121,7 @@ class Reaper : public Entity
 
 class Ghost : public Entity
 {
-	public:
+    public:
         Ghost(){
             type = TERRAN_GHOST;
         }
@@ -130,7 +130,7 @@ class Ghost : public Entity
 
 class Raven: public Entity
 {
-	public:
+    public:
         Raven(){
             type = TERRAN_RAVEN;
         }
@@ -139,7 +139,7 @@ class Raven: public Entity
 
 class FusionCore : public Entity
 {
-	public:
+    public:
         FusionCore(){
             type = TERRAN_FUSION_CORE;
         }
@@ -148,7 +148,7 @@ class FusionCore : public Entity
 
 class Viking : public Entity
 {
-	public:
+    public:
         Viking(){
             type = TERRAN_VIKING;
         }
@@ -157,7 +157,7 @@ class Viking : public Entity
 
 class Medivac : public Entity
 {
-	public:
+    public:
         Medivac(){
             type = TERRAN_MEDIVAC;
         }
@@ -166,7 +166,7 @@ class Medivac : public Entity
 
 class SiegeTank : public Entity
 {
-	public:
+    public:
         SiegeTank(){
             type = TERRAN_SIEGE_TANK;
         }
@@ -175,7 +175,7 @@ class SiegeTank : public Entity
 
 class Thor : public Entity
 {
-	public:
+    public:
         Thor(){
             type = TERRAN_THOR;
         }
@@ -184,7 +184,7 @@ class Thor : public Entity
 
 class OrbitalCommand : public Entity
 {
-	public:
+    public:
         OrbitalCommand(){
             type = TERRAN_ORBITAL_COMMAND;
         }
@@ -193,7 +193,7 @@ class OrbitalCommand : public Entity
 
 class EngineeringBay : public Entity
 {
-	public:
+    public:
         EngineeringBay(){
             type = TERRAN_ENGINEERING_BAY;
         }
@@ -203,23 +203,23 @@ class EngineeringBay : public Entity
 class PlanetaryFortress : public Entity,
                           public Producer
 {
-	public:
+    public:
         PlanetaryFortress(){
             interfaceBitmask = PRODUCER_INTERFACE | UPDATABLE_INTERFACE;
             type = TERRAN_PLANETARY_FORTRESS;
         }
 
-		/* class Producer */
+        /* class Producer */
     public:
         virtual bool produceEntityIfPossible(EntityType type, GameState &state);
         virtual bool isProducing() override;
         virtual void applyChronoBoost() override;
-	
+    
 };
 
 class MissileTurret : public Entity
 {
-	public:
+    public:
         MissileTurret(){
             type = TERRAN_MISSILE_TURRET;
         }
@@ -228,7 +228,7 @@ class MissileTurret : public Entity
 
 class SensorTower : public Entity
 {
-	public:
+    public:
         SensorTower(){
             type = TERRAN_SENSOR_TOWER;
         }
@@ -237,7 +237,7 @@ class SensorTower : public Entity
 
 class GhostAcademy : public Entity
 {
-	public:
+    public:
         GhostAcademy(){
             type = TERRAN_GHOST_ACADEMY;
         }

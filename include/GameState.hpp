@@ -130,7 +130,7 @@ public:
 
     //contains all created entities
     const vector<EntityType>& getEntities(EntityType& type) const;
-	
+    
     //following three vectors only contain pointers to specific elements of the above one
     //contains references to the getEntities vector (views)
     const vector<Upgradable*>& getUpgradeables() const;
