@@ -215,6 +215,7 @@ BuildOrder::~BuildOrder()
     std::for_each(buildSteps.begin(), buildSteps.end(), [](BuildStep* bs) {delete bs;});
 }
 
+// TODO calculate max time and set this in BuildOrder maybe?
 bool BuildOrder::doSanityCheck()
 {
     if (buildSteps.size() == 0)
@@ -278,11 +279,6 @@ bool BuildOrder::doSanityCheck()
             throw std::invalid_argument(msg);
         }
     }
-
-    // TODO calculate max time and set this in BuildOrder maybe?
-    // TODO calculate if supply is possible
-    // TODO calculate if basic dependencies are possible
-
 
     for (BuildStep* step : buildSteps)
     {
