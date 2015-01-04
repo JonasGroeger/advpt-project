@@ -4,8 +4,10 @@
 
 #include "Debug.hpp"
 
-class DFBB {
+class DFBB
+{
 public:
     DFBB();
-    void run(char* entity, char* mode, int maxSimulationTime);
+
+    void run(char *entity, char *mode, int maxSimulationTime);
 };

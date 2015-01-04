@@ -14,38 +14,46 @@ class LarvaHelper : public Entity,
                     public Updatable,
                     public Producer
 {
-    private:
-        struct MorphObject
+private:
+    struct MorphObject
+    {
+        int finishTime;
+        EntityType product;
+    };
+
+    struct MorphObjectComparator
+    {
+        bool operator()(MorphObject *lhs, MorphObject *rhs)
         {
-            int finishTime;
-            EntityType product;
-        };
+            return lhs->finishTime > rhs->finishTime;
+        }
+    };
 
-        struct MorphObjectComparator
-        {
-            bool operator() (MorphObject *lhs, MorphObject *rhs)
-            {
-                return lhs->finishTime > rhs->finishTime;
-            }
-        };
+    int currentTime = 0;
+    int maxTime = 0;
+    int numHatcheries = 0; // TODO GameState should increase this in addEntity
+    int currentLarva = 0; // TODO GameState should increase this in addEntity
 
-        int currentTime = 0;
-        int maxTime = 0;
-        int numHatcheries = 0; // TODO GameState should increase this in addEntity
-        int currentLarva = 0; // TODO GameState should increase this in addEntity
+    std::priority_queue<MorphObject *, std::vector<MorphObject *>, MorphObjectComparator> morphings;
 
-        std::priority_queue<MorphObject*, std::vector<MorphObject*>, MorphObjectComparator> morphings;
+public:
+    LarvaHelper();
 
-    public:
-        LarvaHelper();
-        void update(GameState& state) final;
-        virtual bool produceEntityIfPossible(EntityType type, GameState& state) override;
-        virtual bool isProducing() override;
-        virtual void applyChronoBoost() {}
+    void update(GameState &state) final;
 
-        void increaseLarva();
-        void addHatchery();
+    virtual bool produceEntityIfPossible(EntityType type, GameState &state) override;
 
-        int getMaxLarva();
-        int getCurrentLarva();
+    virtual bool isProducing() override;
+
+    virtual void applyChronoBoost()
+    {
+    }
+
+    void increaseLarva();
+
+    void addHatchery();
+
+    int getMaxLarva();
+
+    int getCurrentLarva();
 };

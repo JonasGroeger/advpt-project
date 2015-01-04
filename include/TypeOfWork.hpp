@@ -1,8 +1,9 @@
 #pragma once
 
-enum class TypeOfWork{
-        Idle,
-        Vespine,
-        Minerals,
-        Producing
+enum class TypeOfWork
+{
+    Idle,
+    Vespine,
+    Minerals,
+    Producing
 };

@@ -1,12 +1,16 @@
 #include "DFBB.hpp"
 #include "BuildListTester.hpp"
 
-DFBB::DFBB() { }
-void DFBB::run(char* entity, char* mode, int maxSimulationTime) {
+DFBB::DFBB()
+{
+}
+
+void DFBB::run(char *entity, char *mode, int maxSimulationTime)
+{
     LOG_DEBUG("DFBB Algorithm started with entity: \"" << entity << "\" mode: \"" << mode << "\" maxSimulationTime: " << maxSimulationTime);
 
     BuildListTester tester;
-    vector<BuildStep*> list;
+    vector<BuildStep *> list;
 
     list.push_back(new BuildStep("scv"));
     list.push_back(new BuildStep("scv"));
@@ -23,7 +27,7 @@ void DFBB::run(char* entity, char* mode, int maxSimulationTime) {
     vector<string> log = tester.testBuildList(list);
     tester.writeLog(log, "logfile.txt");
     //tester.writeBuildList(list, "buildlist.txt");
-    BuildLogResult result = tester.analyzeBuildLog(log, "scv", "rush" );
+    BuildLogResult result = tester.analyzeBuildLog(log, "scv", "rush");
 
     LOG_DEBUG("DFFB Algorithm finished time: " << result.executionTime << " result: " << result.result);
 }

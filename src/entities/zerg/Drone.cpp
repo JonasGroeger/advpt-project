@@ -10,7 +10,7 @@ void Drone::update(GameState &state)
 {
     if (morphing)
     {
-        currentProgress ++;
+        currentProgress++;
         if (currentProgress >= maxProgress)
         {
             state.addEntity(product, 1);
@@ -66,7 +66,7 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
                 return false;
             }
             minerals = 150;
-            gas  = 200;
+            gas = 200;
             time = 50;
             break;
         case ZERG_EVOLUTION_CHAMBER:

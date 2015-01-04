@@ -1,5 +1,4 @@
 #include "entities/zerg/LarvaHelper.hpp"
-#include<iostream>
 
 LarvaHelper::LarvaHelper()
 {
@@ -7,9 +6,9 @@ LarvaHelper::LarvaHelper()
     interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
 }
 
-void LarvaHelper::update(GameState& state)
+void LarvaHelper::update(GameState &state)
 {
-    currentTime ++;
+    currentTime++;
 
     if (morphings.size() == 0)
     {
@@ -40,7 +39,7 @@ void LarvaHelper::update(GameState& state)
     }
 }
 
-bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState& state)
+bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState &state)
 {
     if (currentLarva <= 0)
     {
@@ -141,9 +140,9 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState& state)
         obj->finishTime = currentTime + time;
         obj->product = type;
         morphings.push(obj);
-        currentLarva --;
+        currentLarva--;
         maxTime = (obj->finishTime > maxTime) ? (obj->finishTime) : (maxTime);
-        
+
         return true;
     }
 
@@ -164,7 +163,7 @@ bool LarvaHelper::isProducing()
 
 void LarvaHelper::increaseLarva()
 {
-    currentLarva ++;
+    currentLarva++;
     if (currentLarva > numHatcheries * 3)
     {
         currentLarva = numHatcheries * 3;
@@ -173,7 +172,7 @@ void LarvaHelper::increaseLarva()
 
 void LarvaHelper::addHatchery()
 {
-    numHatcheries ++;
+    numHatcheries++;
 }
 
 int LarvaHelper::getMaxLarva()

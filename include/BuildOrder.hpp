@@ -18,15 +18,17 @@ using namespace std;
 class BuildOrder
 {
 private:
-    vector<BuildStep*> buildSteps;
-    vector<BuildStep*>::iterator iterator;
+    vector<BuildStep *> buildSteps;
+    vector<BuildStep *>::iterator iterator;
     EntityType race;
-    
+
     static map<EntityType, int> supply;
 
 public:
-    BuildOrder(const char* file);
-    BuildOrder(vector<BuildStep*> buildList);
+    BuildOrder(const char *file);
+
+    BuildOrder(vector<BuildStep *> buildList);
+
     ~BuildOrder();
 
     static map<EntityType, vector<EntityType>> dependencies;
@@ -36,7 +38,9 @@ public:
 
     EntityType getRace();
 
-    BuildStep* getNextStep();
+    BuildStep *getNextStep();
+
     void advance();
+
     bool isDone();
 };

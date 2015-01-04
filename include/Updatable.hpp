@@ -7,6 +7,7 @@ class GameState;
 class Updatable
 {
 public:
-    virtual void update(GameState& state) = 0;
+    virtual void update(GameState &state) = 0;
+
     virtual ~Updatable();
 };

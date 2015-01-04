@@ -15,10 +15,10 @@
  * THIS IS WRONG TODO
  */
 
-template <EntityType first, EntityType second, int minerals, int gas, int supply, int time>
+template<EntityType first, EntityType second, int minerals, int gas, int supply, int time>
 class UpgradableUnit : public Entity,
-                           public Updatable,
-                           public Upgradable 
+                       public Updatable,
+                       public Upgradable
 {
 private:
     int maxProgress = 0, currentProgress = 0;
@@ -38,8 +38,10 @@ public:
     {
         //Get the dependencies of the unit we want to uprade to (second)
         auto dependencies = BuildOrder::dependencies[second];
-        for(auto dependency : dependencies){
-            if(!state.hasEntity(dependency)){
+        for (auto dependency : dependencies)
+        {
+            if (!state.hasEntity(dependency))
+            {
                 //if we cant resolve all dependencies --> false
                 return false;
             }
@@ -69,8 +71,8 @@ public:
     {
         if (morphing)
         {
-            currentProgress ++;
-            
+            currentProgress++;
+
             if (currentProgress > maxProgress)
             {
                 state.printBuildEndMessage(second);

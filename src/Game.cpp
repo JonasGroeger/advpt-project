@@ -1,20 +1,24 @@
 #include "Game.hpp"
 #include "Debug.hpp"
 
-bool Game::executeBuildStep(BuildStep* step)
+bool Game::executeBuildStep(BuildStep *step)
 {
-    LOG_DEBUG("Time=" << currentState.getSimulationTime()<< ", Minerals=" << currentState.getMinerals());
+    LOG_DEBUG("Time=" << currentState.getSimulationTime() << ", Minerals=" << currentState.getMinerals());
 
     BuildStepType buildStepType = step->getBuildStepType();
 
     /* Because we assign variables inside the switch (auto upgradables, auto producers, ...) we need to
        scope the cases like so: "case x: {...}". See http://stackoverflow.com/q/7562199 */
-    switch(buildStepType) {
+    switch (buildStepType)
+    {
 
-        case BuildStepType::UPGRADE: {
+        case BuildStepType::UPGRADE:
+        {
             auto upgradables = currentState.getUpgradeables();
-            for (Upgradable *upgrd : upgradables) {
-                if (upgrd->upgradeIfPossible(step->getEntityType(), currentState)) {
+            for (Upgradable *upgrd : upgradables)
+            {
+                if (upgrd->upgradeIfPossible(step->getEntityType(), currentState))
+                {
                     currentState.printBuildStartMessage(step->getEntityType());
                     return true;
                 }
@@ -22,21 +26,25 @@ bool Game::executeBuildStep(BuildStep* step)
             break;
         }
 
-        case BuildStepType::PRODUCE: {
+        case BuildStepType::PRODUCE:
+        {
             auto producers = currentState.getProducers();
-            for (auto it = producers.begin(); it != producers.end(); it++) {
+            for (auto it = producers.begin(); it != producers.end(); it++)
+            {
                 Producer *prod = *it;
 
                 //TODO fix produce interface
 
-                if (prod->produceEntityIfPossible(step->getEntityType(), currentState)) {
+                if (prod->produceEntityIfPossible(step->getEntityType(), currentState))
+                {
                     currentState.printBuildStartMessage(step->getEntityType());
                     return true;
                 }
             }
             break;
         }
-        case BuildStepType::CHRONO_BOOST: {
+        case BuildStepType::CHRONO_BOOST:
+        {
             std::cerr << "chrono boosting a: ";
             // TODO
             break;
@@ -48,8 +56,8 @@ bool Game::executeBuildStep(BuildStep* step)
 
 int Game::loop()
 {
-    while ( (!buildOrder.isDone() || isAnybodyProducing())
-          && !currentState.maxSimTimeReached())
+    while ((!buildOrder.isDone() || isAnybodyProducing())
+            && !currentState.maxSimTimeReached())
     {
         bool somethingHappened = false;
 
@@ -58,14 +66,16 @@ int Game::loop()
          * that finishes this tick is cleared to produce something new
          */
         auto updatables = currentState.getUpdatables();
-        std::for_each(updatables.begin(), updatables.end(), 
-            [this] (Updatable* updt) { updt->update(this->currentState); }
+        std::for_each(updatables.begin(), updatables.end(),
+                [this](Updatable *updt) {
+                    updt->update(this->currentState);
+                }
         );
 
         // As long as there are still steps left
         while (!buildOrder.isDone())
         {
-            BuildStep* nextStep = buildOrder.getNextStep();
+            BuildStep *nextStep = buildOrder.getNextStep();
 
             // We try to execute the first one
             if (executeBuildStep(nextStep))
@@ -83,7 +93,8 @@ int Game::loop()
 
         currentState.reassignWorkers();
 
-        if(somethingHappened){
+        if (somethingHappened)
+        {
 #ifdef DEBUG
             currentState.printResourcesMessage();
 #endif
@@ -93,7 +104,8 @@ int Game::loop()
         currentState.incrementSimulationTime();
     }
 
-    if(currentState.maxSimTimeReached() && !buildOrder.isDone()){
+    if (currentState.maxSimTimeReached() && !buildOrder.isDone())
+    {
         //buildlist did not succeed so return non zero and print error message
         std::cerr << "Reached maximum Time - aborting..." << std::endl;
         currentState.printWorkerMessage();
@@ -132,7 +144,8 @@ bool Game::isAnybodyProducing() const
     return false;
 }
 
-void Game::prepareGame() {
+void Game::prepareGame()
+{
     //TODO maxSimTime == 1000 should fit this assignments requirements
     //
     switch (buildOrder.getRace())
@@ -162,7 +175,7 @@ void Game::prepareGame() {
     }
 
     currentState.setMaxSimTime(3000);
-    currentState.addMineralsWithFactor(50 * GameState::FACTOR); 
+    currentState.addMineralsWithFactor(50 * GameState::FACTOR);
     currentState.consumeEnoughSupply(6 * 1); // Each Worker consumes 1 supply 
 
     currentState.registerLogger(this);
@@ -170,12 +183,13 @@ void Game::prepareGame() {
 }
 
 Game::Game(char *file)
-    :buildOrder(BuildOrder(file))
+        : buildOrder(BuildOrder(file))
 {
     prepareGame();
 }
 
-Game::Game(std::vector<BuildStep*> buildList) 
-    :buildOrder(buildList) {
+Game::Game(std::vector<BuildStep *> buildList)
+        : buildOrder(buildList)
+{
     prepareGame();
 }

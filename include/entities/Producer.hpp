@@ -24,11 +24,19 @@ protected:
     {
         return state != UPState::IDLE;
     }
+
 public:
     // The virtual functions must have a definition
     // See: http://stackoverflow.com/questions/9406580/c-undefined-reference-to-vtable-and-inheritance
-    virtual ~Producer() {}
-    virtual bool produceEntityIfPossible(EntityType type, GameState& state) = 0;
+    virtual ~Producer()
+    {
+    }
+
+    virtual bool produceEntityIfPossible(EntityType type, GameState &state) = 0;
+
     virtual bool isProducing() = 0;
-    virtual void applyChronoBoost() {}
+
+    virtual void applyChronoBoost()
+    {
+    }
 };

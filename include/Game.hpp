@@ -17,14 +17,17 @@ private:
     GameState currentState;
     BuildOrder buildOrder;
 
-    bool executeBuildStep(BuildStep* step);
+    bool executeBuildStep(BuildStep *step);
+
     bool isAnybodyProducing() const;
+
     void prepareGame();
 
 public:
     int loop();
+
     Game(char *file);
 
     // In case of optimization, we don't start with file but with vector<BuildOrder>
-    Game(vector<BuildStep*> buildOrder);
+    Game(vector<BuildStep *> buildOrder);
 };

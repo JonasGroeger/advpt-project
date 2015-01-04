@@ -1,4 +1,5 @@
 #pragma once
+
 #include "TypeOfWork.hpp"
 
 class Worker
@@ -9,5 +10,6 @@ private:
 
 public:
     void setTypeOfWork(TypeOfWork work);
+
     TypeOfWork getTypeOfWork();
 };

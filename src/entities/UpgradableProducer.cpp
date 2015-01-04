@@ -4,9 +4,9 @@
 #include "entities/UpgradableProducer.hpp"
 #include "GameState.hpp"
 
-void UpgradableProducer::update(GameState& gameState)
+void UpgradableProducer::update(GameState &gameState)
 {
-    switch(this->state)
+    switch (this->state)
     {
         case UPState::PRODUCING:
             ++currentProgress;
@@ -24,7 +24,7 @@ void UpgradableProducer::update(GameState& gameState)
             if (currentProgress >= maxProgress)
             {
                 //just switch our own entitytype and notify gamestate of the new type
-                Entity* ourEntity = dynamic_cast<Entity*>(this);
+                Entity *ourEntity = dynamic_cast<Entity *>(this);
                 ourEntity->setType(product);
                 gameState.setAvailableEntityType(product);
                 //gameState.addEntity(product, 1);

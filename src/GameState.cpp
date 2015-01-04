@@ -2,29 +2,34 @@
 #include <entities/zerg/ProductionBuildings.hpp>
 #include <entities/UpgradableUnit.hpp>
 #include <entities/protoss/Probe.hpp>
-#include "GameState.hpp"
 #include "Game.hpp"
 
 GameState::~GameState()
 {
-    std::for_each(entities.begin(), entities.end(), [](Entity* e) {delete e;});
+    std::for_each(entities.begin(), entities.end(), [](Entity *e) {
+        delete e;
+    });
 }
 
-bool GameState::hasEnoughEntities(EntityType type, int amount){
+bool GameState::hasEnoughEntities(EntityType type, int amount)
+{
     int count = 0;
-    for(auto entry : entities){
-        if(entry->getType() == type){
+    for (auto entry : entities)
+    {
+        if (entry->getType() == type)
+        {
             ++count;
         }
     }
-    if(count >= amount){
+    if (count >= amount)
+    {
         return true;
     }
     return false;
 }
 
-
-bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply){
+bool GameState::hasEnough(unsigned long minerals, unsigned long vespine, unsigned long supply)
+{
     return hasEnoughMinerals(minerals)
             && hasEnoughVespine(vespine)
             && hasEnoughSupply(supply);
@@ -42,7 +47,7 @@ bool GameState::hasEnoughVespine(unsigned long amount) const
 
 bool GameState::hasEnoughSupply(unsigned long amount) const
 {
-    return amount <= (maximumSupply-usedSupply);
+    return amount <= (maximumSupply - usedSupply);
 }
 
 bool GameState::hasEntity(EntityType type) const
@@ -55,21 +60,23 @@ bool GameState::hasEntityInProduction(EntityType type) const
     return entitiesInConstruction.test(type);
 }
 
-void GameState::consumeEnoughEntities(EntityType type, int amount){
+void GameState::consumeEnoughEntities(EntityType type, int amount)
+{
 
-    long num_entites = std::count_if(entities.begin(), entities.end(), [type](Entity* entry)
-    {
+    long num_entites = std::count_if(entities.begin(), entities.end(), [type](Entity *entry) {
         return entry->getType() == type;
     });
 
     //If we removed all occurences, we dont have that entity anymore
-    if(num_entites <= amount){
+    if (num_entites <= amount)
+    {
         constructedBitset.reset(type);
     }
 
     int deletedCount = 0;
-    auto it = std::remove_if (entities.begin(), entities.end(), [amount, &deletedCount, type](Entity* entry){
-        if (deletedCount < amount && (entry->getType() == type)) {
+    auto it = std::remove_if(entities.begin(), entities.end(), [amount, &deletedCount, type](Entity *entry) {
+        if (deletedCount < amount && (entry->getType() == type))
+        {
             ++deletedCount;
             return true;
         }
@@ -122,7 +129,6 @@ void GameState::consumeDrone(Drone *drone)
 
     delete drone;
 }
-
 
 void GameState::consumeEnoughMinerals(unsigned long amount)
 {
@@ -181,27 +187,30 @@ unsigned long GameState::getAvailableSupply() const
     return maximumSupply - usedSupply;
 }
 
-void GameState::notifyEntityIsBeingProduced(EntityType type){
+void GameState::notifyEntityIsBeingProduced(EntityType type)
+{
     entitiesInConstruction.set(type);
 }
 
-void GameState::setAvailableEntityType(EntityType type){
+void GameState::setAvailableEntityType(EntityType type)
+{
     constructedBitset.set(type);
 }
 
 void GameState::addEntity(EntityType type, unsigned long amount)
 {
-    Entity* new_unit;
+    Entity *new_unit;
     for (unsigned long i = 0; i < amount; i++)
     {
-        switch(type) {
+        switch (type)
+        {
             //TERRAN START
             case TERRAN_COMMAND_CENTER:
                 new_unit = new CommandCenter();
                 increaseSupply(11);
                 break;
             case TERRAN_SCV:
-                new_unit = new SCV(); 
+                new_unit = new SCV();
                 break;
             case TERRAN_BARRACKS:
                 new_unit = new Barracks();
@@ -287,7 +296,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 new_unit = new Medivac();
                 break;
             case TERRAN_SIEGE_TANK:
-                new_unit = new SiegeTank();             
+                new_unit = new SiegeTank();
                 break;
             case TERRAN_THOR:
                 new_unit = new Thor();
@@ -401,7 +410,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 //ZERG
             case ZERG_LARVA_HELPER:
                 larvaHelper = new LarvaHelper();
-                new_unit = static_cast<Entity*> (larvaHelper);
+                new_unit = static_cast<Entity *> (larvaHelper);
                 break;
             case ZERG_HATCHERY:
                 new_unit = new Hatchery();
@@ -438,7 +447,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 vespeneSlots += 3;
                 break;
             case ZERG_ZERGLING:
-                new_unit = new UpgradableUnit<ZERG_ZERGLING, ZERG_BANELING, 25,25, 1, 20>();
+                new_unit = new UpgradableUnit<ZERG_ZERGLING, ZERG_BANELING, 25, 25, 1, 20>();
                 break;
             case ZERG_ROACH:
                 new_unit = new Roach();
@@ -537,47 +546,48 @@ int GameState::getCurrentLarva() const
     return -1;
 }
 
-void GameState::addCreatedEntity(Entity* entity)
+void GameState::addCreatedEntity(Entity *entity)
 {
-    if(entity == nullptr){
+    if (entity == nullptr)
+    {
         return;
     }
     addEntityToVectors(entity);
 }
 
-void GameState::addEntityToVectors(Entity* entity)
+void GameState::addEntityToVectors(Entity *entity)
 {
     entities.push_back(entity);
 
     constructedBitset.set(entity->getType());
 
-    if(entity->isUpgradable())
+    if (entity->isUpgradable())
     {
-        upgradeables.push_back(dynamic_cast<Upgradable*> (entity));
+        upgradeables.push_back(dynamic_cast<Upgradable *> (entity));
     }
-    if(entity->isUpdatable())
+    if (entity->isUpdatable())
     {
-        updatables.push_back(dynamic_cast<Updatable*>(entity));
+        updatables.push_back(dynamic_cast<Updatable *>(entity));
     }
-    if(entity->isProducer())
+    if (entity->isProducer())
     {
-        producers.push_back(dynamic_cast<Producer*> (entity));
+        producers.push_back(dynamic_cast<Producer *> (entity));
     }
     if (entity->isWorker())
     {
-        Worker *worker = dynamic_cast<Worker*> (entity);
+        Worker *worker = dynamic_cast<Worker *> (entity);
         workers.push_back(worker);
         worker->setTypeOfWork(TypeOfWork::Minerals);
     }
 }
 
 
-void GameState::removeEntity(Entity& entity)
+void GameState::removeEntity(Entity &entity)
 {
     // TODO
 }
 
-void GameState::changeEntity(Entity& old, Entity& theNew)
+void GameState::changeEntity(Entity &old, Entity &theNew)
 {
     // TODO
 }
@@ -597,18 +607,19 @@ int GameState::getSimulationTime() const
     return this->simulationTime;
 }
 
-void GameState::incrementSimulationTime() {
+void GameState::incrementSimulationTime()
+{
     this->simulationTime++;
 }
 
 bool GameState::hasOpenVespeneSlot()
 {
     unsigned int usedSlots = 0;
-    for (Worker* wrk : workers)
+    for (Worker *wrk : workers)
     {
         if (wrk->getTypeOfWork() == TypeOfWork::Vespine)
         {
-            usedSlots ++;
+            usedSlots++;
         }
     }
 
@@ -619,7 +630,7 @@ void GameState::reassignWorkers()
 {
     unsigned long openSlots = vespeneSlots;
     bool first = true; // Always have at least one scv harvesting minerals
-    for (Worker* wrk : workers)
+    for (Worker *wrk : workers)
     {
         switch (wrk->getTypeOfWork())
         {
@@ -629,9 +640,9 @@ void GameState::reassignWorkers()
                 if (openSlots > 0 && !first)
                 {
                     wrk->setTypeOfWork(TypeOfWork::Vespine);
-                    openSlots --;
+                    openSlots--;
                 }
-                else 
+                else
                 {
                     wrk->setTypeOfWork(TypeOfWork::Minerals);
                     first = false;
@@ -643,27 +654,27 @@ void GameState::reassignWorkers()
     }
 }
 
-const vector<EntityType>& GameState::getEntities(EntityType& type) const
+const vector<EntityType> &GameState::getEntities(EntityType &type) const
 {
     return this->entityTypes;
 }
 
-const vector<Upgradable*>& GameState::getUpgradeables() const
+const vector<Upgradable *> &GameState::getUpgradeables() const
 {
     return upgradeables;
 }
 
-const vector<Updatable*>& GameState::getUpdatables() const
+const vector<Updatable *> &GameState::getUpdatables() const
 {
     return updatables;
 }
 
-const vector<Producer*>& GameState::getProducers() const
+const vector<Producer *> &GameState::getProducers() const
 {
     return producers;
 }
 
-const vector<Worker*>& GameState::getWorkers() const
+const vector<Worker *> &GameState::getWorkers() const
 {
     return workers;
 }
@@ -672,6 +683,7 @@ void GameState::registerLogger(Game *newLogger)
 {
     logger = newLogger;
 }
+
 void GameState::unregisterLogger()
 {
     logger = nullptr;
@@ -713,8 +725,10 @@ void GameState::printWorkerMessage() const
     int producingWorkers = 0;
     auto workers = getWorkers();
 
-    for(auto* worker : workers){
-        switch(worker->getTypeOfWork()){
+    for (auto *worker : workers)
+    {
+        switch (worker->getTypeOfWork())
+        {
             case TypeOfWork::Idle:
                 idleWorkers++;
                 break;

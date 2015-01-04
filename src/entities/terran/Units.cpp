@@ -6,10 +6,11 @@ SCV::SCV()
     type = TERRAN_SCV;
 }
 
-void SCV::update(GameState& state)
+void SCV::update(GameState &state)
 {
-    Worker* w = static_cast<Worker*>(this);
-    switch (w->getTypeOfWork()){
+    Worker *w = static_cast<Worker *>(this);
+    switch (w->getTypeOfWork())
+    {
         case TypeOfWork::Idle:
             break;
         case TypeOfWork::Minerals:
@@ -19,7 +20,7 @@ void SCV::update(GameState& state)
             state.addVespineWithFactor(0.35 * GameState::FACTOR);
             break;
         case TypeOfWork::Producing:
-            currentProgress ++;
+            currentProgress++;
             if (currentProgress >= maxProgress)
             {
                 state.addEntity(product, 1);
@@ -29,11 +30,11 @@ void SCV::update(GameState& state)
     }
 }
 
-bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
+bool SCV::produceEntityIfPossible(EntityType type, GameState &state)
 {
-    Worker* w = static_cast<Worker*>(this);
+    Worker *w = static_cast<Worker *>(this);
     TypeOfWork current = w->getTypeOfWork();
-    if(current == TypeOfWork::Producing)
+    if (current == TypeOfWork::Producing)
     {
         return false;
     }
@@ -42,7 +43,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
     unsigned long minerals = 0;
     unsigned long gas = 0;
 
-    switch(type)
+    switch (type)
     {
         case EntityType::TERRAN_SUPPLY_DEPOT:
             maxProgress = 30;
@@ -53,7 +54,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             minerals = 75;
             break;
         case EntityType::TERRAN_BARRACKS:
-            if(!state.hasEntity(TERRAN_SUPPLY_DEPOT)){
+            if (!state.hasEntity(TERRAN_SUPPLY_DEPOT))
+            {
                 return false;
             }
             maxProgress = 65;
@@ -64,7 +66,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             minerals = 400;
             break;
         case EntityType::TERRAN_GHOST_ACADEMY:
-            if(!state.hasEntity(TERRAN_BARRACKS)){
+            if (!state.hasEntity(TERRAN_BARRACKS))
+            {
                 return false;
             }
             maxProgress = 40;
@@ -72,14 +75,16 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             gas = 50;
             break;
         case EntityType::TERRAN_BUNKER:
-            if(!state.hasEntity(TERRAN_BARRACKS)){
+            if (!state.hasEntity(TERRAN_BARRACKS))
+            {
                 return false;
             }
             maxProgress = 40;
             minerals = 100;
             break;
         case EntityType::TERRAN_FACTORY:
-            if(!state.hasEntity(TERRAN_BARRACKS)){
+            if (!state.hasEntity(TERRAN_BARRACKS))
+            {
                 return false;
             }
             maxProgress = 60;
@@ -87,14 +92,16 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             gas = 100;
             break;
         case EntityType::TERRAN_ENGINEERING_BAY:
-            if(!state.hasEntity(TERRAN_COMMAND_CENTER)){
+            if (!state.hasEntity(TERRAN_COMMAND_CENTER))
+            {
                 return false;
             }
             maxProgress = 30;
             minerals = 125;
             break;
         case EntityType::TERRAN_ARMORY:
-            if(!state.hasEntity(TERRAN_FACTORY)){
+            if (!state.hasEntity(TERRAN_FACTORY))
+            {
                 return false;
             }
             maxProgress = 65;
@@ -102,7 +109,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             gas = 100;
             break;
         case EntityType::TERRAN_STARPORT:
-            if(!state.hasEntity(TERRAN_FACTORY)){
+            if (!state.hasEntity(TERRAN_FACTORY))
+            {
                 return false;
             }
             maxProgress = 50;
@@ -110,7 +118,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             gas = 100;
             break;
         case EntityType::TERRAN_FUSION_CORE:
-            if(!state.hasEntity(TERRAN_STARPORT)){
+            if (!state.hasEntity(TERRAN_STARPORT))
+            {
                 return false;
             }
             maxProgress = 65;
@@ -118,7 +127,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             gas = 150;
             break;
         case EntityType::TERRAN_SENSOR_TOWER:
-            if(!state.hasEntity(TERRAN_ENGINEERING_BAY)){
+            if (!state.hasEntity(TERRAN_ENGINEERING_BAY))
+            {
                 return false;
             }
             maxProgress = 25;
@@ -126,7 +136,8 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
             gas = 100;
             break;
         case EntityType::TERRAN_MISSILE_TURRET:
-            if(!state.hasEntity(TERRAN_ENGINEERING_BAY)){
+            if (!state.hasEntity(TERRAN_ENGINEERING_BAY))
+            {
                 return false;
             }
             maxProgress = 25;
@@ -152,7 +163,7 @@ bool SCV::produceEntityIfPossible(EntityType type, GameState& state)
 
 bool SCV::isProducing()
 {
-    Worker* w = static_cast<Worker*>(this);
+    Worker *w = static_cast<Worker *>(this);
 
     if (w->getTypeOfWork() == TypeOfWork::Producing)
     {
@@ -170,10 +181,12 @@ bool PlanetaryFortress::produceEntityIfPossible(EntityType type, GameState &stat
     return true;
 }
 
-bool PlanetaryFortress::isProducing() {
+bool PlanetaryFortress::isProducing()
+{
     return false;
 }
-void PlanetaryFortress::applyChronoBoost() 
+
+void PlanetaryFortress::applyChronoBoost()
 {
 }
 
