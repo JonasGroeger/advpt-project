@@ -65,6 +65,9 @@ private:
 
 // TODO this should be private but it won't compile anymore
 public:
+    GameState() = default;
+    ~GameState();
+
     // minerals and gas is stored multiplied by MIN_FACTOR and GAS_FACTOR respectively
     static const unsigned long FACTOR = 100;
 

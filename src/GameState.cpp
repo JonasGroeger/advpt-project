@@ -5,6 +5,11 @@
 #include "GameState.hpp"
 #include "Game.hpp"
 
+GameState::~GameState()
+{
+    std::for_each(entities.begin(), entities.end(), [](Entity* e) {delete e;});
+}
+
 bool GameState::hasEnoughEntities(EntityType type, int amount){
     int count = 0;
     for(auto entry : entities){
