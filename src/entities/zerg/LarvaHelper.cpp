@@ -30,6 +30,8 @@ void LarvaHelper::update(GameState& state)
         }
 
         morphings.pop();
+        delete(next);
+
         if (morphings.size() == 0)
         {
             break;
