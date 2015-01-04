@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+#include "Debug.hpp"
+
 class DFBB {
 public:
     DFBB();
