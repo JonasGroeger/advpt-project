@@ -8,9 +8,4 @@ if [ ! -d "$BUILD_FOLDER" ]; then
     exit 1
 fi
 
-if [ ! -f "$1" ]; then
-    echo "Usage: ./forwardSim.sh buildlist"
-    exit 2
-fi
-
-./$BUILD_FOLDER/sc2sim $1
+./$BUILD_FOLDER/sc2sim "$@"

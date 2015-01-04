@@ -23,5 +23,4 @@ void DFBB::run(char* entity, char* mode, int maxSimulationTime) {
     //tester.writeBuildList(list, "buildlist.txt");
     BuildLogResult result = tester.analyzeBuildLog(log, "scv", "rush" );
     cout << "time: " << result.executionTime << " result: " << result.result;;
-
 }
