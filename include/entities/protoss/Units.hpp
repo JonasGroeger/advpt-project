@@ -8,6 +8,10 @@
 #include "GameState.hpp"
 #include "entities/Worker.hpp"
 
+////////////////////////////////////////////
+//      v The green protoss units. v      //
+////////////////////////////////////////////
+
 class Zealot : public Entity
 {
     /* class Entity */
@@ -147,6 +151,10 @@ public:
         type = PROTOSS_CARRIER;
     }
 };
+
+////////////////////////////////////////////
+//     v The blue protoss buildings v     //
+////////////////////////////////////////////
 
 class Assimilator : public Entity
 {
