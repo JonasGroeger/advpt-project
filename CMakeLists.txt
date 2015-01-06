@@ -36,64 +36,64 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
 endif()
 
 # Output some properties for easy debugging
-message( "C COMPILER   -->" ${CMAKE_C_COMPILER} )
-message( "CXX COMPILER -->" ${CMAKE_CXX_COMPILER} )
-message( "C FLAGS:     -->" ${CMAKE_C_FLAGS} )
-message( "CXX FLAGS:   -->" ${CMAKE_CXX_FLAGS} )
+message( "C COMPILER   -> " ${CMAKE_C_COMPILER} )
+message( "CXX COMPILER -> " ${CMAKE_CXX_COMPILER} )
+message( "C FLAGS:     -> " ${CMAKE_C_FLAGS} )
+message( "CXX FLAGS:   -> " ${CMAKE_CXX_FLAGS} )
 
 # Add all the header files ...
 set( HPP_FILES
+  include/BuildListTester.hpp
   include/BuildOrder.hpp
   include/BuildStep.hpp
+  include/DFBB.hpp
+  include/Debug.hpp
   include/Entity.hpp
   include/EntityType.hpp
-  include/BuildListTester.hpp
-  include/Debug.hpp
-  include/DFBB.hpp
   include/Game.hpp
   include/GameState.hpp
-  include/entities/Producer.hpp
+  include/TypeOfWork.hpp
   include/Updatable.hpp
   include/Upgradable.hpp
-  include/TypeOfWork.hpp
-  include/entities/Worker.hpp
+  include/entities/Producer.hpp
   include/entities/SimpleProducer.hpp
   include/entities/UpgradableProducer.hpp
-  include/entities/terran/Units.hpp
-  include/entities/terran/ProductionBuildings.hpp
   include/entities/protoss/Units.hpp
+  include/entities/UpgradableUnit.hpp
+  include/entities/Worker.hpp
   include/entities/protoss/Probe.hpp
   include/entities/protoss/ProductionBuildings.hpp
   include/entities/protoss/WarpHelper.hpp
-  include/entities/zerg/Units.hpp
-  include/entities/zerg/ProductionBuildings.hpp
-  include/entities/zerg/LarvaHelper.hpp
+  include/entities/terran/ProductionBuildings.hpp
+  include/entities/terran/Units.hpp
   include/entities/zerg/Drone.hpp
-  include/entities/UpgradableUnit.hpp
+  include/entities/zerg/LarvaHelper.hpp
+  include/entities/zerg/ProductionBuildings.hpp
+  include/entities/zerg/Units.hpp
 )
 
 # ... and source files ...
 set( CPP_FILES
+  src/BuildListTester.cpp
   src/BuildOrder.cpp
   src/BuildStep.cpp
-  src/BuildListTester.cpp
   src/DFBB.cpp
+  src/Entity.cpp
   src/Game.cpp
   src/GameState.cpp
-  src/main.cpp
   src/Updatable.cpp
-  src/Entity.cpp
-  src/entities/Worker.cpp
   src/entities/SimpleProducer.cpp
   src/entities/UpgradableProducer.cpp
-  src/entities/terran/Units.cpp
-  src/entities/terran/ProductionBuildings.cpp
+  src/entities/Worker.cpp
   src/entities/protoss/Probe.cpp
   src/entities/protoss/ProductionBuildings.cpp
   src/entities/protoss/WarpHelper.cpp
-  src/entities/zerg/ProductionBuildings.cpp
-  src/entities/zerg/LarvaHelper.cpp
+  src/entities/terran/ProductionBuildings.cpp
+  src/entities/terran/Units.cpp
   src/entities/zerg/Drone.cpp
+  src/entities/zerg/LarvaHelper.cpp
+  src/entities/zerg/ProductionBuildings.cpp
+  src/main.cpp
 )
 
 source_group( "src" FILES ${CPP_FILES} )
