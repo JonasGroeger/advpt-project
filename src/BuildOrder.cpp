@@ -304,6 +304,23 @@ bool BuildOrder::doSanityCheck()
         builtTypes.insert(stepType);
     }
 
+    // Check if there are no more than 2 harvesting facilities in the buildlist
+    // Issue: #43
+    for (BuildStep *step: buildSteps)
+    {
+        unsigned int nHarvestingFacilities = 0;
+        auto stepType = step->getEntityType();
+        if (stepType == PROTOSS_ASSIMILATOR || stepType == TERRAN_REFINERY || stepType == ZERG_EXTRACTOR)
+        {
+            ++nHarvestingFacilities;
+        }
+
+        if (nHarvestingFacilities > 2)
+        {
+            throw std::invalid_argument("More than 2 harvesting facilities make no sense.");
+        }
+    }
+
     return true;
 }
 
