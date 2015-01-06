@@ -20,7 +20,7 @@ private:
 
     /* class Entity */
 public:
-    SCV();;
+    SCV();
 
     /* class Updatable */
 public:
