@@ -141,6 +141,9 @@ bool Drone::upgradeIfPossible(EntityType type, GameState &state)
         maxProgress = time;
         morphing = true;
         product = type;
+
+        // When the drone morphes into a building, 1 supply is released.
+        // This happens as soon as the drone is morphing.
         state.increaseSupply(1);
         return true;
     }

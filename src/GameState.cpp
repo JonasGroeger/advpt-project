@@ -124,9 +124,6 @@ void GameState::consumeDrone(Drone *drone)
         }
     }
 
-    // This is done by the drone itself
-    //usedSupply -= 1;
-
     delete drone;
 }
 
