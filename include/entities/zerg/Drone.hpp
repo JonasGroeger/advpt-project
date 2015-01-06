@@ -4,6 +4,7 @@
 
 #include "Entity.hpp"
 #include "Updatable.hpp"
+#include "Upgradable.hpp"
 #include "GameState.hpp"
 #include "entities/Worker.hpp"
 

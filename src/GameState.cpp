@@ -201,7 +201,9 @@ void GameState::addEntity(EntityType type, unsigned long amount)
     {
         switch (type)
         {
-            //TERRAN START
+            ////////////////////////////////////////////
+            // Complex(ish) terran entities. vvvvvvvv //
+            ////////////////////////////////////////////
             case TERRAN_COMMAND_CENTER:
                 new_unit = new CommandCenter();
                 increaseSupply(11);
@@ -213,17 +215,11 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 new_unit = new Barracks();
                 break;
             case TERRAN_SUPPLY_DEPOT:
-                new_unit = new SupplyDepot();
+                new_unit = new SimpleEntity<TERRAN_SUPPLY_DEPOT>();
                 increaseSupply(8);
                 break;
-            case TERRAN_MARINE:
-                new_unit = new Marine();
-                break;
-            case TERRAN_MARAUDER:
-                new_unit = new Marauder();
-                break;
             case TERRAN_REFINERY:
-                new_unit = new Refinery();
+                new_unit = new SimpleEntity<TERRAN_REFINERY>();
                 vespeneSlots += 3;
                 break;
             case TERRAN_FACTORY:
@@ -232,18 +228,6 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             case TERRAN_STARPORT:
                 new_unit = new Starport();
                 break;
-            case TERRAN_BATTLECRUISER:
-                new_unit = new BattleCruiser();
-                break;
-            case TERRAN_HELLION:
-                new_unit = new Hellion();
-                break;
-            case TERRAN_ARMORY:
-                new_unit = new Armory();
-                break;
-            case TERRAN_BANSHEE:
-                new_unit = new Banshee();
-                break;
             case TERRAN_BARRACKS_REACTOR:
                 // Ignore, we only get these entity out of an upgrade
                 // new_unit = new BarracksReactor();
@@ -251,18 +235,6 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             case TERRAN_BARRACKS_TECH_LAB:
                 // Ignore, we only get these entity out of an upgrade
                 // new_unit = new BarracksTechLab();
-                break;
-            case TERRAN_BUNKER:
-                new_unit = new Bunker();
-                break;
-            case TERRAN_REAPER:
-                new_unit = new Reaper();
-                break;
-            case TERRAN_GHOST:
-                new_unit = new Ghost();
-                break;
-            case TERRAN_GHOST_ACADEMY:
-                new_unit = new GhostAcademy();
                 break;
             case TERRAN_FACTORY_TECH_LAB:
                 // Ignore, we only get these entity out of an upgrade
@@ -280,99 +252,88 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 // Ignore, we only get these entity out of an upgrade
                 // new_unit = new StarportReactor();
                 break;
-            case TERRAN_RAVEN:
-                new_unit = new Raven();
-                break;
-            case TERRAN_FUSION_CORE:
-                new_unit = new FusionCore();
-                break;
-            case TERRAN_VIKING:
-                new_unit = new Viking();
-                break;
-            case TERRAN_MEDIVAC:
-                new_unit = new Medivac();
-                break;
-            case TERRAN_SIEGE_TANK:
-                new_unit = new SiegeTank();
-                break;
-            case TERRAN_THOR:
-                new_unit = new Thor();
-                break;
-            case TERRAN_ORBITAL_COMMAND:
-                new_unit = new OrbitalCommand();
-                break;
-            case TERRAN_ENGINEERING_BAY:
-                new_unit = new EngineeringBay();
-                break;
             case TERRAN_PLANETARY_FORTRESS:
                 new_unit = new PlanetaryFortress();
                 break;
+
+                ////////////////////////////////////////////
+                // Simple terran entities. vvvvvvvvvvvvvv //
+                ////////////////////////////////////////////
+            case TERRAN_MARINE:
+                new_unit = new SimpleEntity<TERRAN_MARINE>();
+                break;
+            case TERRAN_MARAUDER:
+                new_unit = new SimpleEntity<TERRAN_MARAUDER>();
+                break;
+            case TERRAN_BATTLECRUISER:
+                new_unit = new SimpleEntity<TERRAN_BATTLECRUISER>();
+                break;
+            case TERRAN_HELLION:
+                new_unit = new SimpleEntity<TERRAN_HELLION>();
+                break;
+            case TERRAN_ARMORY:
+                new_unit = new SimpleEntity<TERRAN_ARMORY>();
+                break;
+            case TERRAN_BANSHEE:
+                new_unit = new SimpleEntity<TERRAN_BANSHEE>();
+                break;
+            case TERRAN_BUNKER:
+                new_unit = new SimpleEntity<TERRAN_BUNKER>();
+                break;
+            case TERRAN_REAPER:
+                new_unit = new SimpleEntity<TERRAN_REAPER>();
+                break;
+            case TERRAN_GHOST:
+                new_unit = new SimpleEntity<TERRAN_GHOST>();
+                break;
+            case TERRAN_GHOST_ACADEMY:
+                new_unit = new SimpleEntity<TERRAN_GHOST_ACADEMY>();
+                break;
+            case TERRAN_RAVEN:
+                new_unit = new SimpleEntity<TERRAN_RAVEN>();
+                break;
+            case TERRAN_FUSION_CORE:
+                new_unit = new SimpleEntity<TERRAN_FUSION_CORE>();
+                break;
+            case TERRAN_VIKING:
+                new_unit = new SimpleEntity<TERRAN_VIKING>();
+                break;
+            case TERRAN_MEDIVAC:
+                new_unit = new SimpleEntity<TERRAN_MEDIVAC>();
+                break;
+            case TERRAN_SIEGE_TANK:
+                new_unit = new SimpleEntity<TERRAN_SIEGE_TANK>();
+                break;
+            case TERRAN_THOR:
+                new_unit = new SimpleEntity<TERRAN_THOR>();
+                break;
+            case TERRAN_ORBITAL_COMMAND:
+                new_unit = new SimpleEntity<TERRAN_ORBITAL_COMMAND>();
+                break;
+            case TERRAN_ENGINEERING_BAY:
+                new_unit = new SimpleEntity<TERRAN_ENGINEERING_BAY>();
+                break;
             case TERRAN_MISSILE_TURRET:
-                new_unit = new MissileTurret();
+                new_unit = new SimpleEntity<TERRAN_MISSILE_TURRET>();
                 break;
             case TERRAN_SENSOR_TOWER:
-                new_unit = new SensorTower();
+                new_unit = new SimpleEntity<TERRAN_SENSOR_TOWER>();
                 break;
-                //TERRAN END
-            case PROTOSS_FORGE:
-                new_unit = new Forge();
-                break;
+
+                ////////////////////////////////////////////
+                // Complex(ish) protoss entities. vvvvvvv //
+                ////////////////////////////////////////////
             case PROTOSS_ASSIMILATOR:
-                new_unit = new Assimilator();
+                new_unit = new SimpleEntity<PROTOSS_ASSIMILATOR>();
                 vespeneSlots += 3;
                 break;
-            case PROTOSS_COLOSSUS:
-                new_unit = new Colossus();
-                break;
             case PROTOSS_PYLON:
-                new_unit = new Pylon();
+                new_unit = new SimpleEntity<PROTOSS_PYLON>();
                 increaseSupply(8);
                 break;
             case PROTOSS_NEXUS:
                 new_unit = new Nexus();
                 increaseSupply(10);
-                break;
-            case PROTOSS_PHOTON_CANNON:
-                new_unit = new PhotonCannon();
-                break;
-            case PROTOSS_PHOENIX:
-                new_unit = new Phoenix();
-                break;
-            case PROTOSS_VOID_RAY:
-                new_unit = new VoidRay();
-                break;
-            case PROTOSS_CARRIER:
-                new_unit = new Carrier();
-                break;
-            case PROTOSS_FLEET_BEACON:
-                new_unit = new FleetBeacon();
-                break;
-            case PROTOSS_DARK_SHRINE:
-                new_unit = new DarkShrine();
-                break;
-            case PROTOSS_TEMPLAR_ARCHIVES:
-                new_unit = new TemplarArchives();
-                break;
-            case PROTOSS_ROBOTICS_BAY:
-                new_unit = new RoboticsBay();
-                break;
-            case PROTOSS_OBSERVER:
-                new_unit = new Observer();
-                break;
-            case PROTOSS_IMMORTAL:
-                new_unit = new Immortal();
-                break;
-            case PROTOSS_WARP_PRISM:
-                new_unit = new WarpPrism();
-                break;
-            case PROTOSS_SENTRY:
-                new_unit = new Sentry();
-                break;
-            case PROTOSS_ZEALOT:
-                new_unit = new Zealot();
-                break;
-            case PROTOSS_STALKER:
-                new_unit = new Stalker();
                 break;
             case PROTOSS_PROBE:
                 new_unit = new Probe();
@@ -380,31 +341,86 @@ void GameState::addEntity(EntityType type, unsigned long amount)
             case PROTOSS_GATEWAY:
                 new_unit = new Gateway();
                 break;
-            case PROTOSS_CYBERNETICS_CORE:
-                new_unit = new CyberneticsCore();
-                break;
             case PROTOSS_ROBOTICS_FACILITY:
                 new_unit = new RoboticsFacility();
-                break;
-            case PROTOSS_HIGH_TEMPLAR:
-                new_unit = new HighTemplar();
-                break;
-            case PROTOSS_DARK_TEMPLAR:
-                new_unit = new DarkTemplar();
-                break;
-            case PROTOSS_TWILIGHT_COUNCIL:
-                new_unit = new TwilightCouncil();
                 break;
             case PROTOSS_STARGATE:
                 new_unit = new Stargate();
                 break;
+
+                ////////////////////////////////////////////
+                // Simple protoss entities. vvvvvvvvvvvvv //
+                ////////////////////////////////////////////
+            case PROTOSS_FORGE:
+                new_unit = new SimpleEntity<PROTOSS_FORGE>();
+                break;
+            case PROTOSS_COLOSSUS:
+                new_unit = new SimpleEntity<PROTOSS_COLOSSUS>();
+                break;
+            case PROTOSS_PHOTON_CANNON:
+                new_unit = new SimpleEntity<PROTOSS_PHOTON_CANNON>();
+                break;
+            case PROTOSS_PHOENIX:
+                new_unit = new SimpleEntity<PROTOSS_PHOENIX>();
+                break;
+            case PROTOSS_VOID_RAY:
+                new_unit = new SimpleEntity<PROTOSS_VOID_RAY>();
+                break;
+            case PROTOSS_CARRIER:
+                new_unit = new SimpleEntity<PROTOSS_CARRIER>();
+                break;
+            case PROTOSS_FLEET_BEACON:
+                new_unit = new SimpleEntity<PROTOSS_FLEET_BEACON>();
+                break;
+            case PROTOSS_DARK_SHRINE:
+                new_unit = new SimpleEntity<PROTOSS_DARK_SHRINE>();
+                break;
+            case PROTOSS_TEMPLAR_ARCHIVES:
+                new_unit = new SimpleEntity<PROTOSS_TEMPLAR_ARCHIVES>();
+                break;
+            case PROTOSS_ROBOTICS_BAY:
+                new_unit = new SimpleEntity<PROTOSS_ROBOTICS_BAY>();
+                break;
+            case PROTOSS_OBSERVER:
+                new_unit = new SimpleEntity<PROTOSS_OBSERVER>();
+                break;
+            case PROTOSS_IMMORTAL:
+                new_unit = new SimpleEntity<PROTOSS_IMMORTAL>();
+                break;
+            case PROTOSS_WARP_PRISM:
+                new_unit = new SimpleEntity<PROTOSS_WARP_PRISM>();
+                break;
+            case PROTOSS_SENTRY:
+                new_unit = new SimpleEntity<PROTOSS_SENTRY>();
+                break;
+            case PROTOSS_ZEALOT:
+                new_unit = new SimpleEntity<PROTOSS_ZEALOT>();
+                break;
+            case PROTOSS_STALKER:
+                new_unit = new SimpleEntity<PROTOSS_STALKER>();
+                break;
+            case PROTOSS_CYBERNETICS_CORE:
+                new_unit = new SimpleEntity<PROTOSS_CYBERNETICS_CORE>();
+                break;
+            case PROTOSS_HIGH_TEMPLAR:
+                new_unit = new SimpleEntity<PROTOSS_HIGH_TEMPLAR>();
+                break;
+            case PROTOSS_DARK_TEMPLAR:
+                new_unit = new SimpleEntity<PROTOSS_DARK_TEMPLAR>();
+                break;
+            case PROTOSS_TWILIGHT_COUNCIL:
+                new_unit = new SimpleEntity<PROTOSS_TWILIGHT_COUNCIL>();
+                break;
             case PROTOSS_ARCHON:
-                new_unit = new Archon();
+                new_unit = new SimpleEntity<PROTOSS_ARCHON>();
                 break;
             case PROTOSS_MOTHERSHIP:
-                new_unit = new MotherShip();
+                new_unit = new SimpleEntity<PROTOSS_MOTHERSHIP>();
                 break;
-                //ZERG
+
+                ////////////////////////////////////////////
+                // Complex(ish) zerg entities. vvvvvvvvvv //
+                ////////////////////////////////////////////
             case ZERG_LARVA_HELPER:
                 larvaHelper = new LarvaHelper();
                 new_unit = static_cast<Entity *> (larvaHelper);
@@ -414,87 +430,97 @@ void GameState::addEntity(EntityType type, unsigned long amount)
                 increaseSupply(2);
                 addHatchery();
                 break;
-            case ZERG_EVOLUTION_CHAMBER:
-                new_unit = new EvolutionChamber();
-                break;
-            case ZERG_SPORE_CRAWLER:
-                new_unit = new SporeCrawler();
-                break;
             case ZERG_DRONE:
                 new_unit = new Drone();
-                break;
-            case ZERG_QUEEN:
-                new_unit = new Queen();
                 break;
             case ZERG_OVERLORD:
                 new_unit = new UpgradableUnit<ZERG_OVERLORD, ZERG_OVERSEER, 50, 50, 0, 17>();
                 increaseSupply(8);
                 break;
-            case ZERG_SPAWNING_POOL:
-                new_unit = new SpawningPool();
-                break;
-            case ZERG_SPINE_CRAWLER:
-                new_unit = new SpineCrawler();
-                break;
-            case ZERG_ROACH_WARREN:
-                new_unit = new RoachWarren();
-                break;
             case ZERG_EXTRACTOR:
-                new_unit = new Extractor();
+                new_unit = new SimpleEntity<ZERG_EXTRACTOR>();
                 vespeneSlots += 3;
                 break;
             case ZERG_ZERGLING:
                 new_unit = new UpgradableUnit<ZERG_ZERGLING, ZERG_BANELING, 25, 25, 1, 20>();
                 break;
-            case ZERG_ROACH:
-                new_unit = new Roach();
-                break;
             case ZERG_BANELING:
-                //upgrade
-                break;
-            case ZERG_INFESTATION_PIT:
-                new_unit = new InfestationPit();
-                break;
-            case ZERG_INFESTOR:
-                new_unit = new Infestor();
+                // Can only be obtained by upgrading a Baneling (pair).
                 break;
             case ZERG_HIVE:
-                //upgrade
+                // Can only be obtained by upgrading a Lair.
                 break;
             case ZERG_SPIRE:
-                //new_unit = new Spire();
                 new_unit = new UpgradableUnit<ZERG_SPIRE, ZERG_GREATER_SPIRE, 100, 150, 0, 100>();
                 break;
             case ZERG_GREATER_SPIRE:
-                //upgrade
+                // Can only be obtained by upgrading a Spire.
                 break;
             case ZERG_CORRUPTOR:
                 new_unit = new UpgradableUnit<ZERG_CORRUPTOR, ZERG_BROOD_LORD, 150, 150, 2, 34>();
                 break;
-            case ZERG_MUTALISK:
-                new_unit = new Mutalisk();
-                break;
             case ZERG_BROOD_LORD:
-                //upgrade
-                break;
-            case ZERG_ULTRALIK_CAVERN:
-                new_unit = new UltraliskCavern();
-                break;
-            case ZERG_ULTRALISK:
-                new_unit = new Ultralisk();
-                break;
-            case ZERG_NYDUS_WORM:
-                new_unit = new NydusWorm();
+                // Can only be obtained by upgrading a Corruptor.
                 break;
             case ZERG_NYDUS_NETWORK:
                 new_unit = new NydusNetwork();
                 break;
+
+                ////////////////////////////////////////////
+                // Simple zerg entities. vvvvvvvvvvvvvvvv //
+                ////////////////////////////////////////////
+            case ZERG_EVOLUTION_CHAMBER:
+                new_unit = new SimpleEntity<ZERG_EVOLUTION_CHAMBER>();
+                break;
+            case ZERG_SPORE_CRAWLER:
+                new_unit = new SimpleEntity<ZERG_SPORE_CRAWLER>();
+                break;
+            case ZERG_QUEEN:
+                new_unit = new SimpleEntity<ZERG_QUEEN>();
+                break;
+            case ZERG_SPAWNING_POOL:
+                new_unit = new SimpleEntity<ZERG_SPAWNING_POOL>();
+                break;
+            case ZERG_SPINE_CRAWLER:
+                new_unit = new SimpleEntity<ZERG_SPINE_CRAWLER>();
+                break;
+            case ZERG_ROACH_WARREN:
+                new_unit = new SimpleEntity<ZERG_ROACH_WARREN>();
+                break;
+            case ZERG_ROACH:
+                new_unit = new SimpleEntity<ZERG_ROACH>();
+                break;
+            case ZERG_BANELING_NEST:
+                new_unit = new SimpleEntity<ZERG_BANELING_NEST>();
+                break;
+            case ZERG_INFESTATION_PIT:
+                new_unit = new SimpleEntity<ZERG_INFESTATION_PIT>();
+                break;
+            case ZERG_INFESTOR:
+                new_unit = new SimpleEntity<ZERG_INFESTOR>();
+                break;
+            case ZERG_MUTALISK:
+                new_unit = new SimpleEntity<ZERG_MUTALISK>();
+                break;
+            case ZERG_ULTRALIK_CAVERN:
+                new_unit = new SimpleEntity<ZERG_ULTRALIK_CAVERN>();
+                break;
+            case ZERG_ULTRALISK:
+                new_unit = new SimpleEntity<ZERG_ULTRALISK>();
+                break;
+            case ZERG_NYDUS_WORM:
+                new_unit = new SimpleEntity<ZERG_NYDUS_WORM>();
+                break;
             case ZERG_HYDRALISK_DEN:
-                new_unit = new HydraliskDen();
+                new_unit = new SimpleEntity<ZERG_HYDRALISK_DEN>();
                 break;
             case ZERG_HYDRALISK:
-                new_unit = new Hydralisk();
+                new_unit = new SimpleEntity<ZERG_HYDRALISK>();
                 break;
+
+                ////////////////////////////////////////////
+                // The rest. vvvvvvvvvvvvvvvvvvvvvvvvvvvv //
+                ////////////////////////////////////////////
             case NONE:
                 return;
             default:

@@ -56,9 +56,9 @@ set( HPP_FILES
   include/Updatable.hpp
   include/Upgradable.hpp
   include/entities/Producer.hpp
+  include/entities/SimpleEntity.hpp
   include/entities/SimpleProducer.hpp
   include/entities/UpgradableProducer.hpp
-  include/entities/protoss/Units.hpp
   include/entities/UpgradableUnit.hpp
   include/entities/Worker.hpp
   include/entities/protoss/Probe.hpp
