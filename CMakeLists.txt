@@ -46,7 +46,7 @@ set( HPP_FILES
   include/BuildListTester.hpp
   include/BuildOrder.hpp
   include/BuildStep.hpp
-  include/DFBB.hpp
+  include/DepthFirstBranchAndBound.hpp
   include/Debug.hpp
   include/Entity.hpp
   include/EntityType.hpp
@@ -77,7 +77,7 @@ set( CPP_FILES
   src/BuildListTester.cpp
   src/BuildOrder.cpp
   src/BuildStep.cpp
-  src/DFBB.cpp
+  src/DepthFirstBranchAndBound.cpp
   src/Entity.cpp
   src/Game.cpp
   src/GameState.cpp

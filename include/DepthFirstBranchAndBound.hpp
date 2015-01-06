@@ -4,10 +4,10 @@
 
 #include "Debug.hpp"
 
-class DFBB
+class DepthFirstBranchAndBound
 {
 public:
-    DFBB();
+    DepthFirstBranchAndBound();
 
     void run(char *entity, char *mode, int maxSimulationTime);
 };

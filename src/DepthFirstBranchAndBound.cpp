@@ -1,11 +1,11 @@
-#include "DFBB.hpp"
+#include "DepthFirstBranchAndBound.hpp"
 #include "BuildListTester.hpp"
 
-DFBB::DFBB()
+DepthFirstBranchAndBound::DepthFirstBranchAndBound()
 {
 }
 
-void DFBB::run(char *entity, char *mode, int maxSimulationTime)
+void DepthFirstBranchAndBound::run(char *entity, char *mode, int maxSimulationTime)
 {
     LOG_DEBUG("DFBB Algorithm started with entity: \"" << entity << "\" mode: \"" << mode << "\" maxSimulationTime: " << maxSimulationTime);
 
