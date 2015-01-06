@@ -2,7 +2,6 @@
 
 map<string, EntityType> BuildStep::stringToEntityType =
         {
-                //terran
                 {"refinery", TERRAN_REFINERY},
                 {"supply_depot", TERRAN_SUPPLY_DEPOT},
                 {"barracks", TERRAN_BARRACKS},
@@ -66,9 +65,7 @@ map<string, EntityType> BuildStep::stringToEntityType =
                 {"stargate", PROTOSS_STARGATE},
                 {"archon", PROTOSS_ARCHON},
                 {"mothership", PROTOSS_MOTHERSHIP},
-                //zerg
                 {"hatchery", ZERG_HATCHERY},
-                {"larva", ZERG_LARVA},
                 {"evolution_chamber", ZERG_EVOLUTION_CHAMBER},
                 {"crawler", ZERG_SPORE_CRAWLER},
                 {"drone", ZERG_DRONE},
@@ -133,7 +130,6 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
                 {"stargate", BuildStepType::PRODUCE},
                 {"archon", BuildStepType::PRODUCE},
                 {"mothership", BuildStepType::PRODUCE},
-                //Terran
                 {"refinery", BuildStepType::PRODUCE},
                 {"supply_depot", BuildStepType::PRODUCE},
                 {"barracks", BuildStepType::PRODUCE},
@@ -145,7 +141,6 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
                 {"ghost_academy", BuildStepType::PRODUCE},
                 {"bunker", BuildStepType::PRODUCE},
                 {"hellion", BuildStepType::PRODUCE},
-                {"marine", BuildStepType::PRODUCE},
                 {"factory", BuildStepType::PRODUCE},
                 {"factory_tech_lab", BuildStepType::UPGRADE},
                 {"factory_reactor", BuildStepType::UPGRADE},
@@ -163,17 +158,13 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
                 {"armory", BuildStepType::PRODUCE},
                 {"orbital_command", BuildStepType::UPGRADE},
                 {"command_center", BuildStepType::PRODUCE},
-                {"scv", BuildStepType::PRODUCE},
                 {"engineering_bay", BuildStepType::PRODUCE},
                 {"planetary_fortress", BuildStepType::UPGRADE},
                 {"missile_turret", BuildStepType::PRODUCE},
                 {"sensort_tower", BuildStepType::PRODUCE},
-                {"supply_depot", BuildStepType::PRODUCE},
-                {"barracks", BuildStepType::PRODUCE},
                 {"marine", BuildStepType::PRODUCE},
                 {"scv", BuildStepType::PRODUCE},
                 {"hatchery", BuildStepType::PRODUCE},
-                // TODO change a lot to UPGRADE
                 {"evolution_chamber", BuildStepType::UPGRADE},
                 {"crawler", BuildStepType::UPGRADE},
                 {"drone", BuildStepType::PRODUCE},
@@ -188,15 +179,15 @@ map<string, BuildStepType> BuildStep::stringToBuildStepType =
                 {"extractor", BuildStepType::UPGRADE},
                 {"zergling", BuildStepType::PRODUCE},
                 {"roach", BuildStepType::PRODUCE},
-                {"baneling", BuildStepType::UPGRADE}, //and upgrade?
+                {"baneling", BuildStepType::UPGRADE},
                 {"infestation_pit", BuildStepType::UPGRADE},
                 {"infestor", BuildStepType::PRODUCE},
                 {"hive", BuildStepType::UPGRADE},
                 {"spire", BuildStepType::UPGRADE},
-                {"greater_spire", BuildStepType::UPGRADE},//and upgrade?
+                {"greater_spire", BuildStepType::UPGRADE},
                 {"corruptor", BuildStepType::PRODUCE},
                 {"mutalisk", BuildStepType::PRODUCE},
-                {"brood_lord", BuildStepType::UPGRADE}, //and upgrade?
+                {"brood_lord", BuildStepType::UPGRADE},
                 {"ultralisk_cavern", BuildStepType::UPGRADE},
                 {"ultralisk", BuildStepType::PRODUCE},
                 {"nydus_worm", BuildStepType::UPGRADE},
