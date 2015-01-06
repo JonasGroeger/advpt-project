@@ -57,7 +57,7 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState &state)
         case ZERG_OVERLORD:
             minerals = 100;
             time = 25;
-            supply = 0; // TODO this should add supply in GameState
+            supply = 0;
             break;
         case ZERG_ZERGLING:
             if (!state.hasEntity(ZERG_SPAWNING_POOL))
@@ -151,14 +151,7 @@ bool LarvaHelper::produceEntityIfPossible(EntityType type, GameState &state)
 
 bool LarvaHelper::isProducing()
 {
-    if (morphings.size() > 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return morphings.size() > 0;
 }
 
 void LarvaHelper::increaseLarva()

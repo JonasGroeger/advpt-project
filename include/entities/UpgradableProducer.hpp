@@ -6,11 +6,6 @@
 
 #include "EntityType.hpp"
 
-class Producer;
-
-class Updatable;
-
-
 /*
  * Every Entity that is simply producing some units should inherit from this class
  * Only produceEntityIfPossible should be overwritten.
