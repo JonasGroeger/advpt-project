@@ -206,7 +206,6 @@ BuildStep::BuildStep(string value)
 
 BuildStepType BuildStep::getBuildStepType()
 {
-    fprintf(stderr, "getBuildStepType\n");
     return buildstepType;
 }
 

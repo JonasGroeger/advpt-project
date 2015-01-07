@@ -193,7 +193,7 @@ void Game::prepareGame()
 }
 
 Game::Game(char *file)
-        : buildOrder(BuildOrder(file))
+        : buildOrder(file)
 {
     prepareGame();
 }

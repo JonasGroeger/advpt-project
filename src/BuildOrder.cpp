@@ -187,6 +187,12 @@ map<EntityType, int> BuildOrder::supply =
                 {TERRAN_BANSHEE, 3}
         };
 
+BuildOrder::BuildOrder(BuildOrder& other)
+{
+    this->buildSteps = other.buildSteps;
+    this->iterator = buildSteps.begin();
+    this->race = other.race;
+}
 
 BuildOrder::BuildOrder(std::vector<BuildStep *> buildList)
 {
@@ -208,6 +214,8 @@ BuildOrder::BuildOrder(const char *file)
     iterator = buildSteps.begin();
 
     doSanityCheck();
+
+    cerr << "Created BuildOrder: " << buildSteps.end()-iterator<< endl;
 }
 
 BuildOrder::~BuildOrder()
@@ -343,6 +351,7 @@ void BuildOrder::advance()
 {
     if (iterator != buildSteps.end())
     {
+        cerr << "Advanced BuildOrder: " << buildSteps.end()-iterator<< endl;
         ++iterator;
     }
 }

@@ -26,6 +26,7 @@ private:
 
 public:
     BuildOrder(const char *file);
+    BuildOrder(BuildOrder& other);
 
     BuildOrder(vector<BuildStep *> buildList);
 
