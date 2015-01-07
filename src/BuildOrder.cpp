@@ -212,6 +212,7 @@ BuildOrder::BuildOrder(const char *file)
 
 BuildOrder::~BuildOrder()
 {
+    fprintf(stderr, "BuildOrder Destructor\n");
     std::for_each(buildSteps.begin(), buildSteps.end(), [](BuildStep *bs) {
         delete bs;
     });

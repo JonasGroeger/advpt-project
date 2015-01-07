@@ -1,6 +1,15 @@
 #include "Game.hpp"
 #include "Debug.hpp"
 
+unsigned long Game::getFitnessPush(BuildOrder &order)
+{
+    Game *game = new Game(order);
+    unsigned int runTime = game->loop();
+    delete game;
+    
+    return runTime;
+}
+
 bool Game::executeBuildStep(BuildStep *step)
 {
     LOG_DEBUG("Time=" << currentState.getSimulationTime() << ", Minerals=" << currentState.getMinerals());
@@ -112,12 +121,12 @@ int Game::loop()
 #ifdef DEBUG
         currentState.printResourcesMessage();
 #endif
-        return -1;
+        return currentState.getSimulationTime();
     }
     currentState.printResourcesMessage();
 
     //all fine, return 0
-    return 0;
+    return currentState.getSimulationTime();
 }
 
 bool Game::isAnybodyProducing() const
@@ -144,6 +153,7 @@ bool Game::isAnybodyProducing() const
     return false;
 }
 
+// TODO reset stuff before
 void Game::prepareGame()
 {
     //TODO maxSimTime == 1000 should fit this assignments requirements
@@ -174,12 +184,12 @@ void Game::prepareGame()
             break;
     }
 
+    //currentState.setMaxSimTime(10*60);
     currentState.setMaxSimTime(3000);
     currentState.addMineralsWithFactor(50 * GameState::FACTOR);
     currentState.consumeEnoughSupply(6 * 1); // Each Worker consumes 1 supply 
 
     currentState.registerLogger(this);
-
 }
 
 Game::Game(char *file)
@@ -190,6 +200,12 @@ Game::Game(char *file)
 
 Game::Game(std::vector<BuildStep *> buildList)
         : buildOrder(buildList)
+{
+    prepareGame();
+}
+
+Game::Game(BuildOrder& order)
+    : buildOrder(order)
 {
     prepareGame();
 }

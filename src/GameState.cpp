@@ -625,7 +625,7 @@ bool GameState::maxSimTimeReached() const
     return (simulationTime >= maxTime);
 }
 
-int GameState::getSimulationTime() const
+unsigned int GameState::getSimulationTime() const
 {
     return this->simulationTime;
 }

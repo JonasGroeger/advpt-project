@@ -143,7 +143,7 @@ public:
 
     bool maxSimTimeReached() const;
 
-    int getSimulationTime() const;
+    unsigned int getSimulationTime() const;
 
     void incrementSimulationTime();
 

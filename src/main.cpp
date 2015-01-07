@@ -10,8 +10,10 @@ int main(int argc, char **argv)
     BuildStep::initMap(); // for debugging
     if (argc == 2)
     {
-        Game game(argv[1]);
-        return game.loop();
+        BuildOrder order = BuildOrder(argv[1]);
+        unsigned int time = Game::getFitnessPush(order);
+        printf("Completed list in %d seconds\n", time);
+        return 0;
     }
     else if (argc == 5) // We need 5 arguments
     {

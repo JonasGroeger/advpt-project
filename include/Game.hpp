@@ -23,11 +23,15 @@ private:
 
     void prepareGame();
 
+
 public:
+    static unsigned long getFitnessPush(BuildOrder &order);
     int loop();
 
     Game(char *file);
 
     // In case of optimization, we don't start with file but with vector<BuildOrder>
     Game(vector<BuildStep *> buildOrder);
+
+    Game(BuildOrder& order);
 };
