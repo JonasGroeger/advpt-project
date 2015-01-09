@@ -1,0 +1,2 @@
+[D] Parsed: engineering_bay current supply: 6
+[D] Parsed: planetary_fortress current supply: 6

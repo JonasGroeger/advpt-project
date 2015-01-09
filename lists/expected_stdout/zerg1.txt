@@ -1,0 +1,9 @@
+[D] Parsed: drone current supply: 4
+[D] Parsed: drone current supply: 3
+[D] Parsed: spawning_pool current supply: 4
+[D] Parsed: drone current supply: 3
+[D] Parsed: drone current supply: 2
+[D] Parsed: overlord current supply: 10
+[D] Parsed: zergling current supply: 9
+[D] Parsed: zergling current supply: 8
+[D] Parsed: zergling current supply: 7

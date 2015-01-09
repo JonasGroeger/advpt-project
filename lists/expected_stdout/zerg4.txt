@@ -1,0 +1,5 @@
+[D] Parsed: zergling current supply: 4
+[D] Parsed: zergling current supply: 3
+[D] Parsed: zergling current supply: 2
+[D] Parsed: zergling current supply: 1
+[D] Parsed: zergling current supply: 0

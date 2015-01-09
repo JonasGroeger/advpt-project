@@ -1,0 +1,8 @@
+[D] Parsed: probe current supply: 4
+[D] Parsed: probe current supply: 3
+[D] Parsed: probe current supply: 2
+[D] Parsed: pylon current supply: 10
+[D] Parsed: probe current supply: 9
+[D] Parsed: probe current supply: 8
+[D] Parsed: cybernetics_core current supply: 8
+[D] Parsed: stalker current supply: 6

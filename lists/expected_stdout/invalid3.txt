@@ -1,0 +1,7 @@
+[D] Parsed: scv current supply: 5
+[D] Parsed: scv current supply: 4
+[D] Parsed: scv current supply: 3
+[D] Parsed: scv current supply: 2
+[D] Parsed: scv current supply: 1
+[D] Parsed: scv current supply: 0
+[D] Parsed: scv current supply: -1
