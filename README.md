@@ -29,6 +29,22 @@ anymore in the upper section. Then click "Generate". Open $PROJECT/build/sc2sim.
     #define INDENT_COUNT     4
     #define BRACKETS_IN      NEWLINE
 
+# Generating lists/expected_stdout/*.txt with zsh
+    $ pwd
+    /home/jonas/Dropbox/Code/advpt-project
+    $ cd lists
+    $ for f (*.txt) {../build/sc2sim $f > expected_stdout/$f}
+
+Das braucht man nur wenn man die Vergleichslisten in `lists/expected_stdout` aktualisieren will.
+    
+# Running test.py
+    $ pwd
+    /home/jonas/Dropbox/Code/advpt-project
+    $ chmod +x test.py
+    $ ./test.py 2>/dev/null
+    
+Solange nur Fehler vom Compiler (à la ``*** Error in `./build/sc2sim':``) kommen ist alles OK.
+
 # Log
     <simulation time in seconds>  <message type>   <additional info (depends on message type) >
     Example:
