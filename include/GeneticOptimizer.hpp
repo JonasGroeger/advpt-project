@@ -8,8 +8,8 @@
 class GeneticOptimizer
 {
 private:
-    BuildOrder createBuildList(char* entity);
-    vector<string> getBuildableEntities(BuildOrder &order, string &race, char* entity);
+    BuildOrder* createBuildList(char* entity);
+    vector<string> getBuildableEntities(BuildOrder* order, string &race, char* entity);
 public:
     GeneticOptimizer();
     static vector<string> Terran_Entities;

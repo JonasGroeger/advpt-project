@@ -18,13 +18,14 @@ using namespace std;
 class BuildOrder
 {
 private:
-    vector<BuildStep *> buildSteps;
+    
     vector<BuildStep *>::iterator iterator;
     EntityType race;
 
     static map<EntityType, int> supply;
 
 public:
+    vector<BuildStep *> buildSteps;
     BuildOrder(const char *file);
     BuildOrder(BuildOrder& other);
 

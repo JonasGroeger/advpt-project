@@ -282,7 +282,8 @@ bool BuildOrder::doSanityCheck()
 
         currentSupply -= supply[stepType];
 
-        LOG_DEBUG("Parsed: " << BuildStep::entityTypeToString[stepType] << " current supply: " << currentSupply);
+        // Temporary disabled for beeing to anoying
+        //LOG_DEBUG("Parsed: " << BuildStep::entityTypeToString[stepType] << " current supply: " << currentSupply);
 
         if (currentSupply < 0)
         {
