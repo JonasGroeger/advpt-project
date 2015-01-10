@@ -18,8 +18,9 @@ class BuildStep
 private:
     BuildStepType buildstepType;
     EntityType entityType;
-    string name;
+    
 public:
+    string name;
     static map<string, EntityType> stringToEntityType;
     static map<string, BuildStepType> stringToBuildStepType;
     // DEBUGGING

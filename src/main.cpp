@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Game.hpp"
+#include "GeneticOptimizer.hpp"
 #include "DepthFirstBranchAndBound.hpp"
 
 using namespace std;
@@ -17,11 +18,12 @@ int main(int argc, char **argv)
     }
     else if (argc == 5) // We need 5 arguments
     {
+        
         // Decide, which algorithm to execute
         string algorithm = argv[1];
-        if (algorithm == "DFBB")
+        if (algorithm == "GENETIC")
         {
-            DepthFirstBranchAndBound alg;
+            GeneticOptimizer alg;
             // Will throw invalid_argument exception if argv[4] can't be converted
             alg.run(argv[2], argv[3], stoi(argv[4]));
         }

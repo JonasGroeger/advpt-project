@@ -360,3 +360,16 @@ EntityType BuildOrder::getRace()
 {
     return this->race;
 }
+
+
+void BuildOrder::addStepToBuildList(BuildStep* step) {
+    buildSteps.push_back(step);
+}
+
+void BuildOrder::removeLastStepFromBuildList() {
+    buildSteps.pop_back();
+}
+
+vector<BuildStep*> BuildOrder::getBuildList() {
+    return buildSteps;
+}

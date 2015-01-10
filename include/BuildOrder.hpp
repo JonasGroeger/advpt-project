@@ -29,7 +29,7 @@ public:
     BuildOrder(BuildOrder& other);
 
     BuildOrder(vector<BuildStep *> buildList);
-
+    
     ~BuildOrder();
 
     static map<EntityType, vector<EntityType>> dependencies;
@@ -44,4 +44,8 @@ public:
     void advance();
 
     bool isDone();
+
+    void addStepToBuildList(BuildStep* step);
+    void removeLastStepFromBuildList();
+    vector<BuildStep*> getBuildList();
 };

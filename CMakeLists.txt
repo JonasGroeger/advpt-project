@@ -47,6 +47,7 @@ set( HPP_FILES
   include/BuildOrder.hpp
   include/BuildStep.hpp
   include/DepthFirstBranchAndBound.hpp
+  include/GeneticOptimizer.hpp
   include/Debug.hpp
   include/Entity.hpp
   include/EntityType.hpp
@@ -78,6 +79,7 @@ set( CPP_FILES
   src/BuildOrder.cpp
   src/BuildStep.cpp
   src/DepthFirstBranchAndBound.cpp
+  src/GeneticOptimizer.cpp
   src/Entity.cpp
   src/Game.cpp
   src/GameState.cpp
