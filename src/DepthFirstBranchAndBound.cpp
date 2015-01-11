@@ -27,7 +27,7 @@ void DepthFirstBranchAndBound::run(char *entity, char *mode, int maxSimulationTi
     vector<string> log = tester.testBuildList(list);
     tester.writeLog(log, "logfile.txt");
     //tester.writeBuildList(list, "buildlist.txt");
-    BuildLogResult result = tester.analyzeBuildLog(log, "scv", "rush");
+    //BuildLogResult result = tester.analyzeBuildLog(log, "scv", "rush");
 
-    LOG_DEBUG("DFFB Algorithm finished time: " << result.executionTime << " result: " << result.result);
+   // LOG_DEBUG("DFFB Algorithm finished time: " << result.executionTime << " result: " << result.result);
 }
