@@ -352,7 +352,7 @@ void BuildOrder::advance()
 {
     if (iterator != buildSteps.end())
     {
-        cerr << "Advanced BuildOrder: " << buildSteps.end()-iterator<< endl;
+       // cerr << "Advanced BuildOrder: " << buildSteps.end()-iterator<< endl;
         ++iterator;
     }
 }

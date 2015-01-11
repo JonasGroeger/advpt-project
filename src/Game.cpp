@@ -12,7 +12,8 @@ unsigned long Game::getFitnessPush(BuildOrder &order)
 
 bool Game::executeBuildStep(BuildStep *step)
 {
-    LOG_DEBUG("Time=" << currentState.getSimulationTime() << ", Minerals=" << currentState.getMinerals());
+    // Temporarly deactivated because anoying
+    //LOG_DEBUG("Time=" << currentState.getSimulationTime() << ", Minerals=" << currentState.getMinerals());
 
     BuildStepType buildStepType = step->getBuildStepType();
 
@@ -185,7 +186,7 @@ void Game::prepareGame()
     }
 
     //currentState.setMaxSimTime(10*60);
-    currentState.setMaxSimTime(3000);
+    currentState.setMaxSimTime(30000);
     currentState.addMineralsWithFactor(50 * GameState::FACTOR);
     currentState.consumeEnoughSupply(6 * 1); // Each Worker consumes 1 supply 
 
