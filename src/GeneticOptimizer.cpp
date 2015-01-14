@@ -4,6 +4,7 @@
 #include "GeneticOptimizer.hpp"
 #include "Game.hpp"
 #include "BuildOrder.hpp"
+#include "BuildStep.hpp"
 #include "BuildListTester.hpp"
 #include <string.h>
 #include <utility>
@@ -51,7 +52,15 @@ std::map<string, string> entitiesWithPrerequisites = {
 
 GeneticOptimizer::GeneticOptimizer()
 {
+    // Initialize Random-Generator
     srand(time(NULL));
+}
+
+vector<string> GeneticOptimizer::getDependencyList(string entity) {
+    vector<string> dependencies;
+    vector<EntityType> todoList;
+    
+    return dependencies;
 }
 
 BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
@@ -61,6 +70,7 @@ BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
         
     BuildOrder* result;
     result = new BuildOrder(steps);
+    result->clearBuildSteps();
     
     map<string, int> alreadyAddedEntities;
     if(strcmp(entity, "siege_tank")==0) {
@@ -113,6 +123,11 @@ vector<string> GeneticOptimizer::getBuildableEntities(BuildOrder* order, string 
     vector<string> result;
     if(race.compare("terran")==0)
         listOfEntities = this->Terran_Entities;
+    else if(race.compare("protoss"))
+        listOfEntities = this->Protoss_Entities;
+    else
+        listOfEntities = this->Zerg_Entities;
+
     for(unsigned int i = 0; i < listOfEntities.size();i++) {
         order->addStepToBuildList(new BuildStep(listOfEntities[i]));
 
@@ -150,30 +165,69 @@ vector<pair<unsigned long, BuildOrder*>>* GeneticOptimizer::generateRandomBuildL
     return listOfBuildlists;
 }
 
-void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> buildLists) {
+void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists) {
     
     for(unsigned int i = 0; i<buildLists.size();i++)
     {
+
         unsigned long fitness=0;
         
-        
-        
         try {
-            
-            fitness = Game::getFitnessPush(*buildLists[i].second);
-            
+            cout << "Starte push" << endl;
+            fitness = Game::getFitnessPush(*buildLists[i].second);            
             buildLists[i].first = fitness;
         } catch(...) {
             fitness = INT_MAX;
         }
-        
+        //buildLists[i].first = 100;
     }
     std::sort(buildLists.begin(), buildLists.end());
     
 }
 
-void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>) {
+void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists) {
+    vector<BuildStep*> mumSteps = buildLists[0].second->buildSteps;
+    vector<BuildStep*> dadSteps = buildLists[1].second->buildSteps;
     
+    vector<BuildStep*> steps;
+    steps.push_back(new BuildStep("scv"));
+        
+    
+
+    // Take first two Buildlists and replace positions 3-end with Mutant-Children
+    for(unsigned int i = 2;i<buildLists.size();i++) {
+        BuildOrder* child;
+        child = new BuildOrder(steps);
+        child->clearBuildSteps();
+
+        // recombine
+        bool geht=true;
+            
+     //   do {
+            child->clearBuildSteps();
+            for(unsigned int y = 0; y<min(mumSteps.size(), dadSteps.size());y++) {
+            
+                BuildStep* chosenStep;
+                chosenStep = (rand()%2==0)?mumSteps[y]:dadSteps[y];
+                
+
+                child->addStepToBuildList(
+                    chosenStep
+                );
+
+            }
+       /*     try {
+                geht = true;
+                child->doSanityCheck();
+            } catch(...) { 
+                
+                geht=false;
+            }
+        } while(!geht);
+        */
+        // mutate
+        buildLists[i].second = child;
+    }
 }
 
 void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
@@ -189,24 +243,28 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
         
 
         // Switch cout to gameResultBuffer to suppress output
-        std::stringstream gameResultBuffer;
-        std::streambuf *originalBuffer = std::cout.rdbuf();
-        std::cout.rdbuf(gameResultBuffer.rdbuf());
+      //  std::stringstream gameResultBuffer;
+     //   std::streambuf *originalBuffer = std::cout.rdbuf();
+     //   std::cout.rdbuf(gameResultBuffer.rdbuf());
 
         // Start algorithm here
-        for(int nog=0;nog<numberOfGenerations;nog++) {
+       // for(int nog=0;nog<numberOfGenerations;nog++) {
             rateBuildLists(*listOfBuildlists);
-            mutateBuildLists(*listOfBuildlists);
+       //     std::cout.rdbuf(originalBuffer);
+           // mutateBuildLists(*listOfBuildlists);
+            rateBuildLists(*listOfBuildlists);
 
-        }
+       // }
         // Restore cout
-        std::cout.rdbuf(originalBuffer);
+        
 
        // cout << "finished algorithm";
-        // Print result
+         //Print result
+
         for(unsigned int i = 0; i<listOfBuildlists->size();i++)
         {
-           // cout << "Liste Nr: " << (i+1) << "Fitness: " << (*listOfBuildlists)[i].first << endl;
+         
+           cout << "Liste Nr: " << (i+1) << "Fitness: " << (*listOfBuildlists)[i].first << endl;
         }
         
     } else {

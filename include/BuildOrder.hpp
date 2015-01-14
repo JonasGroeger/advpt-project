@@ -48,5 +48,6 @@ public:
 
     void addStepToBuildList(BuildStep* step);
     void removeLastStepFromBuildList();
+    void clearBuildSteps();
     vector<BuildStep*> getBuildList();
 };

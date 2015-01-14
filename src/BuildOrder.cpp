@@ -226,6 +226,10 @@ BuildOrder::~BuildOrder()
     });
 }
 
+void BuildOrder::clearBuildSteps() {
+    buildSteps.clear();
+}
+
 // TODO calculate max time and set this in BuildOrder maybe?
 bool BuildOrder::doSanityCheck()
 {

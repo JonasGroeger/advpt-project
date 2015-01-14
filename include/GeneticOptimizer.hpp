@@ -12,8 +12,9 @@ private:
     vector<string> getBuildableEntities(BuildOrder* order, string &race, char* entity);
     
     vector<pair<unsigned long, BuildOrder*>>* generateRandomBuildLists(int numberOfBuildLists, char* entity);
-    void rateBuildLists(vector<pair<unsigned long, BuildOrder*>> buildLists);
-    void mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>);
+    void rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists);
+    void mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists);
+    vector<string> getDependencyList(string entity);
 public:
     GeneticOptimizer();
     static vector<string> Terran_Entities;
