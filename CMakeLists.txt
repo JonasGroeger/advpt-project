@@ -71,6 +71,9 @@ set( HPP_FILES
   include/entities/zerg/LarvaHelper.hpp
   include/entities/zerg/ProductionBuildings.hpp
   include/entities/zerg/Units.hpp
+  include/ini.h
+  include/Config.hpp
+  include/INIReader.h
 )
 
 # ... and source files ...
@@ -96,6 +99,9 @@ set( CPP_FILES
   src/entities/zerg/LarvaHelper.cpp
   src/entities/zerg/ProductionBuildings.cpp
   src/main.cpp
+  src/ini.c
+  src/INIReader.cpp
+  src/Config.cpp
 )
 
 source_group( "src" FILES ${CPP_FILES} )
