@@ -56,30 +56,103 @@ GeneticOptimizer::GeneticOptimizer()
     srand(time(NULL));
 }
 
+
+map<EntityType, string> GeneticOptimizer::getEntityTypeToString() {
+    map<string, EntityType>::iterator it = BuildStep::stringToEntityType.begin();
+    map<EntityType, string> result;
+    while(it!=BuildStep::stringToEntityType.end()) {
+        result.insert(pair<EntityType, string>(it->second, it->first));
+        ++it;
+    }
+    return result;
+}
+
 vector<string> GeneticOptimizer::getDependencyList(string entity) {
+
+
     vector<string> dependencies;
     vector<EntityType> todoList;
+    EntityType type = BuildStep::stringToEntityType[entity];
+    map<EntityType, bool> alreadyDone;
+    map<EntityType, string> entityTypeToString = getEntityTypeToString();
+
+    todoList.push_back(type);
+    map<string, int> alreadyAddedToDependencyList;
+   
+    do {
+        // Get first element and delete from todoList
+        EntityType currentType = todoList[0];
+        todoList.erase(todoList.begin());
+        
+        // Get Dependencies
+        vector<EntityType> subtype = BuildOrder::dependencies[currentType];
+        
+        
+        // Walk through all Dependencies
+        for(unsigned int y = 0; y<subtype.size();y++) {
+            // Check, if EntityType already processed (prevents circular dependencies resulting in infinite loops)
+            EntityType currentSubType = subtype[y];
+            // Add to todolist, if not already done
+            if(alreadyDone.find(currentSubType)==alreadyDone.end()){
+                // make sure, we process the element
+                todoList.push_back(currentSubType);
+            }
+                
+            string EntityName = entityTypeToString.find(currentSubType)->second;
+            // If already in list...
+            if(alreadyAddedToDependencyList.find(EntityName)!=alreadyAddedToDependencyList.end()) {
+
+                // remove
+                int index = alreadyAddedToDependencyList.find(EntityName)->second;
+           //     cout << "entfernen an position" << index << endl;
+                dependencies.erase(dependencies.begin() + index);
+                alreadyAddedToDependencyList.erase(
+                    alreadyAddedToDependencyList.find(EntityName)
+                    );
+            } 
+            // Add it to dependency-list
+            dependencies.push_back(EntityName);
+            alreadyAddedToDependencyList.insert(pair<string, int>(EntityName, dependencies.size()-1));
+
+            // Mark as already done
+            alreadyDone.insert(pair<EntityType, bool>(currentSubType, true));
+        
+        }
+        
+    } while(todoList.size()>0);
     
-    return dependencies;
+    // Inverse order of dependencies
+    vector<string> inverseDependencies;
+    for(int i = dependencies.size()-1;i>=0;i--)
+        inverseDependencies.push_back(dependencies[i]);
+
+    return inverseDependencies;
 }
 
 BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
-    
+    string strEntity = entity;
     vector<BuildStep*> steps;
     steps.push_back(new BuildStep("scv"));
         
     BuildOrder* result;
+    cout << "Create new BuildOrder: " << endl;
     result = new BuildOrder(steps);
     result->clearBuildSteps();
     
     map<string, int> alreadyAddedEntities;
     if(strcmp(entity, "siege_tank")==0) {
-        vector<string> requirements {"refinery", "supply_depot", "barracks", "factory", "factory_tech_lab"};
+        //vector<string> requirements {"refinery", "supply_depot", "barracks", "factory", "factory_tech_lab"};
+        vector<string> requirements = getDependencyList(strEntity);
+        //cout << "Listenstart" << endl;
+       // for(int i = 0; i<requirements.size(); i++)
+       //     cout << requirements[i] << endl;
+
         requirements.push_back(entity);
         vector<string> buildableEntities;
         string entry;
         string nextEntity;
         string race = "terran";
+        
         for (unsigned int i=0; i < requirements.size(); i++) {
             buildableEntities = getBuildableEntities(result, race, entity);
             
@@ -108,12 +181,12 @@ BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
                 }
             }
             
-            
             result->addStepToBuildList(new BuildStep(requirements[i]));
         }
     }
 
     LOG_DEBUG("End createBuildList");
+    cout << "Buildliste fertig" << endl;
     return result;
 }
 
@@ -173,7 +246,6 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
         unsigned long fitness=0;
         
         try {
-            cout << "Starte push" << endl;
             fitness = Game::getFitnessPush(*buildLists[i].second);            
             buildLists[i].first = fitness;
         } catch(...) {
@@ -183,6 +255,13 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
     }
     std::sort(buildLists.begin(), buildLists.end());
     
+    
+}
+
+
+bool flipCoin() {
+    int i = rand()%2;
+    return (i==0);
 }
 
 void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists) {
@@ -209,7 +288,6 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
             
                 BuildStep* chosenStep;
                 chosenStep = (rand()%2==0)?mumSteps[y]:dadSteps[y];
-                
 
                 child->addStepToBuildList(
                     chosenStep
@@ -240,31 +318,20 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
         
         // Create initial BuildOrder; 
         std::vector<pair<unsigned long, BuildOrder*>> *listOfBuildlists = generateRandomBuildLists(numberOfLists, entity);
+            
+        rateBuildLists(*listOfBuildlists);
         
-
-        // Switch cout to gameResultBuffer to suppress output
-      //  std::stringstream gameResultBuffer;
-     //   std::streambuf *originalBuffer = std::cout.rdbuf();
-     //   std::cout.rdbuf(gameResultBuffer.rdbuf());
 
         // Start algorithm here
-       // for(int nog=0;nog<numberOfGenerations;nog++) {
+       /* for(int nog=0;nog<numberOfGenerations;nog++) {
+           
             rateBuildLists(*listOfBuildlists);
-       //     std::cout.rdbuf(originalBuffer);
-           // mutateBuildLists(*listOfBuildlists);
-            rateBuildLists(*listOfBuildlists);
-
-       // }
-        // Restore cout
-        
-
-       // cout << "finished algorithm";
-         //Print result
-
+            mutateBuildLists(*listOfBuildlists);
+        }*/
+       
         for(unsigned int i = 0; i<listOfBuildlists->size();i++)
         {
-         
-           cout << "Liste Nr: " << (i+1) << "Fitness: " << (*listOfBuildlists)[i].first << endl;
+           cout << "Liste Nr: " << (i+1) << " Fitness: " << (*listOfBuildlists)[i].first << endl;
         }
         
     } else {

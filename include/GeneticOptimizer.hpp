@@ -15,6 +15,7 @@ private:
     void rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists);
     void mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists);
     vector<string> getDependencyList(string entity);
+    map<EntityType, string> getEntityTypeToString();
 public:
     GeneticOptimizer();
     static vector<string> Terran_Entities;
