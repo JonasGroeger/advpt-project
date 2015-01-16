@@ -24,6 +24,9 @@ private:
 
     static map<EntityType, int> supply;
 
+    // Check supply requirements
+    bool isSupplyPossible();
+
 public:
     vector<BuildStep *> buildSteps;
     BuildOrder(const char *file);

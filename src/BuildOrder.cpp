@@ -230,6 +230,72 @@ void BuildOrder::clearBuildSteps() {
     buildSteps.clear();
 }
 
+void BuildOrder::checkIntegrity()
+{
+
+}
+
+/*
+ * This method checks if there is enough supply provied to complete the list
+ * If the list is empty this method returns true
+ *
+ * The list is assumed to pass checkIntegrity, but this will only be confirmed in debug mode
+ *
+ * For an introduction to this game mechanic see: http://wiki.teamliquid.net/starcraft2/Resources#Supply
+ */
+bool BuildOrder::isSupplyPossible()
+{ 
+#if DEBUG
+    checkIntegrity();
+#endif 
+
+    if (buildSteps.size() == 0)
+    {
+        return true;
+    }
+
+    int availableSupply = 0; 
+    this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
+
+    /*
+     * The different races start with different amount of supply.
+     * Here the supply for 5 starting workers is already subtracted
+     */
+    switch (this->race)
+    {
+        // Protoss and Zergonly has 10 supply at the start
+        case EntityType::ZERG:
+            availableSupply = 5;
+            break;
+        case EntityType::PROTOSS:
+            availableSupply = 5;
+            break;
+        case EntityType::TERRAN:
+            availableSupply = 6;
+            break;
+        default:
+            // If this exception is thrown the first buildstep is broken
+            throw std::invalid_argument("Unknown race");
+    }
+
+    /*
+     * We just subtract the supply of every stepType
+     * If we have less than 0 supply available it is impossible to complete this list
+     */
+    for (BuildStep *step : buildSteps)
+    {
+        EntityType stepType = step->getEntityType();
+        availableSupply -= supply[stepType];
+
+        if (availableSupply < 0)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // TODO calculate max time and set this in BuildOrder maybe?
 bool BuildOrder::doSanityCheck()
 {
