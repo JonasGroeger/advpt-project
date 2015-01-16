@@ -4,6 +4,7 @@
 #include "BuildStep.hpp"
 #include "BuildOrder.hpp"
 #include "Debug.hpp"
+#include "Config.hpp"
 
 class GeneticOptimizer
 {

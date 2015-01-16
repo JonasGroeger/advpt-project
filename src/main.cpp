@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "GeneticOptimizer.hpp"
 #include "DepthFirstBranchAndBound.hpp"
+#include "Config.hpp"
 
 using namespace std;
 

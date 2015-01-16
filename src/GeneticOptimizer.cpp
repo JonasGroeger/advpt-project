@@ -284,8 +284,8 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
 void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
 {
     LOG_DEBUG("GeneticOptimizer Algorithm started with entity: \"" << entity << "\" mode: \"" << mode << "\" maxSimulationTime: " << maxSimulationTime);
-    int numberOfGenerations = 10;
-    int numberOfLists=10;
+    int numberOfGenerations = getConfigInteger("Genetic", "NumberOfGenerations", 10);
+    int numberOfLists = getConfigInteger("Genetic", "NumberOfLists", 20);
 
     if( (strcmp(entity, "siege_tank")==0) ) {
         // Create initial BuildOrder; 
