@@ -131,12 +131,10 @@ vector<string> GeneticOptimizer::getDependencyList(string entity) {
 
 BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
     string strEntity = entity;
-    vector<BuildStep*> steps;
-    steps.push_back(new BuildStep("scv"));
         
     BuildOrder* result;
     cout << "Create new BuildOrder: " << endl;
-    result = new BuildOrder(steps);
+    result = new BuildOrder();
     result->clearBuildSteps();
     
     map<string, int> alreadyAddedEntities;
@@ -204,24 +202,12 @@ vector<string> GeneticOptimizer::getBuildableEntities(BuildOrder* order, string 
     for(unsigned int i = 0; i < listOfEntities.size();i++) {
         order->addStepToBuildList(new BuildStep(listOfEntities[i]));
 
-
-//        if(order.doSanityCheck())
-  //          result.push_back(listOfEntities[i]);
-            // TODO: beautify!!!
-            bool geht=true;
-            try {
-                order->doSanityCheck();
-            } catch(...) { 
-                geht=false;
-            }
-            if(geht) {
-                
-                result.push_back(listOfEntities[i]);
-                if(listOfEntities[i] == strEntity)
-                    return result;
-            }
-
-
+        if(order->isPossible())
+        {
+            result.push_back(listOfEntities[i]);
+            if(listOfEntities[i] == strEntity)
+                return result;
+        }
 
         order->removeLastStepFromBuildList();
     }   
@@ -239,12 +225,12 @@ vector<pair<unsigned long, BuildOrder*>>* GeneticOptimizer::generateRandomBuildL
 }
 
 void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists) {
-    
+
     for(unsigned int i = 0; i<buildLists.size();i++)
     {
 
         unsigned long fitness=0;
-        
+
         try {
             fitness = Game::getFitnessPush(*buildLists[i].second);            
             buildLists[i].first = fitness;
@@ -254,8 +240,8 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
         //buildLists[i].first = 100;
     }
     std::sort(buildLists.begin(), buildLists.end());
-    
-    
+
+
 }
 
 
@@ -267,42 +253,29 @@ bool flipCoin() {
 void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists) {
     vector<BuildStep*> mumSteps = buildLists[0].second->buildSteps;
     vector<BuildStep*> dadSteps = buildLists[1].second->buildSteps;
-    
-    vector<BuildStep*> steps;
-    steps.push_back(new BuildStep("scv"));
-        
-    
 
     // Take first two Buildlists and replace positions 3-end with Mutant-Children
     for(unsigned int i = 2;i<buildLists.size();i++) {
         BuildOrder* child;
-        child = new BuildOrder(steps);
+        child = new BuildOrder();
         child->clearBuildSteps();
 
         // recombine
-        bool geht=true;
-            
-     //   do {
+        do {
             child->clearBuildSteps();
             for(unsigned int y = 0; y<min(mumSteps.size(), dadSteps.size());y++) {
-            
+
                 BuildStep* chosenStep;
                 chosenStep = (rand()%2==0)?mumSteps[y]:dadSteps[y];
 
                 child->addStepToBuildList(
-                    chosenStep
-                );
+                        chosenStep
+                        );
 
             }
-       /*     try {
-                geht = true;
-                child->doSanityCheck();
-            } catch(...) { 
-                
-                geht=false;
-            }
-        } while(!geht);
-        */
+
+        } while(!child->isPossible());
+
         // mutate
         buildLists[i].second = child;
     }
@@ -313,27 +286,25 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
     LOG_DEBUG("GeneticOptimizer Algorithm started with entity: \"" << entity << "\" mode: \"" << mode << "\" maxSimulationTime: " << maxSimulationTime);
     int numberOfGenerations = 10;
     int numberOfLists=10;
-    
+
     if( (strcmp(entity, "siege_tank")==0) ) {
-        
         // Create initial BuildOrder; 
         std::vector<pair<unsigned long, BuildOrder*>> *listOfBuildlists = generateRandomBuildLists(numberOfLists, entity);
-            
+
         rateBuildLists(*listOfBuildlists);
-        
 
         // Start algorithm here
-       /* for(int nog=0;nog<numberOfGenerations;nog++) {
-           
-            rateBuildLists(*listOfBuildlists);
-            mutateBuildLists(*listOfBuildlists);
-        }*/
-       
+        /* for(int nog=0;nog<numberOfGenerations;nog++) {
+
+           rateBuildLists(*listOfBuildlists);
+           mutateBuildLists(*listOfBuildlists);
+           }*/
+
         for(unsigned int i = 0; i<listOfBuildlists->size();i++)
         {
-           cout << "Liste Nr: " << (i+1) << " Fitness: " << (*listOfBuildlists)[i].first << endl;
+            cout << "Liste Nr: " << (i+1) << " Fitness: " << (*listOfBuildlists)[i].first << endl;
         }
-        
+
     } else {
         LOG_DEBUG("nix wars");
     }

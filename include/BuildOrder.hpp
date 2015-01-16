@@ -24,8 +24,14 @@ private:
 
     static map<EntityType, int> supply;
 
+    bool isVespenePossible();
+    bool isDependenciesMet();
+    bool isSupplyPossible();
+    void checkIntegrity();
+
 public:
     vector<BuildStep *> buildSteps;
+    BuildOrder();
     BuildOrder(const char *file);
     BuildOrder(BuildOrder& other);
 
@@ -35,8 +41,7 @@ public:
 
     static map<EntityType, vector<EntityType>> dependencies;
 
-    // This will check for basic dependencies
-    bool doSanityCheck();
+    bool isPossible();
 
     EntityType getRace();
 
