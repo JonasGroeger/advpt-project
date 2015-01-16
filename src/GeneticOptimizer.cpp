@@ -131,12 +131,10 @@ vector<string> GeneticOptimizer::getDependencyList(string entity) {
 
 BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
     string strEntity = entity;
-    vector<BuildStep*> steps;
-    steps.push_back(new BuildStep("scv"));
         
     BuildOrder* result;
     cout << "Create new BuildOrder: " << endl;
-    result = new BuildOrder(steps);
+    result = new BuildOrder();
     result->clearBuildSteps();
     
     map<string, int> alreadyAddedEntities;
@@ -256,13 +254,10 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
     vector<BuildStep*> mumSteps = buildLists[0].second->buildSteps;
     vector<BuildStep*> dadSteps = buildLists[1].second->buildSteps;
 
-    vector<BuildStep*> steps;
-    steps.push_back(new BuildStep("scv"));
-
     // Take first two Buildlists and replace positions 3-end with Mutant-Children
     for(unsigned int i = 2;i<buildLists.size();i++) {
         BuildOrder* child;
-        child = new BuildOrder(steps);
+        child = new BuildOrder();
         child->clearBuildSteps();
 
         // recombine

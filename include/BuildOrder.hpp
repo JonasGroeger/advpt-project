@@ -31,6 +31,7 @@ private:
 
 public:
     vector<BuildStep *> buildSteps;
+    BuildOrder();
     BuildOrder(const char *file);
     BuildOrder(BuildOrder& other);
 
