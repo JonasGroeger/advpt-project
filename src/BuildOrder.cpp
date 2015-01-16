@@ -187,6 +187,10 @@ map<EntityType, int> BuildOrder::supply =
                 {TERRAN_BANSHEE, 3}
         };
 
+BuildOrder::BuildOrder()
+{
+    iterator = buildSteps.begin();
+}
 BuildOrder::BuildOrder(BuildOrder& other)
 {
     this->buildSteps = other.buildSteps;
