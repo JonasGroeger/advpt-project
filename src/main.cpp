@@ -9,11 +9,6 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    cout << getConfigBoolean("Test", "test_val1", false) << endl;
-    cout << getConfigBoolean("Test", "test_val2", false) << endl;
-    cout << getConfigBoolean("Test", "test_val3", false) << endl;
-    cout << getConfigInteger("Test", "test_val4", false) << endl;
-    cout << getConfigString("Test", "test_val5", "default") << endl;
     BuildStep::initMap(); // for debugging
     if (argc == 2)
     {
