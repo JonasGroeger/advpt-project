@@ -230,14 +230,10 @@ void BuildOrder::clearBuildSteps() {
     buildSteps.clear();
 }
 
-void BuildOrder::checkIntegrity()
-{
-
-}
-
 /*
  * This method checks if there is enough supply provied to complete the list
- * If the list is empty this method returns true
+ * If the list is empty this method returns true.
+ * This method will not throw exceptions
  *
  * The list is assumed to pass checkIntegrity, but this will only be confirmed in debug mode
  *
@@ -274,8 +270,7 @@ bool BuildOrder::isSupplyPossible()
             availableSupply = 6;
             break;
         default:
-            // If this exception is thrown the first buildstep is broken
-            throw std::invalid_argument("Unknown race");
+            return false;
     }
 
     /*
@@ -296,44 +291,36 @@ bool BuildOrder::isSupplyPossible()
     return true;
 }
 
-// TODO calculate max time and set this in BuildOrder maybe?
-bool BuildOrder::doSanityCheck()
+/*
+ * Checks basic requirements of the list and will throw execeptions if it fails.
+ * This should not happen if BuildOrder ist used appropriately and automatic Integrity checks
+ * are only enabled in DEBUG mode
+ *
+ * Empty lists are allowed
+ *
+ * Exceptions are thrown iff:
+ *  - A build step has invalid race (should never happen)
+ *  - A build step has EntityType NONE
+ *  - Build steps with differen races appear
+ */
+void BuildOrder::checkIntegrity()
 {
     if (buildSteps.size() == 0)
     {
-        throw std::invalid_argument("There are no steps in the build list!");
+        return;
     }
-
-    int currentSupply = 0;
 
     this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
-    set<EntityType> builtTypes;
-
     switch (this->race)
     {
-        // Protoss and Zergonly has 10 supply at the start
         case EntityType::ZERG:
-            currentSupply = 10;
-            builtTypes.insert(ZERG_HATCHERY);
-            builtTypes.insert(ZERG_OVERLORD);
-            builtTypes.insert(ZERG_DRONE);
-            break;
         case EntityType::PROTOSS:
-            currentSupply = 10;
-            builtTypes.insert(PROTOSS_NEXUS);
-            builtTypes.insert(PROTOSS_PROBE);
-            break;
         case EntityType::TERRAN:
-            builtTypes.insert(TERRAN_COMMAND_CENTER);
-            builtTypes.insert(TERRAN_SCV);
-            currentSupply = 11;
             break;
         default:
+            // If this exception is thrown the first buildstep is broken
             throw std::invalid_argument("Unknown race");
     }
-
-    currentSupply -= 5; // Subtract supply for the workers
-
     for (BuildStep *step : buildSteps)
     {
         EntityType stepType = step->getEntityType();
@@ -349,41 +336,21 @@ bool BuildOrder::doSanityCheck()
             std::string msg = "You cannot build unit '" + step->getName() + "' with your race.";
             throw std::invalid_argument(msg);
         }
-
-        currentSupply -= supply[stepType];
-
-        // Temporary disabled for beeing to anoying
-        //LOG_DEBUG("Parsed: " << BuildStep::entityTypeToString[stepType] << " current supply: " << currentSupply);
-
-        if (currentSupply < 0)
-        {
-            std::string msg = "Not enough supply to build '" + step->getName() + "'.";
-            throw std::invalid_argument(msg);
-        }
     }
+}
 
-    for (BuildStep *step : buildSteps)
-    {
-        EntityType stepType = step->getEntityType();
-        vector<EntityType> deps = BuildOrder::dependencies[stepType];
-
-        for (EntityType d : deps)
-        {
-            if (!builtTypes.count(d))
-            {
-                ostringstream oss;
-                oss << "Basic dependency not met: ";
-                oss << BuildStep::entityTypeToString[stepType];
-                oss << " depends on: ";
-                oss << BuildStep::entityTypeToString[d];
-                oss << endl;
-                throw std::invalid_argument(oss.str());
-            }
-        }
-
-        builtTypes.insert(stepType);
-    }
-
+/*
+ * This method checks if there are more than two vespene facilities in the list
+ * If the list is empty this method returns true.
+ * This method will not throw exceptions.
+ *
+ * The list is assumed to pass checkIntegrity, but this will only be confirmed in debug mode
+ */
+bool BuildOrder::isVespenePossible()
+{
+#ifdef DEBUG
+    checkIntegrity();
+#endif
     // Check if there are no more than 2 harvesting facilities in the buildlist
     // Issue: #43
     for (BuildStep *step: buildSteps)
@@ -397,11 +364,89 @@ bool BuildOrder::doSanityCheck()
 
         if (nHarvestingFacilities > 2)
         {
-            throw std::invalid_argument("More than 2 harvesting facilities make no sense.");
+            return false;
         }
     }
 
     return true;
+}
+
+/*
+ * This method checks if the dependencies of every step are met.
+ * If the list is empty this method returns true.
+ * This method will not throw exceptions.
+ *
+ * The list is assumed to pass checkIntegrity, but this will only be confirmed in debug mode
+ */
+bool BuildOrder::isDependenciesMet()
+{
+#ifdef DEBUG
+    checkIntegrity();
+#endif
+
+    if (buildSteps.size() == 0)
+    {
+        return true;
+    }
+
+    // We but every EntityType we build into this set
+    set<EntityType> builtTypes;
+    this->race = Entity::typeToRace(buildSteps[0]->getEntityType());
+
+    switch (this->race)
+    {
+        // Protoss and Zergonly has 10 supply at the start
+        case EntityType::ZERG:
+            builtTypes.insert(ZERG_HATCHERY);
+            builtTypes.insert(ZERG_OVERLORD);
+            builtTypes.insert(ZERG_DRONE);
+            break;
+        case EntityType::PROTOSS:
+            builtTypes.insert(PROTOSS_NEXUS);
+            builtTypes.insert(PROTOSS_PROBE);
+            break;
+        case EntityType::TERRAN:
+            builtTypes.insert(TERRAN_COMMAND_CENTER);
+            builtTypes.insert(TERRAN_SCV);
+            break;
+        default:
+            return false;
+    }
+
+    for (BuildStep *step : buildSteps)
+    {
+        EntityType stepType = step->getEntityType();
+        vector<EntityType> deps = BuildOrder::dependencies[stepType];
+
+        for (EntityType d : deps)
+        {
+            if (!builtTypes.count(d))
+            {
+                return false;
+            }
+        }
+
+        builtTypes.insert(stepType);
+    }
+
+    return true;
+}
+
+/*
+ * This method check if the buildList is possible to complete.
+ * If the list is empty this method returns true
+ * This method will not throw exceptions.
+ *
+ * The list is assumed to pass checkIntegrity, but this will only be confirmed in debug mode
+ */
+bool BuildOrder::isPossible()
+{
+#ifdef DEBUG
+    checkIntegrity();
+#endif
+    return isSupplyPossible()
+        && isVespenePossible()
+        && isDependenciesMet();
 }
 
 BuildStep *BuildOrder::getNextStep()
@@ -422,7 +467,7 @@ void BuildOrder::advance()
 {
     if (iterator != buildSteps.end())
     {
-       // cerr << "Advanced BuildOrder: " << buildSteps.end()-iterator<< endl;
+        // cerr << "Advanced BuildOrder: " << buildSteps.end()-iterator<< endl;
         ++iterator;
     }
 }
