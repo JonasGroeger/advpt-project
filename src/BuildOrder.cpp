@@ -198,8 +198,6 @@ BuildOrder::BuildOrder(std::vector<BuildStep *> buildList)
 {
     buildSteps = buildList;
     iterator = buildSteps.begin();
-
-    doSanityCheck();
 }
 
 BuildOrder::BuildOrder(const char *file)
@@ -212,8 +210,6 @@ BuildOrder::BuildOrder(const char *file)
     }
 
     iterator = buildSteps.begin();
-
-    doSanityCheck();
 
     cerr << "Created BuildOrder: " << buildSteps.end()-iterator<< endl;
 }

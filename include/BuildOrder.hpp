@@ -27,7 +27,6 @@ private:
     bool isVespenePossible();
     bool isDependenciesMet();
     bool isSupplyPossible();
-    bool isDependenciesMet();
     void checkIntegrity();
 
 public:
@@ -41,7 +40,6 @@ public:
 
     static map<EntityType, vector<EntityType>> dependencies;
 
-    bool doSanityCheck();
     bool isPossible();
 
     EntityType getRace();
