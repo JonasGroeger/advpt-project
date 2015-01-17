@@ -210,20 +210,12 @@ BuildOrder::BuildOrder(const char *file)
     string line;
     while (getline(infile, line))
     {
-        buildSteps.push_back(new BuildStep(line));
+        buildSteps.push_back(BuildStepPool::getInstance().getBuildStep(line));
     }
 
     iterator = buildSteps.begin();
 
     cerr << "Created BuildOrder: " << buildSteps.end()-iterator<< endl;
-}
-
-BuildOrder::~BuildOrder()
-{
-    fprintf(stderr, "BuildOrder Destructor\n");
-    std::for_each(buildSteps.begin(), buildSteps.end(), [](BuildStep *bs) {
-        delete bs;
-    });
 }
 
 void BuildOrder::clearBuildSteps() {
@@ -478,7 +470,10 @@ EntityType BuildOrder::getRace()
 }
 
 
-void BuildOrder::addStepToBuildList(BuildStep* step) {
+void BuildOrder::addBuildStep(string name) {
+    buildSteps.push_back(BuildStepPool::getInstance().getBuildStep(name));
+}
+void BuildOrder::addBuildStep(BuildStep *step) {
     buildSteps.push_back(step);
 }
 

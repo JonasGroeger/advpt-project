@@ -15,18 +15,31 @@ enum class BuildStepType
 
 class BuildStep
 {
+    // Only BuildStepPool should be allowed to create instances of this class
+    friend class BuildStepPool;
 private:
+    BuildStep(string value);
+    BuildStep(const BuildStep& copy);
+    BuildStep& operator=(BuildStep& copy);
+    ~BuildStep() = default;
+    
+    // Private members
     BuildStepType buildstepType;
     EntityType entityType;
-    
-public:
     string name;
+
+public:
+    // Getters for private members
+    BuildStepType getBuildStepType(); 
+    EntityType getEntityType(); 
+    string getName();
+
     static map<string, EntityType> stringToEntityType;
     static map<string, BuildStepType> stringToBuildStepType;
-    // DEBUGGING
+    
+    // Initialize the reverse maps
     static map<EntityType, string> entityTypeToString;
     static map<BuildStepType, string> buildStepTypeToString;
-
     static void initMap(void)
     {
         for (auto it = BuildStep::stringToEntityType.begin(); it != BuildStep::stringToEntityType.end(); it++)
@@ -38,13 +51,24 @@ public:
             BuildStep::buildStepTypeToString[it->second] = it->first;
         }
     }
+};
 
-    BuildStep(string value);
-
-    BuildStepType getBuildStepType();
-
-    EntityType getEntityType();
-
-    //Just for testing
-    string getName();
+/*
+ * BuildStepPool is a Singleton Class that is used to get Pointers to BuildStep Instances
+ * These pointers should NEVER be freed, BuildStepPool will take care of alle this internally
+ */
+class BuildStepPool
+{
+    private:
+        map<string, BuildStep*> stringToBuildStep;
+        // Private Constructor
+        BuildStepPool();
+        // Stop the compiler generating methods of copy the object
+        BuildStepPool(BuildStepPool const& copy);            // Not Implemented
+        BuildStepPool& operator=(BuildStepPool const& copy); // Not Implemented
+        
+    public:
+        static BuildStepPool& getInstance();
+        BuildStep *getBuildStep(string);
+            
 };
