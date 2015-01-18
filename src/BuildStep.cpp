@@ -218,3 +218,24 @@ string BuildStep::getName()
 {
     return name;
 }
+
+
+BuildStepPool::BuildStepPool()
+{
+    for (auto it = BuildStep::stringToEntityType.begin(); it != BuildStep::stringToEntityType.end(); it++)
+    {
+        BuildStep *step = new BuildStep(it->first);
+        stringToBuildStep[it->first] = step;
+    }
+}
+
+BuildStepPool& BuildStepPool::getInstance()
+{
+    static BuildStepPool instance;
+    return instance;
+}
+
+BuildStep* BuildStepPool::getBuildStep(string name)
+{
+    return stringToBuildStep[name];
+}

@@ -135,7 +135,6 @@ BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
     BuildOrder* result;
     cout << "Create new BuildOrder: " << endl;
     result = new BuildOrder();
-    result->clearBuildSteps();
     
     map<string, int> alreadyAddedEntities;
     if(strcmp(entity, "siege_tank")==0) {
@@ -170,16 +169,16 @@ BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
                 if(entitiesWithPrerequisites.count(nextEntity)!=0) {
                     int count = alreadyAddedEntities[nextEntity];
                     if(count>0) {
-                        result->addStepToBuildList(new BuildStep(nextEntity));
+                        result->addBuildStep(nextEntity);
                         count--;
                         alreadyAddedEntities[nextEntity] = count;
                     }
                 } else {
-                    result->addStepToBuildList(new BuildStep(nextEntity));
+                    result->addBuildStep(nextEntity);
                 }
             }
             
-            result->addStepToBuildList(new BuildStep(requirements[i]));
+            result->addBuildStep(requirements[i]);
         }
     }
 
@@ -200,7 +199,7 @@ vector<string> GeneticOptimizer::getBuildableEntities(BuildOrder* order, string 
         listOfEntities = this->Zerg_Entities;
 
     for(unsigned int i = 0; i < listOfEntities.size();i++) {
-        order->addStepToBuildList(new BuildStep(listOfEntities[i]));
+        order->addBuildStep(listOfEntities[i]);
 
         if(order->isPossible())
         {
@@ -268,9 +267,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                 BuildStep* chosenStep;
                 chosenStep = (rand()%2==0)?mumSteps[y]:dadSteps[y];
 
-                child->addStepToBuildList(
-                        chosenStep
-                        );
+                child->addBuildStep(chosenStep);
 
             }
 

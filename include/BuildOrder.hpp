@@ -37,7 +37,7 @@ public:
 
     BuildOrder(vector<BuildStep *> buildList);
     
-    ~BuildOrder();
+    ~BuildOrder() = default;
 
     static map<EntityType, vector<EntityType>> dependencies;
 
@@ -51,7 +51,8 @@ public:
 
     bool isDone();
 
-    void addStepToBuildList(BuildStep* step);
+    void addBuildStep(string name);
+    void addBuildStep(BuildStep *step);
     void removeLastStepFromBuildList();
     void clearBuildSteps();
     vector<BuildStep*> getBuildList();
