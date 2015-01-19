@@ -56,25 +56,12 @@ GeneticOptimizer::GeneticOptimizer()
     srand(time(NULL));
 }
 
-
-map<EntityType, string> GeneticOptimizer::getEntityTypeToString() {
-    map<string, EntityType>::iterator it = BuildStep::stringToEntityType.begin();
-    map<EntityType, string> result;
-    while(it!=BuildStep::stringToEntityType.end()) {
-        result.insert(pair<EntityType, string>(it->second, it->first));
-        ++it;
-    }
-    return result;
-}
-
 vector<string> GeneticOptimizer::getDependencyList(string entity) {
-
-
     vector<string> dependencies;
     vector<EntityType> todoList;
     EntityType type = BuildStep::stringToEntityType[entity];
     map<EntityType, bool> alreadyDone;
-    map<EntityType, string> entityTypeToString = getEntityTypeToString();
+    map<EntityType, string>& entityTypeToString = BuildStep::entityTypeToString;
 
     todoList.push_back(type);
     map<string, int> alreadyAddedToDependencyList;
