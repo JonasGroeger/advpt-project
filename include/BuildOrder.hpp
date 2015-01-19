@@ -56,4 +56,5 @@ public:
     void removeLastStepFromBuildList();
     void clearBuildSteps();
     vector<BuildStep*> getBuildList();
+    void print();
 };

@@ -484,3 +484,11 @@ void BuildOrder::removeLastStepFromBuildList() {
 vector<BuildStep*> BuildOrder::getBuildList() {
     return buildSteps;
 }
+
+void BuildOrder::print()
+{
+    for (BuildStep* step : buildSteps)
+    {
+        cout << step->getName() << endl;
+    }
+}

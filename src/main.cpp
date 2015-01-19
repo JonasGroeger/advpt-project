@@ -43,6 +43,6 @@ int main(int argc, char **argv)
         std::cerr << "Invalid number of arguments! " << std::endl;
         std::cerr << "USAGE:" << std::endl;
         std::cerr << '\t' << argv[0] << " <build-order-file>" << std::endl;
-        std::cerr << '\t' << argv[0] << " DFBB <entity> <mode> <max-simulation-time>" << std::endl;
+        std::cerr << '\t' << argv[0] << " GENETIC <entity> <mode> <max-simulation-time>" << std::endl;
     }
 }

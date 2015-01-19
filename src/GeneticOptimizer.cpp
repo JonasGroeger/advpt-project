@@ -291,15 +291,15 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
         rateBuildLists(*listOfBuildlists);
 
         // Start algorithm here
-        /* for(int nog=0;nog<numberOfGenerations;nog++) {
-
+        for(int nog=0;nog<numberOfGenerations;nog++) {
            rateBuildLists(*listOfBuildlists);
            mutateBuildLists(*listOfBuildlists);
-           }*/
+        }
 
         for(unsigned int i = 0; i<listOfBuildlists->size();i++)
         {
             cout << "Liste Nr: " << (i+1) << " Fitness: " << (*listOfBuildlists)[i].first << endl;
+            (*listOfBuildlists)[i].second->print();
         }
 
     } else {
