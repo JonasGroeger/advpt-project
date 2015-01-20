@@ -254,8 +254,9 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
     vector<BuildStep*> dadSteps = buildLists[1].second->buildSteps;
 
     // Configuration for Mutation-Step
-    int maxProbability = 0.3;
-    double probabilityFraction = 1/buildLists.size();
+    double maxProbability = 0.3;
+    double probabilityFraction = ((double)1)/buildLists.size();
+ 
     double currentProbabilityFraction = probabilityFraction;
     double currentProbability = 0;
     BuildStepPool& buildStepPool = BuildStepPool::getInstance();
@@ -287,12 +288,15 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
         
         BuildOrder* mutatedChild = new BuildOrder();
 
-        for(unsigned int i = 0; i<child->buildSteps.size();i++) {
-            // Calculate Probability
-            currentProbability = maxProbability*currentProbabilityFraction;
+        // Calculate Probability of mutation in this list
+        currentProbability = maxProbability*probabilityFraction*((double)(i+1));
+        for(unsigned int x = 0; x<child->buildSteps.size();x++) {
+            
+            
 
             // Decide, if we do something with the current BuildStep
             double val = (double)rand() / RAND_MAX;
+       
             if(val<currentProbability) {
                 // Decide, what to to
                 int what = rand()%3;
@@ -300,32 +304,35 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                 vector<string> buildableEntities;
                 switch(what) {
                     case 0:
+                        cout << "delete a step" << endl;
                         // delete step (don't add it)... except it's the first step
-                        if(i==0)
-                            mutatedChild->buildSteps.push_back(child->buildSteps[i]);
+                        if(x==0)
+                            mutatedChild->buildSteps.push_back(child->buildSteps[x]);
                         break;
                     case 1:
                         // add new step
+                        cout << "add a step" << endl;
                         buildableEntities = 
                             GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
                         rnd = rand()%buildableEntities.size();
-                        mutatedChild->buildSteps.insert(child->buildSteps.begin()+i, 
+                        mutatedChild->buildSteps.insert(mutatedChild->buildSteps.begin()+x, 
                             buildStepPool.getBuildStep(buildableEntities[rnd]));
                         break;
                     case 2: 
                         // change step
+                        cout << "change a step" << endl;
                         buildableEntities = 
                             GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
                         rnd = rand()%buildableEntities.size();
-                        BuildStep* tmp = child->buildSteps[i];
-                        mutatedChild->buildSteps[i] = buildStepPool.getBuildStep(buildableEntities[rnd]);
+                        BuildStep* tmp = child->buildSteps[x];
+                        mutatedChild->buildSteps[x] = buildStepPool.getBuildStep(buildableEntities[rnd]);
                         if(!mutatedChild->isPossible())
-                            mutatedChild->buildSteps[i] = tmp;
+                            mutatedChild->buildSteps[x] = tmp;
                         break;
                 }
 
             } else {
-                mutatedChild->buildSteps.push_back(originalBuildList[i]);
+                mutatedChild->buildSteps.push_back(child->buildSteps[i]);
             }
             currentProbabilityFraction += probabilityFraction;
         }
@@ -348,11 +355,14 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
         std::vector<pair<unsigned long, BuildOrder*>> *listOfBuildlists = generateRandomBuildLists(numberOfLists, entity);
      
         // Start algorithm here
-        for(int nog=0;nog<numberOfGenerations;nog++) {
-            rateBuildLists(*listOfBuildlists);
-            mutateBuildLists(*listOfBuildlists, entity);
-        }
+        
+
+        //for(int nog=0;nog<numberOfGenerations;nog++) {
+        //    rateBuildLists(*listOfBuildlists);
+        //    mutateBuildLists(*listOfBuildlists, entity);
+        //}
         rateBuildLists(*listOfBuildlists);
+        mutateBuildLists(*listOfBuildlists, entity);
 
         for(unsigned int i = 0; i<listOfBuildlists->size();i++)
         {
