@@ -13,7 +13,7 @@
 #include <climits>
 
 vector<string> GeneticOptimizer::Terran_Entities = {
-"refinery", "supply_depot", "barracks", "barrack_tech_lab", "barracks_reactor",
+"refinery", "supply_depot", "barracks", "barracks_tech_lab", "barracks_reactor",
                 "marauder", "reaper", "ghost", "ghost_academy", "bunker", "hellion", 
                 "marine", "factory", "factory_tech_lab", "factory_reactor", "starport", 
                 "starport_tech_lab", "starport_reactor", "raven", "banshee", "battlecruiser", 
@@ -45,7 +45,7 @@ std::map<string, string> entitiesWithPrerequisites = {
     {"starport_reactor", "starport"},
     {"factory_reactor","factory"}, 
     {"starport_tech_lab","starport"}, 
-    {"barrack_tech_lab","barracks"}, 
+    {"barracks_tech_lab","barracks"}, 
     {"barracks_reactor", "barracks"}, 
     {"factory_tech_lab","factory"} 
 };
@@ -129,6 +129,9 @@ vector<string> GeneticOptimizer::getDependencyList(string entity) {
     return inverseDependencies;
 }
 
+/*
+ * Creates random buildlist that produces a @entity 
+ */
 BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
     string strEntity = entity;
         
@@ -153,25 +156,27 @@ BuildOrder* GeneticOptimizer::createBuildList(char* entity) {
         for (unsigned int i=0; i < requirements.size(); i++) {
             buildableEntities = getBuildableEntities(result, race, entity);
             
-            int rnd = rand()%buildableEntities.size();
+            int rnd = rand() % getConfigInteger("Genetic", "NumberStepsBetween", 5);
             // Create random number of random Entries for BuildList
             
             for(int y=0;y<rnd;y++) {
-                int nextEntry = rand()%rnd;
+                int nextEntry = rand() % buildableEntities.size();
                 nextEntity = buildableEntities[nextEntry];
 
                 if(alreadyAddedEntities.count(nextEntity)==0) {
-                    alreadyAddedEntities.insert(pair<string, int>(nextEntity, 1));
+                    alreadyAddedEntities[nextEntity] = 1;
                 } else {
-                    alreadyAddedEntities[buildableEntities[nextEntry]]++;
+                    alreadyAddedEntities[nextEntity] ++;
                 }
+
                 // check, if entity has prerequisites
                 if(entitiesWithPrerequisites.count(nextEntity)!=0) {
-                    int count = alreadyAddedEntities[nextEntity];
-                    if(count>0) {
+                    const string& prerequisite = entitiesWithPrerequisites[nextEntity];
+
+                    if (alreadyAddedEntities[prerequisite] > 0)
+                    {
                         result->addBuildStep(nextEntity);
-                        count--;
-                        alreadyAddedEntities[nextEntity] = count;
+                        alreadyAddedEntities[prerequisite] --;
                     }
                 } else {
                     result->addBuildStep(nextEntity);
@@ -201,11 +206,9 @@ vector<string> GeneticOptimizer::getBuildableEntities(BuildOrder* order, string 
     for(unsigned int i = 0; i < listOfEntities.size();i++) {
         order->addBuildStep(listOfEntities[i]);
 
-        if(order->isPossible())
+        if(order->isPossible() && listOfEntities[i] != strEntity)
         {
-            result.push_back(listOfEntities[i]);
-            if(listOfEntities[i] == strEntity)
-                return result;
+                result.push_back(listOfEntities[i]);
         }
 
         order->removeLastStepFromBuildList();
@@ -230,17 +233,11 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
 
         unsigned long fitness=0;
 
-        try {
-            fitness = Game::getFitnessPush(*buildLists[i].second);            
-            buildLists[i].first = fitness;
-        } catch(...) {
-            fitness = INT_MAX;
-        }
-        //buildLists[i].first = 100;
+        fitness = Game::getFitnessPush(*buildLists[i].second);            
+        buildLists[i].first = fitness;
     }
+
     std::sort(buildLists.begin(), buildLists.end());
-
-
 }
 
 
@@ -249,12 +246,16 @@ bool flipCoin() {
     return (i==0);
 }
 
+/*
+ * @buildLists are rated and sorted (ascending by fitness) buildLists (must have at least 2 entries)
+ * @entity target entity
+ */
 void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists, char* entity) {
     vector<BuildStep*> mumSteps = buildLists[0].second->buildSteps;
     vector<BuildStep*> dadSteps = buildLists[1].second->buildSteps;
 
     // Configuration for Mutation-Step
-    double maxProbability = 0.3;
+    double maxProbability = getConfigDouble("Genetic", "MaxMutationProbability", 0.3);
     double probabilityFraction = ((double)1)/buildLists.size();
  
     double currentProbabilityFraction = probabilityFraction;
@@ -267,19 +268,58 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
     for(unsigned int i = 2;i<buildLists.size();i++) {
         BuildOrder* child;
         child = new BuildOrder();
-        child->clearBuildSteps();
 
         // recombine
         do {
             child->clearBuildSteps();
+            bool containsEntity = false;
+
+            auto mumIterator = mumSteps.begin();
+            auto dadIterator = dadSteps.begin();
+
+            while (mumIterator != mumSteps.end() && dadIterator != dadSteps.end())
+            {
+                BuildStep *chosenStep = (rand() % 2 == 0) ? *mumIterator : *dadIterator;
+                mumIterator ++;
+                dadIterator ++;
+
+                child->addBuildStep(chosenStep);
+
+                if (chosenStep->getName() == entity)
+                {
+                    containsEntity = true;
+                }
+            }
+
+            if (!containsEntity) 
+            {
+                while (mumIterator != mumSteps.end()) 
+                {
+                    child->addBuildStep(*mumIterator);
+                    mumIterator ++;
+                }
+
+                while (dadIterator != dadSteps.end())
+                {
+                    child->addBuildStep(*dadIterator);
+                    dadIterator ++;
+                }
+            }
+
+            /*
             for(unsigned int y = 0; y<min(mumSteps.size(), dadSteps.size());y++) {
 
                 BuildStep* chosenStep;
                 chosenStep = (rand()%2==0)?mumSteps[y]:dadSteps[y];
 
                 child->addBuildStep(chosenStep);
-
+                if (chosenStep->getName() == entity)
+                {
+                    containsEntity = true;
+                    break;
+                }
             }
+            */
 
         } while(!child->isPossible());
 
@@ -291,9 +331,6 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
         // Calculate Probability of mutation in this list
         currentProbability = maxProbability*probabilityFraction*((double)(i+1));
         for(unsigned int x = 0; x<child->buildSteps.size();x++) {
-            
-            
-
             // Decide, if we do something with the current BuildStep
             double val = (double)rand() / RAND_MAX;
        
@@ -314,6 +351,9 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                         cout << "add a step" << endl;
                         buildableEntities = 
                             GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
+                        cerr << buildableEntities.size() << endl;
+                        cerr << mutatedChild->buildSteps.size() << endl;
+                        mutatedChild->print();
                         rnd = rand()%buildableEntities.size();
                         mutatedChild->buildSteps.insert(mutatedChild->buildSteps.begin()+x, 
                             buildStepPool.getBuildStep(buildableEntities[rnd]));
@@ -323,6 +363,9 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                         cout << "change a step" << endl;
                         buildableEntities = 
                             GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
+                        cerr << buildableEntities.size() << endl;
+                        cerr << mutatedChild->buildSteps.size() << endl;
+                        mutatedChild->print();
                         rnd = rand()%buildableEntities.size();
                         BuildStep* tmp = child->buildSteps[x];
                         mutatedChild->buildSteps[x] = buildStepPool.getBuildStep(buildableEntities[rnd]);
@@ -336,7 +379,6 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
             }
             currentProbabilityFraction += probabilityFraction;
         }
-
 
         delete buildLists[i].second;
         buildLists[i].second = mutatedChild;
@@ -357,16 +399,18 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
         // Start algorithm here
         
 
-        //for(int nog=0;nog<numberOfGenerations;nog++) {
-        //    rateBuildLists(*listOfBuildlists);
-        //    mutateBuildLists(*listOfBuildlists, entity);
-        //}
+        for(int nog=0;nog<numberOfGenerations;nog++) {
+            rateBuildLists(*listOfBuildlists);
+            mutateBuildLists(*listOfBuildlists, entity);
+        }
         rateBuildLists(*listOfBuildlists);
         mutateBuildLists(*listOfBuildlists, entity);
 
         for(unsigned int i = 0; i<listOfBuildlists->size();i++)
         {
+            cout << "---------------------------------------------------------------" << endl;
             cout << "Liste Nr: " << (i+1) << " Fitness: " << (*listOfBuildlists)[i].first << endl;
+            (*listOfBuildlists)[i].second->print();
         }
 
     } else {

@@ -531,6 +531,7 @@ void GameState::addEntity(EntityType type, unsigned long amount)
     // The message should only be printed once
     if (logger != nullptr)
     {
+        return;
         printBuildEndMessage(type);
     }
 }
@@ -714,6 +715,7 @@ void GameState::unregisterLogger()
 
 void GameState::printMessageProlog() const
 {
+    return;
     std::cout << std::left;
     std::cout << std::setw(5);
     std::cout << getSimulationTime();
@@ -722,6 +724,7 @@ void GameState::printMessageProlog() const
 
 void GameState::printBuildStartMessage(EntityType type) const
 {
+    return;
     printMessageProlog();
     std::cout << "build-start";
     std::cout << BuildStep::entityTypeToString[type];
@@ -730,6 +733,7 @@ void GameState::printBuildStartMessage(EntityType type) const
 
 void GameState::printBuildEndMessage(EntityType type) const
 {
+    return;
     printMessageProlog();
     std::cout << "build-end";
     std::cout << BuildStep::entityTypeToString[type];
@@ -742,6 +746,7 @@ void GameState::printBuildEndMessage(EntityType type) const
 
 void GameState::printWorkerMessage() const
 {
+    return;
     int idleWorkers = 0;
     int vespineWorkers = 0;
     int mineralWorkers = 0;
@@ -776,6 +781,7 @@ void GameState::printWorkerMessage() const
 
 void GameState::printResourcesMessage() const
 {
+    return;
     printMessageProlog();
     std::cout << "resources";
     std::cout << "minerals:" << getMinerals();

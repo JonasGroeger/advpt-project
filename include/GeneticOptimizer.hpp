@@ -15,9 +15,9 @@ private:
     vector<pair<unsigned long, BuildOrder*>>* generateRandomBuildLists(int numberOfBuildLists, char* entity);
     void rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists);
     void mutateBuildLists(vector<pair<unsigned long, BuildOrder*>> &buildLists, char* Entity);
-    vector<string> getDependencyList(string entity);
     map<EntityType, string> getEntityTypeToString();
 public:
+    vector<string> getDependencyList(string entity);
     GeneticOptimizer();
     static vector<string> Terran_Entities;
     static vector<string> Zerg_Entities;

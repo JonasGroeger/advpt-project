@@ -20,6 +20,7 @@ class BuildStep
 private:
     BuildStep(string value);
     BuildStep(const BuildStep& copy);
+    BuildStep(const BuildStep&& copy) = delete;
     BuildStep& operator=(BuildStep& copy);
     ~BuildStep() = default;
     

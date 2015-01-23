@@ -18,7 +18,7 @@ marine
 supply_depot
 barracks
 supply_depot
-barrack_tech_lab
+barracks_tech_lab
 ghost_academy
 ghost_academy
 hellion
