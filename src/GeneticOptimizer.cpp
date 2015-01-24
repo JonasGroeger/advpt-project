@@ -230,7 +230,7 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
 
     for(unsigned int i = 0; i<buildLists.size();i++)
     {
-
+        buildLists[i].second->print();
         unsigned long fitness=0;
 
         fitness = Game::getFitnessPush(*buildLists[i].second);            
@@ -325,15 +325,15 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
 
         // mutate
         vector<BuildStep*> originalBuildList = child->buildSteps;
-        
+        child->print();
         BuildOrder* mutatedChild = new BuildOrder();
-
+        
         // Calculate Probability of mutation in this list
         currentProbability = maxProbability*probabilityFraction*((double)(i+1));
-        for(unsigned int x = 0; x<child->buildSteps.size();x++) {
+        for(unsigned int x = 0; x<child->buildSteps.size()-1;x++) {
             // Decide, if we do something with the current BuildStep
             double val = (double)rand() / RAND_MAX;
-       
+            
             if(val<currentProbability) {
                 // Decide, what to to
                 int what = rand()%3;
@@ -351,38 +351,42 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                         cout << "add a step" << endl;
                         buildableEntities = 
                             GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
-                        cerr << buildableEntities.size() << endl;
-                        cerr << mutatedChild->buildSteps.size() << endl;
-                        mutatedChild->print();
-                        rnd = rand()%buildableEntities.size();
-                        mutatedChild->buildSteps.insert(mutatedChild->buildSteps.begin()+x, 
-                            buildStepPool.getBuildStep(buildableEntities[rnd]));
+                        
+                        if(buildableEntities.size()>0) {
+                            rnd = rand()%buildableEntities.size();
+                            mutatedChild->buildSteps.push_back(buildStepPool.getBuildStep(buildableEntities[rnd]));
+                            mutatedChild->buildSteps.push_back(child->buildSteps[x]); 
+                            
+                        }
                         break;
                     case 2: 
                         // change step
                         cout << "change a step" << endl;
                         buildableEntities = 
                             GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
-                        cerr << buildableEntities.size() << endl;
-                        cerr << mutatedChild->buildSteps.size() << endl;
-                        mutatedChild->print();
-                        rnd = rand()%buildableEntities.size();
-                        BuildStep* tmp = child->buildSteps[x];
-                        mutatedChild->buildSteps[x] = buildStepPool.getBuildStep(buildableEntities[rnd]);
-                        if(!mutatedChild->isPossible())
-                            mutatedChild->buildSteps[x] = tmp;
+                        
+                        if(buildableEntities.size()>0) {
+                            rnd = rand()%buildableEntities.size();
+                            BuildStep* tmp = child->buildSteps[x];
+                           
+                            mutatedChild->buildSteps[x] = buildStepPool.getBuildStep(buildableEntities[rnd]);
+                            if(!mutatedChild->isPossible())
+                                mutatedChild->buildSteps[x] = tmp;
+                        }
                         break;
                 }
 
             } else {
-                mutatedChild->buildSteps.push_back(child->buildSteps[i]);
+                mutatedChild->buildSteps.push_back(child->buildSteps[x]);
             }
             currentProbabilityFraction += probabilityFraction;
         }
 
         delete buildLists[i].second;
         buildLists[i].second = mutatedChild;
+        
     }
+    cout << "End of Mutation" << endl;
 }
 
 void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
