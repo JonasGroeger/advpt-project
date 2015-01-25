@@ -44,7 +44,6 @@ GeneticOptimizer::GeneticOptimizer()
     // Initialize Random-Generator
     srand(time(NULL));
     //set genetic in gamestate
-
 }
 
 
@@ -148,7 +147,11 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
         vector<string> buildableEntities;
         string entry;
         string nextEntity;
-        string race = "terran";
+        string race = "protoss";
+        if (Entity::typeToRace(BuildStep::stringToEntityType[strEntity]) == PROTOSS)
+        {
+            race = "protoss";
+        }
 
         for (unsigned int i = 0; i < requirements.size(); i++)
         {
@@ -202,11 +205,11 @@ vector<string> GeneticOptimizer::getBuildableEntities(BuildOrder *order, string 
     vector<string> listOfEntities;
     vector<string> result;
 
-    if (race.compare("terran") == 0)
+    if (race == "terran")
     {
         listOfEntities = this->Terran_Entities;
     }
-    else if (race.compare("protoss"))
+    else if (race == "protoss")
     {
         listOfEntities = this->Protoss_Entities;
     }
@@ -277,7 +280,11 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder *>
     double currentProbabilityFraction = probabilityFraction;
     double currentProbability = 0;
     BuildStepPool &buildStepPool = BuildStepPool::getInstance();
-    string race = "terran";
+    string race = "protoss";
+    if (Entity::typeToRace(BuildStep::stringToEntityType[entity]) == PROTOSS)
+    {
+        race = "protoss";
+    }
 
     // Take first two Buildlists and replace positions 3-end with Mutant-Children
     for (unsigned int i = 2; i < buildLists.size(); i++)
