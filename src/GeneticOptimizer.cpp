@@ -137,7 +137,6 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
     result = new BuildOrder();
 
     map<string, int> alreadyAddedEntities;
-    if (strcmp(entity, "siege_tank") == 0)
     {
         //vector<string> requirements {"refinery", "supply_depot", "barracks", "factory", "factory_tech_lab"};
         vector<string> requirements = getDependencyList(strEntity);
@@ -414,7 +413,6 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
     int numberOfGenerations = getConfigInteger("Genetic", "NumberOfGenerations", 20);
     int numberOfLists = getConfigInteger("Genetic", "NumberOfLists", 20);
 
-    if ((strcmp(entity, "siege_tank") == 0))
     {
         // Create initial BuildOrder; 
         std::vector<pair<unsigned long, BuildOrder *>> *listOfBuildlists = generateRandomBuildLists(numberOfLists, entity);
@@ -434,10 +432,6 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
             cout << "Liste Nr: " << (i + 1) << " Fitness: " << (*listOfBuildlists)[i].first << endl;
             (*listOfBuildlists)[i].second->print();
         }
-    }
-    else
-    {
-        LOG_DEBUG("nix wars");
     }
 }
 
