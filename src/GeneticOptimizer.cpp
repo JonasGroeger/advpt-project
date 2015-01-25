@@ -1,4 +1,3 @@
-
 #include <vector>
 #include <random>
 #include "GeneticOptimizer.hpp"
@@ -388,7 +387,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
             }
             currentProbabilityFraction += probabilityFraction;
         }
-        
+        mutatedChild->buildSteps.push_back(buildStepPool.getBuildStep(entity));
         delete buildLists[i].second;
         buildLists[i].second = mutatedChild;
         
