@@ -246,12 +246,6 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
     std::sort(buildLists.begin(), buildLists.end());
 }
 
-
-bool flipCoin() {
-    int i = rand()%2;
-    return (i==0);
-}
-
 /*
  * @buildLists are rated and sorted (ascending by fitness) buildLists (must have at least 2 entries)
  * @entity target entity
