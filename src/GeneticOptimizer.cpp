@@ -144,7 +144,7 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
         //requirements.push_back(entity);
         vector<string> buildableEntities;
         string nextEntity;
-        string race = "protoss";
+        string race = "terran";
         if (Entity::typeToRace(BuildStep::stringToEntityType[strEntity]) == PROTOSS)
         {
             race = "protoss";
@@ -278,7 +278,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder *>
     double currentProbabilityFraction = probabilityFraction;
     double currentProbability = 0;
     BuildStepPool &buildStepPool = BuildStepPool::getInstance();
-    string race = "protoss";
+    string race = "terran";
     if (Entity::typeToRace(BuildStep::stringToEntityType[entity]) == PROTOSS)
     {
         race = "protoss";
