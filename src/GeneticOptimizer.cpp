@@ -337,6 +337,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
         
         // Calculate Probability of mutation in this list
         currentProbability = maxProbability*probabilityFraction*((double)(i+1));
+
         for(unsigned int x = 0; x<child->buildSteps.size()-1;x++) {
             // Decide, if we do something with the current BuildStep
             double val = (double)rand() / RAND_MAX;
@@ -374,8 +375,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                         
                         if(buildableEntities.size()>0) {
                             rnd = rand()%buildableEntities.size();
-                            BuildStep* tmp = child->buildSteps[x];
-                           
+
                             mutatedChild->buildSteps.push_back(buildStepPool.getBuildStep(buildableEntities[rnd]));
                             if(!mutatedChild->isPossible())
                                 mutatedChild->removeLastStepFromBuildList();
