@@ -131,21 +131,18 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
 {
     string strEntity = entity;
 
-    BuildOrder *result;
+    BuildOrder *result = new BuildOrder();
     //cout << "Create new BuildOrder: " << endl;
-    result = new BuildOrder();
 
     map<string, int> alreadyAddedEntities;
-    {
         //vector<string> requirements {"refinery", "supply_depot", "barracks", "factory", "factory_tech_lab"};
         vector<string> requirements = getDependencyList(strEntity);
         //cout << "Listenstart" << endl;
         // for(int i = 0; i<requirements.size(); i++)
         //     cout << requirements[i] << endl;
 
-        requirements.push_back(entity);
+        //requirements.push_back(entity);
         vector<string> buildableEntities;
-        string entry;
         string nextEntity;
         string race = "protoss";
         if (Entity::typeToRace(BuildStep::stringToEntityType[strEntity]) == PROTOSS)
@@ -156,10 +153,11 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
         for (unsigned int i = 0; i < requirements.size(); i++)
         {
             buildableEntities = getBuildableEntities(result, race, entity);
-
+            if(buildableEntities.size() == 0){
+                continue;
+            }
             int rnd = rand() % getConfigInteger("Genetic", "NumberStepsBetween", 5);
             // Create random number of random Entries for BuildList
-
             for (int y = 0; y < rnd; y++)
             {
                 int nextEntry = rand() % buildableEntities.size();
@@ -192,7 +190,6 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
 
             result->addBuildStep(requirements[i]);
         }
-    }
 
     LOG_DEBUG("End createBuildList");
     //cout << "Buildliste fertig" << endl;
