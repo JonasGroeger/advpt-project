@@ -45,6 +45,8 @@ GeneticOptimizer::GeneticOptimizer()
 {
     // Initialize Random-Generator
     srand(time(NULL));
+    //set genetic in gamestate
+
 }
 
 
@@ -133,7 +135,7 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
     string strEntity = entity;
 
     BuildOrder *result;
-    cout << "Create new BuildOrder: " << endl;
+    //cout << "Create new BuildOrder: " << endl;
     result = new BuildOrder();
 
     map<string, int> alreadyAddedEntities;
@@ -193,7 +195,7 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
     }
 
     LOG_DEBUG("End createBuildList");
-    cout << "Buildliste fertig" << endl;
+    //cout << "Buildliste fertig" << endl;
     return result;
 }
 
@@ -246,7 +248,7 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder *>> 
 {
     for (unsigned int i = 0; i < buildLists.size(); i++)
     {
-        buildLists[i].second->print();
+        //buildLists[i].second->print();
         unsigned long fitness = 0;
 
         if ((buildLists[i].second)->getBuildList().size() == 0)
@@ -340,7 +342,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder *>
 
         // mutate
         vector<BuildStep *> originalBuildList = child->buildSteps;
-        child->print();
+        //child->print();
         BuildOrder *mutatedChild = new BuildOrder();
 
         // Calculate Probability of mutation in this list
@@ -360,14 +362,14 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder *>
                 switch (what)
                 {
                     case 0:
-                        cout << "delete a step" << endl;
+                        //cout << "delete a step" << endl;
                         // delete step (don't add it)... except it's the first step
                         if (currentStep == 0)
                             mutatedChild->buildSteps.push_back(child->buildSteps[currentStep]);
                         break;
                     case 1:
                         // add new step
-                        cout << "add a step" << endl;
+                        //cout << "add a step" << endl;
                         buildableEntities = GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
 
                         if (buildableEntities.size() > 0)
@@ -379,7 +381,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder *>
                         break;
                     case 2:
                         // change step
-                        cout << "change a step" << endl;
+                        //cout << "change a step" << endl;
                         buildableEntities = GeneticOptimizer::getBuildableEntities(mutatedChild, race, entity);
 
                         if (buildableEntities.size() > 0)
@@ -405,7 +407,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder *>
         buildLists[i].second = mutatedChild;
 
     }
-    cout << "End of Mutation" << endl;
+    //cout << "End of Mutation" << endl;
 }
 
 void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)

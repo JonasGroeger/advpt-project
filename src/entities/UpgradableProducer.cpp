@@ -40,6 +40,7 @@ void UpgradableProducer::update(GameState &gameState)
 
 void UpgradableProducer::printMessageProlog(unsigned int time) const
 {
+    return;
     std::cout << std::left;
     std::cout << std::setw(5);
     std::cout << time;
@@ -48,6 +49,7 @@ void UpgradableProducer::printMessageProlog(unsigned int time) const
 
 void UpgradableProducer::printBuildEndMessage(EntityType type, unsigned int time) const
 {
+    return;
     printMessageProlog(time);
     std::cout << "build-end";
     std::cout << BuildStep::entityTypeToString[type];
