@@ -52,12 +52,14 @@ private :
 
     long maxTime = 0;
     std::vector<WarpTask *> warpTasks;
-    static WarpHelper *_instance;
 
     virtual void warpBuilding(int duration, EntityType type, GameState &state);
 
 
 protected:
+
+
+public :
     WarpHelper()
     {
         type = PROTOSS_WARP_HELPER;
@@ -65,22 +67,11 @@ protected:
     }
     virtual ~WarpHelper()
     {
-        _instance = 0;
         for (WarpTask* task : warpTasks)
         {
-                delete task;
+            delete task;
         }
         warpTasks.clear();
-    }
-
-public :
-    static WarpHelper *Instance()
-    {
-        if (_instance == 0)
-        {
-            _instance = new WarpHelper();
-        }
-        return _instance;
     }
 
     /* Updatable */

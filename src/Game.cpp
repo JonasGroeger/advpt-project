@@ -164,7 +164,7 @@ void Game::prepareGame()
         case PROTOSS:
             currentState.addEntity(PROTOSS_PROBE, 6);
             currentState.addEntity(PROTOSS_NEXUS, 1);
-            currentState.addCreatedEntity(WarpHelper::Instance());
+            currentState.addCreatedEntity(new WarpHelper());
             break;
         case TERRAN:
             currentState.addEntity(TERRAN_SCV, 6);
