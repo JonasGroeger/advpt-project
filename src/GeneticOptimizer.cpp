@@ -412,7 +412,6 @@ void GeneticOptimizer::run(char *entity, char *mode, int maxSimulationTime)
 {
     LOG_DEBUG("GeneticOptimizer Algorithm started with entity: \"" << entity << "\" mode: \"" << mode << "\" maxSimulationTime: " << maxSimulationTime);
     int numberOfGenerations = getConfigInteger("Genetic", "NumberOfGenerations", 20);
-    numberOfGenerations = 50;
     int numberOfLists = getConfigInteger("Genetic", "NumberOfLists", 20);
 
     if ((strcmp(entity, "siege_tank") == 0))
