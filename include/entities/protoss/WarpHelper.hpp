@@ -63,6 +63,15 @@ protected:
         type = PROTOSS_WARP_HELPER;
         interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
     }
+    virtual ~WarpHelper()
+    {
+        _instance = 0;
+        for (WarpTask* task : warpTasks)
+        {
+                delete task;
+        }
+        warpTasks.clear();
+    }
 
 public :
     static WarpHelper *Instance()
@@ -81,5 +90,4 @@ public :
     virtual bool produceEntityIfPossible(EntityType type, GameState &state);
 
     virtual bool isProducing();
-
 };

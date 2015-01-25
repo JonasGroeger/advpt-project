@@ -15,14 +15,14 @@ void WarpHelper::update(GameState &state)
             state.addEntity((*it)->getType(), 1);
 
             WarpTask *toDelete = *it;
-            warpTasks.erase(it);
+            it = warpTasks.erase(it);
             delete(toDelete);
         }
         else
         {
             (*it)->update();
+            it++;
         }
-        it++;
     }
 }
 
