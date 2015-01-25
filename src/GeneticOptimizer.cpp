@@ -334,11 +334,11 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
         vector<BuildStep*> originalBuildList = child->buildSteps;
         child->print();
         BuildOrder* mutatedChild = new BuildOrder();
-        
+
         // Calculate Probability of mutation in this list
         currentProbability = maxProbability*probabilityFraction*((double)(i+1));
 
-        for(unsigned int x = 0; x<child->buildSteps.size()-1;x++) {
+        for(unsigned int currentStep = 0; currentStep <child->buildSteps.size()-1; currentStep++) {
             // Decide, if we do something with the current BuildStep
             double val = (double)rand() / RAND_MAX;
             
@@ -351,8 +351,8 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                     case 0:
                         cout << "delete a step" << endl;
                         // delete step (don't add it)... except it's the first step
-                        if(x==0)
-                            mutatedChild->buildSteps.push_back(child->buildSteps[x]);
+                        if(currentStep ==0)
+                            mutatedChild->buildSteps.push_back(child->buildSteps[currentStep]);
                         break;
                     case 1:
                         // add new step
@@ -363,7 +363,7 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                         if(buildableEntities.size()>0) {
                             rnd = rand()%buildableEntities.size();
                             mutatedChild->buildSteps.push_back(buildStepPool.getBuildStep(buildableEntities[rnd]));
-                            mutatedChild->buildSteps.push_back(child->buildSteps[x]); 
+                            mutatedChild->buildSteps.push_back(child->buildSteps[currentStep]);
                             
                         }
                         break;
@@ -384,11 +384,11 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                 }
 
             } else {
-                mutatedChild->buildSteps.push_back(child->buildSteps[x]);
+                mutatedChild->buildSteps.push_back(child->buildSteps[currentStep]);
             }
             currentProbabilityFraction += probabilityFraction;
         }
-
+        
         delete buildLists[i].second;
         buildLists[i].second = mutatedChild;
         
