@@ -153,6 +153,7 @@ BuildOrder *GeneticOptimizer::createBuildList(char *entity)
         for (unsigned int i = 0; i < requirements.size(); i++)
         {
             buildableEntities = getBuildableEntities(result, race, entity);
+            //TODO is this a safe workaround?
             if(buildableEntities.size() == 0){
                 continue;
             }
