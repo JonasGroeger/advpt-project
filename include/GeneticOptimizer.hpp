@@ -1,6 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <cstring>
+#include <climits>
+
 #include "BuildStep.hpp"
 #include "BuildOrder.hpp"
 #include "Debug.hpp"

@@ -1,5 +1,3 @@
-#include <vector>
-#include <random>
 #include "GeneticOptimizer.hpp"
 #include "Game.hpp"
 
