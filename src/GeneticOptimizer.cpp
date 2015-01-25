@@ -233,7 +233,14 @@ void GeneticOptimizer::rateBuildLists(vector<pair<unsigned long, BuildOrder*>> &
         buildLists[i].second->print();
         unsigned long fitness=0;
 
-        fitness = Game::getFitnessPush(*buildLists[i].second);            
+        if ((buildLists[i].second)->getBuildList().size() == 0)
+        {
+                fitness = LONG_MAX;
+        }
+        else
+        {
+                fitness = Game::getFitnessPush(*buildLists[i].second);            
+        }
         buildLists[i].first = fitness;
     }
 
