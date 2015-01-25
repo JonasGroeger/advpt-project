@@ -158,8 +158,8 @@ bool Game::isAnybodyProducing() const
 void Game::prepareGame()
 {
     //TODO maxSimTime == 1000 should fit this assignments requirements
-    //
-    switch (buildOrder.getRace())
+    EntityType race = buildOrder.getRace();
+    switch (race)
     {
         case PROTOSS:
             currentState.addEntity(PROTOSS_PROBE, 6);
@@ -181,6 +181,7 @@ void Game::prepareGame()
             currentState.addEntity(ZERG_OVERLORD, 1);
             break;
         default:
+            cerr << race << endl;
             throw invalid_argument("Unrecognized race");
             break;
     }

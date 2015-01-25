@@ -20,7 +20,7 @@ class BuildOrder
 private:
     
     vector<BuildStep *>::iterator iterator;
-    EntityType race;
+    EntityType race = NONE;
 
     static map<EntityType, int> supply;
 

@@ -467,6 +467,10 @@ void BuildOrder::advance()
 
 EntityType BuildOrder::getRace()
 {
+    if (this->race == NONE)
+    {
+        checkIntegrity();
+    }
     return this->race;
 }
 
