@@ -369,9 +369,9 @@ void GeneticOptimizer::mutateBuildLists(vector<pair<unsigned long, BuildOrder*>>
                             rnd = rand()%buildableEntities.size();
                             BuildStep* tmp = child->buildSteps[x];
                            
-                            mutatedChild->buildSteps[x] = buildStepPool.getBuildStep(buildableEntities[rnd]);
+                            mutatedChild->buildSteps.push_back(buildStepPool.getBuildStep(buildableEntities[rnd]));
                             if(!mutatedChild->isPossible())
-                                mutatedChild->buildSteps[x] = tmp;
+                                mutatedChild->removeLastStepFromBuildList();
                         }
                         break;
                 }
