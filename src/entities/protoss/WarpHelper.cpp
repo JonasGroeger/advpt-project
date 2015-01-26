@@ -1,28 +1,24 @@
 #include <entities/protoss/WarpHelper.hpp>
 
-WarpHelper *WarpHelper::_instance = 0;
-
 /* Updatable */
 void WarpHelper::update(GameState &state)
 {
-    auto it = warpTasks.begin();
-    auto end = warpTasks.end();
-    while (it != end)
+    std::vector<WarpTask*>::iterator it;
+    for (it = warpTasks.begin(); it != warpTasks.end(); )
     {
         // do some stuff
         if ((*it)->isFinished())
         {
             state.addEntity((*it)->getType(), 1);
-
             WarpTask *toDelete = *it;
-            warpTasks.erase(it);
+            it = warpTasks.erase(it);
             delete(toDelete);
         }
         else
         {
             (*it)->update();
+            it++;
         }
-        it++;
     }
 }
 

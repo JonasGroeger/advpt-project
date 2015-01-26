@@ -310,7 +310,7 @@ void BuildOrder::checkIntegrity()
         case EntityType::TERRAN:
             break;
         default:
-            cout << buildSteps[0]->getName() << endl;
+            //cout << buildSteps[0]->getName() << endl;
             // If this exception is thrown the first buildstep is broken
             throw std::invalid_argument("Unknown race");
     }
@@ -467,6 +467,10 @@ void BuildOrder::advance()
 
 EntityType BuildOrder::getRace()
 {
+    if (this->race == NONE)
+    {
+        checkIntegrity();
+    }
     return this->race;
 }
 

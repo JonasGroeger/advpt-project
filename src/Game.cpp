@@ -117,7 +117,7 @@ int Game::loop()
     if (currentState.maxSimTimeReached() && !buildOrder.isDone())
     {
         //buildlist did not succeed so return non zero and print error message
-        std::cerr << "Reached maximum Time - aborting..." << std::endl;
+        //std::cerr << "Reached maximum Time - aborting..." << std::endl;
         currentState.printWorkerMessage();
 #ifdef DEBUG
         currentState.printResourcesMessage();
@@ -158,13 +158,13 @@ bool Game::isAnybodyProducing() const
 void Game::prepareGame()
 {
     //TODO maxSimTime == 1000 should fit this assignments requirements
-    //
-    switch (buildOrder.getRace())
+    EntityType race = buildOrder.getRace();
+    switch (race)
     {
         case PROTOSS:
             currentState.addEntity(PROTOSS_PROBE, 6);
             currentState.addEntity(PROTOSS_NEXUS, 1);
-            currentState.addCreatedEntity(WarpHelper::Instance());
+            currentState.addCreatedEntity(new WarpHelper());
             break;
         case TERRAN:
             currentState.addEntity(TERRAN_SCV, 6);
@@ -181,6 +181,7 @@ void Game::prepareGame()
             currentState.addEntity(ZERG_OVERLORD, 1);
             break;
         default:
+            cerr << race << endl;
             throw invalid_argument("Unrecognized race");
             break;
     }

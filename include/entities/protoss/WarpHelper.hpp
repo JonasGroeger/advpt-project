@@ -52,26 +52,26 @@ private :
 
     long maxTime = 0;
     std::vector<WarpTask *> warpTasks;
-    static WarpHelper *_instance;
 
     virtual void warpBuilding(int duration, EntityType type, GameState &state);
 
 
 protected:
+
+
+public :
     WarpHelper()
     {
         type = PROTOSS_WARP_HELPER;
         interfaceBitmask = UPDATABLE_INTERFACE | PRODUCER_INTERFACE;
     }
-
-public :
-    static WarpHelper *Instance()
+    virtual ~WarpHelper()
     {
-        if (_instance == 0)
+        for (WarpTask* task : warpTasks)
         {
-            _instance = new WarpHelper();
+            delete task;
         }
-        return _instance;
+        warpTasks.clear();
     }
 
     /* Updatable */
@@ -81,5 +81,4 @@ public :
     virtual bool produceEntityIfPossible(EntityType type, GameState &state);
 
     virtual bool isProducing();
-
 };
