@@ -1,49 +1,19 @@
 # Starcraft 2 build order simulator
 
+# Build
+Entweder `source use-clang.sh` oder `source `use-gcc.sh` ausführen und dann `./build.sh`.
+
 # Stoff
 Leere Zeilen sind in buildlists nicht erwünscht.
 
 # Mailing list
 advpt@googlegroups.com
 
-# Building
-## Linux im CIP
-```
-export CC=/local/clang-3.5/bin/clang
-export CXX=/local/clang-3.5/bin/clang++
-chmod +x build.sh
-./build.sh
-```
-
-## Linux (sonstige)
-Export CC and CXX according to your environment and then execute the build.sh
-
-## Windows
-Install CMake and CMake for VS. Add cmake.exe to $PATH. Use cmake-gui to generate .sln files
-like http://i.imgur.com/6vwZbyL.png and hit "Configure" a few times until nothing is red
-anymore in the upper section. Then click "Generate". Open $PROJECT/build/sc2sim.sln with VS.
-
 # Formatting
     #define MAX_LINE_LENGTH  120
     #define INDENT_USING     SPACES
     #define INDENT_COUNT     4
     #define BRACKETS_IN      NEWLINE
-
-# Generating lists/expected_stdout/*.txt with zsh
-    $ pwd
-    /home/jonas/Dropbox/Code/advpt-project
-    $ cd lists
-    $ for f (*.txt) {../build/sc2sim $f > expected_stdout/$f}
-
-Das braucht man nur wenn man die Vergleichslisten in `lists/expected_stdout` aktualisieren will.
-    
-# Running test.py
-    $ pwd
-    /home/jonas/Dropbox/Code/advpt-project
-    $ chmod +x test.py
-    $ ./test.py 2>/dev/null
-    
-Solange nur Fehler vom Compiler (à la ``*** Error in `./build/sc2sim':``) kommen ist alles OK.
 
 # Log
     <simulation time in seconds>  <message type>   <additional info (depends on message type) >
