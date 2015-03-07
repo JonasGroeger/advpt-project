@@ -2,17 +2,10 @@ cmake_minimum_required( VERSION 2.8 FATAL_ERROR )
 
 set( EXECUTABLE sc2sim )
 set( HEADER_FOLDER include )
-set( HEADER_TERRAN include/terran )
-set( HEADER_PROTOSS include/protoss )
-set( HEADER_ZERG include/zerg )
 set( CPP_FOLDER src )
 
 include_directories( ${HEADER_FOLDER} )
-include_directories( ${HEADER_TERRAN} )
-include_directories( ${HEADER_PROTOSS} )
-include_directories( ${HEADER_ZERG} )
 include_directories( ${CPP_FOLDER} )
-project( ${EXECUTABLE} )
 
 set( CMAKE_BUILD_TYPE Debug )
 # See: http://stackoverflow.com/q/7031126
@@ -26,13 +19,6 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
   set( CMAKE_C_FLAGS_DEBUG            "-g" )
   set( CMAKE_CXX_FLAGS                "-Wall -std=c++11" )
   set( CMAKE_CXX_FLAGS_DEBUG          "-g" )
-elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" )
-  # using Intel C++
-elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-  # Turn on the ability to create folders to organize projects (.vcxproj)
-  # It creates "CMakePredefinedTargets" folder by default and adds CMake
-  # defined projects like INSTALL.vcxproj and ZERO_CHECK.vcxproj
-  set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 endif()
 
 # Output some properties for easy debugging
@@ -43,77 +29,16 @@ message( "CXX FLAGS:   -> " ${CMAKE_CXX_FLAGS} )
 
 # Add all the header files ...
 set( HPP_FILES
-  include/BuildListTester.hpp
-  include/BuildOrder.hpp
-  include/BuildStep.hpp
-  include/DepthFirstBranchAndBound.hpp
-  include/GeneticOptimizer.hpp
-  include/Debug.hpp
-  include/Entity.hpp
-  include/EntityType.hpp
-  include/Game.hpp
-  include/GameState.hpp
-  include/TypeOfWork.hpp
-  include/Updatable.hpp
-  include/Upgradable.hpp
-  include/entities/Producer.hpp
-  include/entities/SimpleEntity.hpp
-  include/entities/SimpleProducer.hpp
-  include/entities/UpgradableProducer.hpp
-  include/entities/UpgradableUnit.hpp
-  include/entities/Worker.hpp
-  include/entities/protoss/Probe.hpp
-  include/entities/protoss/ProductionBuildings.hpp
-  include/entities/protoss/WarpHelper.hpp
-  include/entities/terran/ProductionBuildings.hpp
-  include/entities/terran/Units.hpp
-  include/entities/zerg/Drone.hpp
-  include/entities/zerg/LarvaHelper.hpp
-  include/entities/zerg/ProductionBuildings.hpp
-  include/entities/zerg/Units.hpp
-  include/ini.h
-  include/Config.hpp
-  include/INIReader.h
+
 )
 
 # ... and source files ...
 set( CPP_FILES
-  src/BuildListTester.cpp
-  src/BuildOrder.cpp
-  src/BuildStep.cpp
-  src/DepthFirstBranchAndBound.cpp
-  src/GeneticOptimizer.cpp
-  src/Entity.cpp
-  src/Game.cpp
-  src/GameState.cpp
-  src/Updatable.cpp
-  src/entities/SimpleProducer.cpp
-  src/entities/UpgradableProducer.cpp
-  src/entities/Worker.cpp
-  src/entities/protoss/Probe.cpp
-  src/entities/protoss/ProductionBuildings.cpp
-  src/entities/protoss/WarpHelper.cpp
-  src/entities/terran/ProductionBuildings.cpp
-  src/entities/terran/Units.cpp
-  src/entities/zerg/Drone.cpp
-  src/entities/zerg/LarvaHelper.cpp
-  src/entities/zerg/ProductionBuildings.cpp
   src/main.cpp
-  src/ini.c
-  src/INIReader.cpp
-  src/Config.cpp
 )
-
-source_group( "src" FILES ${CPP_FILES} )
-source_group( "include" FILES ${HPP_FILES} )
 
 # ... to build the executable.
 add_executable( ${EXECUTABLE} ${CPP_FILES} ${HPP_FILES} )
-
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-  # Creates a folder "executables" and adds target project (sc2sim.vcxproj) under it
-  set_property( TARGET ${EXECUTABLE} PROPERTY FOLDER "executables" )
-endif()
 
 # Uncomment (to enable) or Comment (to disable) the debug output (see includes/Debug.hpp)
 add_definitions(-DDEBUG)

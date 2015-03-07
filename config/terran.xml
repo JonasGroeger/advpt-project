@@ -1,0 +1,42 @@
+<config>
+
+    <workers name="worker">
+        <unit name="scv"></unit>
+        <unit name="probe"></unit>
+        <unit name="drone"></unit>
+    </workers>
+
+    <gas_harvesters name="gas_harvester">
+        <unit name="refinery"></unit>
+        <unit name="assimilator"></unit>
+        <unit name="extractor"></unit>
+    </gas_harvesters>
+
+    <!-- unit bekommt beim parsen eine automatisch erstellte max nummer. default=1. -->
+    <max_units>
+        <unit name="mothership" max="2"></unit>
+    </max_units>
+
+    `<action name="scv" max="1">
+        <costs mineral="50" gas="10" time="30" supply="30" >
+            <!-- unit bekommt beim parsen eine automatisch erstellte id. -->
+            <unit name="larva" />
+            <energy amount="100" name="orbital_command" />
+        </costs>
+
+        <!-- Leiht sich eine Unit. SVC leiht sich Command Center. -->
+        <borrows>
+            <!-- unit bekommt beim parsen eine automatisch erstellte id. -->
+            <unit name="command_center" />
+        </borrows>
+        <dependencies>
+            <!-- unit bekommt beim parsen eine automatisch erstellte id. -->
+            <unit name="command_center" />
+        </dependencies>
+        <results supply="50" mineral="1">
+            <!-- unit bekommt beim parsen eine automatisch erstellte id. -->
+            <unit name="scv" />
+        </results>
+    </action>
+
+</config>

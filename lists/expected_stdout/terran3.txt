@@ -1,8 +1,0 @@
-[D] Parsed: scv current supply: 5
-[D] Parsed: scv current supply: 4
-[D] Parsed: supply_depot current supply: 12
-[D] Parsed: barracks current supply: 12
-[D] Parsed: refinery current supply: 12
-[D] Parsed: factory current supply: 12
-[D] Parsed: starport current supply: 12
-[D] Parsed: battlecruiser current supply: 6

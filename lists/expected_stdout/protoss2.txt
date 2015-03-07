@@ -1,7 +1,0 @@
-[D] Parsed: probe current supply: 4
-[D] Parsed: probe current supply: 3
-[D] Parsed: pylon current supply: 11
-[D] Parsed: assimilator current supply: 11
-[D] Parsed: gateway current supply: 11
-[D] Parsed: cybernetics_core current supply: 11
-[D] Parsed: stargate current supply: 11

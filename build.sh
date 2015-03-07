@@ -5,7 +5,7 @@ BUILD_FOLDER="build"
 HOSTNAME=$(hostname -f)
 
 # Remove left-overs from last build
-#rm -rf $BUILD_FOLDER
+rm -rf $BUILD_FOLDER
 
 # Create build directory
 mkdir -p $BUILD_FOLDER

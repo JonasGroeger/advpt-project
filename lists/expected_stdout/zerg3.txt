@@ -1,7 +1,0 @@
-[D] Parsed: drone current supply: 4
-[D] Parsed: drone current supply: 3
-[D] Parsed: drone current supply: 2
-[D] Parsed: spawning_pool current supply: 3
-[D] Parsed: queen current supply: 1
-[D] Parsed: zergling current supply: 0
-[D] Parsed: zergling current supply: -1
