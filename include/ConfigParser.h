@@ -25,7 +25,7 @@ using std::vector;
 class ConfigParser
 {
 public:
-    ConfigParser(char* pathToConfigFile);
+    ConfigParser(char*file);
     BuildAction getAction(string actionName);
 
 protected:
