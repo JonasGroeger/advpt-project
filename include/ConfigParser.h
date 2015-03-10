@@ -49,9 +49,7 @@ private:
     const char* ATTRIBUTE_TIME = "time";
     const char* ATTRIBUTE_SUPPLY = "supply";
 
-    char* configPath;
     XMLDocument xmlConfig;
-    XMLNode* rootNode;
     map<string, int> unitMap;
     int unitCount = 0;
     map<string, BuildAction> buildActionMap;

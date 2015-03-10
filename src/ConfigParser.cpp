@@ -7,13 +7,14 @@ ConfigParser::ConfigParser(char *file)
         throw std::invalid_argument("Malformed configuration file.");
     }
 
-    rootNode = xmlConfig.RootElement();
+    XMLNode *rootNode = xmlConfig.RootElement();
     if(rootNode == nullptr){
         throw std::invalid_argument("Malformed configuration file: No root element found.");
     }
 
     // parse the actions
-    for (XMLElement* action = rootNode->FirstChildElement(NODE_ACTION); action != nullptr; action = action->NextSiblingElement())
+    for (XMLElement* action = rootNode->FirstChildElement(NODE_ACTION); action != nullptr;
+         action = action->NextSiblingElement("action"))
     {
         BuildAction buildAction;
         buildAction.name = action->Attribute(ATTRIBUTE_NAME);
