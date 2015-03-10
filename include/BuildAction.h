@@ -6,6 +6,14 @@
 using std::string;
 using std::vector;
 
+typedef struct BuildCost{
+    int time;
+    int gas;
+    int minerals;
+    int supply;
+    vector<int> units;
+} BuildCost;
+
 typedef struct BuildResult{
     int gas;
     int minerals;
@@ -16,11 +24,9 @@ typedef struct BuildResult{
 typedef struct BuildAction{
     int id;
     string name;
-    int neededMinerals;
-    int neededGas;
-    int neededTime;
-    //could also be positive!
-    int neededSupply;
+    bool isWorker = false;
+    bool isGasHarvester = false;
+    BuildCost cost;
     vector<int> dependencies;
     vector<int> borrows;
     BuildResult result;

@@ -7,13 +7,14 @@
 #include <vector>
 #include "BuildAction.h"
 
+using tinyxml2::XML_SUCCESS;
 using tinyxml2::XMLDocument;
 using tinyxml2::XMLElement;
 using tinyxml2::XMLError;
 using tinyxml2::XMLNode;
-using tinyxml2::XML_SUCCESS;
 
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::string;
 using std::map;
@@ -24,13 +25,12 @@ class ConfigParser
 {
 public:
     ConfigParser(char* pathToConfigFile);
+    BuildAction getAction(string actionName);
 
 protected:
     bool checkForXmlError(XMLError e);
-    void parseWorkers();
-    void parseGasHarvesters();
-    void createAction();
     int getUnitId(string unitName);
+    void addUnitToVector(string unitName, vector<int>& vec);
 
 private:
     const char* NODE_ROOT = "sc2sim";
@@ -55,5 +55,5 @@ private:
     XMLNode* rootNode;
     map<string, int> unitMap;
     int unitCount = 0;
-    vector<BuildAction> buildActions;
+    map<string, BuildAction> buildActionMap;
 };

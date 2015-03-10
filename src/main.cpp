@@ -10,6 +10,10 @@ int main(int argc, char *argv[])
     }
 
     ConfigParser configParser(argv[1]);
+    BuildAction scvAction = configParser.getAction("scv");
+    cout << scvAction.id << " " << scvAction.isWorker << endl;
+    BuildAction engineering_bayAction = configParser.getAction("engineering_bay");
+    cout << engineering_bayAction.id << " " << engineering_bayAction.isWorker << endl;
 
     return 0;
 }
