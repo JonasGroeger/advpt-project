@@ -3,16 +3,17 @@
 ConfigParser::ConfigParser(char *pathToConfigFile)
 {
     configPath = pathToConfigFile;
-    XMLError eResult = xmlConfig.LoadFile(configPath);
-    if(!checkForXmlError(eResult)){
-        //handle error here
-    }
-    rootNode = xmlConfig.FirstChildElement(NODE_ROOT);
-    if(rootNode == nullptr){
-        cout << "ERROR" <<endl ;
+    XMLError load_result = xmlConfig.LoadFile(configPath);
+    if(load_result != XML_SUCCESS){
+        throw std::invalid_argument("Malformed configuration file.");
     }
 
-    //parse the actions
+    rootNode = xmlConfig.RootElement();
+    if(rootNode == nullptr){
+        throw std::invalid_argument("Malformed configuration file: No root element found.");
+    }
+
+    // parse the actions
     for (XMLElement* action = rootNode->FirstChildElement(NODE_ACTION); action != nullptr; action = action->NextSiblingElement())
     {
         BuildAction buildAction;
@@ -105,10 +106,3 @@ void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vecto
     }
 }
 
-bool ConfigParser::checkForXmlError(XMLError e)
-{
-    if(e != XML_SUCCESS){
-        return false;
-    }
-    return true;
-}

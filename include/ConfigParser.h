@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <stdexcept>
 #include <vector>
 #include "BuildAction.h"
 
@@ -28,12 +29,10 @@ public:
     BuildAction getAction(string actionName);
 
 protected:
-    bool checkForXmlError(XMLError e);
     int getUnitId(string unitName);
     void addUnitsToVector(XMLElement* element, const char* node, vector<int>& vec);
 
 private:
-    const char* NODE_ROOT = "sc2sim";
     const char* NODE_MAX_UNITS = "max_units";
     const char* NODE_WORKER = "workers";
     const char* NODE_GAS_HARVESTER = "gas_harvesters";
