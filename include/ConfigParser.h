@@ -7,7 +7,12 @@
 #include <vector>
 #include "BuildAction.h"
 
-using namespace tinyxml2;
+using tinyxml2::XMLDocument;
+using tinyxml2::XMLElement;
+using tinyxml2::XMLError;
+using tinyxml2::XMLNode;
+using tinyxml2::XML_SUCCESS;
+
 using std::cout;
 using std::endl;
 using std::string;
@@ -21,7 +26,7 @@ public:
     ConfigParser(char* pathToConfigFile);
 
 protected:
-    bool checkForXmlError(tinyxml2::XMLError e);
+    bool checkForXmlError(XMLError e);
     void parseWorkers();
     void parseGasHarvesters();
     void createAction();
