@@ -30,7 +30,7 @@ public:
 protected:
     bool checkForXmlError(XMLError e);
     int getUnitId(string unitName);
-    void addUnitToVector(string unitName, vector<int>& vec);
+    void addUnitsToVector(XMLElement* element, const char* node, vector<int>& vec);
 
 private:
     const char* NODE_ROOT = "sc2sim";

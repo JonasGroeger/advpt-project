@@ -26,24 +26,15 @@ ConfigParser::ConfigParser(char *pathToConfigFile)
         buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
         buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
         //if this action is consuming other units
-        for (XMLElement* costUnits = costs->FirstChildElement(); costUnits != nullptr; costUnits = costUnits->NextSiblingElement())
-        {
-            addUnitToVector(costUnits->Attribute(ATTRIBUTE_NAME), buildAction.cost.units);
-        }
+        addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
 
         //borrows
         XMLElement* borrows = action->FirstChildElement(NODE_BORROWS);
-        for (XMLElement* borrow = borrows->FirstChildElement(); borrow != nullptr; borrow = borrow->NextSiblingElement())
-        {
-            addUnitToVector(borrow->Attribute(ATTRIBUTE_NAME), buildAction.borrows);
-        }
+        addUnitsToVector(borrows, NODE_UNIT, buildAction.borrows);
 
         //dependencies
         XMLElement* dependencies = action->FirstChildElement(NODE_DEPENDENCIES);
-        for (XMLElement* dep = dependencies->FirstChildElement(); dep != nullptr; dep = dep->NextSiblingElement())
-        {
-            addUnitToVector(dep->Attribute(ATTRIBUTE_NAME), buildAction.dependencies);
-        }
+        addUnitsToVector(dependencies, NODE_UNIT, buildAction.dependencies);
 
         //results
         XMLElement* results = action->FirstChildElement(NODE_RESULTS);
@@ -51,10 +42,8 @@ ConfigParser::ConfigParser(char *pathToConfigFile)
         buildAction.result.minerals = stoi(results->Attribute(ATTRIBUTE_MINERALS));
         buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
         buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
-        for (XMLElement* resultUnit = results->FirstChildElement(NODE_UNIT); resultUnit != nullptr; resultUnit = resultUnit->NextSiblingElement())
-        {
-            addUnitToVector(resultUnit->Attribute(ATTRIBUTE_NAME), buildAction.result.units);
-        }
+        addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
+
         buildActionMap[buildAction.name] = buildAction;
     }
 
@@ -107,9 +96,13 @@ int ConfigParser::getUnitId(string unitName)
     return unitMap[unitName];
 }
 
-void ConfigParser::addUnitToVector(string unitName, vector<int>& vec){
-    getUnitId(unitName);
-    vec.push_back(unitMap[unitName]);
+void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<int>& targetVector){
+    for (XMLElement* tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
+    {
+        string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);
+        getUnitId(unitName);
+        targetVector.push_back(unitMap[unitName]);
+    }
 }
 
 bool ConfigParser::checkForXmlError(XMLError e)
