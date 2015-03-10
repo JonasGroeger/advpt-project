@@ -2,7 +2,6 @@
 
 ConfigParser::ConfigParser(char *pathToConfigFile)
 {
-    cout << pathToConfigFile << endl;
     configPath = pathToConfigFile;
     XMLError eResult = xmlConfig.LoadFile(configPath);
     if(!checkForXmlError(eResult)){
