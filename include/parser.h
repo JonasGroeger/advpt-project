@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tinyxml2.h>
+using namespace tinyxml2;
 
 class Parser
 {
@@ -13,5 +14,5 @@ protected:
 
 private:
     char* configPath;
-    tinyxml2::XMLDocument xmlConfig;
+    XMLDocument xmlConfig;
 };
