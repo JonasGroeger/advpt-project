@@ -6,28 +6,32 @@
 using std::string;
 using std::vector;
 
-typedef struct BuildCost{
-    int time;
-    int gas;
+typedef struct BuildCost
+{
     int minerals;
+    int gas;
+    int time;
     int supply;
     vector<int> units;
 } BuildCost;
 
-typedef struct BuildResult{
-    int gas;
+typedef struct BuildResult
+{
     int minerals;
+    int gas;
     int supply;
     vector<int> units;
 } BuildResult;
 
-typedef struct BuildAction{
+typedef struct BuildAction
+{
     int id;
     string name;
-    bool isWorker = false;
-    bool isGasHarvester = false;
     BuildCost cost;
     vector<int> dependencies;
     vector<int> borrows;
     BuildResult result;
+
+    bool isWorker = false;
+    bool isGasHarvester = false;
 } BuildAction;
