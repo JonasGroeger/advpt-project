@@ -1,9 +1,8 @@
 #include "ConfigParser.h"
 
-ConfigParser::ConfigParser(char *pathToConfigFile)
+ConfigParser::ConfigParser(char *file)
 {
-    configPath = pathToConfigFile;
-    XMLError load_result = xmlConfig.LoadFile(configPath);
+    XMLError load_result = xmlConfig.LoadFile(file);
     if(load_result != XML_SUCCESS){
         throw std::invalid_argument("Malformed configuration file.");
     }
