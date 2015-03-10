@@ -1,7 +1,7 @@
 # Starcraft 2 build order simulator
 
 # Build
-Entweder `source use-clang.sh` oder `source `use-gcc.sh` ausführen und dann `./build.sh`.
+Entweder `source use-clang.sh` oder `source use-gcc.sh` ausführen und dann `./build.sh`.
 
 # Stoff
 Leere Zeilen sind in buildlists nicht erwünscht.
