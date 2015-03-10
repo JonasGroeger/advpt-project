@@ -4,24 +4,28 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
+#include "BuildAction.h"
+
 using namespace tinyxml2;
 using std::cout;
 using std::endl;
 using std::string;
 using std::map;
+using std::stoi;
+using std::vector;
 
-class Parser
+class ConfigParser
 {
 public:
-    Parser(char* pathToConfigFile);
+    ConfigParser(char* pathToConfigFile);
 
 protected:
     bool checkForXmlError(tinyxml2::XMLError e);
     void parseWorkers();
     void parseGasHarvesters();
     void createAction();
-
-    void addUnitToMap(string unitName);
+    int getUnitId(string unitName);
 
 private:
     const char* NODE_ROOT = "sc2sim";
@@ -36,7 +40,7 @@ private:
     const char* NODE_RESULTS = "results";
 
     const char* ATTRIBUTE_NAME = "name";
-    const char* ATTRIBUTE_MINERALS = "minerals";
+    const char* ATTRIBUTE_MINERALS = "mineral";
     const char* ATTRIBUTE_GAS = "gas";
     const char* ATTRIBUTE_TIME = "time";
     const char* ATTRIBUTE_SUPPLY = "supply";
@@ -46,4 +50,5 @@ private:
     XMLNode* rootNode;
     map<string, int> unitMap;
     int unitCount = 0;
+    vector<BuildAction> buildActions;
 };

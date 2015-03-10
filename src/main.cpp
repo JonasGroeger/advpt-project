@@ -1,5 +1,5 @@
 #include <iostream>
-#include "parser.h"
+#include "ConfigParser.h"
 
 class Config
 {
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    Parser configParser(argv[1]);
+    ConfigParser configParser(argv[1]);
 
     return 0;
 }
