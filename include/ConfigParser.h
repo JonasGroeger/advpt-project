@@ -9,6 +9,7 @@
 
 using namespace tinyxml2;
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::string;
 using std::map;
@@ -19,13 +20,12 @@ class ConfigParser
 {
 public:
     ConfigParser(char* pathToConfigFile);
+    BuildAction getAction(string actionName);
 
 protected:
     bool checkForXmlError(tinyxml2::XMLError e);
-    void parseWorkers();
-    void parseGasHarvesters();
-    void createAction();
     int getUnitId(string unitName);
+    void addUnitToVector(string unitName, vector<int>& vec);
 
 private:
     const char* NODE_ROOT = "sc2sim";
@@ -50,5 +50,5 @@ private:
     XMLNode* rootNode;
     map<string, int> unitMap;
     int unitCount = 0;
-    vector<BuildAction> buildActions;
+    map<string, BuildAction> buildActionMap;
 };
