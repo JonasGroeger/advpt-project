@@ -1,12 +1,12 @@
 #include <iostream>
-#include <tinyxml2.h>
+#include "parser.h"
 
 class Config
 {
 
 };
 
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
@@ -14,17 +14,7 @@ int main(int argc, const char *argv[])
         return 1;
     }
 
-    std::string configFile = argv[1];
-
-    tinyxml2::XMLDocument doc;
-    tinyxml2::XMLError e = doc.LoadFile(configFile.c_str());
-    if (e != 0)
-    {
-        std::cerr << "Could not read configuration file. Is it really there?\n    " << configFile << std::endl;
-        return 2;
-    }
-
-    //tinyxml2::XMLElement *root = doc.RootElement();
+    Parser configParser(argv[1]);
 
     return 0;
 }
