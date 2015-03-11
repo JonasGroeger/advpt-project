@@ -5,7 +5,6 @@
 
 #include "BuildAction.h"
 
-using time_t = int;
 using ress_t = int;
 
 class State {
@@ -27,11 +26,17 @@ class State {
     /*
      * This simply represents an action that is currently being produced
      */
-    struct ActiveAction
+    class ActiveAction
     {
+        private:
         time_t timeFinished;
-        BuildAction& action;
+        const BuildAction& action;
 
+        public:
+        ActiveAction(time_t _timeFinished, const BuildAction& _action)
+            : timeFinished(_timeFinished), action(_action) {}
+
+        private:
         /*
          * Reverse ordering on timeFinished so priority_queue works
          */
@@ -39,7 +44,7 @@ class State {
         {
             return timeFinished > lhs.timeFinished;
         }
-    }
+    } ;
 
     std::priority_queue<ActiveAction> activeActions;
 
