@@ -93,18 +93,18 @@ const BuildAction& ConfigParser::getAction(string actionName)
 }
 
 
-int ConfigParser::getUnitId(string unitName)
+action_t ConfigParser::getUnitId(string unitName)
 {
     if(unitMap.count(unitName) == 0)
     {
         cout << "Unit added with name " << unitName << " and id " << unitCount << endl;
-        unitMap.insert(std::pair<string, int>(unitName, unitCount));
+        unitMap.insert(std::pair<string, action_t>(unitName, unitCount));
         ++unitCount;
     }
     return unitMap[unitName];
 }
 
-void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<int>& targetVector){
+void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<action_t>& targetVector){
     for (XMLElement* tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
     {
         string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);
