@@ -1,12 +1,15 @@
 #pragma once
 
+#include <vector>
+#include <queue> 
+
 #include "BuildAction.h"
 
 using time_t = int;
 using ress_t = int;
 
 class State {
-    
+    //I think it is fine to expose these fields without getter and setters
     public: 
     // The elapsed time
     time_t currentTime = 0;
@@ -16,13 +19,31 @@ class State {
     ress_t supply_used, supply_max;
 
     private:
-    vector<action_t> entities;
-    vector<bool> borrowed;
+    // We save all produced units/buildings here
+    // Duplicates are possible
+    std::vector<action_t> entities;
+    std::vector<bool> borrowed;
 
-    // TODO 
-    // PriorityQueue aus aktiven Actions
+    /*
+     * This simply represents an action that is currently being produced
+     */
+    struct ActiveAction
+    {
+        time_t timeFinished;
+        BuildAction& action;
 
-    // TODO Workers are defined implicitly
+        /*
+         * Reverse ordering on timeFinished so priority_queue works
+         */
+        bool operator<(const ActiveAction& lhs) const
+        {
+            return timeFinished > lhs.timeFinished;
+        }
+    }
+
+    std::priority_queue<ActiveAction> activeActions;
+
+    // TODO workers
 
     public:
     // Paper S.3 "Action Legality"
