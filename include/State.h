@@ -2,17 +2,17 @@
 
 #include "BuildAction.h"
 
-using timet = int;
-using resst = int;
-
 class State {
+    
+    public: 
     // The elapsed time
-    timet currentTime = 0;
+    int currentTime = 0;
 
     // The available ressources
-    resst minerals, gas;
-    resst supply_used, supply_max;
+    int minerals, gas;
+    int supply_used, supply_max;
 
+    private:
     vector<int> entities;
     vector<bool> borrowed;
 
@@ -30,6 +30,20 @@ class State {
     bool borrow(actiont act);
     bool unborrow(actiont act);
 
-    bool canStartAction(const BuildAction&) const;
+    // Paper S.3 "Action Legality"
+    /*
+     * Returns true iff the following hold true:
+     *  - Dependencies and borrows are available, borrowed or being created
+     *  - Costs are available or will be created
+     */
+    bool isLegalAction(const BuildACtion&) const;
     void startAction(const BuildAction&);
+
+    // Paper S.3 "Fast Forward and State Transistion"
+    /*
+     * S' <- Sim(S, d)
+     * This advances the state by @amount without any new actions being issude
+     *
+     */
+    void advanceTime(int amount) const;
 };
