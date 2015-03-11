@@ -92,6 +92,10 @@ const BuildAction& ConfigParser::getAction(string actionName)
     }
 }
 
+int ConfigParser::getNumberOfActions() const
+{
+    return unitCount;
+}
 
 action_t ConfigParser::getUnitId(string unitName)
 {

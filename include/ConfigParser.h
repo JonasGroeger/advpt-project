@@ -29,6 +29,7 @@ public:
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
     const BuildAction& getAction(string actionName);
+    int getNumberOfActions() const;
 
 protected:
     int getUnitId(string unitName);

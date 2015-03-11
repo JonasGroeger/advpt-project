@@ -2,10 +2,13 @@
 
 #include <vector>
 #include <queue> 
+#include <assert> 
 
 #include "BuildAction.h"
+#include "ConfigParser.h"
 
-using ress_t = int;
+// TODO 
+using ress_t = long double;
 
 class State {
     //I think it is fine to expose these fields without getter and setters
@@ -14,14 +17,17 @@ class State {
     time_t currentTime = 0;
 
     // The available ressources
-    ress_t minerals, gas;
-    ress_t supply_used, supply_max;
+    ress_t minerals = 0, gas = 0;
+    ress_t supply_used = 0, supply_max = 0;
 
     private:
-    // We save all produced units/buildings here
-    // Duplicates are possible
-    std::vector<action_t> entities;
-    std::vector<bool> borrowed;
+    // At every position i, entities[i] indicates how many entities with action id i exist currently
+    std::vector<int> entities;
+    // At every position i, borrowed[i] indicates how many entities with action id i are currently borrowed
+    std::vector<int> borrowed;
+    // At every position i, producing[i] indicates how many entities with action id i are currently being produced
+    // Note: activeActions contains more information on currently produced actions
+    std::vector<int> producing;
 
     /*
      * This simply represents an action that is currently being produced
@@ -48,9 +54,24 @@ class State {
 
     std::priority_queue<ActiveAction> activeActions;
 
-    // TODO workers
+    // TODO
+    const ress_t MINERALS_PER_TIME_UNIT = 0.1;
+    const ress_t GAS_PER_TIME_UNIT = 0.1;
+
+    // How many workers exist at all
+    int workersAll;
+    // How many are producing minerals
+    int workersMinerals;
+    // How many are producing gas
+    int workersGas;
+
+    // How many gas slots are available
+    // This is increase by 3 for every gas harvester
+    int gasHarvesting;
 
     public:
+    State(const ConfigParser&);
+
     // Paper S.3 "Action Legality"
     /*
      * Returns true iff the following hold true:
@@ -81,4 +102,7 @@ class State {
      *  - Insert the action
      */
     void startAction(const BuildAction&);
+    
+    private:
+    void increaseRessources(time_t);
 };
