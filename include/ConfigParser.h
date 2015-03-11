@@ -26,7 +26,10 @@ class ConfigParser
 {
 public:
     ConfigParser(char*file);
-    BuildAction getAction(string actionName);
+
+    // We return a reference to prevent unneccessary copying
+    // But nobody else should be able to modify it
+    const BuildAction& getAction(string actionName);
 
 protected:
     int getUnitId(string unitName);

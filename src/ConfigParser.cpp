@@ -59,16 +59,15 @@ ConfigParser::ConfigParser(char *file)
         }
         catch (const std::out_of_range& oor)
         {
-            cerr << "Out of Range error: " << oor.what() << '\n';
+            throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
-    //TODO where to put them?
-    //TODO memory leak here?
 
     //now parse the gas_harvesters
     XMLElement *gas_harvesters = rootNode->FirstChildElement(NODE_GAS_HARVESTER);
     for (XMLElement* gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr; gas_element = gas_element->NextSiblingElement())
     {
+
         try
         {
             buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
@@ -76,13 +75,21 @@ ConfigParser::ConfigParser(char *file)
         }
         catch (const std::out_of_range& oor)
         {
-            cerr << "Out of Range error: " << oor.what() << '\n';
+            throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
 }
 
-BuildAction ConfigParser::getAction(string actionName){
-    return buildActionMap.at(actionName);
+const BuildAction& ConfigParser::getAction(string actionName)
+{
+    if (buildActionMap.count(actionName) == 0)
+    {
+        throw new std::out_of_range("Unable to find: " + actionName);
+    }
+    else
+    {
+        return buildActionMap[actionName];
+    }
 }
 
 
