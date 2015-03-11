@@ -93,7 +93,7 @@ const BuildAction& ConfigParser::getAction(string actionName)
 }
 
 
-int ConfigParser::getUnitId(string unitName)
+action_t ConfigParser::getUnitId(string unitName)
 {
     if(unitMap.count(unitName) == 0)
     {
@@ -104,7 +104,7 @@ int ConfigParser::getUnitId(string unitName)
     return unitMap[unitName];
 }
 
-void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<int>& targetVector){
+void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<action_t>& targetVector){
     for (XMLElement* tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
     {
         string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);
