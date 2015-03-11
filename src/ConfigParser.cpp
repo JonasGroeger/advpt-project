@@ -55,7 +55,7 @@ ConfigParser::ConfigParser(char *file)
         try
         {
             buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
-            cout << worker->Attribute(ATTRIBUTE_NAME) << " is a worker!" << endl;
+            LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
         }
         catch (const std::out_of_range& oor)
         {
@@ -71,7 +71,7 @@ ConfigParser::ConfigParser(char *file)
         try
         {
             buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
-            cout << gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!" << endl;
+            LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
         }
         catch (const std::out_of_range& oor)
         {
@@ -97,7 +97,7 @@ int ConfigParser::getUnitId(string unitName)
 {
     if(unitMap.count(unitName) == 0)
     {
-        cout << "Unit added with name " << unitName << " and id " << unitCount << endl;
+        LOG_DEBUG( "Unit added with name " << unitName << " and id " << unitCount);
         unitMap.insert(std::pair<string, int>(unitName, unitCount));
         ++unitCount;
     }
