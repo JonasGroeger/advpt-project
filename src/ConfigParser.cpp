@@ -14,7 +14,7 @@ ConfigParser::ConfigParser(char *file)
 
     // parse the actions
     for (XMLElement* action = rootNode->FirstChildElement(NODE_ACTION); action != nullptr;
-         action = action->NextSiblingElement("action"))
+         action = action->NextSiblingElement(NODE_ACTION))
     {
         BuildAction buildAction;
         buildAction.name = action->Attribute(ATTRIBUTE_NAME);
