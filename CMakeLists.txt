@@ -35,13 +35,14 @@ set( HPP_FILES
 
 # ... and source files ...
 set( CPP_FILES
-  src/main.cpp
   src/tinyxml2.cpp
   src/ConfigParser.cpp
 )
 
 # ... to build the executable.
-add_executable( ${EXECUTABLE} ${CPP_FILES} ${HPP_FILES} )
+add_executable( ${EXECUTABLE} src/main.cpp ${CPP_FILES} ${HPP_FILES} )
+
+add_executable( test_xml tests/xml.cpp ${CPP_FILES} ${HPP_FILES} )
 
 # Uncomment (to enable) or Comment (to disable) the debug output (see includes/Debug.hpp)
 add_definitions(-DDEBUG)
