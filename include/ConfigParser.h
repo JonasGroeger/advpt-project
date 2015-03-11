@@ -27,6 +27,9 @@ class ConfigParser
 public:
     ConfigParser(char*file);
 
+    //this method will process the previously parsed xml
+    void initialize();
+
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
     const BuildAction& getAction(string actionName);

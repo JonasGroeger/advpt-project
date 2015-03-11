@@ -6,7 +6,10 @@ ConfigParser::ConfigParser(char *file)
     if(load_result != XML_SUCCESS){
         throw std::invalid_argument("Malformed configuration file.");
     }
+}
 
+void ConfigParser::initialize()
+{
     XMLNode *rootNode = xmlConfig.RootElement();
     if(rootNode == nullptr){
         throw std::invalid_argument("Malformed configuration file: No root element found.");
