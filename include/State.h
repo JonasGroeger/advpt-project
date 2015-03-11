@@ -7,8 +7,10 @@
 #include "BuildAction.h"
 #include "ConfigParser.h"
 
-// TODO 
+// TODO better datatype
 using ress_t = long double;
+
+// TODO managin units with energy
 
 class State {
     //I think it is fine to expose these fields without getter and setters
