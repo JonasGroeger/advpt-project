@@ -55,49 +55,56 @@ ConfigParser::ConfigParser(char *file)
         try
         {
             buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
-            cout << worker->Attribute(ATTRIBUTE_NAME) << " is a worker!" << endl;
+            LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
         }
         catch (const std::out_of_range& oor)
         {
-            cerr << "Out of Range error: " << oor.what() << '\n';
+            throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
-    //TODO where to put them?
-    //TODO memory leak here?
 
     //now parse the gas_harvesters
     XMLElement *gas_harvesters = rootNode->FirstChildElement(NODE_GAS_HARVESTER);
     for (XMLElement* gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr; gas_element = gas_element->NextSiblingElement())
     {
+
         try
         {
             buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
-            cout << gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!" << endl;
+            LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
         }
         catch (const std::out_of_range& oor)
         {
-            cerr << "Out of Range error: " << oor.what() << '\n';
+            throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
 }
 
-BuildAction ConfigParser::getAction(string actionName){
-    return buildActionMap.at(actionName);
+const BuildAction& ConfigParser::getAction(string actionName)
+{
+    if (buildActionMap.count(actionName) == 0)
+    {
+        throw std::out_of_range("Unable to find: " + actionName);
+    }
+    else
+    {
+        return buildActionMap[actionName];
+    }
 }
 
 
-int ConfigParser::getUnitId(string unitName)
+action_t ConfigParser::getUnitId(string unitName)
 {
     if(unitMap.count(unitName) == 0)
     {
-        cout << "Unit added with name " << unitName << " and id " << unitCount << endl;
+        LOG_DEBUG( "Unit added with name " << unitName << " and id " << unitCount);
         unitMap.insert(std::pair<string, int>(unitName, unitCount));
         ++unitCount;
     }
     return unitMap[unitName];
 }
 
-void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<int>& targetVector){
+void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<action_t>& targetVector){
     for (XMLElement* tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
     {
         string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);

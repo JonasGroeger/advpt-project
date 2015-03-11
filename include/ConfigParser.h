@@ -6,6 +6,8 @@
 #include <map>
 #include <stdexcept>
 #include <vector>
+
+#include "Debug.h"
 #include "BuildAction.h"
 
 using tinyxml2::XML_SUCCESS;
@@ -14,9 +16,6 @@ using tinyxml2::XMLElement;
 using tinyxml2::XMLError;
 using tinyxml2::XMLNode;
 
-using std::cout;
-using std::cerr;
-using std::endl;
 using std::string;
 using std::map;
 using std::stoi;
@@ -26,7 +25,10 @@ class ConfigParser
 {
 public:
     ConfigParser(char*file);
-    BuildAction getAction(string actionName);
+
+    // We return a reference to prevent unneccessary copying
+    // But nobody else should be able to modify it
+    const BuildAction& getAction(string actionName);
 
 protected:
     int getUnitId(string unitName);

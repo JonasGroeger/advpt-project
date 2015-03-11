@@ -6,7 +6,7 @@
 using std::string;
 using std::vector;
 
-using actiont = int;
+using action_t = int;
 
 typedef struct BuildCost
 {
@@ -14,7 +14,7 @@ typedef struct BuildCost
     int gas;
     int time;
     int supply;
-    vector<actiont> units;
+    vector<action_t> units;
 } BuildCost;
 
 typedef struct BuildResult
@@ -22,7 +22,7 @@ typedef struct BuildResult
     int minerals;
     int gas;
     int supply;
-    vector<actiont> units;
+    vector<action_t> units;
 } BuildResult;
 
 typedef struct BuildAction
@@ -30,8 +30,8 @@ typedef struct BuildAction
     int id;
     string name;
     BuildCost cost;
-    vector<actiont> dependencies;
-    vector<actiont> borrows;
+    vector<action_t> dependencies;
+    vector<action_t> borrows;
     BuildResult result;
 
     bool isWorker = false;
