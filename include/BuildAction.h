@@ -14,7 +14,7 @@ typedef struct BuildCost
     int gas;
     int time;
     int supply;
-    vector<action_t> units;
+    vector<std::pair<action_t, int>> units;
 } BuildCost;
 
 typedef struct BuildResult
@@ -22,7 +22,7 @@ typedef struct BuildResult
     int minerals;
     int gas;
     int supply;
-    vector<action_t> units;
+    vector<std::pair<action_t, int>> units;
 } BuildResult;
 
 typedef struct BuildAction
@@ -30,8 +30,8 @@ typedef struct BuildAction
     int id;
     string name;
     BuildCost cost;
-    vector<action_t> dependencies;
-    vector<action_t> borrows;
+    vector<std::pair<action_t, int>> dependencies;
+    vector<std::pair<action_t, int>> borrows;
     BuildResult result;
 
     bool isWorker = false;
