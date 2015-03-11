@@ -84,7 +84,7 @@ const BuildAction& ConfigParser::getAction(string actionName)
 {
     if (buildActionMap.count(actionName) == 0)
     {
-        throw new std::out_of_range("Unable to find: " + actionName);
+        throw std::out_of_range("Unable to find: " + actionName);
     }
     else
     {
