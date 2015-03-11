@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         assert(!refinery.isWorker);
 
         assert(commandCenter.dependencies.size() == 0);
-        assert(commandCenter.borrows == vector<int>{scv.id});
+        //assert(commandCenter.borrows == vector<int>{scv.id});
     }
     catch (std::exception &e)
     {

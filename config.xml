@@ -461,6 +461,8 @@
     <action name="banshee">
         <costs mineral="150" gas="100" time="60" supply="3"/>
         <borrows>
+            <!-- TODO JUST FOR TESTING HERE --!>
+            <unit name="starport_techlab"/>
             <unit name="starport_techlab"/>
         </borrows>
         <dependencies>

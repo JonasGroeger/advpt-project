@@ -6,6 +6,7 @@
 #include <map>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
 
 #include "Debug.h"
 #include "BuildAction.h"
@@ -32,7 +33,7 @@ public:
 
 protected:
     int getUnitId(string unitName);
-    void addUnitsToVector(XMLElement* element, const char* node, vector<int>& vec);
+    void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
 
 private:
     const char* NODE_MAX_UNITS = "max_units";
