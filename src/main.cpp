@@ -1,5 +1,6 @@
 #include <iostream>
 #include "ConfigParser.h"
+#include "BuildOrder.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,7 @@ int main(int argc, char *argv[])
     }
 
     ConfigParser::Instance().parseConfig(argv[1]);
-
+    BuildOrder buildOrder;
+    buildOrder.createBuildOrder("siege_tank");
     return 0;
 }
