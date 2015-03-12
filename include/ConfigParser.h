@@ -44,7 +44,7 @@ private:
     ConfigParser(ConfigParser const&) = delete;
     void operator=(ConfigParser const&) = delete;
 
-    //const char* NODE_MAX_UNITS = "max_units";
+    const char* NODE_MAX_UNITS = "max_units";
     const char* NODE_WORKER = "workers";
     const char* NODE_GAS_HARVESTER = "gas_harvesters";
     const char* NODE_RACE = "race";
