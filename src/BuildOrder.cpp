@@ -5,6 +5,7 @@ vector<BuildAction> BuildOrder::createBuildOrder(string target)
     vector<BuildAction> returnVec;
     returnVec.push_back(ConfigParser::Instance().getAction(target));
     getDependencies(ConfigParser::Instance().getAction(target).id, returnVec);
+    reverse(returnVec.begin(), returnVec.end());
     return returnVec;
 }
 
