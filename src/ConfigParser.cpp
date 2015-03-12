@@ -21,10 +21,10 @@ void ConfigParser::parseConfig(char *file){
 
         //costs of the action
         XMLElement* costs = action->FirstChildElement(NODE_COSTS);
-        buildAction.cost.gas = stoi(costs->Attribute(ATTRIBUTE_GAS));
-        buildAction.cost.minerals = stoi(costs->Attribute(ATTRIBUTE_MINERALS));
-        buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
-        buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
+        buildAction.cost.gas = costs->IntAttribute(ATTRIBUTE_GAS);
+        buildAction.cost.minerals = costs->IntAttribute(ATTRIBUTE_MINERALS);
+        buildAction.cost.supply = costs->IntAttribute(ATTRIBUTE_SUPPLY);
+        buildAction.cost.time = costs->IntAttribute(ATTRIBUTE_TIME);
         //if this action is consuming other units
         addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
 
@@ -39,9 +39,9 @@ void ConfigParser::parseConfig(char *file){
         //results
         XMLElement* results = action->FirstChildElement(NODE_RESULTS);
 
-        buildAction.result.minerals = stoi(results->Attribute(ATTRIBUTE_MINERALS));
-        buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
-        buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
+        buildAction.result.minerals = results->IntAttribute(ATTRIBUTE_MINERALS);
+        buildAction.result.gas = results->IntAttribute(ATTRIBUTE_GAS);
+        buildAction.result.supply = results->IntAttribute(ATTRIBUTE_SUPPLY);
         addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
 
         buildActionMap[buildAction.name] = buildAction;
