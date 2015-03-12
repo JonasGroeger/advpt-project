@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "Debug.h"
+
 using namespace std;
 
 class BuildOrder
@@ -16,4 +18,5 @@ public:
 
 private:
     vector<BuildAction> buildList;
+    void getDependencies(action_t id, vector<BuildAction> &outVector);
 };

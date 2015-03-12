@@ -12,6 +12,6 @@ int main(int argc, char *argv[])
 
     ConfigParser::Instance().parseConfig(argv[1]);
     BuildOrder buildOrder;
-    buildOrder.createBuildOrder("siege_tank");
+    buildOrder.createBuildOrder("thor");
     return 0;
 }
