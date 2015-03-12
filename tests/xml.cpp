@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
         cerr << "config.Parser.getAction(\"asdf\"); did not throw an out_of_range exception" << endl;
         return 1;
     }
+    cout << 1 << endl;
 
     try
     {
@@ -39,16 +40,23 @@ int main(int argc, char *argv[])
         BuildAction commandCenter = configParser.getAction("command_center");
 
         assert(scv.isWorker);
+        cout << 2 << endl;
         assert(!commandCenter.isWorker);
+        cout << 3 << endl;
         assert(!refinery.isWorker);
+        cout << 4 << endl;
 
         assert(commandCenter.dependencies.size() == 0);
-        assert(commandCenter.borrows == vector<int>{scv.id});
+        cout << 5 << endl;
+        assert(commandCenter.borrows.size() == 1);
+        assert(commandCenter.borrows[0].first == scv.id);
+        assert(commandCenter.borrows[0].second == 1);
     }
     catch (std::exception &e)
     {
         cerr << "Caught unexpected exception: " << e.what() << endl;
     }
 
+    cout << "SUCCESS" << endl;
     return 0;
 }

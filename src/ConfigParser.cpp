@@ -108,12 +108,26 @@ action_t ConfigParser::getUnitId(string unitName)
     return unitMap[unitName];
 }
 
-void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<action_t>& targetVector){
+void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& targetVector){
     for (XMLElement* tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
     {
         string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);
-        getUnitId(unitName);
-        targetVector.push_back(unitMap[unitName]);
+        action_t id = getUnitId(unitName);
+
+        std::vector<std::pair<action_t, int>>::iterator it;
+        it = std::find_if(targetVector.begin(), targetVector.end(), [&id](std::pair<action_t, int> &pair)
+        {
+            return (pair.first == id);
+        });
+
+        if(it != targetVector.end())
+        {
+            (*it).second++;
+        }
+        else
+        {
+            targetVector.push_back(std::pair<action_t, int>(unitMap[unitName], 1));
+        }
     }
 }
 
