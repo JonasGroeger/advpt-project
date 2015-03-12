@@ -1,12 +1,11 @@
 #include "BuildOrder.h"
 
-BuildOrder::BuildOrder(ConfigParser parser)
-{
-    configParser = parser;
-}
-
 vector<BuildAction> BuildOrder::createBuildOrder(string target)
 {
-    buildList.clear;
-    configParser.getAction(target);
+    auto bAction = ConfigParser::Instance().getAction(target);
+    buildList.push_back(bAction);
+    auto deps = bAction.dependencies;
+    for(auto t : deps){
+
+    }
 }

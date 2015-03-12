@@ -30,13 +30,16 @@ message( "CXX FLAGS:   -> " ${CMAKE_CXX_FLAGS} )
 # Add all the header files ...
 set( HPP_FILES
     include/tinyxml2.h
+    include/BuildAction.h
     include/ConfigParser.h
+    include/BuildOrder.h
 )
 
 # ... and source files ...
 set( CPP_FILES
   src/tinyxml2.cpp
   src/ConfigParser.cpp
+  src/BuildOrder.cpp
 )
 
 # ... to build the executable.
