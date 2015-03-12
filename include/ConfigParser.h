@@ -35,6 +35,7 @@ public:
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
     const BuildAction& getAction(string actionName);
+    const BuildAction& getAction(action_t id);
 
 private:
     ConfigParser(){};
@@ -63,6 +64,7 @@ private:
     map<string, int> unitMap;
     int unitCount = 0;
     map<string, BuildAction> buildActionMap;
+    map<action_t, BuildAction> buildActionIdMap;
 
     int getUnitId(string unitName);
     void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);

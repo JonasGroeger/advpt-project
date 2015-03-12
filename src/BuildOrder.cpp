@@ -2,10 +2,20 @@
 
 vector<BuildAction> BuildOrder::createBuildOrder(string target)
 {
-    auto bAction = ConfigParser::Instance().getAction(target);
-    buildList.push_back(bAction);
-    auto deps = bAction.dependencies;
-    for(auto t : deps){
+    vector<BuildAction> returnVec;
+    returnVec.push_back(ConfigParser::Instance().getAction(target));
+    getDependencies(ConfigParser::Instance().getAction(target).id, returnVec);
+    return returnVec;
+}
 
+void BuildOrder::getDependencies(action_t id, vector<BuildAction>& outVector)
+{
+    auto dependencies = ConfigParser::Instance().getAction(id).dependencies;
+    for(auto depPair : dependencies)
+    {
+        LOG_DEBUG("Dependency of [" << ConfigParser::Instance().getAction(id).name <<"] is " << depPair.second << "* [" << ConfigParser::Instance().getAction(depPair.first).name << "]");
+        outVector.push_back(ConfigParser::Instance().getAction(depPair.first));
+        getDependencies(ConfigParser::Instance().getAction(depPair.first).id, outVector);
     }
+    return;
 }
