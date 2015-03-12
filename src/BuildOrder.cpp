@@ -1,6 +1,6 @@
 #include "BuildOrder.h"
 
-vector<BuildAction> BuildOrder::createBuildOrder(string target)
+vector<BuildAction> BuildOrder::createMinimalBuildOrder(string target)
 {
     vector<BuildAction> returnVec;
     returnVec.push_back(ConfigParser::Instance().getAction(target));

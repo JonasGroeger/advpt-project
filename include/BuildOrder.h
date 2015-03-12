@@ -14,10 +14,11 @@ class BuildOrder
 {
 public:
     BuildOrder(){};
-    vector<BuildAction> createBuildOrder(string target);
+    vector<BuildAction> createMinimalBuildOrder(string target);
     vector<BuildAction> getPossibleNextActions(const vector<BuildAction> actions);
 
 private:
+    int availableSupply = 0;
     map<action_t, int> availableUnits;
     vector<BuildAction> buildList;
     void getDependencies(action_t id, vector<BuildAction> &outVector);
