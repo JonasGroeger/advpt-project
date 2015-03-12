@@ -11,45 +11,62 @@ void ConfigParser::parseConfig(char *file){
         throw std::invalid_argument("Malformed configuration file: No root element found.");
     }
 
-    // parse the actions
-    for (XMLElement* action = rootNode->FirstChildElement(NODE_ACTION); action != nullptr;
-         action = action->NextSiblingElement(NODE_ACTION))
+    // Iterate through found races
+    for(XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
+        race = race->NextSiblingElement(NODE_RACE))
     {
-        BuildAction buildAction;
-        buildAction.name = action->Attribute(ATTRIBUTE_NAME);
-        buildAction.id = getUnitId(buildAction.name);
 
-        //costs of the action
-        XMLElement* costs = action->FirstChildElement(NODE_COSTS);
-        buildAction.cost.gas = stoi(costs->Attribute(ATTRIBUTE_GAS));
-        buildAction.cost.minerals = stoi(costs->Attribute(ATTRIBUTE_MINERALS));
-        buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
-        buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
-        //if this action is consuming other units
-        addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
+        // parse the actions
+        for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
+             action = action->NextSiblingElement(NODE_ACTION))
+        {
+            BuildAction buildAction;
+            buildAction.name = action->Attribute(ATTRIBUTE_NAME);
+            buildAction.id = getUnitId(buildAction.name);
 
-        //borrows
-        XMLElement* borrows = action->FirstChildElement(NODE_BORROWS);
-        addUnitsToVector(borrows, NODE_UNIT, buildAction.borrows);
+            //costs of the action
+            XMLElement *costs = action->FirstChildElement(NODE_COSTS);
+            buildAction.cost.gas = stoi(costs->Attribute(ATTRIBUTE_GAS));
+            buildAction.cost.minerals = stoi(costs->Attribute(ATTRIBUTE_MINERALS));
+            buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
+            buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
+            //if this action is consuming other units
+            addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
 
-        //dependencies
-        XMLElement* dependencies = action->FirstChildElement(NODE_DEPENDENCIES);
-        addUnitsToVector(dependencies, NODE_UNIT, buildAction.dependencies);
+            //borrows
+            XMLElement *borrows = action->FirstChildElement(NODE_BORROWS);
+            addUnitsToVector(borrows, NODE_UNIT, buildAction.borrows);
 
-        //results
-        XMLElement* results = action->FirstChildElement(NODE_RESULTS);
+            //dependencies
+            XMLElement *dependencies = action->FirstChildElement(NODE_DEPENDENCIES);
+            addUnitsToVector(dependencies, NODE_UNIT, buildAction.dependencies);
 
-        buildAction.result.minerals = stoi(results->Attribute(ATTRIBUTE_MINERALS));
-        buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
-        buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
-        addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
+            //results
+            XMLElement *results = action->FirstChildElement(NODE_RESULTS);
 
-        buildActionMap[buildAction.name] = buildAction;
+            buildAction.result.minerals = stoi(results->Attribute(ATTRIBUTE_MINERALS));
+            buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
+            buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
+            addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
+
+            buildActionMap[buildAction.name] = buildAction;
+        }
+
     }
 
-    //workers
+    // Maximum unit numbers
+    XMLElement *maxElement = rootNode->FirstChildElement(NODE_MAX_UNITS);
+    for(XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
+            max = max->NextSiblingElement(NODE_UNIT))
+    {
+        // TODO: Insert maximum unit number in buildActionMap
+        // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
+    }
+
+    // Workers
     XMLElement *workerElement = rootNode->FirstChildElement(NODE_WORKER);
-    for (XMLElement* worker = workerElement->FirstChildElement(); worker != nullptr; worker = worker->NextSiblingElement())
+    for (XMLElement* worker = workerElement->FirstChildElement(); worker != nullptr;
+         worker = worker->NextSiblingElement(NODE_UNIT))
     {
         try
         {
@@ -62,11 +79,11 @@ void ConfigParser::parseConfig(char *file){
         }
     }
 
-    //now parse the gas_harvesters
+    // Gas harvesters
     XMLElement *gas_harvesters = rootNode->FirstChildElement(NODE_GAS_HARVESTER);
-    for (XMLElement* gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr; gas_element = gas_element->NextSiblingElement())
+    for (XMLElement* gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
+         gas_element = gas_element->NextSiblingElement(NODE_UNIT))
     {
-
         try
         {
             buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
