@@ -96,6 +96,16 @@ void ConfigParser::parseConfig(char *file){
     }
 }
 
+const vector<BuildAction> ConfigParser::getAllActions()
+{
+    vector<BuildAction> resultVec;
+    for(auto pair : buildActionMap)
+    {
+        resultVec.push_back(pair.second);
+    }
+    return resultVec;
+}
+
 const BuildAction& ConfigParser::getAction(string actionName)
 {
     if (buildActionMap.count(actionName) == 0)
