@@ -44,6 +44,7 @@ private:
     const char* NODE_MAX_UNITS = "max_units";
     const char* NODE_WORKER = "workers";
     const char* NODE_GAS_HARVESTER = "gas_harvesters";
+    const char* NODE_RACE = "race";
     const char* NODE_ACTION = "action";
     const char* NODE_UNIT = "unit";
     const char* NODE_COSTS = "costs";
@@ -56,6 +57,7 @@ private:
     const char* ATTRIBUTE_GAS = "gas";
     const char* ATTRIBUTE_TIME = "time";
     const char* ATTRIBUTE_SUPPLY = "supply";
+    // const char* ATTRIBUTE_MAX = "max";
 
     XMLDocument xmlConfig;
     map<string, int> unitMap;

@@ -2,7 +2,7 @@
 
 <sc2sim>
     <max_units>
-
+        <!-- <unit name="mothership" max="1"/> -->
     </max_units>
 
     <workers name="worker">
@@ -25,465 +25,475 @@
         gas_harvester ... Wenn es in sc2sim/gas_harvesters drin ist.
     -->
 
-    <action name="command_center">
-        <costs mineral="400" gas="0" time="100" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies/>
-        <results mineral="0" gas="0" time="0" supply="11">
-            <unit name="command_center"/>
-        </results>
-    </action>
+    <race name="zerg">
 
-    <action name="scv">
-        <costs mineral="50" gas="0" time="17" supply="1"/>
-        <borrows>
-            <unit name="command_center"/>
-        </borrows>
-        <dependencies>
-            <unit name="command_center"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="scv"/>
-        </results>
-    </action>
+    </race>
 
-    <action name="planetary_fortress">
-        <costs mineral="150" gas="150" time="50" supply="0">
-            <unit name="command_center"/>
-        </costs>
-        <borrows>
-            <unit name="command_center"/>
-        </borrows>
-        <dependencies>
-            <unit name="command_center"/>
-            <unit name="engineering_bay"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="11">
-            <unit name="planetary_fortress"/>
-        </results>
-    </action>
+    <race name="protoss">
 
-    <!-- SPECIAL: Calldown, Mule -->
-    <action name="orbital_command">
-        <costs mineral="150" gas="0" time="35" supply="0">
-            <unit name="command_center"/>
-        </costs>
-        <borrows>
-            <unit name="command_center"/>
-        </borrows>
-        <dependencies>
-            <unit name="command_center"/>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="11">
-            <unit name="orbital_command"/>
-        </results>
-    </action>
+    </race>
 
-    <action name="engineering_bay">
-        <costs mineral="125" gas="0" time="35" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="command_center"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="engineering_bay"/>
-        </results>
-    </action>
+    <race name="terran">
+        <action name="command_center">
+            <costs mineral="400" gas="0" time="100" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="11">
+                <unit name="command_center"/>
+            </results>
+        </action>
 
-    <action name="missile_turret">
-        <costs mineral="100" gas="0" time="25" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="engineering_bay"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="missile_turret"/>
-        </results>
-    </action>
+        <action name="scv">
+            <costs mineral="50" gas="0" time="17" supply="1"/>
+            <borrows>
+                <unit name="command_center"/>
+            </borrows>
+            <dependencies>
+                <unit name="command_center"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="scv"/>
+            </results>
+        </action>
 
-    <action name="sensor_tower">
-        <costs mineral="125" gas="100" time="25" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="engineering_bay"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="sensor_tower"/>
-        </results>
-    </action>
+        <action name="planetary_fortress">
+            <costs mineral="150" gas="150" time="50" supply="0">
+                <unit name="command_center"/>
+            </costs>
+            <borrows>
+                <unit name="command_center"/>
+            </borrows>
+            <dependencies>
+                <unit name="command_center"/>
+                <unit name="engineering_bay"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="11">
+                <unit name="planetary_fortress"/>
+            </results>
+        </action>
 
-    <action name="supply_depot">
-        <costs mineral="100" gas="0" time="30" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies/>
-        <results mineral="0" gas="0" time="0" supply="8">
-            <unit name="supply_depot"/>
-        </results>
-    </action>
+        <!-- SPECIAL: Calldown, Mule -->
+        <action name="orbital_command">
+            <costs mineral="150" gas="0" time="35" supply="0">
+                <unit name="command_center"/>
+            </costs>
+            <borrows>
+                <unit name="command_center"/>
+            </borrows>
+            <dependencies>
+                <unit name="command_center"/>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="11">
+                <unit name="orbital_command"/>
+            </results>
+        </action>
 
-    <!-- SPECIAL: Reactor, TechLab -->
-    <action name="barracks">
-        <costs mineral="150" gas="0" time="65" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="supply_depot"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="barracks"/>
-        </results>
-    </action>
+        <action name="engineering_bay">
+            <costs mineral="125" gas="0" time="35" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="command_center"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="engineering_bay"/>
+            </results>
+        </action>
 
-    <action name="barracks_reactor">
-        <costs mineral="50" gas="50" time="50" supply="0">
-            <unit name="barracks"/>
-        </costs>
-        <borrows>
-            <unit name="barracks"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="barracks_reactor"/>
-        </results>
-    </action>
+        <action name="missile_turret">
+            <costs mineral="100" gas="0" time="25" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="engineering_bay"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="missile_turret"/>
+            </results>
+        </action>
 
-    <action name="barracks_techlab">
-        <costs mineral="50" gas="25" time="25" supply="0">
-            <unit name="barracks"/>
-        </costs>
-        <borrows>
-            <unit name="barracks"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="barracks_techlab"/>
-        </results>
-    </action>
+        <action name="sensor_tower">
+            <costs mineral="125" gas="100" time="25" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="engineering_bay"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="sensor_tower"/>
+            </results>
+        </action>
 
-    <action name="marine">
-        <costs mineral="50" gas="0" time="25" supply="1"/>
-        <borrows>
-            <unit name="barracks"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="marine"/>
-        </results>
-    </action>
-    <action name="refinery">
-        <costs mineral="75" gas="0" time="30" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies/>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="refinery"/>
-        </results>
-    </action>
+        <action name="supply_depot">
+            <costs mineral="100" gas="0" time="30" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="8">
+                <unit name="supply_depot"/>
+            </results>
+        </action>
 
-    <action name="marauder">
-        <costs mineral="100" gas="25" time="30" supply="2"/>
-        <borrows>
-            <unit name="barracks_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks_techlab"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="marauder"/>
-        </results>
-    </action>
+        <!-- SPECIAL: Reactor, TechLab -->
+        <action name="barracks">
+            <costs mineral="150" gas="0" time="65" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="supply_depot"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="barracks"/>
+            </results>
+        </action>
 
-    <action name="reaper">
-        <costs mineral="50" gas="50" time="45" supply="1"/>
-        <borrows>
-            <unit name="barracks_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks_techlab"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="reaper"/>
-        </results>
-    </action>
+        <action name="barracks_reactor">
+            <costs mineral="50" gas="50" time="50" supply="0">
+                <unit name="barracks"/>
+            </costs>
+            <borrows>
+                <unit name="barracks"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="barracks_reactor"/>
+            </results>
+        </action>
 
-    <action name="ghost">
-        <costs mineral="200" gas="100" time="40" supply="2"/>
-        <borrows>
-            <unit name="barracks_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks_techlab"/>
-            <unit name="ghost_academy"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="ghost"/>
-        </results>
-    </action>
+        <action name="barracks_techlab">
+            <costs mineral="50" gas="25" time="25" supply="0">
+                <unit name="barracks"/>
+            </costs>
+            <borrows>
+                <unit name="barracks"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="barracks_techlab"/>
+            </results>
+        </action>
 
-    <action name="ghost_academy">
-        <costs mineral="150" gas="50" time="40" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="ghost_academy"/>
-        </results>
-    </action>
+        <action name="marine">
+            <costs mineral="50" gas="0" time="25" supply="1"/>
+            <borrows>
+                <unit name="barracks"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="marine"/>
+            </results>
+        </action>
+        <action name="refinery">
+            <costs mineral="75" gas="0" time="30" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="refinery"/>
+            </results>
+        </action>
 
-    <action name="bunker">
-        <costs mineral="100" gas="0" time="40" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="scv"/>
-        </results>
-    </action>
+        <action name="marauder">
+            <costs mineral="100" gas="25" time="30" supply="2"/>
+            <borrows>
+                <unit name="barracks_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks_techlab"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="marauder"/>
+            </results>
+        </action>
 
-    <!-- SPECIAL: Reactor, TechLab -->
-    <action name="factory">
-        <costs mineral="150" gas="100" time="60" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="barracks"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="factory"/>
-        </results>
-    </action>
+        <action name="reaper">
+            <costs mineral="50" gas="50" time="45" supply="1"/>
+            <borrows>
+                <unit name="barracks_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks_techlab"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="reaper"/>
+            </results>
+        </action>
 
-    <action name="factory_reactor">
-        <costs mineral="50" gas="50" time="50" supply="0">
-            <unit name="factory"/>
-        </costs>
-        <borrows>
-            <unit name="factory"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="factory_reactor"/>
-        </results>
-    </action>
+        <action name="ghost">
+            <costs mineral="200" gas="100" time="40" supply="2"/>
+            <borrows>
+                <unit name="barracks_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks_techlab"/>
+                <unit name="ghost_academy"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="ghost"/>
+            </results>
+        </action>
 
-    <action name="factory_techlab">
-        <costs mineral="50" gas="25" time="50" supply="0">
-            <unit name="factory"/>
-        </costs>
-        <borrows>
-            <unit name="factory"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="factory_techlab"/>
-        </results>
-    </action>
+        <action name="ghost_academy">
+            <costs mineral="150" gas="50" time="40" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="ghost_academy"/>
+            </results>
+        </action>
 
-    <action name="hellion">
-        <costs mineral="100" gas="0" time="30" supply="2"/>
-        <borrows>
-            <unit name="factory"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="hellion"/>
-        </results>
-    </action>
+        <action name="bunker">
+            <costs mineral="100" gas="0" time="40" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="scv"/>
+            </results>
+        </action>
 
-    <action name="siege_tank">
-        <costs mineral="150" gas="125" time="45" supply="3"/>
-        <borrows>
-            <unit name="factory_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory_techlab"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="siege_tank"/>
-        </results>
-    </action>
+        <!-- SPECIAL: Reactor, TechLab -->
+        <action name="factory">
+            <costs mineral="150" gas="100" time="60" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="barracks"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="factory"/>
+            </results>
+        </action>
 
-    <action name="thor">
-        <costs mineral="300" gas="200" time="60" supply="6"/>
-        <borrows>
-            <unit name="factory_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory_techlab"/>
-            <unit name="armory"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="thor"/>
-        </results>
-    </action>
+        <action name="factory_reactor">
+            <costs mineral="50" gas="50" time="50" supply="0">
+                <unit name="factory"/>
+            </costs>
+            <borrows>
+                <unit name="factory"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="factory_reactor"/>
+            </results>
+        </action>
 
-    <action name="armory">
-        <costs mineral="150" gas="100" time="65" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="armory"/>
-        </results>
-    </action>
+        <action name="factory_techlab">
+            <costs mineral="50" gas="25" time="50" supply="0">
+                <unit name="factory"/>
+            </costs>
+            <borrows>
+                <unit name="factory"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="factory_techlab"/>
+            </results>
+        </action>
 
-    <!-- SPECIAL: Reactor, TechLab -->
-    <action name="starport">
-        <costs mineral="150" gas="100" time="50" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="factory"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="starport"/>
-        </results>
-    </action>
+        <action name="hellion">
+            <costs mineral="100" gas="0" time="30" supply="2"/>
+            <borrows>
+                <unit name="factory"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="hellion"/>
+            </results>
+        </action>
 
-    <action name="starport_reactor">
-        <costs mineral="50" gas="50" time="50" supply="0">
-            <unit name="starport"/>
-        </costs>
-        <borrows>
-            <unit name="starport"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="starport_reactor"/>
-        </results>
-    </action>
+        <action name="siege_tank">
+            <costs mineral="150" gas="125" time="45" supply="3"/>
+            <borrows>
+                <unit name="factory_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory_techlab"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="siege_tank"/>
+            </results>
+        </action>
 
-    <action name="starport_techlab">
-        <costs mineral="50" gas="25" time="25" supply="0">
-            <unit name="starport"/>
-        </costs>
-        <borrows>
-            <unit name="starport"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="starport_techlab"/>
-        </results>
-    </action>
+        <action name="thor">
+            <costs mineral="300" gas="200" time="60" supply="6"/>
+            <borrows>
+                <unit name="factory_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory_techlab"/>
+                <unit name="armory"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="thor"/>
+            </results>
+        </action>
 
-    <action name="medivac">
-        <costs mineral="100" gas="100" time="42" supply="2"/>
-        <borrows>
-            <unit name="starport"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="medivac"/>
-        </results>
-    </action>
+        <action name="armory">
+            <costs mineral="150" gas="100" time="65" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="armory"/>
+            </results>
+        </action>
 
-    <action name="viking">
-        <costs mineral="150" gas="75" time="42" supply="2"/>
-        <borrows>
-            <unit name="starport"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="viking"/>
-        </results>
-    </action>
+        <!-- SPECIAL: Reactor, TechLab -->
+        <action name="starport">
+            <costs mineral="150" gas="100" time="50" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="factory"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="starport"/>
+            </results>
+        </action>
 
-    <action name="fusion_core">
-        <costs mineral="150" gas="150" time="65" supply="0"/>
-        <borrows>
-            <unit name="scv"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="fusion_core"/>
-        </results>
-    </action>
+        <action name="starport_reactor">
+            <costs mineral="50" gas="50" time="50" supply="0">
+                <unit name="starport"/>
+            </costs>
+            <borrows>
+                <unit name="starport"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="starport_reactor"/>
+            </results>
+        </action>
 
-    <action name="raven">
-        <costs mineral="100" gas="200" time="60" supply="2"/>
-        <borrows>
-            <unit name="starport_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport_techlab"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="raven"/>
-        </results>
-    </action>
+        <action name="starport_techlab">
+            <costs mineral="50" gas="25" time="25" supply="0">
+                <unit name="starport"/>
+            </costs>
+            <borrows>
+                <unit name="starport"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="starport_techlab"/>
+            </results>
+        </action>
 
-    <action name="banshee">
-        <costs mineral="150" gas="100" time="60" supply="3"/>
-        <borrows>
-            <unit name="starport_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport_techlab"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="banshee"/>
-        </results>
-    </action>
+        <action name="medivac">
+            <costs mineral="100" gas="100" time="42" supply="2"/>
+            <borrows>
+                <unit name="starport"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="medivac"/>
+            </results>
+        </action>
 
-    <action name="battlecruiser">
-        <costs mineral="400" gas="300" time="90" supply="6"/>
-        <borrows>
-            <unit name="starport_techlab"/>
-        </borrows>
-        <dependencies>
-            <unit name="starport_techlab"/>
-            <unit name="fusion_core"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="battlecruiser"/>
-        </results>
-    </action>
+        <action name="viking">
+            <costs mineral="150" gas="75" time="42" supply="2"/>
+            <borrows>
+                <unit name="starport"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="viking"/>
+            </results>
+        </action>
+
+        <action name="fusion_core">
+            <costs mineral="150" gas="150" time="65" supply="0"/>
+            <borrows>
+                <unit name="scv"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="fusion_core"/>
+            </results>
+        </action>
+
+        <action name="raven">
+            <costs mineral="100" gas="200" time="60" supply="2"/>
+            <borrows>
+                <unit name="starport_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport_techlab"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="raven"/>
+            </results>
+        </action>
+
+        <action name="banshee">
+            <costs mineral="150" gas="100" time="60" supply="3"/>
+            <borrows>
+                <unit name="starport_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport_techlab"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="banshee"/>
+            </results>
+        </action>
+
+        <action name="battlecruiser">
+            <costs mineral="400" gas="300" time="90" supply="6"/>
+            <borrows>
+                <unit name="starport_techlab"/>
+            </borrows>
+            <dependencies>
+                <unit name="starport_techlab"/>
+                <unit name="fusion_core"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="battlecruiser"/>
+            </results>
+        </action>
+    </race>
 
     <!-- Only temporary -->
     <action name="probe">
