@@ -15,8 +15,13 @@ class BuildOrder
 public:
     BuildOrder(){};
     vector<BuildAction> createBuildOrder(string target);
+    vector<BuildAction> getPossibleNextActions(const vector<BuildAction> actions);
 
 private:
+    map<action_t, int> availableUnits;
     vector<BuildAction> buildList;
     void getDependencies(action_t id, vector<BuildAction> &outVector);
+    bool checkSupply(int costSupply, int currentSupply);
+    bool checkDependencies(const vector<std::pair<action_t, int>> &dependencies);
+    bool checkBorrows(const vector<std::pair<action_t, int>> &borrows);
 };

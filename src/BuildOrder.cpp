@@ -20,3 +20,57 @@ void BuildOrder::getDependencies(action_t id, vector<BuildAction>& outVector)
     }
     return;
 }
+
+vector<BuildAction> BuildOrder::getPossibleNextActions(const vector<BuildAction> actions)
+{
+    vector<BuildAction> resultVec;
+    //TODO REMOVE THIS AND GET OUT OF CONFIG assume that we have scv and command center
+    int supply = 0;
+    availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
+    availableUnits[ConfigParser::Instance().getAction("scv").id] = 5;
+
+    for(auto action : actions)
+    {
+        if(checkSupply(action.cost.supply, supply)
+                && checkDependencies(action.dependencies)
+                && checkBorrows(action.borrows))
+        {
+            LOG_DEBUG("Action [" << action.name << "] is possible");
+        }
+    }
+    return resultVec;
+}
+
+bool BuildOrder::checkSupply(int costSupply, int currentSupply)
+{
+    if(currentSupply < costSupply)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool BuildOrder::checkDependencies(const vector<std::pair<action_t, int>> &dependencies)
+{
+    for(auto dep : dependencies)
+    {
+        //if we dont have this dependency yet, or if we dont have enough instances of it, return false
+        if(availableUnits.count(dep.first) == 0 || availableUnits[dep.first] < dep.second)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool BuildOrder::checkBorrows(const vector<std::pair<action_t, int>> &borrows)
+{
+    for(auto bor : borrows)
+    {
+        if(availableUnits.count(bor.first) == 0 || availableUnits[bor.first] < bor.second)
+        {
+            return false;
+        }
+    }
+    return true;
+}
