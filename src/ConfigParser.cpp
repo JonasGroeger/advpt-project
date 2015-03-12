@@ -108,6 +108,11 @@ const BuildAction& ConfigParser::getAction(string actionName)
     }
 }
 
+long ConfigParser::getActionCount()
+{
+    return unitMap.size();
+}
+
 
 action_t ConfigParser::getUnitId(string unitName)
 {
