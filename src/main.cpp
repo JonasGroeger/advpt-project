@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    ConfigParser configParser(argv[1]);
+    ConfigParser::Instance().parseConfig(argv[1]);
 
     return 0;
 }
