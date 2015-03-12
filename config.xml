@@ -7,14 +7,10 @@
 
     <workers name="worker">
         <unit name="scv"/>
-        <unit name="probe"/>
-        <unit name="drone"/>
     </workers>
 
     <gas_harvesters name="gas_harvester">
         <unit name="refinery"/>
-        <unit name="assimilator"/>
-        <unit name="extractor"/>
     </gas_harvesters>
 
     <!--
@@ -494,50 +490,4 @@
             </results>
         </action>
     </race>
-
-    <!-- Only temporary -->
-    <action name="probe">
-        <costs mineral="50" gas="0" time="17" supply="1"/>
-        <borrows>
-            <unit name="nexus"/>
-        </borrows>
-        <dependencies>
-            <unit name="nexus"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="probe"/>
-        </results>
-    </action>
-    <action name="drone">
-        <costs mineral="50" gas="0" time="17" supply="1"/>
-        <borrows>
-            <unit name="hatchery"/>
-        </borrows>
-        <dependencies>
-            <unit name="hatchery"/>
-        </dependencies>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="drone"/>
-        </results>
-    </action>
-    <action name="assimilator">
-        <costs mineral="75" gas="0" time="30" supply="0"/>
-        <borrows>
-            <unit name="probe"/>
-        </borrows>
-        <dependencies/>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="assimilator"/>
-        </results>
-    </action>
-    <action name="extractor">
-        <costs mineral="75" gas="0" time="30" supply="0"/>
-        <borrows>
-            <unit name="drone"/>
-        </borrows>
-        <dependencies/>
-        <results mineral="0" gas="0" time="0" supply="0">
-            <unit name="extractor"/>
-        </results>
-    </action>
 </sc2sim>
