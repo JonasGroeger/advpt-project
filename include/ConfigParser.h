@@ -36,10 +36,6 @@ public:
     // But nobody else should be able to modify it
     const BuildAction& getAction(string actionName);
 
-protected:
-    int getUnitId(string unitName);
-    void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
-
 private:
     ConfigParser(){};
     ConfigParser(ConfigParser const&) = delete;
@@ -65,4 +61,7 @@ private:
     map<string, int> unitMap;
     int unitCount = 0;
     map<string, BuildAction> buildActionMap;
+
+    int getUnitId(string unitName);
+    void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
 };
