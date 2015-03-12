@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <queue> 
-#include <assert> 
+#include <cassert> 
 
 #include "BuildAction.h"
 #include "ConfigParser.h"
@@ -36,15 +36,15 @@ class State {
      */
     class ActiveAction
     {
-        private:
-        time_t timeFinished;
-        const BuildAction& action;
-
         public:
-        ActiveAction(time_t _timeFinished, const BuildAction& _action)
-            : timeFinished(_timeFinished), action(_action) {}
+        time_t timeFinished;
+        BuildAction& action;
 
-        private:
+        ActiveAction(time_t _timeFinished, BuildAction& _action)
+            : timeFinished(_timeFinished), action(_action) {}
+        ActiveAction(const ActiveAction& lhs)
+            : timeFinished(lhs.timeFinished), action(lhs.action) {}
+
         /*
          * Reverse ordering on timeFinished so priority_queue works
          */
@@ -52,7 +52,22 @@ class State {
         {
             return timeFinished > lhs.timeFinished;
         }
-    } ;
+
+        ActiveAction& operator=(const ActiveAction& lhs)
+        {
+            this->timeFinished = lhs.timeFinished;
+            this->action = lhs.action;
+            return *this;
+        }
+    };
+
+    struct OrderActiveActions
+    {
+        bool operator() (const ActiveAction& a, const ActiveAction& b)
+        {
+            return a.timeFinished > b.timeFinished;
+        }
+    };
 
     std::priority_queue<ActiveAction> activeActions;
 
@@ -71,6 +86,9 @@ class State {
     // This is increase by 3 for every gas harvester
     int gasHarvesting;
 
+    // This is used to determine if an Action that consumes gas is legal
+    bool willProduceGas = false;
+
     public:
     State(const ConfigParser&);
 
@@ -87,13 +105,13 @@ class State {
      * S' <- Sim(S, d)
      * This advances the state by @amount without any new actions being issude
      */
-    void advanceTime(time_t amount) const;
+    void advanceTime(time_t amount);
 
     /*
      * d <- When(S, R)
      * Returns the time it will take until the ressource requirement R is met
      */
-    time_t whenIsPossible(const BuildCost&) const;
+    time_t whenIsPossible(BuildCost&) const;
 
     /*
      * S' <- Do(S, a)
@@ -103,7 +121,7 @@ class State {
      *  - Flaggin borrowed resources
      *  - Insert the action
      */
-    void startAction(const BuildAction&);
+    void startAction(BuildAction&);
     
     private:
     void increaseRessources(time_t);
