@@ -26,6 +26,14 @@
     -->
 
     <race name="zerg">
+
+    </race>
+
+    <race name="protoss">
+
+    </race>
+
+    <race name="terran">
         <action name="command_center">
             <costs mineral="400" gas="0" time="100" supply="0"/>
             <borrows>
