@@ -25,17 +25,22 @@ using std::vector;
 class ConfigParser
 {
 public:
-    ConfigParser(char*file);
+    static ConfigParser& Instance()
+    {
+        static ConfigParser instance;
+        return instance;
+    }
 
+    void parseConfig(char* file);
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
     const BuildAction& getAction(string actionName);
 
-protected:
-    int getUnitId(string unitName);
-    void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
-
 private:
+    ConfigParser(){};
+    ConfigParser(ConfigParser const&) = delete;
+    void operator=(ConfigParser const&) = delete;
+
     const char* NODE_MAX_UNITS = "max_units";
     const char* NODE_WORKER = "workers";
     const char* NODE_GAS_HARVESTER = "gas_harvesters";
@@ -56,4 +61,7 @@ private:
     map<string, int> unitMap;
     int unitCount = 0;
     map<string, BuildAction> buildActionMap;
+
+    int getUnitId(string unitName);
+    void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
 };
