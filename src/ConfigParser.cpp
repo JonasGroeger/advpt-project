@@ -50,6 +50,7 @@ void ConfigParser::parseConfig(char *file){
             addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
 
             buildActionMap[buildAction.name] = buildAction;
+            buildActionIdMap[buildAction.id] = buildAction;
         }
 
     }
@@ -115,6 +116,18 @@ const BuildAction& ConfigParser::getAction(string actionName)
     else
     {
         return buildActionMap[actionName];
+    }
+}
+
+const BuildAction& ConfigParser::getAction(action_t id)
+{
+    if (buildActionIdMap.count(id) == 0)
+    {
+        throw std::out_of_range("Unable to find: " + std::to_string(id));
+    }
+    else
+    {
+        return buildActionIdMap[id];
     }
 }
 
