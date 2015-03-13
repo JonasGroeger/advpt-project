@@ -117,9 +117,14 @@ class State {
 
     /*
      * d <- When(S, R)
-     * Returns the time it will take until the ressource requirement R is met
+     * IMPORTANT this implementation differs from the paper
+     *
+     * Returns false if the @cost is satisfied.
+     * Otherwise it will return a time amount which should be used to advance the simulation.
+     * NOTE it is not guarenteed that @cost will be satisfied after this time amount.
+     * You must check again!
      */
-    time_t whenIsPossible(BuildCost&) const;
+    time_t isAdditionalTimeNeeded(const BuildCost& cost) const;
 
     /*
      * S' <- Do(S, a)

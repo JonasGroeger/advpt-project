@@ -49,6 +49,19 @@ bool State::isLegalAction(const BuildAction& act) const
     return true;
 }
 
+bool State::isSatisfied(const vector<std::pair<action_t, int>> entities, bool use_producing) const
+{
+    for (auto entity : entities)
+    {
+        action_t type = entity.first;
+        int count = entitiy.second;
+
+        if (entities[type] + producing[type] * use_producing < count)
+        {
+            return false;
+        }
+}
+
 void State::advanceTime(time_t amount)
 {
     time_t end_time = currentTime + amount;
@@ -109,8 +122,9 @@ void State::advanceTime(time_t amount)
 
 // TODO this one is tricky because we need to identify the actions upon which we have to wait
 // Also for determining how long until ressources are available we have to take active actions into account that are producing workers which will increase ressource production
-time_t State::whenIsPossible(BuildCost& cost) const
+time_t State::isAdditionalTimeNeeded(const BuildCost& cost) const
 {
+
     return 0;
 }
 
