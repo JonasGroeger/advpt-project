@@ -26,10 +26,13 @@ public:
         ,buildList(other.buildList)
     {};
 
+
     vector<action_t> getPossibleNextActions(const vector<BuildAction>& actions);
     bool insertActionIfPossible(action_t action, int position);
     bool removeActionIfPossible(int position);
     bool swapActionIfPossible(action_t old, action_t newAction, int position);
+
+    friend ostream& operator<< (ostream &out, BuildOrder &obj);
 
 private:
     int availableSupply = 0;
@@ -39,6 +42,11 @@ private:
     bool isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action);
     void createMinimalBuildOrder(string target);
     void getDependencies(action_t id, vector<BuildAction> &outVector);
+
+    //get the resulting supply of this buildorder from step 0 to step pos-1
+    int getSupply(int pos);
+    int applySupply(int currSupply, action_t action);
+    void addOrIncrementUnit(map<action_t, int> *unitMap, action_t unit);
     bool checkSupply(int costSupply, int currentSupply);
     bool checkDependencies(const vector<std::pair<action_t, int>> &dependencies, const map<action_t, int> &currentUnits);
     bool checkBorrows(const vector<std::pair<action_t, int>> &borrows, const map<action_t, int> &currentUnits);
