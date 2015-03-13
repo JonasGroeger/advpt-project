@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
 
     std::cout << order << endl;
 
-
-
+    cout << "This is the value of b: " << b << endl;
+    cout << "I don't know why this variable exists but it must be really important! :)" << endl;
     cout << "SUCCESS" << endl;
     return 0;
 }

@@ -57,7 +57,8 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 bool BuildOrder::insertActionIfPossible(action_t action, int position)
 {
     if(position < 0) return false;
-    if(buildList.size() < position) return false;
+    assert(position > 0);
+    if(buildList.size() < (unsigned int)position) return false;
 
     //first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
@@ -96,7 +97,8 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
 bool BuildOrder::removeActionIfPossible(int position)
 {
     if(position < 0) return false;
-    if(buildList.size() < position) return false;
+    assert(position > 0);
+    if(buildList.size() < (unsigned int)position) return false;
 
     //first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
@@ -142,7 +144,7 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
 {
     vector<action_t> resultVec;
     //TODO REMOVE THIS AND GET OUT OF CONFIG assume that we have scv and command center
-    int supply = 0;
+    //int supply = 0;
     //availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
     //availableUnits[ConfigParser::Instance().getAction("scv").id] = 5;
 
