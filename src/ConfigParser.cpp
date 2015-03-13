@@ -1,19 +1,22 @@
 #include "ConfigParser.h"
 
-void ConfigParser::parseConfig(char *file){
+void ConfigParser::parseConfig(char *file)
+{
     XMLError load_result = xmlConfig.LoadFile(file);
-    if(load_result != XML_SUCCESS){
+    if (load_result != XML_SUCCESS)
+    {
         throw std::invalid_argument("Malformed configuration file.");
     }
 
     XMLNode *rootNode = xmlConfig.RootElement();
-    if(rootNode == nullptr){
+    if (rootNode == nullptr)
+    {
         throw std::invalid_argument("Malformed configuration file: No root element found.");
     }
 
     // Iterate through found races
-    for(XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
-        race = race->NextSiblingElement(NODE_RACE))
+    for (XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
+         race = race->NextSiblingElement(NODE_RACE))
     {
 
         // parse the actions
@@ -57,8 +60,8 @@ void ConfigParser::parseConfig(char *file){
 
     // Maximum unit numbers
     XMLElement *maxElement = rootNode->FirstChildElement(NODE_MAX_UNITS);
-    for(XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
-            max = max->NextSiblingElement(NODE_UNIT))
+    for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
+         max = max->NextSiblingElement(NODE_UNIT))
     {
         // TODO: Insert maximum unit number in buildActionMap
         // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
@@ -66,7 +69,7 @@ void ConfigParser::parseConfig(char *file){
 
     // Workers
     XMLElement *workerElement = rootNode->FirstChildElement(NODE_WORKER);
-    for (XMLElement* worker = workerElement->FirstChildElement(); worker != nullptr;
+    for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
          worker = worker->NextSiblingElement(NODE_UNIT))
     {
         try
@@ -74,25 +77,45 @@ void ConfigParser::parseConfig(char *file){
             buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
             LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
         }
-        catch (const std::out_of_range& oor)
+        catch (const std::out_of_range &oor)
         {
             throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
 
+    action_t gasHarvesterId = -1;
     // Gas harvesters
     XMLElement *gas_harvesters = rootNode->FirstChildElement(NODE_GAS_HARVESTER);
-    for (XMLElement* gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
+    for (XMLElement *gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
          gas_element = gas_element->NextSiblingElement(NODE_UNIT))
     {
         try
         {
             buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
+            gasHarvesterId = buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).id;
             LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
         }
-        catch (const std::out_of_range& oor)
+        catch (const std::out_of_range &oor)
         {
             throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
+        }
+    }
+
+    //TODO make the two maps point at the same value elements!
+    for(auto it = buildActionMap.begin(); it != buildActionMap.end(); it++)
+    {
+        if((*it).second.cost.gas > 0)
+        {
+            LOG_DEBUG((*it).second.name << " needs gas!");
+            (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
+        }
+    }
+    for(auto it = buildActionIdMap.begin(); it != buildActionIdMap.end(); it++)
+    {
+        if((*it).second.cost.gas > 0)
+        {
+            LOG_DEBUG((*it).second.name << " needs gas!");
+            (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
         }
     }
 }
