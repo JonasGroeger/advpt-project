@@ -40,6 +40,10 @@ private:
     vector<action_t> buildList;
 
     bool isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action);
+    /*
+     * Removes all build steps and creates a fresh BuildOrder
+     * that will create the unit represented by @target
+     */
     void createMinimalBuildOrder(string target);
     void getDependencies(action_t id, vector<action_t> &outVector);
 

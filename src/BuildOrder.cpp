@@ -2,15 +2,20 @@
 
 void BuildOrder::createMinimalBuildOrder(string target)
 {
+    // TODO this does not reset the rest of the BuildOrder State
+    // TODO is this a problem?
     buildList.clear();
     vector<action_t> deps;
     getDependencies(ConfigParser::Instance().getAction(target).id, deps);
     map<action_t, int> currUnits;
+
+    // TODO general approach for all races needed
     addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
     addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
+
     while(deps.size() > 0)
     {
-        std::cout << deps.capacity() << std::endl;
+        LOG_DEBUG(deps.capacity());
         auto possibleActions = getPossibleNextActions(currUnits, deps);
         for(action_t action : possibleActions)
         {
@@ -144,6 +149,7 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
     for(auto action : actions)
     {
         auto bAction = ConfigParser::Instance().getAction(action);
+        // TODO
         if(//checkSupply(action.cost.supply, supply)
                  checkDependencies(bAction.dependencies, currUnits)
                 && checkBorrows(bAction.borrows, currUnits))
