@@ -11,8 +11,5 @@ int main(int argc, char *argv[])
     }
 
     ConfigParser::Instance().parseConfig(argv[1]);
-    BuildOrder buildOrder;
-    buildOrder.createMinimalBuildOrder("thor");
-    buildOrder.getPossibleNextActions(ConfigParser::Instance().getAllActions());
     return 0;
 }
