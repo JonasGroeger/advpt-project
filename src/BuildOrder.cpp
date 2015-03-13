@@ -10,6 +10,7 @@ void BuildOrder::createMinimalBuildOrder(string target)
     map<action_t, int> currUnits;
 
     // TODO general approach for all races needed
+    int supply = 0;
     addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
     addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
 
@@ -20,7 +21,14 @@ void BuildOrder::createMinimalBuildOrder(string target)
         for(action_t action : possibleActions)
         {
             auto bAction = ConfigParser::Instance().getAction(action);
+            while(!checkSupply(bAction.cost.supply, supply))
+            {
+                addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("supply_depot").id);
+                supply = applySupply(supply, ConfigParser::Instance().getAction("supply_depot").id);
+                buildList.push_back(ConfigParser::Instance().getAction("supply_depot").id);
+            }
             addOrIncrementUnit(&currUnits, action);
+            supply = applySupply(supply, action);
             buildList.push_back(action);
             deps.erase(std::remove_if(deps.begin(),
                             deps.end(),
@@ -31,7 +39,12 @@ void BuildOrder::createMinimalBuildOrder(string target)
                     deps.end());
         }
     }
-
+    while(!checkSupply(ConfigParser::Instance().getAction(target).cost.supply, supply))
+    {
+        addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("supply_depot").id);
+        supply = applySupply(supply, ConfigParser::Instance().getAction("supply_depot").id);
+        buildList.push_back(ConfigParser::Instance().getAction("supply_depot").id);
+    }
     buildList.push_back(ConfigParser::Instance().getAction(target).id);
 
 }
@@ -57,7 +70,7 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 bool BuildOrder::insertActionIfPossible(action_t action, int position)
 {
     if(position < 0) return false;
-    assert(position > 0);
+    //assert(position > 0);
     if(buildList.size() < (unsigned int)position) return false;
 
     //first get the "state" until pos-1 in our buildorder
@@ -97,7 +110,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
 bool BuildOrder::removeActionIfPossible(int position)
 {
     if(position < 0) return false;
-    assert(position > 0);
+    //assert(position > 0);
     if(buildList.size() < (unsigned int)position) return false;
 
     //first get the "state" until pos-1 in our buildorder
@@ -144,7 +157,6 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
 {
     vector<action_t> resultVec;
     //TODO REMOVE THIS AND GET OUT OF CONFIG assume that we have scv and command center
-    //int supply = 0;
     //availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
     //availableUnits[ConfigParser::Instance().getAction("scv").id] = 5;
 
@@ -152,8 +164,7 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
     {
         auto bAction = ConfigParser::Instance().getAction(action);
         // TODO
-        if(//checkSupply(action.cost.supply, supply)
-                 checkDependencies(bAction.dependencies, currUnits)
+        if(checkDependencies(bAction.dependencies, currUnits)
                 && checkBorrows(bAction.borrows, currUnits))
         {
             LOG_DEBUG("Action [" << bAction.name << "] is possible");
