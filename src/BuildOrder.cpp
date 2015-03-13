@@ -49,13 +49,46 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
 
     for(;iter != buildList.end(); iter++)
     {
-        if(!isActionPossible(currUnits, supply, action)){
+        if(!isActionPossible(currUnits, supply, (*iter).id)){
             return false;
         }
         addOrIncrementUnit(&currUnits, (*iter).id);
         supply = applySupply(supply, (*iter).id);
     }
     buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action));
+    return true;
+}
+
+bool BuildOrder::removeActionIfPossible(int position)
+{
+    if(position < 0) return false;
+    if(buildList.size() < position) return false;
+
+    //first get the "state" until pos-1 in our buildorder
+    auto iter = buildList.begin();
+    int supply = getSupply(position);
+    map<action_t, int> currUnits;
+
+    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
+    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
+
+    for(int c = 0; c < position; c++)
+    {
+        addOrIncrementUnit(&currUnits, (*iter).id);
+        iter++;
+    }
+    //skip the action we want to remove
+    iter++;
+
+    for(;iter != buildList.end(); iter++)
+    {
+        if(!isActionPossible(currUnits, supply, (*iter).id)){
+            return false;
+        }
+        addOrIncrementUnit(&currUnits, (*iter).id);
+        supply = applySupply(supply, (*iter).id);
+    }
+    buildList.erase(buildList.begin()+position);
     return true;
 }
 
