@@ -91,8 +91,9 @@ void State::advanceTime(time_t amount)
 
         BuildResult& res = act.result;
 
-        minerals += res.minerals;
-        gas += res.gas;
+        minerals += res.minerals * RESS_FACTOR;
+        gas += res.gas * RESS_FACTOR;
+
         supply_max += res.supply;
 
         for (auto unit : res.units)
@@ -125,6 +126,7 @@ void State::increaseRessources(time_t t)
 {
     assert(t >= 0);
 
+    // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
     minerals += t * MINERALS_PER_TIME_UNIT * workersMinerals;
     gas += t * GAS_PER_TIME_UNIT * workersGas;
 }

@@ -7,10 +7,21 @@
 #include "BuildAction.h"
 #include "ConfigParser.h"
 
-// TODO better datatype
+/*
+ * This datatype is used to represent minerals and gas
+ * Internally it is always multiplied by RESS_FACTOR 
+ */
+// TODO if someone is bored this could also be implementated by a smart class with overloaded arithmetic operators and default int conversions etc.
 using ress_t = long double;
+const int RESS_FACTOR = 100; // Scaling factor
 
-// TODO managin units with energy
+/*
+ * These values represent how much minerals/gas are produced by one worker
+ */
+const ress_t MINERALS_PER_TIME_UNIT = 0.7 * RESS_FACTOR;
+const ress_t GAS_PER_TIME_UNIT = 0.35 * RESS_FACTOR;
+
+// TODO managing units with energy
 
 class State {
     //I think it is fine to expose these fields without getter and setters
@@ -71,9 +82,6 @@ class State {
 
     std::priority_queue<ActiveAction> activeActions;
 
-    // TODO
-    const ress_t MINERALS_PER_TIME_UNIT = 0.1;
-    const ress_t GAS_PER_TIME_UNIT = 0.1;
 
     // How many workers exist at all
     int workersAll;
