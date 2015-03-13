@@ -14,28 +14,15 @@ State::State(const ConfigParser& cfg)
 bool State::isLegalAction(const BuildAction& act) const
 {
     // Dependencies
-    for (auto dep : act.dependencies)
+    if (!isSatisfied(act.dependencies, true))
     {
-        action_t type = dep.first;
-        int count = dep.second;
-
-        // We also take currently produced entities in account
-        if (entities[type] + producing[type] < count)
-        {
-            return false;
-        }
+        return false;
     }
 
     // Borrows
-    for (auto borrow : act.borrows)
+    if (!isSatisfied(act.borrows, true))
     {
-        action_t type = borrow.first;
-        int count = borrow.second;
-
-        if (entities[type] + producing[type] < count)
-        {
-            return false;
-        }
+        return false;
     }
 
     // Costs
@@ -47,19 +34,6 @@ bool State::isLegalAction(const BuildAction& act) const
     */
 
     return true;
-}
-
-bool State::isSatisfied(const vector<std::pair<action_t, int>> entities, bool use_producing) const
-{
-    for (auto entity : entities)
-    {
-        action_t type = entity.first;
-        int count = entitiy.second;
-
-        if (entities[type] + producing[type] * use_producing < count)
-        {
-            return false;
-        }
 }
 
 void State::advanceTime(time_t amount)
@@ -122,10 +96,36 @@ void State::advanceTime(time_t amount)
 
 // TODO this one is tricky because we need to identify the actions upon which we have to wait
 // Also for determining how long until ressources are available we have to take active actions into account that are producing workers which will increase ressource production
-time_t State::isAdditionalTimeNeeded(const BuildCost& cost) const
+time_t State::isAdditionalTimeNeeded(const BuildAction& act) const
 {
+    assert(isLegalAction(act));
+    // Dependencies
+    if (!isSatisfied(act.dependencies, false)
+     || !isSatisfied(act.borrows, false)
+     || !hasEnoughSupply(act.cost.supply))
+    {
+        // TODO return time to next finished action
+        return 1;
+    }
 
-    return 0;
+    ress_t minerals_needed = minerals - act.cost.minerals;
+    ress_t gas_needed      = gas - act.cost.gas;
+
+    if (minerals_needed < 0) minerals_needed = 0;
+    if (gas_needed < 0) gas_needed = 0;
+
+    // TODO division by zero
+    ress_t minerals_time = minerals_needed / getMineralsPerTick();
+    ress_t gas_time      = gas_needed / getGasPerTick();
+
+    if (minerals_time > gas_time)
+    {
+        return minerals_time+1;
+    }
+    else
+    {
+        return gas_time+1;
+    }
 }
 
 void State::startAction(BuildAction& act)
@@ -140,7 +140,39 @@ void State::increaseRessources(time_t t)
 {
     assert(t >= 0);
 
+    
+    minerals += t * getMineralsPerTick();
+    gas      += t * getGasPerTick();
+}
+
+bool State::isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing) const
+{
+    for (auto entity : entities)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (this->entities[type] + producing[type] * use_producing < count)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool State::hasEnoughSupply(ress_t supply_needed) const
+{
+    return (supply_max - supply_used) >= supply_needed;
+}
+
+ress_t State::getMineralsPerTick() const
+{
     // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
-    minerals += t * MINERALS_PER_TIME_UNIT * workersMinerals;
-    gas += t * GAS_PER_TIME_UNIT * workersGas;
+    return MINERALS_PER_TIME_UNIT * workersMinerals;
+}
+
+ress_t State::getGasPerTick() const
+{
+    // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
+    return GAS_PER_TIME_UNIT * workersGas;
 }

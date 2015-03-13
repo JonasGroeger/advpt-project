@@ -31,6 +31,7 @@ class State {
 
     // The available ressources
     ress_t minerals = 0, gas = 0;
+    // TODO handle supply with a factor??
     ress_t supply_used = 0, supply_max = 0;
 
     private:
@@ -124,7 +125,7 @@ class State {
      * NOTE it is not guarenteed that @cost will be satisfied after this time amount.
      * You must check again!
      */
-    time_t isAdditionalTimeNeeded(const BuildCost& cost) const;
+    time_t isAdditionalTimeNeeded(const BuildAction& cost) const;
 
     /*
      * S' <- Do(S, a)
@@ -138,4 +139,12 @@ class State {
     
     private:
     void increaseRessources(time_t);
+    /*
+     * Returns true if all entries in @entities are satisfied
+     * If @use_producing is true, untis that are currently being built are also taken into account.
+     */
+    bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing) const;
+    bool hasEnoughSupply(ress_t supply_needed) const;
+    ress_t getMineralsPerTick() const;
+    ress_t getGasPerTick() const;
 };
