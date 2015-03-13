@@ -1,12 +1,11 @@
 #include "BuildOrder.h"
 
-vector<BuildAction> BuildOrder::createMinimalBuildOrder(string target)
+void BuildOrder::createMinimalBuildOrder(string target)
 {
-    vector<BuildAction> returnVec;
-    returnVec.push_back(ConfigParser::Instance().getAction(target));
-    getDependencies(ConfigParser::Instance().getAction(target).id, returnVec);
-    reverse(returnVec.begin(), returnVec.end());
-    return returnVec;
+    buildList.clear();
+    buildList.push_back(ConfigParser::Instance().getAction(target));
+    getDependencies(ConfigParser::Instance().getAction(target).id, buildList);
+    reverse(buildList.begin(), buildList.end());
 }
 
 void BuildOrder::getDependencies(action_t id, vector<BuildAction>& outVector)
@@ -21,9 +20,9 @@ void BuildOrder::getDependencies(action_t id, vector<BuildAction>& outVector)
     return;
 }
 
-vector<BuildAction> BuildOrder::getPossibleNextActions(const vector<BuildAction> actions)
+vector<action_t> BuildOrder::getPossibleNextActions(const vector<BuildAction>& actions)
 {
-    vector<BuildAction> resultVec;
+    vector<action_t> resultVec;
     //TODO REMOVE THIS AND GET OUT OF CONFIG assume that we have scv and command center
     int supply = 0;
     availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
@@ -36,6 +35,7 @@ vector<BuildAction> BuildOrder::getPossibleNextActions(const vector<BuildAction>
                 && checkBorrows(action.borrows))
         {
             LOG_DEBUG("Action [" << action.name << "] is possible");
+            resultVec.push_back(action.id);
         }
     }
     return resultVec;

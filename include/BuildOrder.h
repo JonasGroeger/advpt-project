@@ -14,13 +14,25 @@ class BuildOrder
 {
 public:
     BuildOrder(){};
-    vector<BuildAction> createMinimalBuildOrder(string target);
-    vector<BuildAction> getPossibleNextActions(const vector<BuildAction> actions);
+
+    BuildOrder(string target)
+    {
+        createMinimalBuildOrder(target);
+    };
+
+    BuildOrder(const BuildOrder& other)
+        :availableSupply(other.availableSupply)
+        ,availableUnits(other.availableUnits)
+        ,buildList(other.buildList)
+    {};
+
+    vector<action_t> getPossibleNextActions(const vector<BuildAction>& actions);
 
 private:
     int availableSupply = 0;
     map<action_t, int> availableUnits;
     vector<BuildAction> buildList;
+    void createMinimalBuildOrder(string target);
     void getDependencies(action_t id, vector<BuildAction> &outVector);
     bool checkSupply(int costSupply, int currentSupply);
     bool checkDependencies(const vector<std::pair<action_t, int>> &dependencies);
