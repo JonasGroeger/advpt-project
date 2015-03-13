@@ -3,18 +3,47 @@
 void BuildOrder::createMinimalBuildOrder(string target)
 {
     buildList.clear();
-    buildList.push_back(ConfigParser::Instance().getAction(target));
-    getDependencies(ConfigParser::Instance().getAction(target).id, buildList);
-    reverse(buildList.begin(), buildList.end());
+    vector<action_t> deps;
+    getDependencies(ConfigParser::Instance().getAction(target).id, deps);
+    map<action_t, int> currUnits;
+    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
+    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
+    while(deps.size() > 0)
+    {
+        std::cout << deps.capacity() << std::endl;
+        auto possibleActions = getPossibleNextActions(currUnits, deps);
+        for(action_t action : possibleActions)
+        {
+            auto bAction = ConfigParser::Instance().getAction(action);
+            addOrIncrementUnit(&currUnits, action);
+            buildList.push_back(action);
+            deps.erase(std::remove_if(deps.begin(),
+                            deps.end(),
+                            [&action](action_t id)
+                            {
+                                return id == action;
+                            }),
+                    deps.end());
+        }
+    }
+
+    buildList.push_back(ConfigParser::Instance().getAction(target).id);
+
 }
 
-void BuildOrder::getDependencies(action_t id, vector<BuildAction>& outVector)
+void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 {
     auto dependencies = ConfigParser::Instance().getAction(id).dependencies;
     for(auto depPair : dependencies)
     {
         LOG_DEBUG("Dependency of [" << ConfigParser::Instance().getAction(id).name <<"] is " << depPair.second << "* [" << ConfigParser::Instance().getAction(depPair.first).name << "]");
-        outVector.push_back(ConfigParser::Instance().getAction(depPair.first));
+        if(!(availableUnits.count(ConfigParser::Instance().getAction(depPair.first).id) > 0)
+                || (availableUnits[ConfigParser::Instance().getAction(depPair.first).id] < depPair.second))
+        {
+            LOG_DEBUG("Adding it to our vector!");
+            outVector.push_back(ConfigParser::Instance().getAction(depPair.first).id);
+        }
+        addOrIncrementUnit(&availableUnits, ConfigParser::Instance().getAction(depPair.first).id);
         getDependencies(ConfigParser::Instance().getAction(depPair.first).id, outVector);
     }
     return;
@@ -35,7 +64,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
 
     for(int c = 0; c < position; c++)
     {
-        addOrIncrementUnit(&currUnits, (*iter).id);
+        addOrIncrementUnit(&currUnits, (*iter));
         iter++;
     }
 
@@ -49,13 +78,13 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
 
     for(;iter != buildList.end(); iter++)
     {
-        if(!isActionPossible(currUnits, supply, (*iter).id)){
+        if(!isActionPossible(currUnits, supply, (*iter))){
             return false;
         }
-        addOrIncrementUnit(&currUnits, (*iter).id);
-        supply = applySupply(supply, (*iter).id);
+        addOrIncrementUnit(&currUnits, (*iter));
+        supply = applySupply(supply, (*iter));
     }
-    buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action));
+    buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
     return true;
 }
 
@@ -74,7 +103,7 @@ bool BuildOrder::removeActionIfPossible(int position)
 
     for(int c = 0; c < position; c++)
     {
-        addOrIncrementUnit(&currUnits, (*iter).id);
+        addOrIncrementUnit(&currUnits, (*iter));
         iter++;
     }
     //skip the action we want to remove
@@ -82,11 +111,11 @@ bool BuildOrder::removeActionIfPossible(int position)
 
     for(;iter != buildList.end(); iter++)
     {
-        if(!isActionPossible(currUnits, supply, (*iter).id)){
+        if(!isActionPossible(currUnits, supply, (*iter))){
             return false;
         }
-        addOrIncrementUnit(&currUnits, (*iter).id);
-        supply = applySupply(supply, (*iter).id);
+        addOrIncrementUnit(&currUnits, (*iter));
+        supply = applySupply(supply, (*iter));
     }
     buildList.erase(buildList.begin()+position);
     return true;
@@ -104,22 +133,23 @@ bool BuildOrder::isActionPossible(map<action_t, int> currentUnits, int currentSu
     return false;
 }
 
-vector<action_t> BuildOrder::getPossibleNextActions(const vector<BuildAction>& actions)
+vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions)
 {
     vector<action_t> resultVec;
     //TODO REMOVE THIS AND GET OUT OF CONFIG assume that we have scv and command center
     int supply = 0;
-    availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
-    availableUnits[ConfigParser::Instance().getAction("scv").id] = 5;
+    //availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
+    //availableUnits[ConfigParser::Instance().getAction("scv").id] = 5;
 
     for(auto action : actions)
     {
-        if(checkSupply(action.cost.supply, supply)
-                && checkDependencies(action.dependencies, availableUnits)
-                && checkBorrows(action.borrows, availableUnits))
+        auto bAction = ConfigParser::Instance().getAction(action);
+        if(//checkSupply(action.cost.supply, supply)
+                 checkDependencies(bAction.dependencies, currUnits)
+                && checkBorrows(bAction.borrows, currUnits))
         {
-            LOG_DEBUG("Action [" << action.name << "] is possible");
-            resultVec.push_back(action.id);
+            LOG_DEBUG("Action [" << bAction.name << "] is possible");
+            resultVec.push_back(bAction.id);
         }
     }
     return resultVec;
@@ -144,8 +174,8 @@ int BuildOrder::getSupply(int pos)
         iter++)
     {
         count++;
-        result -= (*iter).cost.supply;
-        result += (*iter).result.supply;
+        result -= ConfigParser::Instance().getAction((*iter)).cost.supply;
+        result += ConfigParser::Instance().getAction((*iter)).result.supply;
     }
     return result;
 }
@@ -198,7 +228,7 @@ ostream& operator<<(ostream &out, BuildOrder &obj)
     int c = 0;
     for(auto element : obj.buildList)
     {
-        out << "[" << c << "] = [" << element.name << "]" << std::endl;
+        out << "[" << c << "] = [" << ConfigParser::Instance().getAction(element).name << "]" << std::endl;
         c++;
     }
     return out;

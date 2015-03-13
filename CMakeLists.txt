@@ -47,5 +47,6 @@ add_executable( ${EXECUTABLE} src/main.cpp ${CPP_FILES} ${HPP_FILES} )
 
 add_executable( test_xml tests/xml.cpp ${CPP_FILES} ${HPP_FILES} )
 
+add_executable( test_buildorder tests/buildorder.cpp ${CPP_FILES} ${HPP_FILES} )
 # Uncomment (to enable) or Comment (to disable) the debug output (see includes/Debug.hpp)
 add_definitions(-DDEBUG)

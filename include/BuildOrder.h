@@ -27,7 +27,7 @@ public:
     {};
 
 
-    vector<action_t> getPossibleNextActions(const vector<BuildAction>& actions);
+    vector<action_t> getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions);
     bool insertActionIfPossible(action_t action, int position);
     bool removeActionIfPossible(int position);
     bool swapActionIfPossible(action_t old, action_t newAction, int position);
@@ -37,11 +37,11 @@ public:
 private:
     int availableSupply = 0;
     map<action_t, int> availableUnits;
-    vector<BuildAction> buildList;
+    vector<action_t> buildList;
 
     bool isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action);
     void createMinimalBuildOrder(string target);
-    void getDependencies(action_t id, vector<BuildAction> &outVector);
+    void getDependencies(action_t id, vector<action_t> &outVector);
 
     //get the resulting supply of this buildorder from step 0 to step pos-1
     int getSupply(int pos);
