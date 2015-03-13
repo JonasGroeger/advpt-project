@@ -16,12 +16,14 @@ bool State::isLegalAction(const BuildAction& act) const
     // Dependencies
     if (!isSatisfied(act.dependencies, true))
     {
+        LOG_DEBUG("dep failed");
         return false;
     }
 
     // Borrows
     if (!isSatisfied(act.borrows, true))
     {
+        LOG_DEBUG("bor failed");
         return false;
     }
 
@@ -53,30 +55,11 @@ void State::advanceTime(time_t amount)
         currentTime += time_delta;
 
         // Handle action results
-        BuildAction& act = activeActions.top().action;
+        const BuildAction& act = activeActions.top().action;
+        LOG_DEBUG("Handle action with id: " << act.id << " and finishTime: " << activeActions.top().timeFinished);
         activeActions.pop();
 
-        if (act.isWorker) 
-        {
-            workersAll ++;
-
-            // Always put workers into gas if possible
-            if (workersGas < gasHarvesting)
-            {
-                workersGas++;
-            }
-            else
-            {
-                workersMinerals++;
-            }
-        }
-
-        if (act.isGasHarvester)
-        {
-            gasHarvesting += 3;
-        }
-
-        BuildResult& res = act.result;
+        const BuildResult& res = act.result;
 
         minerals += res.minerals * RESS_FACTOR;
         gas += res.gas * RESS_FACTOR;
@@ -85,7 +68,7 @@ void State::advanceTime(time_t amount)
 
         for (auto unit : res.units)
         {
-            entities[unit.first] += unit.second;
+            addUnit(unit.first, unit.second);
             producing[unit.first] -= unit.second;
         }
     }
@@ -104,7 +87,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act) const
      || !isSatisfied(act.borrows, false)
      || !hasEnoughSupply(act.cost.supply))
     {
-        // TODO return time to next finished action
+        // TODO return time until next action is finished
         return 1;
     }
 
@@ -128,11 +111,40 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act) const
     }
 }
 
-void State::startAction(BuildAction& act)
+void State::startAction(const BuildAction& act)
 {
     // TODO remember to add result to producing
     ActiveAction aa(currentTime + act.cost.time, act);
     activeActions.push(aa);
+    
+    LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
+
+    // TODO consume and borrow ressources
+}
+
+void State::addUnit(action_t type, int count)
+{
+    // TODO clean the worker detection up
+    entities[unit] ++;
+    if (act.isWorker) 
+    {
+        workersAll ++;
+
+        // Always put workers into gas if possible
+        if (workersGas < gasHarvesting)
+        {
+            workersGas++;
+        }
+        else
+        {
+            workersMinerals++;
+        }
+    }
+
+    if (act.isGasHarvester)
+    {
+        gasHarvesting += 3;
+    }
 
 }
 
@@ -140,7 +152,6 @@ void State::increaseRessources(time_t t)
 {
     assert(t >= 0);
 
-    
     minerals += t * getMineralsPerTick();
     gas      += t * getGasPerTick();
 }

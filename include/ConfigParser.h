@@ -32,7 +32,7 @@ public:
     const BuildAction& getAction(string actionName);
     int getNumberOfActions() const;
 
-protected:
+public:
     int getUnitId(string unitName);
     void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
 

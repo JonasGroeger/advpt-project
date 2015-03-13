@@ -6,6 +6,7 @@
 
 #include "BuildAction.h"
 #include "ConfigParser.h"
+#include "Debug.h"
 
 /*
  * This datatype is used to represent minerals and gas
@@ -45,14 +46,15 @@ class State {
 
     /*
      * This simply represents an action that is currently being produced
+     * TODO I just overloaded functions until the compiler stopped complaining
      */
     class ActiveAction
     {
         public:
         time_t timeFinished;
-        BuildAction& action;
+        BuildAction action;
 
-        ActiveAction(time_t _timeFinished, BuildAction& _action)
+        ActiveAction(time_t _timeFinished, BuildAction _action)
             : timeFinished(_timeFinished), action(_action) {}
         ActiveAction(const ActiveAction& lhs)
             : timeFinished(lhs.timeFinished), action(lhs.action) {}
@@ -70,14 +72,6 @@ class State {
             this->timeFinished = lhs.timeFinished;
             this->action = lhs.action;
             return *this;
-        }
-    };
-
-    struct OrderActiveActions
-    {
-        bool operator() (const ActiveAction& a, const ActiveAction& b)
-        {
-            return a.timeFinished > b.timeFinished;
         }
     };
 
@@ -131,13 +125,19 @@ class State {
      * S' <- Do(S, a)
      * Starts an Action assuming all required ressources are available.
      *  - Subtract consumed ressources
-     *  - Update actions in progress // TODO what does this mean?
+     *  - Update actions in progres
      *  - Flaggin borrowed resources
      *  - Insert the action
      */
-    void startAction(BuildAction&);
+    void startAction(const BuildAction&);
+
+    /*
+     * Adds @count units of typed @type
+     */
+    void addUnit(action_t type, int count);
     
-    private:
+    // TODO make private
+    public:
     void increaseRessources(time_t);
     /*
      * Returns true if all entries in @entities are satisfied
