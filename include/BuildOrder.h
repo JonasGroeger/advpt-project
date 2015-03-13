@@ -36,9 +36,10 @@ private:
     map<action_t, int> availableUnits;
     vector<BuildAction> buildList;
 
+    bool isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action);
     void createMinimalBuildOrder(string target);
     void getDependencies(action_t id, vector<BuildAction> &outVector);
     bool checkSupply(int costSupply, int currentSupply);
-    bool checkDependencies(const vector<std::pair<action_t, int>> &dependencies);
-    bool checkBorrows(const vector<std::pair<action_t, int>> &borrows);
+    bool checkDependencies(const vector<std::pair<action_t, int>> &dependencies, const map<action_t, int> &currentUnits);
+    bool checkBorrows(const vector<std::pair<action_t, int>> &borrows, const map<action_t, int> &currentUnits);
 };

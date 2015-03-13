@@ -1,3 +1,4 @@
+#include <AVFoundation/AVFoundation.h>
 #include "BuildOrder.h"
 
 void BuildOrder::createMinimalBuildOrder(string target)
@@ -20,6 +21,18 @@ void BuildOrder::getDependencies(action_t id, vector<BuildAction>& outVector)
     return;
 }
 
+bool BuildOrder::insertActionIfPossible(action_t action, int position)
+{
+    if(position < 0) return false;
+    if(buildList.size() < position) return false;
+    //TODO
+}
+
+bool BuildOrder::isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action)
+{
+
+}
+
 vector<action_t> BuildOrder::getPossibleNextActions(const vector<BuildAction>& actions)
 {
     vector<action_t> resultVec;
@@ -31,8 +44,8 @@ vector<action_t> BuildOrder::getPossibleNextActions(const vector<BuildAction>& a
     for(auto action : actions)
     {
         if(checkSupply(action.cost.supply, supply)
-                && checkDependencies(action.dependencies)
-                && checkBorrows(action.borrows))
+                && checkDependencies(action.dependencies, availableUnits)
+                && checkBorrows(action.borrows, availableUnits))
         {
             LOG_DEBUG("Action [" << action.name << "] is possible");
             resultVec.push_back(action.id);
@@ -50,12 +63,12 @@ bool BuildOrder::checkSupply(int costSupply, int currentSupply)
     return true;
 }
 
-bool BuildOrder::checkDependencies(const vector<std::pair<action_t, int>> &dependencies)
+bool BuildOrder::checkDependencies(const vector<std::pair<action_t, int>> &dependencies, const map<action_t, int> &currentUnits)
 {
     for(auto dep : dependencies)
     {
         //if we dont have this dependency yet, or if we dont have enough instances of it, return false
-        if(availableUnits.count(dep.first) == 0 || availableUnits[dep.first] < dep.second)
+        if(currentUnits.count(dep.first) == 0 || currentUnits[dep.first] < dep.second)
         {
             return false;
         }
@@ -63,11 +76,11 @@ bool BuildOrder::checkDependencies(const vector<std::pair<action_t, int>> &depen
     return true;
 }
 
-bool BuildOrder::checkBorrows(const vector<std::pair<action_t, int>> &borrows)
+bool BuildOrder::checkBorrows(const vector<std::pair<action_t, int>> &borrows, const map<action_t, int> &currentUnits)
 {
     for(auto bor : borrows)
     {
-        if(availableUnits.count(bor.first) == 0 || availableUnits[bor.first] < bor.second)
+        if(currentUnits.count(bor.first) == 0 || currentUnits[bor.first] < bor.second)
         {
             return false;
         }
