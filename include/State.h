@@ -135,6 +135,7 @@ class State {
 
     /*
      * Adds @count units of typed @type
+     * Besides incrementing the entities map the function will also adjust worker and gasHarvester counts
      */
     void addUnit(action_t type, int count = 1);
     
