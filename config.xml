@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <sc2sim>
+
     <max_units>
         <!-- <unit name="mothership" max="1"/> -->
     </max_units>
@@ -22,11 +23,455 @@
     -->
 
     <race name="zerg">
+        <action name="hatchery">
+            <costs mineral="300" gas="0" time="10" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="2">
+                <unit name="hatchery"/>
+            </results>
+        </action>
 
+        <action name="extractor">
+            <costs mineral="25" gas="0" time="30" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="extractor"/>
+            </results>
+        </action>
+
+        <action name="spawning_pool">
+            <costs mineral="200" gas="0" time="65" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="hatchery"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="spawning_pool"/>
+            </results>
+        </action>
+
+        <action name="queen">
+            <costs mineral="150" gas="0" time="50" supply="2"/>
+            <borrows>
+                <unit name="hatchery"/>
+                <unit name="lair"/>
+                <unit name="hive"/>
+            </borrows>
+            <dependencies>
+                <unit name="spawning_pool"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="queen"/>
+                <energy current="25" max="200"/>
+            </results>
+        </action>
+
+        <action name="spine_crawler">
+            <costs mineral="100" gas="0" time="50" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spawning_pool"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="spine_crawler"/>
+            </results>
+        </action>
+
+        <action name="roach_warren">
+            <costs mineral="180" gas="0" time="55" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spawning_pool"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="roach_warren"/>
+            </results>
+        </action>
+
+        <action name="baneling_nest">
+            <costs mineral="100" gas="50" time="60" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spawning_pool"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="baneling_nest"/>
+            </results>
+        </action>
+
+        <action name="roach">
+            <costs mineral="75" gas="25" time="27" supply="2">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="roach_warren"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="roach"/>
+            </results>
+        </action>
+
+        <action name="zergling_pair">
+            <costs mineral="50" gas="0" time="24" supply="1">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spawning_pool"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="zergling"/>
+                <unit name="zergling"/>
+            </results>
+        </action>
+
+        <action name="baneling">
+            <costs mineral="25" gas="25" time="20" supply="0.5">
+                <unit name="zergling"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="baneling_nest"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="baneling"/>
+            </results>
+        </action>
+
+        <action name="lair">
+            <costs mineral="150" gas="100" time="80" supply="0">
+                <unit name="hatchery"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="hatchery"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="lair"/>
+            </results>
+        </action>
+
+        <action name="evolution_chamber">
+            <costs mineral="75" gas="0" time="35" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="hatchery"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="evolution_chamber"/>
+            </results>
+        </action>
+
+        <action name="spore_crawler">
+            <costs mineral="75" gas="0" time="30" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="evolution_chamber"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="spore_crawler"/>
+            </results>
+        </action>
+
+        <action name="drone">
+            <costs mineral="50" gas="0" time="17" supply="1">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="drone"/>
+            </results>
+        </action>
+
+        <!-- TODO: Handle larva properly. Currently it has no costs, no borrows
+         and depends on hatchery. However, larva can also spawn in lair and hive.
+         -->
+        <action name="larva">
+            <costs mineral="0" gas="0" time="15" supply="0">
+
+            </costs>
+            <borrows>
+
+            </borrows>
+            <dependencies>
+                <unit name="hatchery"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="larva"/>
+            </results>
+        </action>
+
+        <action name="overlord">
+            <costs mineral="100" gas="0" time="25" supply="0">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="8">
+                <unit name="overlord"/>
+            </results>
+        </action>
+
+        <!-- Macht ein Overseer wieder +-0 supply, also dem overlord seinen weg??
+         wenn ja, dann kosten supply = 8
+         -->
+        <action name="overseer">
+            <costs mineral="50" gas="50" time="17" supply="0">
+                <unit name="overlord"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="lair"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="overseer"/>
+            </results>
+        </action>
+
+        <action name="hydralisk_den">
+            <costs mineral="100" gas="100" time="40" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="lair"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="hydralisk_den"/>
+            </results>
+        </action>
+
+        <action name="hydralisk">
+            <costs mineral="100" gas="50" time="33" supply="2">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="hydralisk_den"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="hydralisk"/>
+            </results>
+        </action>
+
+        <!-- TODO: Oder hatchery, lair und hive zusammen -->
+
+
+        <action name="nydus_network">
+            <costs mineral="150" gas="200" time="50" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows>
+
+            </borrows>
+            <dependencies>
+                <unit name="lair"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="nydus_network"/>
+            </results>
+        </action>
+
+        <action name="nydus_worm">
+            <costs mineral="100" gas="100" time="200" supply="0">
+
+            </costs>
+            <borrows>
+                <unit name="nydus_network"/>
+            </borrows>
+            <dependencies>
+                <unit name="nydus_network"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="nydus_worm"/>
+            </results>
+        </action>
+
+        <action name="hive">
+            <costs mineral="200" gas="150" time="100" supply="0">
+                <unit name="lair"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="infestation_pit"/>
+                <unit name="lair"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="hive"/>
+            </results>
+        </action>
+
+        <action name="infestation_pit">
+            <costs mineral="100" gas="100" time="50" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows>
+
+            </borrows>
+            <dependencies>
+                <unit name="lair"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="infestation_pit"/>
+            </results>
+        </action>
+
+        <action name="ultralisk_cavern">
+            <costs mineral="150" gas="200" time="65" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="hive"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="ultralisk_cavern"/>
+            </results>
+        </action>
+
+        <action name="ultralisk">
+            <costs mineral="300" gas="200" time="55" supply="6">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="ultralisk_cavern"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="ultralisk"/>
+            </results>
+        </action>
+
+        <action name="infestor">
+            <costs mineral="100" gas="150" time="50" supply="2">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="infestation_pit"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="infestor"/>
+            </results>
+        </action>
+
+        <action name="spire">
+            <costs mineral="200" gas="200" time="100" supply="0">
+                <unit name="drone"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="lair"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="spire"/>
+            </results>
+        </action>
+
+        <action name="greater_spire">
+            <costs mineral="100" gas="150" time="100" supply="0">
+                <unit name="spire"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spire"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="greater_spire"/>
+            </results>
+        </action>
+
+        <action name="brood_lord">
+            <costs mineral="150" gas="150" time="34" supply="2">
+                <unit name="corruptor"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="corruptor"/>
+                <unit name="greater_spire"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="brood_lord"/>
+            </results>
+        </action>
+
+        <action name="corruptor">
+            <costs mineral="150" gas="100" time="40" supply="2">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spire"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="corruptor"/>
+            </results>
+        </action>
+
+        <action name="mutalisk">
+            <costs mineral="100" gas="100" time="33" supply="2">
+                <unit name="larva"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="spire"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="mutalisk"/>
+            </results>
+        </action>
     </race>
 
     <race name="protoss">
 
+        <action name="probe">
+            <costs mineral="50" gas="0" time="17" supply="1"/>
+            <borrows>
+                <unit name="nexus"/>
+            </borrows>
+            <dependencies>
+                <unit name="nexus"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="probe"/>
+            </results>
+        </action>
+
+        <action name="assimilator">
+            <costs mineral="75" gas="0" time="30" supply="0"/>
+            <borrows>
+                <unit name="probe"/>
+            </borrows>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="assimilator"/>
+            </results>
+        </action>
+
+        <!--
+        TODO: Eintragen. Erstmal Schluss für Heute. Zu viel XML.
+        -->
     </race>
 
     <race name="terran">
@@ -45,6 +490,8 @@
             <costs mineral="50" gas="0" time="17" supply="1"/>
             <borrows>
                 <unit name="command_center"/>
+                <unit name="planetary_fortress"/>
+                <unit name="orbital_command"/>
             </borrows>
             <dependencies>
                 <unit name="command_center"/>
@@ -59,7 +506,6 @@
                 <unit name="command_center"/>
             </costs>
             <borrows>
-                <unit name="command_center"/>
             </borrows>
             <dependencies>
                 <unit name="command_center"/>
@@ -76,7 +522,6 @@
                 <unit name="command_center"/>
             </costs>
             <borrows>
-                <unit name="command_center"/>
             </borrows>
             <dependencies>
                 <unit name="command_center"/>
@@ -156,7 +601,6 @@
                 <unit name="barracks"/>
             </costs>
             <borrows>
-                <unit name="barracks"/>
             </borrows>
             <dependencies>
                 <unit name="barracks"/>
@@ -171,7 +615,6 @@
                 <unit name="barracks"/>
             </costs>
             <borrows>
-                <unit name="barracks"/>
             </borrows>
             <dependencies>
                 <unit name="barracks"/>
@@ -289,7 +732,6 @@
                 <unit name="factory"/>
             </costs>
             <borrows>
-                <unit name="factory"/>
             </borrows>
             <dependencies>
                 <unit name="factory"/>
@@ -304,7 +746,6 @@
                 <unit name="factory"/>
             </costs>
             <borrows>
-                <unit name="factory"/>
             </borrows>
             <dependencies>
                 <unit name="factory"/>
@@ -386,7 +827,6 @@
                 <unit name="starport"/>
             </costs>
             <borrows>
-                <unit name="starport"/>
             </borrows>
             <dependencies>
                 <unit name="starport"/>
@@ -401,7 +841,6 @@
                 <unit name="starport"/>
             </costs>
             <borrows>
-                <unit name="starport"/>
             </borrows>
             <dependencies>
                 <unit name="starport"/>
