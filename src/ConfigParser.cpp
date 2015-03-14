@@ -191,6 +191,32 @@ void ConfigParser::parseConfig(char *file)
     }
 }
 
+void ConfigParser::setRaceForAction(string actionName)
+{
+    bool bFound = false;
+    for (auto race : races)
+    {
+        auto it = find_if(race.second.actions.begin(), race.second.actions.end(),
+                [&actionName](const std::pair<action_t, BuildAction> &entry)
+                {
+                    return entry.second.name.compare(actionName) == 0;
+                }
+        );
+
+        if (it != race.second.actions.end())
+        {
+            currentRace = race.second;
+            bFound = true;
+            LOG_DEBUG("Found race ["<<currentRace.name<<"] for action ["<< actionName << "]");
+            break;
+        }
+    }
+    if (!bFound)
+    {
+        throw std::invalid_argument("There is no race for action [" + actionName + "]");
+    }
+}
+
 const BuildAction& ConfigParser::getDefaulSupplyAction()
 {
     return currentRace.actions[currentRace.defaultSupplyAction];
@@ -213,32 +239,16 @@ const vector<BuildAction> ConfigParser::getAllActions()
 
 const BuildAction &ConfigParser::getAction(string actionName)
 {
-    bool bFound = false;
-    action_t actionId;
-    for (auto race : races)
+    auto it = std::find_if(currentRace.actions.begin(), currentRace.actions.end(),
+                        [&actionName](const std::pair<action_t, BuildAction> &action)
+                        {
+                            return actionName.compare(action.second.name) == 0;
+                        });
+    if(it == currentRace.actions.end())
     {
-        auto it = find_if(race.second.actions.begin(), race.second.actions.end(),
-                [&actionName,&actionId](const std::pair<action_t, BuildAction> &entry)
-                {
-                    //save the actionId here, when search is successfull we need that value
-                    actionId = entry.second.id;
-                    return entry.second.name.compare(actionName) == 0;
-                }
-        );
-
-        if (it != race.second.actions.end())
-        {
-            currentRace = race.second;
-            bFound = true;
-            LOG_DEBUG("[ConfigParser::getAction(string) : Found race ["<<currentRace.name<<"] for action ["<< actionName << "]");
-            break;
-        }
+        throw std::out_of_range("Unable to find action : " + actionName);
     }
-    if (!bFound)
-    {
-        throw std::out_of_range("Unable to find: " + actionName);
-    }
-    return currentRace.actions[actionId];
+    return (*it).second;
 }
 
 const BuildAction &ConfigParser::getAction(action_t id)

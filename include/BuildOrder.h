@@ -101,7 +101,7 @@ private:
     * @param unitMap    : a pointer to the map
     * @param unit       : the action_t to look for
     */
-    void addOrIncrementUnit(map<action_t, int> *unitMap, action_t unit);
+    void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
 
     /*
     * Checks if @currentSupply >= costSupply
