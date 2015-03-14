@@ -18,7 +18,6 @@ void ConfigParser::parseConfig(char *file)
     for (XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
          race = race->NextSiblingElement(NODE_RACE))
     {
-
         // parse the actions
         for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
              action = action->NextSiblingElement(NODE_ACTION))
@@ -56,66 +55,65 @@ void ConfigParser::parseConfig(char *file)
             buildActionIdMap[buildAction.id] = buildAction;
         }
 
-    }
+        // Maximum unit numbers
+        XMLElement *maxElement = race->FirstChildElement(NODE_MAX_UNITS);
+        for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
+             max = max->NextSiblingElement(NODE_UNIT))
+        {
+            // TODO: Insert maximum unit number in buildActionMap
+            // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
+        }
 
-    // Maximum unit numbers
-    XMLElement *maxElement = rootNode->FirstChildElement(NODE_MAX_UNITS);
-    for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
-         max = max->NextSiblingElement(NODE_UNIT))
-    {
-        // TODO: Insert maximum unit number in buildActionMap
-        // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
-    }
+        // Workers
+        XMLElement *workerElement = race->FirstChildElement(NODE_WORKER);
+        for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
+             worker = worker->NextSiblingElement(NODE_UNIT))
+        {
+            try
+            {
+                buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
+                LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
+            }
+            catch (const std::out_of_range &oor)
+            {
+                throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
+            }
+        }
 
-    // Workers
-    XMLElement *workerElement = rootNode->FirstChildElement(NODE_WORKER);
-    for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
-         worker = worker->NextSiblingElement(NODE_UNIT))
-    {
-        try
+        action_t gasHarvesterId = -1;
+        // Gas harvesters
+        XMLElement *gas_harvesters = race->FirstChildElement(NODE_GAS_HARVESTER);
+        for (XMLElement *gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
+             gas_element = gas_element->NextSiblingElement(NODE_UNIT))
         {
-            buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
-            LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
+            try
+            {
+                buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
+                gasHarvesterId = buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).id;
+                LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
+            }
+            catch (const std::out_of_range &oor)
+            {
+                throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
+            }
         }
-        catch (const std::out_of_range &oor)
-        {
-            throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
-        }
-    }
 
-    action_t gasHarvesterId = -1;
-    // Gas harvesters
-    XMLElement *gas_harvesters = rootNode->FirstChildElement(NODE_GAS_HARVESTER);
-    for (XMLElement *gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
-         gas_element = gas_element->NextSiblingElement(NODE_UNIT))
-    {
-        try
+        //TODO make the two maps point at the same value elements!
+        for(auto it = buildActionMap.begin(); it != buildActionMap.end(); it++)
         {
-            buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
-            gasHarvesterId = buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).id;
-            LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
+            if((*it).second.cost.gas > 0)
+            {
+                LOG_DEBUG((*it).second.name << " needs gas!");
+                (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
+            }
         }
-        catch (const std::out_of_range &oor)
+        for(auto it = buildActionIdMap.begin(); it != buildActionIdMap.end(); it++)
         {
-            throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
-        }
-    }
-
-    //TODO make the two maps point at the same value elements!
-    for(auto it = buildActionMap.begin(); it != buildActionMap.end(); it++)
-    {
-        if((*it).second.cost.gas > 0)
-        {
-            LOG_DEBUG((*it).second.name << " needs gas!");
-            (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
-        }
-    }
-    for(auto it = buildActionIdMap.begin(); it != buildActionIdMap.end(); it++)
-    {
-        if((*it).second.cost.gas > 0)
-        {
-            LOG_DEBUG((*it).second.name << " needs gas!");
-            (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
+            if((*it).second.cost.gas > 0)
+            {
+                LOG_DEBUG((*it).second.name << " needs gas!");
+                (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
+            }
         }
     }
 }

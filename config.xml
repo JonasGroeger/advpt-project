@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <sc2sim>
-    <max_units>
-        <!-- <unit name="mothership" max="1"/> -->
-    </max_units>
-
-    <workers name="worker">
-        <unit name="scv"/>
-    </workers>
-
-    <gas_harvesters name="gas_harvester">
-        <unit name="refinery"/>
-    </gas_harvesters>
-
     <!--
     <unit> bekommt
         id  ... Wenn es sie schon gibt: zuweisen. Wenn nicht: neu, aufsteigend erstellen.
@@ -20,16 +8,19 @@
         worker ... Wenn es in sc2sim/workers drin ist.
         gas_harvester ... Wenn es in sc2sim/gas_harvesters drin ist.
     -->
+    <race name="terran" default_supply="supply_depot">
+        <max_units>
+            <!-- <unit name="mothership" max="1"/> -->
+        </max_units>
 
-    <race name="zerg">
+        <workers name="worker">
+            <unit name="scv"/>
+        </workers>
 
-    </race>
+        <gas_harvesters name="gas_harvester">
+            <unit name="refinery"/>
+        </gas_harvesters>
 
-    <race name="protoss">
-
-    </race>
-
-    <race name="terran">
         <action name="command_center">
             <costs mineral="400" gas="0" time="100" supply="0"/>
             <borrows>
