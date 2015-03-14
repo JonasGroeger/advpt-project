@@ -57,7 +57,7 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
     for(auto depPair : dependencies)
     {
         LOG_DEBUG("Dependency of [" << ConfigParser::Instance().getAction(id).name <<"] is " << depPair.second << "* [" << ConfigParser::Instance().getAction(depPair.first).name << "]");
-        if(!(availableUnits.count(ConfigParser::Instance().getAction(depPair.first).id) > 0)
+        if(availableUnits.count(ConfigParser::Instance().getAction(depPair.first).id) <= 0
                 || (availableUnits[ConfigParser::Instance().getAction(depPair.first).id] < depPair.second))
         {
             LOG_DEBUG("Adding it to our vector!");
@@ -80,8 +80,12 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
     int supply = getSupply(position);
     map<action_t, int> currUnits;
 
-    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
-    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
+    auto startUnits = ConfigParser::Instance().getStartConfig();
+    for(auto startPair : startUnits)
+    {
+        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name<<"] "<<startPair.second);
+        currUnits[startPair.first] = startPair.second;
+    }
 
     for(int c = 0; c < position; c++)
     {
@@ -120,8 +124,12 @@ bool BuildOrder::removeActionIfPossible(int position)
     int supply = getSupply(position);
     map<action_t, int> currUnits;
 
-    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
-    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
+    auto startUnits = ConfigParser::Instance().getStartConfig();
+    for(auto startPair : startUnits)
+    {
+        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name<<"] "<<startPair.second);
+        currUnits[startPair.first] = startPair.second;
+    }
 
     for(int c = 0; c < position; c++)
     {
@@ -146,13 +154,9 @@ bool BuildOrder::removeActionIfPossible(int position)
 bool BuildOrder::isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action)
 {
     BuildAction bAction = ConfigParser::Instance().getAction(action);
-    if(checkSupply(bAction.cost.supply, currentSupply)
-        && checkDependencies(bAction.dependencies, currentUnits)
-        && checkBorrows(bAction.borrows, currentUnits))
-    {
-        return true;
-    }
-    return false;
+    return checkSupply(bAction.cost.supply, currentSupply)
+    && checkDependencies(bAction.dependencies, currentUnits)
+    && checkBorrows(bAction.borrows, currentUnits);
 }
 
 vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions)
@@ -175,11 +179,7 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
 
 bool BuildOrder::checkSupply(int costSupply, int currentSupply)
 {
-    if(currentSupply < costSupply)
-    {
-        return false;
-    }
-    return true;
+    return currentSupply >= costSupply;
 }
 
 int BuildOrder::getSupply(int pos)
