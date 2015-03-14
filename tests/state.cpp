@@ -1,11 +1,24 @@
 #include <iostream>
 #include <cassert>
+#include <string>
 #include <vector>
 
 #include "State.h"
 #include "ConfigParser.h"
 
 using namespace std; // If you feel offended by this change it!
+
+int i = 0;
+
+template <class T>
+void simple_test(string msg, T expression, T expected_value)
+{
+    cerr << "TEST NR." << i++;
+
+    assert(expression == expected_value);
+    
+    cerr << " " << msg << endl;
+}
 
 int main(int argc, char *argv[])
 {
@@ -26,14 +39,13 @@ int main(int argc, char *argv[])
 
     cerr << "Created state with a command_center and one scv" << endl;
 
-    cerr << "can build scv: " << s.isLegalAction(ConfigParser::Instance().getAction("scv")) << endl;
-    cerr << "can build supply_depot: " << s.isLegalAction(ConfigParser::Instance().getAction("supply_depot")) << endl;
-    cerr << "can build barracks: " << s.isLegalAction(ConfigParser::Instance().getAction("barracks")) << endl;
+    simple_test("It is possible to build a scv", s.isLegalAction(ConfigParser::Instance().getAction("scv")), true);
+    simple_test("It is possible to build a supply_depot", s.isLegalAction(ConfigParser::Instance().getAction("supply_depot")), true);
+    simple_test("It is NOT possible to build a barracks", s.isLegalAction(ConfigParser::Instance().getAction("barracks")), false);
+    simple_test("Currently producing 0.7 minerals/second", s.getMineralsPerTick(), (ress_t)70);
+    simple_test("Currently producing 0 gas/second", s.getGasPerTick(), (ress_t)0);
 
-    cerr << "Currently producing " << s.getMineralsPerTick() << " minerals per tick" << endl;
-    cerr << "Currently producing " << s.getGasPerTick() << " gas per tick" << endl;
-
-    cerr << "Barracks can be built in " << s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("barracks")) << endl;
+    simple_test("supply_depot can be built in 2 ticks", s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("supply_depot")), (time_t)2);
 
     //s.startAction(ConfigParser::Instance().getAction("scv"));
     cerr << "SUCCESS" << endl;

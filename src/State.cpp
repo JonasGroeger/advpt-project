@@ -80,15 +80,19 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         return 1;
     }
 
-    ress_t minerals_needed = minerals - act.cost.minerals;
-    ress_t gas_needed      = gas - act.cost.gas;
+    ress_t minerals_needed = act.cost.minerals - minerals;
+    ress_t gas_needed      = act.cost.gas - gas;
 
     if (minerals_needed < 0) minerals_needed = 0;
     if (gas_needed < 0) gas_needed = 0;
 
-    // TODO division by zero
+    assert(minerals_needed == 0 || getMineralsPerTick() != 0);
+    assert(gas_needed == 0 || getGasPerTick() != 0);
+    
     ress_t minerals_time = minerals_needed / getMineralsPerTick();
+    if (minerals_needed == 0) minerals_time = 0;
     ress_t gas_time      = gas_needed / getGasPerTick();
+    if (gas_needed == 0) gas_time = 0;
 
     if (minerals_time > gas_time)
     {
@@ -144,11 +148,9 @@ void State::startAction(const BuildAction& act)
 
 void State::addUnit(action_t type, int count)
 {
-    // TODO
     entities[type] += count;
 
     // This ain't pretty but it works
-    // TODO clean the worker detection up
     const BuildAction& act = ConfigParser::Instance().getAction(type);
     if (act.isGasHarvester)
     {
@@ -158,19 +160,11 @@ void State::addUnit(action_t type, int count)
     if (act.isWorker) 
     {
         workersAll += count;
+    }
 
-        for (int i = 0; i < count; i++)
-        {
-            // Always put workers into gas if possible
-            if (workersGas < gasHarvesting)
-            {
-                workersGas++;
-            }
-            else
-            {
-                workersMinerals++;
-            }
-        }
+    if (act.isWorker || act.isGasHarvester)
+    {
+        reallocateWorkers();
     }
 }
 
@@ -212,4 +206,31 @@ ress_t State::getGasPerTick() const
 {
     // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
     return GAS_PER_TIME_UNIT * workersGas;
+}
+
+void State::reallocateWorkers()
+{
+    if (workersAll == 0)
+    {
+        return;
+    }
+
+    int workersRemaining = workersAll;
+    
+    // Always have at least one worker mine minerals
+    workersMinerals = 1;
+    workersRemaining --;
+
+    if (gasHarvesting >= workersRemaining)
+    {
+        workersGas = workersRemaining;
+        workersRemaining = 0;
+    }
+    else
+    {
+        workersGas = gasHarvesting;
+        workersRemaining -= gasHarvesting;
+    }
+
+    workersMinerals += workersRemaining;
 }

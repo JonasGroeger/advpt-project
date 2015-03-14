@@ -150,4 +150,10 @@ class State {
     bool hasEnoughSupply(ress_t supply_needed) const;
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;
+
+    /*
+     * This function redistributes the workers to mine minerals and gas.
+     * If possible at least one worker will mine minerals, after that as many as possible will mine gas
+     */
+    void reallocateWorkers();
 };
