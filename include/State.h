@@ -36,7 +36,6 @@ class State {
 
     // The available ressources
     ress_t minerals = 0, gas = 0;
-    // TODO handle supply with a factor??
     ress_t supply_used = 0, supply_max = 0;
 
     private:

@@ -102,24 +102,54 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
 void State::startAction(const BuildAction& act)
 {
-    // TODO remember to add result to producing
+    // Checking dependencies
+    assert(isSatisfied(act.dependencies, false));
+
     ActiveAction aa(currentTime + act.cost.time, act);
     activeActions.push(aa);
     
     LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
 
-    // TODO consume and borrow ressources
+    const BuildCost& cost = act.cost;
+
+    // Consume minerals, gas and supply
+    assert(minerals >= cost.minerals);
+    minerals -= cost.minerals;
+    assert(gas >= cost.gas);
+    gas -= cost.gas;
+    supply_used += cost.supply;
+    assert(supply_used <= supply_max);
+
+
+    // Remove the unit cost
+    for (std::pair<action_t, int> unit : cost.units)
+    {
+        assert(entities[unit.first] >= unit.second);
+        entities[unit.first] -= unit.second;
+    }
+
+    // Borrow some units
+    for (std::pair<action_t, int> borrow : act.borrows)
+    {
+        borrowed[borrow.first] += borrow.second;
+        assert(borrowed[borrow.first] <= entities[borrow.first]);
+    }
+
+    // We mark the results as being produced
+    for (std::pair<action_t, int> result : act.result.units)
+    {
+            producing[result.first] += result.second;
+    }
 }
 
 void State::addUnit(action_t type, int count)
 {
     // TODO
-    // TODO clean the worker detection up
     entities[type] += count;
 
     // This ain't pretty but it works
+    // TODO clean the worker detection up
     const BuildAction& act = ConfigParser::Instance().getAction(type);
-    cerr << "Action: " << act.name << ":" << act.isWorker << endl;
     if (act.isGasHarvester)
     {
         gasHarvesting += 3;
