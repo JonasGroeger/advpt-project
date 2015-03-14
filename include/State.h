@@ -55,6 +55,7 @@ class State {
     class ActiveAction
     {
         public:
+        //this value is the currTime the action was startet + the time this action needs to finish
         time_t timeFinished;
         BuildAction action;
 
