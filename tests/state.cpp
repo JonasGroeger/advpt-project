@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     }
 
     ConfigParser::Instance().parseConfig(argv[1]);
+    ConfigParser::Instance().setRaceForAction("command_center");
 
     State s = State();
     cerr << "Adding command_center" << endl;
