@@ -175,6 +175,11 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
     return resultVec;
 }
 
+bool BuildOrder::checkSupply(int costSupply, int currentSupply)
+{
+    return currentSupply >= costSupply;
+}
+
 void BuildOrder::reset(){
     buildList.clear();
     availableSupply = 0;
