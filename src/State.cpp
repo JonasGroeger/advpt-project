@@ -30,11 +30,10 @@ bool State::isLegalAction(const BuildAction& act)
 void State::advanceTime(time_t amount)
 {
     time_t end_time = currentTime + amount;
-
     // Finish all actions that will end withing @amount
     // TODO read priority_queue docs
     // TODO is <= correct?
-    while (activeActions.top().timeFinished <= currentTime + amount)
+    while (!activeActions.empty() && activeActions.top().timeFinished <= currentTime + amount)
     {
         time_t time_delta = activeActions.top().timeFinished - currentTime;
         assert(time_delta >= 0);
@@ -62,7 +61,7 @@ void State::advanceTime(time_t amount)
         }
     }
 
-    increaseRessources(currentTime - end_time);
+    increaseRessources(end_time-currentTime);
     currentTime = end_time;
 }
 
@@ -90,8 +89,9 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     assert(gas_needed == 0 || getGasPerTick() != 0);
     
     ress_t minerals_time = minerals_needed / getMineralsPerTick();
-    if (minerals_needed == 0) minerals_time = 0;
     ress_t gas_time      = gas_needed / getGasPerTick();
+
+    if (minerals_needed == 0) minerals_time = 0;
     if (gas_needed == 0) gas_time = 0;
 
     if (minerals_time > gas_time)
@@ -233,4 +233,41 @@ void State::reallocateWorkers()
     }
 
     workersMinerals += workersRemaining;
+}
+
+ostream& operator<<(ostream& out, State& obj)
+{
+    out << "State with: " << endl;
+    out << "Minerals: " << obj.minerals << endl;
+    out << "Gas: " << obj.gas << endl;
+    out << "Supply: " << obj.supply_used << "/" << obj.supply_max << endl;
+    out << "Current time: " << obj.currentTime << endl;
+
+    for (auto e : obj.entities)
+    {
+        out << "Entity: " << ConfigParser::Instance().getAction(e.first).name << " x " << e.second << endl;
+    }
+    for (auto b : obj.borrowed)
+    {
+        out << "Borrowed: " << ConfigParser::Instance().getAction(b.first).name << " x " << b.second << endl;
+    }
+    for (auto p : obj.producing)
+    {
+        out << "Producing: " << ConfigParser::Instance().getAction(p.first).name << " x " << p.second << endl;
+    }
+
+    out << "There are currently " << obj.activeActions.size() << " active actions:" << endl;
+
+    std::priority_queue<State::ActiveAction> copy = obj.activeActions;
+
+    while (not copy.empty())
+    {
+        State::ActiveAction aa = copy.top();
+        copy.pop();
+
+        out << aa.action.name << " finished at: " << aa.timeFinished << endl;
+    }
+    out << "There are currently " << obj.activeActions.size() << " active actions:" << endl;
+
+    return out;
 }

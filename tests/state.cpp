@@ -47,7 +47,16 @@ int main(int argc, char *argv[])
 
     simple_test("supply_depot can be built in 2 ticks", s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("supply_depot")), (time_t)2);
 
-    //s.startAction(ConfigParser::Instance().getAction("scv"));
+    cerr << s << endl;
+
+    cerr << "Advancing time by 2" << endl;
+    s.advanceTime(2);
+
+    //cerr << "Starting supply_deport" << endl;
+    //s.startAction(ConfigParser::Instance().getAction("supply_depot"));
+
+    
+
     cerr << "SUCCESS" << endl;
     return 0;
 }
