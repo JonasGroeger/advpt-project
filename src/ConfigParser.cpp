@@ -18,6 +18,10 @@ void ConfigParser::parseConfig(char *file)
     for (XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
          race = race->NextSiblingElement(NODE_RACE))
     {
+        Race currRace;
+        currRace.name = race->Attribute(ATTRIBUTE_NAME);
+        map<action_t, BuildAction> actions;
+
         // parse the actions
         for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
              action = action->NextSiblingElement(NODE_ACTION))
@@ -51,9 +55,10 @@ void ConfigParser::parseConfig(char *file)
             buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
             addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
 
-            buildActionMap[buildAction.name] = buildAction;
-            buildActionIdMap[buildAction.id] = buildAction;
+            actions[buildAction.id] = buildAction;
         }
+        currRace.actions = actions;
+        races[currRace.name] = currRace;
 
         // Maximum unit numbers
         XMLElement *maxElement = race->FirstChildElement(NODE_MAX_UNITS);
@@ -66,52 +71,77 @@ void ConfigParser::parseConfig(char *file)
 
         // Workers
         XMLElement *workerElement = race->FirstChildElement(NODE_WORKER);
+        bool bWorkerFound = false;
         for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
              worker = worker->NextSiblingElement(NODE_UNIT))
         {
-            try
+
+            string workerName = worker->Attribute(ATTRIBUTE_NAME);
+            auto it = find_if(currRace.actions.begin(), currRace.actions.end(),
+                    [&workerName](const std::pair<action_t, BuildAction> &action)
+                    {
+                        return workerName.compare(action.second.name) == 0;
+                    });
+            if (it != currRace.actions.end())
             {
-                buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
+                (*it).second.isWorker = true;
+                bWorkerFound = true;
                 LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
             }
-            catch (const std::out_of_range &oor)
-            {
-                throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
-            }
+        }
+        if (!bWorkerFound)
+        {
+            throw std::out_of_range("No worker was found!");
         }
 
         action_t gasHarvesterId = -1;
         // Gas harvesters
         XMLElement *gas_harvesters = race->FirstChildElement(NODE_GAS_HARVESTER);
+        bool bGasHarvesterFound = false;
         for (XMLElement *gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
              gas_element = gas_element->NextSiblingElement(NODE_UNIT))
         {
-            try
+            string gasHarvesterName = gas_element->Attribute(ATTRIBUTE_NAME);
+            auto it = find_if(currRace.actions.begin(), currRace.actions.end(),
+                    [&gasHarvesterName](const std::pair<action_t, BuildAction> &action)
+                    {
+                        return gasHarvesterName.compare(action.second.name) == 0;
+                    });
+            if (it != currRace.actions.end())
             {
-                buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
-                gasHarvesterId = buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).id;
-                LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
+                (*it).second.isGasHarvester = true;
+                gasHarvesterId = (*it).second.id;
+                bGasHarvesterFound = true;
+                LOG_DEBUG(gasHarvesterName << " is a gas harvester!");
             }
-            catch (const std::out_of_range &oor)
-            {
-                throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
-            }
+        }
+        if (!bGasHarvesterFound)
+        {
+            throw std::out_of_range("No worker was found!");
         }
 
-        //TODO make the two maps point at the same value elements!
-        for(auto it = buildActionMap.begin(); it != buildActionMap.end(); it++)
+        //get the default supply
+        string sDefSupply = race->Attribute(ATTRIBUTE_DEFAULT_SUPPLY);
+        auto it = std::find_if(currRace.actions.begin(), currRace.actions.end(),
+                                [&sDefSupply](const std::pair<action_t, BuildAction> &action)
+                                {
+                                    return sDefSupply.compare(action.second.name) == 0;
+                                });
+        if(it == currRace.actions.end())
         {
-            if((*it).second.cost.gas > 0)
-            {
-                LOG_DEBUG((*it).second.name << " needs gas!");
-                (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
-            }
+            throw std::out_of_range("No default supply building found!");
         }
-        for(auto it = buildActionIdMap.begin(); it != buildActionIdMap.end(); it++)
+        else
+        {
+            LOG_DEBUG("Default Supply for race ["<<currRace.name<<"] is ["<<(*it).second.name<<"]");
+            currRace.defaultSupplyAction = (*it).second.id;
+        }
+
+        for(auto it = currRace.actions.begin(); it != currRace.actions.end(); ++it)
         {
             if((*it).second.cost.gas > 0)
             {
-                LOG_DEBUG((*it).second.name << " needs gas!");
+                LOG_DEBUG("[" << (*it).second.name << "] needs gas!");
                 (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
             }
         }
@@ -121,26 +151,44 @@ void ConfigParser::parseConfig(char *file)
 const vector<BuildAction> ConfigParser::getAllActions()
 {
     vector<BuildAction> resultVec;
-    for(auto pair : buildActionMap)
+    for (auto pair : buildActionMap)
     {
         resultVec.push_back(pair.second);
     }
     return resultVec;
 }
 
-const BuildAction& ConfigParser::getAction(string actionName)
+const BuildAction &ConfigParser::getAction(string actionName)
 {
-    if (buildActionMap.count(actionName) == 0)
+    bool bFound = false;
+    action_t actionId;
+    for (auto race : races)
     {
+        auto it = find_if(race.second.actions.begin(), race.second.actions.end(),
+                [&actionName, &actionId](const std::pair<action_t, BuildAction> &entry)
+                {
+                    //save the actionId here, when search is successfull we need that value
+                    actionId = entry.second.id;
+                    return entry.second.name.compare(actionName) == 0;
+                }
+        );
+
+        if (it != race.second.actions.end())
+        {
+            currentRace = &race.second;
+            bFound = true;
+            break;
+        }
+    }
+    if (!bFound)
+    {
+
         throw std::out_of_range("Unable to find: " + actionName);
     }
-    else
-    {
-        return buildActionMap[actionName];
-    }
+    return currentRace->actions[actionId];
 }
 
-const BuildAction& ConfigParser::getAction(action_t id)
+const BuildAction &ConfigParser::getAction(action_t id)
 {
     if (buildActionIdMap.count(id) == 0)
     {
@@ -160,17 +208,18 @@ long ConfigParser::getActionCount()
 
 action_t ConfigParser::getUnitId(string unitName)
 {
-    if(unitMap.count(unitName) == 0)
+    if (unitMap.count(unitName) == 0)
     {
-        LOG_DEBUG( "Unit added with name " << unitName << " and id " << unitCount);
+        LOG_DEBUG("Unit added with name " << unitName << " and id " << unitCount);
         unitMap.insert(std::pair<string, int>(unitName, unitCount));
         ++unitCount;
     }
     return unitMap[unitName];
 }
 
-void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& targetVector){
-    for (XMLElement* tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
+void ConfigParser::addUnitsToVector(XMLElement *element, const char *node, vector<std::pair<action_t, int>> &targetVector)
+{
+    for (XMLElement *tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
     {
         string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);
         action_t id = getUnitId(unitName);
@@ -181,7 +230,7 @@ void ConfigParser::addUnitsToVector(XMLElement* element, const char* node, vecto
             return (pair.first == id);
         });
 
-        if(it != targetVector.end())
+        if (it != targetVector.end())
         {
             (*it).second++;
         }

@@ -44,6 +44,14 @@ private:
     ConfigParser(ConfigParser const&) = delete;
     void operator=(ConfigParser const&) = delete;
 
+    struct Race
+    {
+        string name;
+        action_t defaultSupplyAction;
+        map<action_t, int> startUnits;
+        map<action_t, BuildAction> actions;
+    };
+
     const char* NODE_MAX_UNITS = "max_units";
     const char* NODE_WORKER = "workers";
     const char* NODE_GAS_HARVESTER = "gas_harvesters";
@@ -56,6 +64,7 @@ private:
     const char* NODE_RESULTS = "results";
 
     const char* ATTRIBUTE_NAME = "name";
+    const char* ATTRIBUTE_DEFAULT_SUPPLY = "default_supply";
     const char* ATTRIBUTE_MINERALS = "mineral";
     const char* ATTRIBUTE_GAS = "gas";
     const char* ATTRIBUTE_TIME = "time";
@@ -70,4 +79,7 @@ private:
 
     int getUnitId(string unitName);
     void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
+
+    Race* currentRace;
+    map<string, Race> races;
 };
