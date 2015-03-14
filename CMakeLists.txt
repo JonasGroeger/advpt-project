@@ -32,6 +32,7 @@ set( HPP_FILES
     include/tinyxml2.h
     include/BuildAction.h
     include/ConfigParser.h
+    include/State.h
     include/BuildOrder.h
 )
 
@@ -39,6 +40,7 @@ set( HPP_FILES
 set( CPP_FILES
   src/tinyxml2.cpp
   src/ConfigParser.cpp
+  src/State.cpp
   src/BuildOrder.cpp
 )
 
@@ -46,6 +48,7 @@ set( CPP_FILES
 add_executable( ${EXECUTABLE} src/main.cpp ${CPP_FILES} ${HPP_FILES} )
 
 add_executable( test_xml tests/xml.cpp ${CPP_FILES} ${HPP_FILES} )
+add_executable( test_state tests/state.cpp ${CPP_FILES} ${HPP_FILES} )
 
 add_executable( test_buildorder tests/buildorder.cpp ${CPP_FILES} ${HPP_FILES} )
 # Uncomment (to enable) or Comment (to disable) the debug output (see includes/Debug.hpp)

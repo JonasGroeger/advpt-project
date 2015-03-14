@@ -268,7 +268,6 @@ long ConfigParser::getActionCount()
     return currentRace.actions.size();
 }
 
-
 action_t ConfigParser::getUnitId(string unitName)
 {
     if (unitMap.count(unitName) == 0)
