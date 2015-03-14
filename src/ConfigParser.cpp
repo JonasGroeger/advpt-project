@@ -60,8 +60,6 @@ void ConfigParser::parseConfig(char *file)
             actions[buildAction.id] = buildAction;
         }
         currRace.actions = actions;
-        //the races map will hold all available races and their corresponding struct
-        races[currRace.name] = currRace;
 
         // Maximum unit numbers
         XMLElement *maxElement = race->FirstChildElement(NODE_MAX_UNITS);
@@ -142,6 +140,32 @@ void ConfigParser::parseConfig(char *file)
             currRace.defaultSupplyAction = (*it).second.id;
         }
 
+        //parse our start_config
+        XMLElement* startConfig = race->FirstChildElement(NODE_START_UNITS);
+        map<action_t, int> startMap;
+        for(XMLElement* startUnit = startConfig->FirstChildElement(NODE_UNIT);
+            startUnit != nullptr;
+            startUnit = startUnit->NextSiblingElement(NODE_UNIT))
+        {
+            string startUnitName = startUnit->Attribute(ATTRIBUTE_NAME);
+            int startCount = startUnit->IntAttribute(ATTRIBUTE_COUNT);
+
+            auto it = std::find_if(currRace.actions.begin(), currRace.actions.end(),
+                    [&startUnitName](const std::pair<action_t, BuildAction> &action)
+                    {
+                        return startUnitName.compare(action.second.name) == 0;
+                    });
+            if(it == currRace.actions.end())
+            {
+                throw std::out_of_range("The Unit ["+ startUnitName + "] is not available in our actions!");
+            }
+            else
+            {
+                LOG_DEBUG("Starting unit for race ["<<currRace.name<<"] is ["<<(*it).second.name<<"] with count [" << startCount<<"]");
+                startMap[(*it).second.id] = startCount;
+            }
+        }
+        currRace.startUnits = startMap;
         //resolve the gas dependencies
         for(auto it = currRace.actions.begin(); it != currRace.actions.end(); ++it)
         {
@@ -151,7 +175,20 @@ void ConfigParser::parseConfig(char *file)
                 (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
             }
         }
+        //the races map will hold all available races and their corresponding struct
+        races[currRace.name] = currRace;
     }
+}
+
+const BuildAction& ConfigParser::getDefaulSupplyAction()
+{
+    return currentRace.actions[currentRace.defaultSupplyAction];
+}
+
+const map<action_t, int> ConfigParser::getStartConfig()
+{
+    LOG_DEBUG("STARTUNITS "<<currentRace.startUnits.size());
+    return currentRace.startUnits;
 }
 
 const vector<BuildAction> ConfigParser::getAllActions()
@@ -171,7 +208,7 @@ const BuildAction &ConfigParser::getAction(string actionName)
     for (auto race : races)
     {
         auto it = find_if(race.second.actions.begin(), race.second.actions.end(),
-                [&actionName, &actionId](const std::pair<action_t, BuildAction> &entry)
+                [&actionName,&actionId](const std::pair<action_t, BuildAction> &entry)
                 {
                     //save the actionId here, when search is successfull we need that value
                     actionId = entry.second.id;
@@ -181,29 +218,38 @@ const BuildAction &ConfigParser::getAction(string actionName)
 
         if (it != race.second.actions.end())
         {
-            currentRace = &race.second;
+            currentRace = race.second;
+            LOG_DEBUG("TEST "<< currentRace.actions[1].name);
             bFound = true;
-            LOG_DEBUG("FOUND RACE ["<<currentRace->name<<"] FOR ACTION ["<< actionName << "]");
+            LOG_DEBUG("FOUND RACE ["<<currentRace.name<<"] FOR ACTION ["<< actionName << "]");
+            for(auto a : currentRace.actions)
+            {
+                if(a.first == actionId)
+                {
+                    std::cout << "ACTION : " << a.second.name << " " << a.second.id << std::endl;
+
+                }
+            }
             break;
         }
     }
     if (!bFound)
     {
-
         throw std::out_of_range("Unable to find: " + actionName);
     }
-    return currentRace->actions[actionId];
+    LOG_DEBUG("TEST "<< currentRace.actions[1].name << " ACTIONID IS "<<actionId);
+    return currentRace.actions[actionId];
 }
 
 const BuildAction &ConfigParser::getAction(action_t id)
 {
-    if (buildActionIdMap.count(id) == 0)
+    if (currentRace.actions.count(id) == 0)
     {
         throw std::out_of_range("Unable to find: " + std::to_string(id));
     }
     else
     {
-        return buildActionIdMap[id];
+        return currentRace.actions[id];
     }
 }
 

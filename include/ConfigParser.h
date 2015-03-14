@@ -35,6 +35,8 @@ public:
     const vector<BuildAction> getAllActions();
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
+    const map<action_t, int> getStartConfig();
+    const BuildAction& getDefaulSupplyAction();
     const BuildAction& getAction(string actionName);
     const BuildAction& getAction(action_t id);
     long getActionCount();
@@ -52,10 +54,11 @@ private:
         map<action_t, BuildAction> actions;
     };
 
+    const char* NODE_RACE = "race";
+    const char* NODE_START_UNITS = "start_units";
     const char* NODE_MAX_UNITS = "max_units";
     const char* NODE_WORKER = "workers";
     const char* NODE_GAS_HARVESTER = "gas_harvesters";
-    const char* NODE_RACE = "race";
     const char* NODE_ACTION = "action";
     const char* NODE_UNIT = "unit";
     const char* NODE_COSTS = "costs";
@@ -64,6 +67,7 @@ private:
     const char* NODE_RESULTS = "results";
 
     const char* ATTRIBUTE_NAME = "name";
+    const char* ATTRIBUTE_COUNT = "count";
     const char* ATTRIBUTE_DEFAULT_SUPPLY = "default_supply";
     const char* ATTRIBUTE_MINERALS = "mineral";
     const char* ATTRIBUTE_GAS = "gas";
@@ -80,6 +84,6 @@ private:
     int getUnitId(string unitName);
     void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
 
-    Race* currentRace;
+    Race currentRace;
     map<string, Race> races;
 };

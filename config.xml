@@ -9,6 +9,11 @@
         gas_harvester ... Wenn es in sc2sim/gas_harvesters drin ist.
     -->
     <race name="terran" default_supply="supply_depot">
+        <start_units>
+            <unit name="scv" count="5"></unit>
+            <unit name="command_center" count="1"></unit>
+        </start_units>
+
         <max_units>
             <!-- <unit name="mothership" max="1"/> -->
         </max_units>

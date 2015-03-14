@@ -6,26 +6,29 @@ void BuildOrder::createMinimalBuildOrder(string target)
     // TODO is this a problem?
     buildList.clear();
     vector<action_t> deps;
-    getDependencies(ConfigParser::Instance().getAction(target).id, deps);
+    BuildAction targetAction = ConfigParser::Instance().getAction(target);
+    getDependencies(targetAction.id, deps);
     map<action_t, int> currUnits;
 
-    // TODO general approach for all races needed
     int supply = 0;
-    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("scv").id);
-    addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("command_center").id);
+    auto startUnits = ConfigParser::Instance().getStartConfig();
+    for(auto startPair : startUnits)
+    {
+        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name<<"] "<<startPair.second);
+        currUnits[startPair.first] = startPair.second;
+    }
 
     while(deps.size() > 0)
     {
-        LOG_DEBUG(deps.capacity());
         auto possibleActions = getPossibleNextActions(currUnits, deps);
         for(action_t action : possibleActions)
         {
             auto bAction = ConfigParser::Instance().getAction(action);
             while(!checkSupply(bAction.cost.supply, supply))
             {
-                addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("supply_depot").id);
-                supply = applySupply(supply, ConfigParser::Instance().getAction("supply_depot").id);
-                buildList.push_back(ConfigParser::Instance().getAction("supply_depot").id);
+                addOrIncrementUnit(&currUnits, ConfigParser::Instance().getDefaulSupplyAction().id);
+                supply = applySupply(supply, ConfigParser::Instance().getDefaulSupplyAction().id);
+                buildList.push_back(ConfigParser::Instance().getDefaulSupplyAction().id);
             }
             addOrIncrementUnit(&currUnits, action);
             supply = applySupply(supply, action);
@@ -39,14 +42,13 @@ void BuildOrder::createMinimalBuildOrder(string target)
                     deps.end());
         }
     }
-    while(!checkSupply(ConfigParser::Instance().getAction(target).cost.supply, supply))
+    while(!checkSupply(targetAction.cost.supply, supply))
     {
-        addOrIncrementUnit(&currUnits, ConfigParser::Instance().getAction("supply_depot").id);
-        supply = applySupply(supply, ConfigParser::Instance().getAction("supply_depot").id);
-        buildList.push_back(ConfigParser::Instance().getAction("supply_depot").id);
+        addOrIncrementUnit(&currUnits, ConfigParser::Instance().getDefaulSupplyAction().id);
+        supply = applySupply(supply, ConfigParser::Instance().getDefaulSupplyAction().id);
+        buildList.push_back(ConfigParser::Instance().getDefaulSupplyAction().id);
     }
-    buildList.push_back(ConfigParser::Instance().getAction(target).id);
-
+    buildList.push_back(targetAction.id);
 }
 
 void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
@@ -156,9 +158,6 @@ bool BuildOrder::isActionPossible(map<action_t, int> currentUnits, int currentSu
 vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions)
 {
     vector<action_t> resultVec;
-    //TODO REMOVE THIS AND GET OUT OF CONFIG assume that we have scv and command center
-    //availableUnits[ConfigParser::Instance().getAction("command_center").id] = 1;
-    //availableUnits[ConfigParser::Instance().getAction("scv").id] = 5;
 
     for(auto action : actions)
     {
