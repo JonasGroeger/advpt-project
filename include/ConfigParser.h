@@ -32,6 +32,13 @@ public:
     }
 
     void parseConfig(char* file);
+    /*
+    * This method sets the race used for future calls to getAction(action_t).
+    * It does so by looking through all its known actions for @actionName.
+    * @param actionName : the action used to determine the race
+    * @throws invalid_argument exception when there is no race for @actionName
+    */
+    void setRaceForAction(string actionName);
     const vector<BuildAction> getAllActions();
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it

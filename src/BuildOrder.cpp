@@ -4,6 +4,7 @@ void BuildOrder::createMinimalBuildOrder(string target)
 {
     reset();
     vector<action_t> deps;
+    ConfigParser::Instance().setRaceForAction(target);
     BuildAction targetAction = ConfigParser::Instance().getAction(target);
     getDependencies(targetAction.id, deps);
     map<action_t, int> currUnits;
