@@ -24,11 +24,11 @@ void BuildOrder::createMinimalBuildOrder(string target)
             auto bAction = ConfigParser::Instance().getAction(action);
             while(!checkSupply(bAction.cost.supply, supply))
             {
-                addOrIncrementUnit(&currUnits, ConfigParser::Instance().getDefaulSupplyAction().id);
+                addOrIncrementUnit(currUnits, ConfigParser::Instance().getDefaulSupplyAction().id);
                 supply = applySupply(supply, ConfigParser::Instance().getDefaulSupplyAction().id);
                 buildList.push_back(ConfigParser::Instance().getDefaulSupplyAction().id);
             }
-            addOrIncrementUnit(&currUnits, action);
+            addOrIncrementUnit(currUnits, action);
             supply = applySupply(supply, action);
             buildList.push_back(action);
             deps.erase(std::remove_if(deps.begin(),
@@ -42,7 +42,7 @@ void BuildOrder::createMinimalBuildOrder(string target)
     }
     while(!checkSupply(targetAction.cost.supply, supply))
     {
-        addOrIncrementUnit(&currUnits, ConfigParser::Instance().getDefaulSupplyAction().id);
+        addOrIncrementUnit(currUnits, ConfigParser::Instance().getDefaulSupplyAction().id);
         supply = applySupply(supply, ConfigParser::Instance().getDefaulSupplyAction().id);
         buildList.push_back(ConfigParser::Instance().getDefaulSupplyAction().id);
     }
@@ -61,7 +61,7 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
             LOG_DEBUG("Adding it to our vector!");
             outVector.push_back(ConfigParser::Instance().getAction(depPair.first).id);
         }
-        addOrIncrementUnit(&availableUnits, ConfigParser::Instance().getAction(depPair.first).id);
+        addOrIncrementUnit(availableUnits, ConfigParser::Instance().getAction(depPair.first).id);
         getDependencies(ConfigParser::Instance().getAction(depPair.first).id, outVector);
     }
     return;
@@ -87,7 +87,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
 
     for(int c = 0; c < position; c++)
     {
-        addOrIncrementUnit(&currUnits, (*iter));
+        addOrIncrementUnit(currUnits, (*iter));
         iter++;
     }
 
@@ -96,7 +96,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
     {
         return false;
     }
-    addOrIncrementUnit(&currUnits, action);
+    addOrIncrementUnit(currUnits, action);
     supply = applySupply(supply, action);
 
     for(;iter != buildList.end(); iter++)
@@ -104,7 +104,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
         if(!isActionPossible(currUnits, supply, (*iter))){
             return false;
         }
-        addOrIncrementUnit(&currUnits, (*iter));
+        addOrIncrementUnit(currUnits, (*iter));
         supply = applySupply(supply, (*iter));
     }
     buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
@@ -131,7 +131,7 @@ bool BuildOrder::removeActionIfPossible(int position)
 
     for(int c = 0; c < position; c++)
     {
-        addOrIncrementUnit(&currUnits, (*iter));
+        addOrIncrementUnit(currUnits, (*iter));
         iter++;
     }
     //skip the action we want to remove
@@ -142,7 +142,7 @@ bool BuildOrder::removeActionIfPossible(int position)
         if(!isActionPossible(currUnits, supply, (*iter))){
             return false;
         }
-        addOrIncrementUnit(&currUnits, (*iter));
+        addOrIncrementUnit(currUnits, (*iter));
         supply = applySupply(supply, (*iter));
     }
     buildList.erase(buildList.begin()+position);
@@ -210,13 +210,13 @@ int BuildOrder::applySupply(int currSupply, action_t action)
     return currSupply;
 }
 
-void BuildOrder::addOrIncrementUnit(map<action_t, int> *unitMap, action_t unit)
+void BuildOrder::addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit)
 {
-    if(unitMap->count(unit)){
-        (*unitMap)[unit]++;
+    if(unitMap.count(unit)){
+        unitMap[unit]++;
     } else
     {
-        (*unitMap)[unit] = 1;
+        unitMap[unit] = 1;
     }
 }
 
