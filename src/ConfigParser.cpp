@@ -23,7 +23,8 @@ void ConfigParser::parseConfig(char *file)
         Race currRace;
         currRace.name = race->Attribute(ATTRIBUTE_NAME);
         LOG_DEBUG(" Parsing race ["<<currRace.name<<"]");
-        //this map will hold all actions by this race
+
+        // A mapping from an incrementing id (the unit id) to all the actions
         map<action_t, BuildAction> actions;
 
         LOG_DEBUG("  Parsing actions");
@@ -36,6 +37,14 @@ void ConfigParser::parseConfig(char *file)
             LOG_DEBUG("   Parsing action ["<<buildAction.name<<"]");
             buildAction.id = getUnitId(buildAction.name);
             LOG_DEBUG("    Unit [" << buildAction.name << "] added with id [" << buildAction.id <<"]");
+
+            // Instead of creating the max_units concept in xml (since we only need it for this one action), it herein
+            // is included in application logic.
+            if(buildAction.name.compare("mothership"))
+            {
+                buildAction.max = 1;
+            }
+            buildAction.max = -1;
 
             //costs of the action
             XMLElement *costs = action->FirstChildElement(NODE_COSTS);
@@ -65,16 +74,6 @@ void ConfigParser::parseConfig(char *file)
             actions[buildAction.id] = buildAction;
         }
         currRace.actions = actions;
-
-        LOG_DEBUG("  Parsing maxUnits");
-        // Maximum unit numbers
-        XMLElement *maxElement = race->FirstChildElement(NODE_MAX_UNITS);
-        for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
-             max = max->NextSiblingElement(NODE_UNIT))
-        {
-            // TODO: Insert maximum unit number in race struct
-            // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
-        }
 
         LOG_DEBUG("  Parsing workers");
         // Workers for this race
