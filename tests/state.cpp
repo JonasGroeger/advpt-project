@@ -15,24 +15,26 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    ConfigParser configParser(argv[1]);
+    ConfigParser::Instance().parseConfig(argv[1]);
 
-    State s = State(configParser);
-    s.addUnit(configParser.getUnitId("command_center"));
-    s.addUnit(configParser.getUnitId("scv"));
+    State s = State();
+    cerr << "Adding command_center" << endl;
+    s.addUnit(ConfigParser::Instance().getAction("command_center").id);
+    cerr << "Adding scv" << endl;
+    s.addUnit(ConfigParser::Instance().getAction("scv").id);
 
-    cout << "Created state with a command_center and one scv" << endl;
+    cerr << "Created state with a command_center and one scv" << endl;
 
-    cout << "can build scv: " << s.isLegalAction(configParser.getAction("scv")) << endl;
-    cout << "can build supply_depot: " << s.isLegalAction(configParser.getAction("supply_depot")) << endl;
-    cout << "can build barracks: " << s.isLegalAction(configParser.getAction("barracks")) << endl;
+    cerr << "can build scv: " << s.isLegalAction(ConfigParser::Instance().getAction("scv")) << endl;
+    cerr << "can build supply_depot: " << s.isLegalAction(ConfigParser::Instance().getAction("supply_depot")) << endl;
+    cerr << "can build barracks: " << s.isLegalAction(ConfigParser::Instance().getAction("barracks")) << endl;
 
-    cout << "Currently producing " << s.getMineralsPerTick() << " minerals per tick" << endl;
-    cout << "Currently producing " << s.getGasPerTick() << " gas per tick" << endl;
+    cerr << "Currently producing " << s.getMineralsPerTick() << " minerals per tick" << endl;
+    cerr << "Currently producing " << s.getGasPerTick() << " gas per tick" << endl;
 
-    cout << "Barracks can be built in " << s.isAdditionalTimeNeeded(configParser.getAction("barracks")) << endl;
+    cerr << "Barracks can be built in " << s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("barracks")) << endl;
 
-    //s.startAction(configParser.getAction("scv"));
-    cout << "SUCCESS" << endl;
+    //s.startAction(ConfigParser::Instance().getAction("scv"));
+    cerr << "SUCCESS" << endl;
     return 0;
 }

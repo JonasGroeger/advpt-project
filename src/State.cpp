@@ -1,17 +1,6 @@
 #include "State.h"
 
-/*
- * This reserves the neccessary memory in the vectors
- * and intializes everything to 0
- */
-State::State(const ConfigParser& cfg)
-    : entities(cfg.getNumberOfActions(), 0),
-      borrowed(cfg.getNumberOfActions(), 0),
-      producing(cfg.getNumberOfActions(), 0)
-{
-}
-
-bool State::isLegalAction(const BuildAction& act) const
+bool State::isLegalAction(const BuildAction& act)
 {
     // Dependencies
     if (!isSatisfied(act.dependencies, true))
@@ -79,7 +68,7 @@ void State::advanceTime(time_t amount)
 
 // TODO this one is tricky because we need to identify the actions upon which we have to wait
 // Also for determining how long until ressources are available we have to take active actions into account that are producing workers which will increase ressource production
-time_t State::isAdditionalTimeNeeded(const BuildAction& act) const
+time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 {
     assert(isLegalAction(act));
     // Dependencies
@@ -124,28 +113,35 @@ void State::startAction(const BuildAction& act)
 
 void State::addUnit(action_t type, int count)
 {
+    // TODO
     // TODO clean the worker detection up
-    entities[unit] ++;
-    if (act.isWorker) 
-    {
-        workersAll ++;
+    entities[type] += count;
 
-        // Always put workers into gas if possible
-        if (workersGas < gasHarvesting)
-        {
-            workersGas++;
-        }
-        else
-        {
-            workersMinerals++;
-        }
-    }
-
+    // This ain't pretty but it works
+    const BuildAction& act = ConfigParser::Instance().getAction(type);
+    cerr << "Action: " << act.name << ":" << act.isWorker << endl;
     if (act.isGasHarvester)
     {
         gasHarvesting += 3;
     }
 
+    if (act.isWorker) 
+    {
+        workersAll += count;
+
+        for (int i = 0; i < count; i++)
+        {
+            // Always put workers into gas if possible
+            if (workersGas < gasHarvesting)
+            {
+                workersGas++;
+            }
+            else
+            {
+                workersMinerals++;
+            }
+        }
+    }
 }
 
 void State::increaseRessources(time_t t)
@@ -156,14 +152,14 @@ void State::increaseRessources(time_t t)
     gas      += t * getGasPerTick();
 }
 
-bool State::isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing) const
+bool State::isSatisfied(const vector<std::pair<action_t, int>>& constrains, bool use_producing)
 {
-    for (auto entity : entities)
+    for (auto entity : constrains)
     {
         action_t type = entity.first;
         int count = entity.second;
 
-        if (this->entities[type] + producing[type] * use_producing < count)
+        if (entities[type] + producing[type] * use_producing < count)
         {
             return false;
         }

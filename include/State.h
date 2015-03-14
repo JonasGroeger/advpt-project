@@ -1,8 +1,12 @@
 #pragma once
 
-#include <vector>
+#include <map>
 #include <queue> 
 #include <cassert> 
+
+// TODO remove
+#include <iostream>
+using namespace std;
 
 #include "BuildAction.h"
 #include "ConfigParser.h"
@@ -37,12 +41,12 @@ class State {
 
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
-    std::vector<int> entities;
+    std::map<action_t, int> entities;
     // At every position i, borrowed[i] indicates how many entities with action id i are currently borrowed
-    std::vector<int> borrowed;
+    std::map<action_t, int> borrowed;
     // At every position i, producing[i] indicates how many entities with action id i are currently being produced
     // Note: activeActions contains more information on currently produced actions
-    std::vector<int> producing;
+    std::map<action_t, int> producing;
 
     /*
      * This simply represents an action that is currently being produced
@@ -93,15 +97,13 @@ class State {
     bool willProduceGas = false;
 
     public:
-    State(const ConfigParser&);
-
     // Paper S.3 "Action Legality"
     /*
      * Returns true iff the following hold true:
      *  - Dependencies and borrows are available, borrowed or being created
      *  - Costs are available or will be created
      */
-    bool isLegalAction(const BuildAction&) const;
+    bool isLegalAction(const BuildAction&);
 
     // Paper S.3 "Fast Forward and State Transistion"
     /*
@@ -119,7 +121,7 @@ class State {
      * NOTE it is not guarenteed that @cost will be satisfied after this time amount.
      * You must check again!
      */
-    time_t isAdditionalTimeNeeded(const BuildAction& cost) const;
+    time_t isAdditionalTimeNeeded(const BuildAction& cost);
 
     /*
      * S' <- Do(S, a)
@@ -134,7 +136,7 @@ class State {
     /*
      * Adds @count units of typed @type
      */
-    void addUnit(action_t type, int count);
+    void addUnit(action_t type, int count = 1);
     
     // TODO make private
     public:
@@ -143,7 +145,7 @@ class State {
      * Returns true if all entries in @entities are satisfied
      * If @use_producing is true, untis that are currently being built are also taken into account.
      */
-    bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing) const;
+    bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
     bool hasEnoughSupply(ress_t supply_needed) const;
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;

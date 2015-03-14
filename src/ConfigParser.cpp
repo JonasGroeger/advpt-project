@@ -1,83 +1,133 @@
 #include "ConfigParser.h"
 
-ConfigParser::ConfigParser(char *file)
+void ConfigParser::parseConfig(char *file)
 {
     XMLError load_result = xmlConfig.LoadFile(file);
-    if(load_result != XML_SUCCESS){
+    if (load_result != XML_SUCCESS)
+    {
         throw std::invalid_argument("Malformed configuration file.");
     }
 
     XMLNode *rootNode = xmlConfig.RootElement();
-    if(rootNode == nullptr){
+    if (rootNode == nullptr)
+    {
         throw std::invalid_argument("Malformed configuration file: No root element found.");
     }
 
-    // parse the actions
-    for (XMLElement* action = rootNode->FirstChildElement(NODE_ACTION); action != nullptr;
-         action = action->NextSiblingElement("action"))
+    // Iterate through found races
+    for (XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
+         race = race->NextSiblingElement(NODE_RACE))
     {
-        BuildAction buildAction;
-        buildAction.name = action->Attribute(ATTRIBUTE_NAME);
-        buildAction.id = getUnitId(buildAction.name);
 
-        //costs of the action
-        XMLElement* costs = action->FirstChildElement(NODE_COSTS);
-        buildAction.cost.gas = stoi(costs->Attribute(ATTRIBUTE_GAS));
-        buildAction.cost.minerals = stoi(costs->Attribute(ATTRIBUTE_MINERALS));
-        buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
-        buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
-        //if this action is consuming other units
-        addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
+        // parse the actions
+        for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
+             action = action->NextSiblingElement(NODE_ACTION))
+        {
+            BuildAction buildAction;
+            buildAction.name = action->Attribute(ATTRIBUTE_NAME);
+            buildAction.id = getUnitId(buildAction.name);
 
-        //borrows
-        XMLElement* borrows = action->FirstChildElement(NODE_BORROWS);
-        addUnitsToVector(borrows, NODE_UNIT, buildAction.borrows);
+            //costs of the action
+            XMLElement *costs = action->FirstChildElement(NODE_COSTS);
+            buildAction.cost.gas = stoi(costs->Attribute(ATTRIBUTE_GAS));
+            buildAction.cost.minerals = stoi(costs->Attribute(ATTRIBUTE_MINERALS));
+            buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
+            buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
+            //if this action is consuming other units
+            addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
 
-        //dependencies
-        XMLElement* dependencies = action->FirstChildElement(NODE_DEPENDENCIES);
-        addUnitsToVector(dependencies, NODE_UNIT, buildAction.dependencies);
+            //borrows
+            XMLElement *borrows = action->FirstChildElement(NODE_BORROWS);
+            addUnitsToVector(borrows, NODE_UNIT, buildAction.borrows);
 
-        //results
-        XMLElement* results = action->FirstChildElement(NODE_RESULTS);
+            //dependencies
+            XMLElement *dependencies = action->FirstChildElement(NODE_DEPENDENCIES);
+            addUnitsToVector(dependencies, NODE_UNIT, buildAction.dependencies);
 
-        buildAction.result.minerals = stoi(results->Attribute(ATTRIBUTE_MINERALS));
-        buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
-        buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
-        addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
+            //results
+            XMLElement *results = action->FirstChildElement(NODE_RESULTS);
 
-        buildActionMap[buildAction.name] = buildAction;
+            buildAction.result.minerals = stoi(results->Attribute(ATTRIBUTE_MINERALS));
+            buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
+            buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
+            addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
+
+            buildActionMap[buildAction.name] = buildAction;
+            buildActionIdMap[buildAction.id] = buildAction;
+        }
+
     }
 
-    //workers
+    // Maximum unit numbers
+    XMLElement *maxElement = rootNode->FirstChildElement(NODE_MAX_UNITS);
+    for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
+         max = max->NextSiblingElement(NODE_UNIT))
+    {
+        // TODO: Insert maximum unit number in buildActionMap
+        // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
+    }
+
+    // Workers
     XMLElement *workerElement = rootNode->FirstChildElement(NODE_WORKER);
-    for (XMLElement* worker = workerElement->FirstChildElement(); worker != nullptr; worker = worker->NextSiblingElement())
+    for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
+         worker = worker->NextSiblingElement(NODE_UNIT))
     {
         try
         {
             buildActionMap.at(worker->Attribute(ATTRIBUTE_NAME)).isWorker = true;
             LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
         }
-        catch (const std::out_of_range& oor)
+        catch (const std::out_of_range &oor)
         {
             throw std::out_of_range(worker->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
 
-    //now parse the gas_harvesters
+    action_t gasHarvesterId = -1;
+    // Gas harvesters
     XMLElement *gas_harvesters = rootNode->FirstChildElement(NODE_GAS_HARVESTER);
-    for (XMLElement* gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr; gas_element = gas_element->NextSiblingElement())
+    for (XMLElement *gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
+         gas_element = gas_element->NextSiblingElement(NODE_UNIT))
     {
-
         try
         {
             buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).isGasHarvester = true;
+            gasHarvesterId = buildActionMap.at(gas_element->Attribute(ATTRIBUTE_NAME)).id;
             LOG_DEBUG(gas_element->Attribute(ATTRIBUTE_NAME) << " is a gas harvester!");
         }
-        catch (const std::out_of_range& oor)
+        catch (const std::out_of_range &oor)
         {
             throw std::out_of_range(gas_element->Attribute(ATTRIBUTE_NAME) + string(" is not present in the map."));
         }
     }
+
+    //TODO make the two maps point at the same value elements!
+    for(auto it = buildActionMap.begin(); it != buildActionMap.end(); it++)
+    {
+        if((*it).second.cost.gas > 0)
+        {
+            LOG_DEBUG((*it).second.name << " needs gas!");
+            (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
+        }
+    }
+    for(auto it = buildActionIdMap.begin(); it != buildActionIdMap.end(); it++)
+    {
+        if((*it).second.cost.gas > 0)
+        {
+            LOG_DEBUG((*it).second.name << " needs gas!");
+            (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
+        }
+    }
+}
+
+const vector<BuildAction> ConfigParser::getAllActions()
+{
+    vector<BuildAction> resultVec;
+    for(auto pair : buildActionMap)
+    {
+        resultVec.push_back(pair.second);
+    }
+    return resultVec;
 }
 
 const BuildAction& ConfigParser::getAction(string actionName)
@@ -92,9 +142,21 @@ const BuildAction& ConfigParser::getAction(string actionName)
     }
 }
 
-int ConfigParser::getNumberOfActions() const
+const BuildAction& ConfigParser::getAction(action_t id)
 {
-    return unitCount;
+    if (buildActionIdMap.count(id) == 0)
+    {
+        throw std::out_of_range("Unable to find: " + std::to_string(id));
+    }
+    else
+    {
+        return buildActionIdMap[id];
+    }
+}
+
+long ConfigParser::getActionCount()
+{
+    return unitMap.size();
 }
 
 action_t ConfigParser::getUnitId(string unitName)

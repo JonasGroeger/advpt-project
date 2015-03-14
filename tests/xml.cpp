@@ -14,12 +14,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    ConfigParser configParser(argv[1]);
+    ConfigParser::Instance().parseConfig(argv[1]);
 
     bool b = false;
     try 
     {
-        BuildAction asdf = configParser.getAction("asdf");
+        BuildAction asdf = ConfigParser::Instance().getAction("asdf");
     }
     catch (std::out_of_range &oof)
     {
@@ -34,10 +34,10 @@ int main(int argc, char *argv[])
 
     try
     {
-        BuildAction scv = configParser.getAction("scv");
-        BuildAction tank = configParser.getAction("siege_tank");
-        BuildAction refinery = configParser.getAction("refinery");
-        BuildAction commandCenter = configParser.getAction("command_center");
+        BuildAction scv = ConfigParser::Instance().getAction("scv");
+        BuildAction tank = ConfigParser::Instance().getAction("siege_tank");
+        BuildAction refinery = ConfigParser::Instance().getAction("refinery");
+        BuildAction commandCenter = ConfigParser::Instance().getAction("command_center");
 
         assert(scv.isWorker);
         cout << 2 << endl;

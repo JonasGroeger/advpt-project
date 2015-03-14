@@ -10,24 +10,24 @@ using action_t = int;
 
 typedef struct BuildCost
 {
-    int minerals;
-    int gas;
-    int time;
-    int supply;
+    int minerals = 0;
+    int gas = 0;
+    int time = 0;
+    int supply = 0;
     vector<std::pair<action_t, int>> units;
 } BuildCost;
 
 typedef struct BuildResult
 {
-    int minerals;
-    int gas;
-    int supply;
+    int minerals = 0;
+    int gas = 0;
+    int supply = 0;
     vector<std::pair<action_t, int>> units;
 } BuildResult;
 
 typedef struct BuildAction
 {
-    int id;
+    action_t id;
     string name;
     BuildCost cost;
     vector<std::pair<action_t, int>> dependencies;
