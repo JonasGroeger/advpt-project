@@ -57,30 +57,21 @@ class State {
         public:
         //this value is the currTime the action was startet + the time this action needs to finish
         time_t timeFinished;
-        BuildAction action;
+        const BuildAction* action;
 
-        ActiveAction(time_t _timeFinished, BuildAction _action)
-            : timeFinished(_timeFinished), action(_action) {}
-        ActiveAction(const ActiveAction& lhs)
-            : timeFinished(lhs.timeFinished), action(lhs.action) {}
+        ActiveAction(time_t t, const BuildAction* ba) : timeFinished(t), action(ba) {}
+    };
 
-        /*
-         * Reverse ordering on timeFinished so priority_queue works
-         */
-        bool operator<(const ActiveAction& lhs) const
+    class ReverseActiveActionComparator
+    {
+        public:
+        bool operator()(const ActiveAction& lhs, const ActiveAction& rhs)
         {
-            return timeFinished > lhs.timeFinished;
-        }
-
-        ActiveAction& operator=(const ActiveAction& lhs)
-        {
-            this->timeFinished = lhs.timeFinished;
-            this->action = lhs.action;
-            return *this;
+            return lhs.timeFinished > rhs.timeFinished;
         }
     };
 
-    std::priority_queue<ActiveAction> activeActions;
+    std::priority_queue<ActiveAction, vector<ActiveAction>, ReverseActiveActionComparator> activeActions;
 
 
     // How many workers exist at all

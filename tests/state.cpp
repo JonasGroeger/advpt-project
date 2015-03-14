@@ -51,11 +51,18 @@ int main(int argc, char *argv[])
 
     cerr << "Advancing time by 2" << endl;
     s.advanceTime(2);
-
-    //cerr << "Starting supply_deport" << endl;
-    //s.startAction(ConfigParser::Instance().getAction("supply_depot"));
-
     
+    cerr << s << endl;
+
+    cerr << "Building supply_depot" << endl;
+    s.startAction(ConfigParser::Instance().getAction("supply_depot"));
+
+    cerr << s << endl;
+
+    cerr << "Advancing time by 32" << endl;
+    s.advanceTime(32);
+
+    cerr << s << endl;
 
     cerr << "SUCCESS" << endl;
     return 0;

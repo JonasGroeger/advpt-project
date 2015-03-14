@@ -43,11 +43,11 @@ void State::advanceTime(time_t amount)
         currentTime += time_delta;
 
         // Handle action results
-        const BuildAction& act = activeActions.top().action;
-        LOG_DEBUG("Handle action with id: " << act.id << " and finishTime: " << activeActions.top().timeFinished);
+        const BuildAction* act = activeActions.top().action;
+        LOG_DEBUG("Handle action with id: " << act->id << " and finishTime: " << activeActions.top().timeFinished);
         activeActions.pop();
 
-        const BuildResult& res = act.result;
+        const BuildResult& res = act->result;
 
         minerals += res.minerals * RESS_FACTOR;
         gas += res.gas * RESS_FACTOR;
@@ -56,13 +56,19 @@ void State::advanceTime(time_t amount)
 
         for (auto unit : res.units)
         {
+            cerr << "Adding " << unit.first << "x" << unit.second << endl;
             addUnit(unit.first, unit.second);
             producing[unit.first] -= unit.second;
         }
     }
 
+    cerr << 1 << endl;
     increaseRessources(end_time-currentTime);
+    cerr << 2 << endl;
     currentTime = end_time;
+    cerr << 3 << endl;
+
+    cerr << "Advance finished" << endl;
 }
 
 // TODO this one is tricky because we need to identify the actions upon which we have to wait
@@ -109,7 +115,7 @@ void State::startAction(const BuildAction& act)
     // Checking dependencies
     assert(isSatisfied(act.dependencies, false));
 
-    ActiveAction aa(currentTime + act.cost.time, act);
+    ActiveAction aa(currentTime + act.cost.time, &act);
     activeActions.push(aa);
     
     LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
@@ -238,36 +244,39 @@ void State::reallocateWorkers()
 ostream& operator<<(ostream& out, State& obj)
 {
     out << "State with: " << endl;
-    out << "Minerals: " << obj.minerals << endl;
-    out << "Gas: " << obj.gas << endl;
-    out << "Supply: " << obj.supply_used << "/" << obj.supply_max << endl;
-    out << "Current time: " << obj.currentTime << endl;
+    out << "\tMinerals: " << obj.minerals << endl;
+    out << "\tGas: " << obj.gas << endl;
+    out << "\tSupply: " << obj.supply_used << "/" << obj.supply_max << endl;
+    out << "\tCurrent time: " << obj.currentTime << endl;
 
     for (auto e : obj.entities)
     {
-        out << "Entity: " << ConfigParser::Instance().getAction(e.first).name << " x " << e.second << endl;
+        if (e.second)
+        out << "\tEntity: " << ConfigParser::Instance().getAction(e.first).name << "x " << e.second << endl;
     }
     for (auto b : obj.borrowed)
     {
-        out << "Borrowed: " << ConfigParser::Instance().getAction(b.first).name << " x " << b.second << endl;
+        if (b.second)
+        out << "\tBorrowed: " << ConfigParser::Instance().getAction(b.first).name << "x " << b.second << endl;
     }
     for (auto p : obj.producing)
     {
-        out << "Producing: " << ConfigParser::Instance().getAction(p.first).name << " x " << p.second << endl;
+        if (p.second)
+        out << "\tProducing: " << ConfigParser::Instance().getAction(p.first).name << "x " << p.second << endl;
     }
 
-    out << "There are currently " << obj.activeActions.size() << " active actions:" << endl;
+    out << "\tThere are currently " << obj.activeActions.size() << " active actions:" << endl;
 
-    std::priority_queue<State::ActiveAction> copy = obj.activeActions;
+    auto copy = obj.activeActions;
 
     while (not copy.empty())
     {
         State::ActiveAction aa = copy.top();
         copy.pop();
 
-        out << aa.action.name << " finished at: " << aa.timeFinished << endl;
+        out << "\t\t" << aa.action->name << " finished at: " << aa.timeFinished << endl;
     }
-    out << "There are currently " << obj.activeActions.size() << " active actions:" << endl;
+    out << "\tThere are currently " << obj.activeActions.size() << " active actions:" << endl;
 
     return out;
 }
