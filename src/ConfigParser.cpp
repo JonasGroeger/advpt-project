@@ -183,6 +183,7 @@ const BuildAction &ConfigParser::getAction(string actionName)
         {
             currentRace = &race.second;
             bFound = true;
+            LOG_DEBUG("FOUND RACE ["<<currentRace->name<<"] FOR ACTION ["<< actionName << "]");
             break;
         }
     }
