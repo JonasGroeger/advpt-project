@@ -14,6 +14,7 @@ void ConfigParser::parseConfig(char *file)
         throw std::invalid_argument("Malformed configuration file: No root element found.");
     }
 
+    LOG_DEBUG("Parsing races");
     // Iterate through each race
     for (XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
          race = race->NextSiblingElement(NODE_RACE))
@@ -21,16 +22,20 @@ void ConfigParser::parseConfig(char *file)
         //the race struct
         Race currRace;
         currRace.name = race->Attribute(ATTRIBUTE_NAME);
+        LOG_DEBUG(" Parsing race ["<<currRace.name<<"]");
         //this map will hold all actions by this race
         map<action_t, BuildAction> actions;
 
+        LOG_DEBUG("  Parsing actions");
         // parse the actions and put them to the map
         for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
              action = action->NextSiblingElement(NODE_ACTION))
         {
             BuildAction buildAction;
             buildAction.name = action->Attribute(ATTRIBUTE_NAME);
+            LOG_DEBUG("   Parsing action ["<<buildAction.name<<"]");
             buildAction.id = getUnitId(buildAction.name);
+            LOG_DEBUG("    Unit [" << buildAction.name << "] added with id [" << buildAction.id <<"]");
 
             //costs of the action
             XMLElement *costs = action->FirstChildElement(NODE_COSTS);
@@ -61,6 +66,7 @@ void ConfigParser::parseConfig(char *file)
         }
         currRace.actions = actions;
 
+        LOG_DEBUG("  Parsing maxUnits");
         // Maximum unit numbers
         XMLElement *maxElement = race->FirstChildElement(NODE_MAX_UNITS);
         for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
@@ -70,13 +76,13 @@ void ConfigParser::parseConfig(char *file)
             // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
         }
 
+        LOG_DEBUG("  Parsing workers");
         // Workers for this race
         XMLElement *workerElement = race->FirstChildElement(NODE_WORKER);
         bool bWorkerFound = false;
         for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
              worker = worker->NextSiblingElement(NODE_UNIT))
         {
-
             string workerName = worker->Attribute(ATTRIBUTE_NAME);
             auto it = find_if(currRace.actions.begin(), currRace.actions.end(),
                     [&workerName](const std::pair<action_t, BuildAction> &action)
@@ -87,7 +93,7 @@ void ConfigParser::parseConfig(char *file)
             {
                 (*it).second.isWorker = true;
                 bWorkerFound = true;
-                LOG_DEBUG(worker->Attribute(ATTRIBUTE_NAME) << " is a worker!");
+                LOG_DEBUG("   Found worker ["<<worker->Attribute(ATTRIBUTE_NAME)<<"]");
             }
         }
         if (!bWorkerFound)
@@ -98,6 +104,7 @@ void ConfigParser::parseConfig(char *file)
 
         // Gas harvesters for this race
         //gasharvesterId is used later to put the gas harvester as a dependency to each unit that has gas costs
+        LOG_DEBUG("  Parsing Gas Harvesters");
         action_t gasHarvesterId = -1;
         XMLElement *gas_harvesters = race->FirstChildElement(NODE_GAS_HARVESTER);
         bool bGasHarvesterFound = false;
@@ -115,15 +122,16 @@ void ConfigParser::parseConfig(char *file)
                 (*it).second.isGasHarvester = true;
                 gasHarvesterId = (*it).second.id;
                 bGasHarvesterFound = true;
-                LOG_DEBUG(gasHarvesterName << " is a gas harvester!");
+                LOG_DEBUG("   Found gas harvester ["<<gasHarvesterName<<"]");
             }
         }
         if (!bGasHarvesterFound)
         {
-            throw std::out_of_range("No worker was found!");
+            throw std::out_of_range("No gas harvester was found for race [" + currRace.name +"]");
         }
 
         //get the default supply for this race
+        LOG_DEBUG("  Parsing default supply");
         string sDefSupply = race->Attribute(ATTRIBUTE_DEFAULT_SUPPLY);
         auto it = std::find_if(currRace.actions.begin(), currRace.actions.end(),
                                 [&sDefSupply](const std::pair<action_t, BuildAction> &action)
@@ -136,11 +144,12 @@ void ConfigParser::parseConfig(char *file)
         }
         else
         {
-            LOG_DEBUG("Default Supply for race ["<<currRace.name<<"] is ["<<(*it).second.name<<"]");
+            LOG_DEBUG("   Found default supply ["<<(*it).second.name<<"]");
             currRace.defaultSupplyAction = (*it).second.id;
         }
 
         //parse our start_config
+        LOG_DEBUG("  Parsing start_config");
         XMLElement* startConfig = race->FirstChildElement(NODE_START_UNITS);
         map<action_t, int> startMap;
         for(XMLElement* startUnit = startConfig->FirstChildElement(NODE_UNIT);
@@ -157,21 +166,23 @@ void ConfigParser::parseConfig(char *file)
                     });
             if(it == currRace.actions.end())
             {
-                throw std::out_of_range("The Unit ["+ startUnitName + "] is not available in our actions!");
+                throw std::out_of_range("The Unit ["+ startUnitName + "] of race ["+ currRace.name+"is not available in our actions!");
             }
             else
             {
-                LOG_DEBUG("Starting unit for race ["<<currRace.name<<"] is ["<<(*it).second.name<<"] with count [" << startCount<<"]");
+                LOG_DEBUG("   Found start unit ["<<(*it).second.name<<"] with count [" << startCount << "]");
                 startMap[(*it).second.id] = startCount;
             }
         }
         currRace.startUnits = startMap;
+
         //resolve the gas dependencies
+        LOG_DEBUG("  Parsing units with gas dependencies");
         for(auto it = currRace.actions.begin(); it != currRace.actions.end(); ++it)
         {
             if((*it).second.cost.gas > 0)
             {
-                LOG_DEBUG("[" << (*it).second.name << "] needs gas!");
+                LOG_DEBUG("   Found unit [" << (*it).second.name << "] with gas dependency");
                 (*it).second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
             }
         }
@@ -187,7 +198,6 @@ const BuildAction& ConfigParser::getDefaulSupplyAction()
 
 const map<action_t, int> ConfigParser::getStartConfig()
 {
-    LOG_DEBUG("STARTUNITS "<<currentRace.startUnits.size());
     return currentRace.startUnits;
 }
 
@@ -219,17 +229,8 @@ const BuildAction &ConfigParser::getAction(string actionName)
         if (it != race.second.actions.end())
         {
             currentRace = race.second;
-            LOG_DEBUG("TEST "<< currentRace.actions[1].name);
             bFound = true;
-            LOG_DEBUG("FOUND RACE ["<<currentRace.name<<"] FOR ACTION ["<< actionName << "]");
-            for(auto a : currentRace.actions)
-            {
-                if(a.first == actionId)
-                {
-                    std::cout << "ACTION : " << a.second.name << " " << a.second.id << std::endl;
-
-                }
-            }
+            LOG_DEBUG("[ConfigParser::getAction(string) : Found race ["<<currentRace.name<<"] for action ["<< actionName << "]");
             break;
         }
     }
@@ -237,7 +238,6 @@ const BuildAction &ConfigParser::getAction(string actionName)
     {
         throw std::out_of_range("Unable to find: " + actionName);
     }
-    LOG_DEBUG("TEST "<< currentRace.actions[1].name << " ACTIONID IS "<<actionId);
     return currentRace.actions[actionId];
 }
 
@@ -255,7 +255,7 @@ const BuildAction &ConfigParser::getAction(action_t id)
 
 long ConfigParser::getActionCount()
 {
-    return unitMap.size();
+    return currentRace.actions.size();
 }
 
 
@@ -263,7 +263,6 @@ action_t ConfigParser::getUnitId(string unitName)
 {
     if (unitMap.count(unitName) == 0)
     {
-        LOG_DEBUG("Unit added with name " << unitName << " and id " << unitCount);
         unitMap.insert(std::pair<string, int>(unitName, unitCount));
         ++unitCount;
     }
