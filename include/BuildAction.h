@@ -27,7 +27,7 @@ typedef struct BuildResult
 
 typedef struct BuildAction
 {
-    int id;
+    action_t id;
     string name;
     BuildCost cost;
     vector<std::pair<action_t, int>> dependencies;
