@@ -14,15 +14,17 @@ void ConfigParser::parseConfig(char *file)
         throw std::invalid_argument("Malformed configuration file: No root element found.");
     }
 
-    // Iterate through found races
+    // Iterate through each race
     for (XMLElement *race = rootNode->FirstChildElement(NODE_RACE); race != nullptr;
          race = race->NextSiblingElement(NODE_RACE))
     {
+        //the race struct
         Race currRace;
         currRace.name = race->Attribute(ATTRIBUTE_NAME);
+        //this map will hold all actions by this race
         map<action_t, BuildAction> actions;
 
-        // parse the actions
+        // parse the actions and put them to the map
         for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
              action = action->NextSiblingElement(NODE_ACTION))
         {
@@ -58,6 +60,7 @@ void ConfigParser::parseConfig(char *file)
             actions[buildAction.id] = buildAction;
         }
         currRace.actions = actions;
+        //the races map will hold all available races and their corresponding struct
         races[currRace.name] = currRace;
 
         // Maximum unit numbers
@@ -65,11 +68,11 @@ void ConfigParser::parseConfig(char *file)
         for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
              max = max->NextSiblingElement(NODE_UNIT))
         {
-            // TODO: Insert maximum unit number in buildActionMap
+            // TODO: Insert maximum unit number in race struct
             // int max_number = stoi(max->Attribute(ATTRIBUTE_MAX));
         }
 
-        // Workers
+        // Workers for this race
         XMLElement *workerElement = race->FirstChildElement(NODE_WORKER);
         bool bWorkerFound = false;
         for (XMLElement *worker = workerElement->FirstChildElement(); worker != nullptr;
@@ -94,8 +97,10 @@ void ConfigParser::parseConfig(char *file)
             throw std::out_of_range("No worker was found!");
         }
 
+
+        // Gas harvesters for this race
+        //gasharvesterId is used later to put the gas harvester as a dependency to each unit that has gas costs
         action_t gasHarvesterId = -1;
-        // Gas harvesters
         XMLElement *gas_harvesters = race->FirstChildElement(NODE_GAS_HARVESTER);
         bool bGasHarvesterFound = false;
         for (XMLElement *gas_element = gas_harvesters->FirstChildElement(); gas_element != nullptr;
@@ -120,7 +125,7 @@ void ConfigParser::parseConfig(char *file)
             throw std::out_of_range("No worker was found!");
         }
 
-        //get the default supply
+        //get the default supply for this race
         string sDefSupply = race->Attribute(ATTRIBUTE_DEFAULT_SUPPLY);
         auto it = std::find_if(currRace.actions.begin(), currRace.actions.end(),
                                 [&sDefSupply](const std::pair<action_t, BuildAction> &action)
@@ -137,6 +142,7 @@ void ConfigParser::parseConfig(char *file)
             currRace.defaultSupplyAction = (*it).second.id;
         }
 
+        //resolve the gas dependencies
         for(auto it = currRace.actions.begin(); it != currRace.actions.end(); ++it)
         {
             if((*it).second.cost.gas > 0)
