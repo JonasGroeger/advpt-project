@@ -52,6 +52,10 @@ private:
     vector<action_t> buildList;
 
     /*
+    * this one resets all internally used variables
+    */
+    void reset();
+    /*
     * check if a given action is possible with the given values
     * @param currentUnits   : contains an entry for each available action_t and the count as value
     * @param currentSupply  : the currently available supply

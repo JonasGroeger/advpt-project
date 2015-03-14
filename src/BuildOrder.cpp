@@ -2,9 +2,7 @@
 
 void BuildOrder::createMinimalBuildOrder(string target)
 {
-    // TODO this does not reset the rest of the BuildOrder State
-    // TODO is this a problem?
-    buildList.clear();
+    reset();
     vector<action_t> deps;
     BuildAction targetAction = ConfigParser::Instance().getAction(target);
     getDependencies(targetAction.id, deps);
@@ -177,9 +175,10 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
     return resultVec;
 }
 
-bool BuildOrder::checkSupply(int costSupply, int currentSupply)
-{
-    return currentSupply >= costSupply;
+void BuildOrder::reset(){
+    buildList.clear();
+    availableSupply = 0;
+    availableUnits.clear();
 }
 
 int BuildOrder::getSupply(int pos)
