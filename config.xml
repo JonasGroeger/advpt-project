@@ -3,7 +3,7 @@
 <sc2sim>
 
     <max_units>
-        <!-- <unit name="mothership" max="1"/> -->
+        <unit name="mothership" max="1"/>
     </max_units>
 
     <workers name="worker">
@@ -473,9 +473,382 @@
             </results>
         </action>
 
-        <!--
-        TODO: Eintragen. Erstmal Schluss für Heute. Zu viel XML.
-        -->
+        <action name="nexus">
+            <costs mineral="400" gas="0" time="100" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="10">
+                <unit name="nexus"/>
+                <energy current="0" max="100"/>
+                <!-- TODO: Chrono Boost -->
+            </results>
+        </action>
+
+        <action name="pylon">
+            <costs mineral="100" gas="0" time="25" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="8">
+                <unit name="pylon"/>
+            </results>
+        </action>
+
+        <action name="forge">
+            <costs mineral="150" gas="0" time="45" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="pylon"/>
+                <unit name="nexus"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="forge"/>
+            </results>
+        </action>
+
+        <action name="photon_cannon">
+            <costs mineral="150" gas="0" time="40" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="forge"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="photon_cannon"/>
+            </results>
+        </action>
+
+        <action name="gateway">
+            <costs mineral="150" gas="0" time="65" supply="0"/>
+            <borrows/>
+            <dependencies>
+                <unit name="nexus"/>
+                <unit name="pylon"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="gateway"/>
+            </results>
+        </action>
+
+        <action name="zealot">
+            <costs mineral="100" gas="0" time="38" supply="2"/>
+            <borrows>
+                <unit name="gateway"/>
+            </borrows>
+            <dependencies>
+                <unit name="gateway"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="zealot"/>
+            </results>
+        </action>
+
+        <action name="stalker">
+            <costs mineral="125" gas="50" time="42" supply="2"/>
+            <borrows>
+                <unit name="gateway"/>
+            </borrows>
+            <dependencies>
+                <unit name="gateway"/>
+                <unit name="cybernetics_core"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="stalker"/>
+            </results>
+        </action>
+
+        <action name="sentry">
+            <costs mineral="50" gas="100" time="37" supply="2"/>
+            <borrows>
+                <unit name="gateway"/>
+            </borrows>
+            <dependencies>
+                <unit name="gateway"/>
+                <unit name="cybernetics_core"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="sentry"/>
+            </results>
+        </action>
+
+        <action name="cybernetics_core">
+            <costs mineral="150" gas="0" time="50" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="gateway"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="cybernetics_core"/>
+            </results>
+        </action>
+
+        <action name="robotics_facility">
+            <costs mineral="200" gas="100" time="65" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="cybernetics_core"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="robotics_facility"/>
+            </results>
+        </action>
+
+        <action name="robotics_bay">
+            <costs mineral="200" gas="200" time="65" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="robotics_facility"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="robotics_bay"/>
+            </results>
+        </action>
+
+        <action name="warp_prism">
+            <costs mineral="200" gas="0" time="50" supply="2"/>
+            <borrows>
+                <unit name="robotics_facility"/>
+            </borrows>
+            <dependencies>
+                <unit name="robotics_facility"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="warp_prism"/>
+            </results>
+        </action>
+
+        <action name="immortal">
+            <costs mineral="250" gas="100" time="55" supply="4"/>
+            <borrows>
+                <unit name="robotics_facility"/>
+            </borrows>
+            <dependencies>
+                <unit name="robotics_facility"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="immortal"/>
+            </results>
+        </action>
+
+        <action name="observer">
+            <costs mineral="25" gas="75" time="30" supply="1"/>
+            <borrows>
+                <unit name="robotics_facility"/>
+            </borrows>
+            <dependencies>
+                <unit name="robotics_facility"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="observer"/>
+            </results>
+        </action>
+
+        <action name="colossus">
+            <costs mineral="300" gas="200" time="75" supply="6"/>
+            <borrows>
+                <unit name="robotics_facility"/>
+            </borrows>
+            <dependencies>
+                <unit name="robotics_facility"/>
+                <unit name="robotics_bay"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="colossus"/>
+            </results>
+        </action>
+
+        <action name="mothership">
+            <costs mineral="400" gas="400" time="160" supply="8"/>
+            <borrows>
+                <unit name="nexus"/>
+            </borrows>
+            <dependencies>
+                <unit name="fleet_beacon"/>
+                <unit name="nexus"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="mothership"/>
+            </results>
+        </action>
+
+        <action name="fleet_beacon">
+            <costs mineral="300" gas="200" time="60" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="stargate"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="fleet_beacon"/>
+            </results>
+        </action>
+
+        <action name="stargate">
+            <costs mineral="150" gas="150" time="60" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="cybernetics_core"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="stargate"/>
+            </results>
+        </action>
+
+        <action name="twilight_council">
+            <costs mineral="150" gas="100" time="50" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="cybernetics_core"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="twilight_council"/>
+            </results>
+        </action>
+
+        <action name="templar_archives">
+            <costs mineral="150" gas="100" time="50" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="twilight_council"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="templar_archives"/>
+            </results>
+        </action>
+
+        <action name="dark_shrine">
+            <costs mineral="100" gas="250" time="100" supply="0">
+                <unit name="probe"/>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="twilight_council"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="dark_shrine"/>
+            </results>
+        </action>
+
+        <action name="high_templar">
+            <costs mineral="50" gas="150" time="55" supply="2"/>
+            <borrows>
+                <unit name="gateway"/>
+            </borrows>
+            <dependencies>
+                <unit name="templar_archives"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="high_templar"/>
+            </results>
+        </action>
+
+        <action name="dark_templar">
+            <costs mineral="125" gas="125" time="55" supply="2"/>
+            <borrows>
+                <unit name="gateway"/>
+            </borrows>
+            <dependencies>
+                <unit name="dark_shrine"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="dark_templar"/>
+            </results>
+        </action>
+
+        <action name="phoenix">
+            <costs mineral="150" gas="100" time="35" supply="2"/>
+            <borrows>
+                <unit name="stargate"/>
+            </borrows>
+            <dependencies>
+                <unit name="stargate"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="phoenix"/>
+            </results>
+        </action>
+
+        <action name="void_ray">
+            <costs mineral="0" gas="0" time="0" supply="0"/>
+            <borrows>
+                <unit name="stargate"/>
+            </borrows>
+            <dependencies>
+                <unit name="stargate"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="void_ray"/>
+            </results>
+        </action>
+
+        <action name="carrier">
+            <costs mineral="0" gas="0" time="0" supply="0"/>
+            <borrows>
+                <unit name="stargate"/>
+            </borrows>
+            <dependencies>
+                <unit name="fleet_beacon"/>
+                <unit name="stargate"/>
+            </dependencies>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="carrier"/>
+            </results>
+        </action>
+
+        <action name="fuse_archon_high">
+            <costs mineral="100" gas="300" time="12" supply="4">
+                <unit name="high_templar"/>
+                <unit name="high_templar"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="archon"/>
+            </results>
+        </action>
+
+        <action name="fuse_archon_dark">
+            <costs mineral="175" gas="275" time="12" supply="4">
+                <unit name="dark_templar"/>
+                <unit name="dark_templar"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="archon"/>
+            </results>
+        </action>
+
+        <action name="fuse_archon_mixed">
+            <costs mineral="250" gas="250" time="12" supply="4">
+                <unit name="high_templar"/>
+                <unit name="dark_templar"/>
+            </costs>
+            <borrows/>
+            <dependencies/>
+            <results mineral="0" gas="0" time="0" supply="0">
+                <unit name="archon"/>
+            </results>
+        </action>
     </race>
 
     <race name="terran">
