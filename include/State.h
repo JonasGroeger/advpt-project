@@ -126,7 +126,6 @@ class State {
 
     void addActionResult(const BuildResult&, bool removeProducing=true);
 
-    // TODO make private
     private:
     /*
      * Adds @count units of typed @type
@@ -150,6 +149,10 @@ class State {
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;
 
+    /*
+     * I think this qualifies for the longest function name of this project!
+     */
+    time_t getTimeTillNextActionIsFinished() const;
     /*
      * This function redistributes the workers to mine minerals and gas.
      * If possible at least one worker will mine minerals, after that as many as possible will mine gas

@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     s.addActionResult(ConfigParser::Instance().getAction("command_center").result, false);
     cerr << "Adding scv" << endl;
     s.addActionResult(ConfigParser::Instance().getAction("scv").result, false);
+    s.supply_used ++;
 
     cerr << "Created state with a command_center and one scv" << endl;
 
@@ -106,6 +107,27 @@ int main(int argc, char *argv[])
 
     s.advanceTime(65);
     
+    cerr << s << endl;
+
+    cerr << "Let's produce 10 marines" << endl;
+
+    simple_test("Marine's are generally possible", s.isLegalAction(ConfigParser::Instance().getAction("marine")), true);
+
+    for (int i = 0; i < 10; i++)
+    {
+        // this is not the correct way to do this...
+        cerr << s << endl;
+        time_t t = s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("marine"));
+        cerr << "Time till next marine is possible: " << t << endl;
+        cerr << "Advancing time by " << t << endl;
+        s.advanceTime(t);
+        s.startAction(ConfigParser::Instance().getAction("marine"));
+    }
+
+    cerr << s << endl;
+
+
+
     cerr << s << endl;
 
     cerr << "SUCCESS" << endl;

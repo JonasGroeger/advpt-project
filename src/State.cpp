@@ -68,13 +68,24 @@ void State::advanceTime(time_t amount)
 time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 {
     assert(isLegalAction(act));
-    // Dependencies
+    // Dependencies and supply
     if (!isSatisfied(act.dependencies, false)
-     || !isSatisfied(act.borrows, false)
      || !hasEnoughSupply(act.cost.supply))
     {
         // TODO return time until next action is finished
-        return 1;
+        return getTimeTillNextActionIsFinished();
+    }
+
+    // Borrows
+    for (auto entity : act.borrows)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (entities[type] - borrowed[type] < count)
+        {
+            return getTimeTillNextActionIsFinished();
+        }
     }
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
@@ -303,4 +314,15 @@ ostream& operator<<(ostream& out, State& obj)
     }
 
     return out;
+}
+time_t State::getTimeTillNextActionIsFinished() const
+{
+    if (activeActions.empty())
+    {
+        return 0;
+    }
+    else
+    {
+        return activeActions.top().timeFinished - currentTime;
+    }
 }
