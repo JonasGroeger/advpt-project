@@ -54,21 +54,23 @@ void State::advanceTime(time_t amount)
 
         supply_max += res.supply;
 
+        // Unborrow units
+        for (std::pair<action_t, int> borrow : act->borrows)
+        {
+            borrowed[borrow.first] -= borrow.second;
+            assert(borrowed[borrow.first] >= 0);
+        }
+
         for (auto unit : res.units)
         {
-            cerr << "Adding " << unit.first << "x" << unit.second << endl;
             addUnit(unit.first, unit.second);
             producing[unit.first] -= unit.second;
+            assert(producing[unit.first] >= 0);
         }
     }
 
-    cerr << 1 << endl;
     increaseRessources(end_time-currentTime);
-    cerr << 2 << endl;
     currentTime = end_time;
-    cerr << 3 << endl;
-
-    cerr << "Advance finished" << endl;
 }
 
 // TODO this one is tricky because we need to identify the actions upon which we have to wait
@@ -252,17 +254,17 @@ ostream& operator<<(ostream& out, State& obj)
     for (auto e : obj.entities)
     {
         if (e.second)
-        out << "\tEntity: " << ConfigParser::Instance().getAction(e.first).name << "x " << e.second << endl;
+        out << "\tEntity: " << ConfigParser::Instance().getAction(e.first).name << ":" << e.second << endl;
     }
     for (auto b : obj.borrowed)
     {
         if (b.second)
-        out << "\tBorrowed: " << ConfigParser::Instance().getAction(b.first).name << "x " << b.second << endl;
+        out << "\tBorrowed: " << ConfigParser::Instance().getAction(b.first).name << ":" << b.second << endl;
     }
     for (auto p : obj.producing)
     {
         if (p.second)
-        out << "\tProducing: " << ConfigParser::Instance().getAction(p.first).name << "x " << p.second << endl;
+        out << "\tProducing: " << ConfigParser::Instance().getAction(p.first).name << ":" << p.second << endl;
     }
 
     out << "\tThere are currently " << obj.activeActions.size() << " active actions:" << endl;
@@ -276,7 +278,6 @@ ostream& operator<<(ostream& out, State& obj)
 
         out << "\t\t" << aa.action->name << " finished at: " << aa.timeFinished << endl;
     }
-    out << "\tThere are currently " << obj.activeActions.size() << " active actions:" << endl;
 
     return out;
 }
