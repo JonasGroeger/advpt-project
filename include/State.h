@@ -95,7 +95,7 @@ class State {
     int gasHarvesting;
 
     // This is used to determine if an Action that consumes gas is legal
-    bool willProduceGas = false;
+//    bool willProduceGas = false;
 
     public:
     // Paper S.3 "Action Legality"

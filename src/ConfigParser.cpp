@@ -280,7 +280,7 @@ action_t ConfigParser::getUnitId(string unitName)
 
 void ConfigParser::addUnitsToVector(XMLElement *element, const char *node, vector<std::pair<action_t, int>> &targetVector)
 {
-    for (XMLElement *tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement())
+    for (XMLElement *tmpElement = element->FirstChildElement(node); tmpElement != nullptr; tmpElement = tmpElement->NextSiblingElement(node))
     {
         string unitName = tmpElement->Attribute(ATTRIBUTE_NAME);
         action_t id = getUnitId(unitName);

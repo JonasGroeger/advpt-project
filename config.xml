@@ -8,7 +8,23 @@
         worker ... Wenn es in sc2sim/workers drin ist.
         gas_harvester ... Wenn es in sc2sim/gas_harvesters drin ist.
     -->
-    <race name="zerg">
+    <race name="zerg" default_supply="hatchery">
+        <start_units>
+
+        </start_units>
+
+        <max_units>
+            <!-- <unit name="<race name=ip" max="1"/> -->
+        </max_units>
+
+        <workers>
+            <unit name="drone"/>
+        </workers>
+
+        <gas_harvesters>
+            <unit name="extractor"/>;
+        </gas_harvesters>
+
         <action name="hatchery">
             <costs mineral="300" gas="0" time="10" supply="0">
                 <unit name="drone"/>
@@ -429,7 +445,22 @@
         </action>
     </race>
 
-    <race name="protoss">
+    <race name="protoss" default_supply="nexus">
+        <start_units>
+        </start_units>
+
+        <max_units>
+            <!-- <unit name="<race name=ip" max="1"/> -->
+        </max_units>
+
+        <workers>
+            <unit name="probe"/>
+        </workers>
+
+        <gas_harvesters>
+            <unit name="assimilator"/>
+        </gas_harvesters>
+
         <action name="probe">
             <costs mineral="50" gas="0" time="17" supply="1"/>
             <borrows>
