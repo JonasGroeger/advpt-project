@@ -40,8 +40,15 @@ public:
     *
     */
     vector<action_t> getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions);
-    bool insertActionIfPossible(action_t action, int position);
+
+    /*
+    * Insert an action at the given position in the buildlist. If the position is greater than the size of the buildlist
+    * the action will be inserted at the highest index (last in the buildlist).
+    */
+    bool insertActionIfPossible(action_t action, unsigned int position);
+
     bool removeActionIfPossible(int position);
+
     bool swapActionIfPossible(action_t old, action_t newAction, int position);
 
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
@@ -84,7 +91,7 @@ private:
     * @param pos    : the last position to check
     * @returns the resulting supply value as int
     */
-    int getSupply(int pos);
+    int getSupply(unsigned int pos);
 
     /*
     * Apply the cost/result supply of @action to a given value.
@@ -122,4 +129,10 @@ private:
     * @returns true if dependencies are met, false otherwise
     */
     bool checkBorrows(const vector<std::pair<action_t, int>> &borrows, const map<action_t, int> &currentUnits);
+
+    /*
+    * Checks, that there are no more units of a type than allowed in @currentUnits.
+    * @returns true, if no more than allowed units are built
+    */
+    bool checkMaxUnits(int maximumUnitsOfAType, action_t action, map<action_t, int> currentUnits);
 };
