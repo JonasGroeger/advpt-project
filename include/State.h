@@ -122,14 +122,17 @@ class State {
      */
     void startAction(const BuildAction&);
 
+    void addActionResult(const BuildResult&, bool removeProducing=true);
+
+    // TODO make private
+    public:
     /*
      * Adds @count units of typed @type
      * Besides incrementing the entities map the function will also adjust worker and gasHarvester counts
+     * NOTE: you probably want to use addActionResults
      */
     void addUnit(action_t type, int count = 1);
     
-    // TODO make private
-    public:
     void increaseRessources(time_t);
     /*
      * Returns true if all entries in @entities are satisfied

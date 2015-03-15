@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
 
     State s = State();
     cerr << "Adding command_center" << endl;
-    s.addUnit(ConfigParser::Instance().getAction("command_center").id);
+    s.addActionResult(ConfigParser::Instance().getAction("command_center").result, false);
     cerr << "Adding scv" << endl;
-    s.addUnit(ConfigParser::Instance().getAction("scv").id);
+    s.addActionResult(ConfigParser::Instance().getAction("scv").result, false);
 
     cerr << "Created state with a command_center and one scv" << endl;
 
@@ -45,12 +45,12 @@ int main(int argc, char *argv[])
     simple_test("Currently producing 0.7 minerals/second", s.getMineralsPerTick(), (ress_t)70);
     simple_test("Currently producing 0 gas/second", s.getGasPerTick(), (ress_t)0);
 
-    simple_test("supply_depot can be built in 2 ticks", s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("supply_depot")), (time_t)2);
+    simple_test("supply_depot can be built in 143 ticks", s.isAdditionalTimeNeeded(ConfigParser::Instance().getAction("supply_depot")), (time_t)143);
 
     cerr << s << endl;
 
-    cerr << "Advancing time by 2" << endl;
-    s.advanceTime(2);
+    cerr << "Advancing time by 143" << endl;
+    s.advanceTime(143);
     
     cerr << s << endl;
 

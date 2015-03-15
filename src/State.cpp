@@ -48,11 +48,7 @@ void State::advanceTime(time_t amount)
         activeActions.pop();
 
         const BuildResult& res = act->result;
-
-        minerals += res.minerals * RESS_FACTOR;
-        gas += res.gas * RESS_FACTOR;
-
-        supply_max += res.supply;
+        addActionResult(act->result);
 
         // Unborrow units
         for (std::pair<action_t, int> borrow : act->borrows)
@@ -61,12 +57,6 @@ void State::advanceTime(time_t amount)
             assert(borrowed[borrow.first] >= 0);
         }
 
-        for (auto unit : res.units)
-        {
-            addUnit(unit.first, unit.second);
-            producing[unit.first] -= unit.second;
-            assert(producing[unit.first] >= 0);
-        }
     }
 
     increaseRessources(end_time-currentTime);
@@ -87,8 +77,8 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         return 1;
     }
 
-    ress_t minerals_needed = act.cost.minerals - minerals;
-    ress_t gas_needed      = act.cost.gas - gas;
+    ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
+    ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
 
     if (minerals_needed < 0) minerals_needed = 0;
     if (gas_needed < 0) gas_needed = 0;
@@ -125,10 +115,10 @@ void State::startAction(const BuildAction& act)
     const BuildCost& cost = act.cost;
 
     // Consume minerals, gas and supply
-    assert(minerals >= cost.minerals);
-    minerals -= cost.minerals;
-    assert(gas >= cost.gas);
-    gas -= cost.gas;
+    assert(minerals >= cost.minerals*RESS_FACTOR);
+    minerals -= cost.minerals*RESS_FACTOR;
+    assert(gas >= cost.gas*RESS_FACTOR);
+    gas -= cost.gas*RESS_FACTOR;
     supply_used += cost.supply;
     assert(supply_used <= supply_max);
 
@@ -151,6 +141,23 @@ void State::startAction(const BuildAction& act)
     for (std::pair<action_t, int> result : act.result.units)
     {
             producing[result.first] += result.second;
+    }
+}
+
+void State::addActionResult(const BuildResult& res, bool removeProducing)
+{
+    minerals += res.minerals * RESS_FACTOR;
+    gas += res.gas * RESS_FACTOR;
+
+    supply_max += res.supply;
+    for (auto unit : res.units)
+    {
+        addUnit(unit.first, unit.second);
+        if (removeProducing)
+        {
+            producing[unit.first] -= unit.second;
+            assert(producing[unit.first] >= 0);
+        }
     }
 }
 
@@ -261,8 +268,8 @@ void State::reallocateWorkers()
 ostream& operator<<(ostream& out, State& obj)
 {
     out << "State with: " << endl;
-    out << "\tMinerals: " << obj.minerals << endl;
-    out << "\tGas: " << obj.gas << endl;
+    out << "\tMinerals: " << obj.minerals << " (~" << (obj.minerals/RESS_FACTOR) << ")" << endl;
+    out << "\tGas: " << obj.gas << " (~" << (obj.gas/RESS_FACTOR) << ")" << endl;
     out << "\tSupply: " << obj.supply_used << "/" << obj.supply_max << endl;
     out << "\tCurrent time: " << obj.currentTime << endl;
 
