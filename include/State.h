@@ -85,9 +85,6 @@ class State {
     // This is increase by 3 for every gas harvester
     int gasHarvesting;
 
-    // This is used to determine if an Action that consumes gas is legal
-//    bool willProduceGas = false;
-
     public:
     // Paper S.3 "Action Legality"
     /*
@@ -139,6 +136,11 @@ class State {
      * If @use_producing is true, untis that are currently being built are also taken into account.
      */
     bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
+    /*
+     * Returns true if at least ONE entry in @entities is satisfied
+     * If @use_producing is true, untis that are currently being built are also taken into account.
+     */
+    bool isOneSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
     bool hasEnoughSupply(ress_t supply_needed) const;
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;

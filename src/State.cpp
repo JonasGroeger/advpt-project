@@ -10,7 +10,7 @@ bool State::isLegalAction(const BuildAction& act)
     }
 
     // Borrows
-    if (!isSatisfied(act.borrows, true))
+    if (!isOneSatisfied(act.borrows, true))
     {
         LOG_DEBUG("bor failed");
         return false;
@@ -184,9 +184,9 @@ void State::increaseRessources(time_t t)
     gas      += t * getGasPerTick();
 }
 
-bool State::isSatisfied(const vector<std::pair<action_t, int>>& constrains, bool use_producing)
+bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
 {
-    for (auto entity : constrains)
+    for (auto entity : constraints)
     {
         action_t type = entity.first;
         int count = entity.second;
@@ -197,6 +197,21 @@ bool State::isSatisfied(const vector<std::pair<action_t, int>>& constrains, bool
         }
     }
     return true;
+}
+
+bool State::isOneSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
+{
+    for (auto entity : constraints)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (entities[type] + producing[type] * use_producing >= count)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool State::hasEnoughSupply(ress_t supply_needed) const
