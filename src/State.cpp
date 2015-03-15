@@ -86,19 +86,19 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     assert(minerals_needed == 0 || getMineralsPerTick() != 0);
     assert(gas_needed == 0 || getGasPerTick() != 0);
     
-    ress_t minerals_time = minerals_needed / getMineralsPerTick();
-    ress_t gas_time      = gas_needed / getGasPerTick();
+    ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
+    ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
 
     if (minerals_needed == 0) minerals_time = 0;
     if (gas_needed == 0) gas_time = 0;
 
     if (minerals_time > gas_time)
     {
-        return minerals_time+1;
+        return minerals_time;
     }
     else
     {
-        return gas_time+1;
+        return gas_time;
     }
 }
 
@@ -271,6 +271,7 @@ ostream& operator<<(ostream& out, State& obj)
     out << "\tMinerals: " << obj.minerals << " (~" << (obj.minerals/RESS_FACTOR) << ")" << endl;
     out << "\tGas: " << obj.gas << " (~" << (obj.gas/RESS_FACTOR) << ")" << endl;
     out << "\tSupply: " << obj.supply_used << "/" << obj.supply_max << endl;
+    out << "\tWorkers: " << obj.workersAll << "/" << obj.workersMinerals << "/" << obj.workersGas << endl;
     out << "\tCurrent time: " << obj.currentTime << endl;
 
     for (auto e : obj.entities)

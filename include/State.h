@@ -3,6 +3,7 @@
 #include <map>
 #include <queue> 
 #include <cassert> 
+#include <cmath> 
 
 // TODO remove
 #include <iostream>
@@ -32,6 +33,7 @@ class State {
     //I think it is fine to expose these fields without getter and setters
     public: 
     friend ostream& operator<<(ostream& out, State& obj);
+    friend int main(int argc, char*argv[]);
     // The elapsed time
     time_t currentTime = 0;
 
@@ -125,7 +127,7 @@ class State {
     void addActionResult(const BuildResult&, bool removeProducing=true);
 
     // TODO make private
-    public:
+    private:
     /*
      * Adds @count units of typed @type
      * Besides incrementing the entities map the function will also adjust worker and gasHarvester counts
