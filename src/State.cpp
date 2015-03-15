@@ -30,9 +30,8 @@ bool State::isLegalAction(const BuildAction& act)
 void State::advanceTime(time_t amount)
 {
     time_t end_time = currentTime + amount;
+
     // Finish all actions that will end withing @amount
-    // TODO read priority_queue docs
-    // TODO is <= correct?
     while (!activeActions.empty() && activeActions.top().timeFinished <= currentTime + amount)
     {
         time_t time_delta = activeActions.top().timeFinished - currentTime;
@@ -63,8 +62,6 @@ void State::advanceTime(time_t amount)
     currentTime = end_time;
 }
 
-// TODO this one is tricky because we need to identify the actions upon which we have to wait
-// Also for determining how long until ressources are available we have to take active actions into account that are producing workers which will increase ressource production
 time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 {
     assert(isLegalAction(act));
@@ -72,7 +69,6 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     if (!isSatisfied(act.dependencies, false)
      || !hasEnoughSupply(act.cost.supply))
     {
-        // TODO return time until next action is finished
         return getTimeTillNextActionIsFinished();
     }
 
@@ -86,6 +82,16 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         {
             return getTimeTillNextActionIsFinished();
         }
+    }
+
+    // Maybe we have to wait until workers are produced
+    if (minerals_needed != 0 && getMineralsPerTick() == 0)
+    {
+        return getTimeTillNextActionIsFinished();
+    }
+    if (gas_needed != 0 && getGasPerTick() == 0)
+    {
+        return getTimeTillNextActionIsFinished();
     }
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
@@ -132,7 +138,6 @@ void State::startAction(const BuildAction& act)
     gas -= cost.gas*RESS_FACTOR;
     supply_used += cost.supply;
     assert(supply_used <= supply_max);
-
 
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)

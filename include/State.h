@@ -5,7 +5,6 @@
 #include <cassert> 
 #include <cmath> 
 
-// TODO remove
 #include <iostream>
 using namespace std;
 
@@ -52,7 +51,6 @@ class State {
 
     /*
      * This simply represents an action that is currently being produced
-     * TODO I just overloaded functions until the compiler stopped complaining
      */
     class ActiveAction
     {
