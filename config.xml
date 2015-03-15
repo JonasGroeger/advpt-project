@@ -10,12 +10,12 @@
     -->
     <race name="zerg" default_supply="hatchery">
         <start_units>
-
+            <unit name="hatchery" count="1"/>
+            <unit name="drone" count="5"/>
+            <unit name="overlord" count="1"/>
         </start_units>
 
-        <max_units>
-            <!-- <unit name="<race name=ip" max="1"/> -->
-        </max_units>
+        <max_units/>
 
         <workers>
             <unit name="drone"/>
@@ -447,6 +447,8 @@
 
     <race name="protoss" default_supply="nexus">
         <start_units>
+            <unit name="nexus" count="1"/>
+            <unit name="probe" count="5"/>
         </start_units>
 
         <max_units>
@@ -865,8 +867,8 @@
 
     <race name="terran" default_supply="supply_depot">
           <start_units>
-              <unit name="scv" count="5"></unit>
-              <unit name="command_center" count="1"></unit>
+              <unit name="scv" count="5"/>
+              <unit name="command_center" count="1"/>
           </start_units>
 
           <max_units>
