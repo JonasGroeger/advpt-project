@@ -29,27 +29,27 @@ message( "CXX FLAGS:   -> " ${CMAKE_CXX_FLAGS} )
 
 # Add all the header files ...
 set( HPP_FILES
-    include/tinyxml2.h
     include/BuildAction.h
+    include/BuildOrder.h
     include/ConfigParser.h
     include/State.h
-    include/BuildOrder.h
+    include/tinyxml2.h
 )
 
 # ... and source files ...
 set( CPP_FILES
-  src/tinyxml2.cpp
+  src/BuildOrder.cpp
   src/ConfigParser.cpp
   src/State.cpp
-  src/BuildOrder.cpp
+  src/tinyxml2.cpp
 )
 
 # ... to build the executable.
 add_executable( ${EXECUTABLE} src/main.cpp ${CPP_FILES} ${HPP_FILES} )
 
+# Test executables
 add_executable( test_xml tests/xml.cpp ${CPP_FILES} ${HPP_FILES} )
 add_executable( test_state tests/state.cpp ${CPP_FILES} ${HPP_FILES} )
-
 add_executable( test_buildorder tests/buildorder.cpp ${CPP_FILES} ${HPP_FILES} )
-# Uncomment (to enable) or Comment (to disable) the debug output (see includes/Debug.hpp)
-add_definitions(-DDEBUG)
+
+add_definitions(-DDEBUG) # Uncomment (to enable) or Comment (to disable) the debug output (see include/Debug.hpp)
