@@ -452,7 +452,7 @@
         </start_units>
 
         <max_units>
-            <!-- <unit name="<race name=ip" max="1"/> -->
+            <unit name="mothership" max="1"/>
         </max_units>
 
         <workers>
@@ -871,9 +871,7 @@
               <unit name="command_center" count="1"/>
           </start_units>
 
-          <max_units>
-              <unit name="mothership" max="1"/>
-          </max_units>
+          <max_units/>
 
           <workers>
               <unit name="scv"/>
