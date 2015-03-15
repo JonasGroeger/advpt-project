@@ -80,7 +80,7 @@ private:
     const char* ATTRIBUTE_GAS = "gas";
     const char* ATTRIBUTE_TIME = "time";
     const char* ATTRIBUTE_SUPPLY = "supply";
-    // const char* ATTRIBUTE_MAX = "max";
+    const char* ATTRIBUTE_MAX = "max";
 
     XMLDocument xmlConfig;
     map<string, int> unitMap;

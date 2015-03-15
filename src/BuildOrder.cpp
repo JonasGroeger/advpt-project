@@ -68,13 +68,16 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
     return;
 }
 
-bool BuildOrder::insertActionIfPossible(action_t action, int position)
-{
-    if(position < 0) return false;
-    //assert(position > 0);
-    if(buildList.size() < (unsigned int)position) return false;
 
-    //first get the "state" until pos-1 in our buildorder
+bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
+{
+    // Assuming one provides a insert index higher than the list size, just insert it at the last position
+    if(position > buildList.size())
+    {
+        position = buildList.size();
+    }
+
+    // first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
     int supply = getSupply(position);
     map<action_t, int> currUnits;
@@ -82,17 +85,19 @@ bool BuildOrder::insertActionIfPossible(action_t action, int position)
     auto startUnits = ConfigParser::Instance().getStartConfig();
     for(auto startPair : startUnits)
     {
-        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name<<"] "<<startPair.second);
+        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name << "] "
+                << startPair.second);
         currUnits[startPair.first] = startPair.second;
     }
 
+    // Add the units until the insert position (excl.) in the list.
     for(int c = 0; c < position; c++)
     {
         addOrIncrementUnit(currUnits, (*iter));
         iter++;
     }
 
-    //check if action is possible
+    // Check if the newly inserted action is possible at all
     if(!isActionPossible(currUnits, supply, action))
     {
         return false;
@@ -154,8 +159,9 @@ bool BuildOrder::isActionPossible(map<action_t, int> currentUnits, int currentSu
 {
     BuildAction bAction = ConfigParser::Instance().getAction(action);
     return checkSupply(bAction.cost.supply, currentSupply)
-    && checkDependencies(bAction.dependencies, currentUnits)
-    && checkBorrows(bAction.borrows, currentUnits);
+            && checkDependencies(bAction.dependencies, currentUnits)
+            && checkBorrows(bAction.borrows, currentUnits)
+            && checkMaxUnits(bAction.maxNumber, action, currentUnits);
 }
 
 vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions)
@@ -187,14 +193,11 @@ void BuildOrder::reset(){
     availableUnits.clear();
 }
 
-int BuildOrder::getSupply(int pos)
+int BuildOrder::getSupply(unsigned int pos)
 {
     int result = 0;
-    if(pos <= 0) return 0;
     int count = 0;
-    for(auto iter = buildList.begin();
-        iter != buildList.end() && count < pos;
-        iter++)
+    for(auto iter = buildList.begin(); iter != buildList.end() && count < pos; iter++)
     {
         count++;
         result -= ConfigParser::Instance().getAction((*iter)).cost.supply;
@@ -255,4 +258,17 @@ ostream& operator<<(ostream &out, BuildOrder &obj)
         c++;
     }
     return out;
+}
+
+bool BuildOrder::checkMaxUnits(int maximumUnitsOfAType, action_t action, map<action_t, int> currentUnits)
+{
+    unsigned long builtUnitsOfAType = currentUnits.count(action);
+
+    if(builtUnitsOfAType >= maximumUnitsOfAType)
+    {
+        LOG_DEBUG("Cannot build [" << ConfigParser::Instance().getAction(action).name << "]."
+                "Already at maximum: " << builtUnitsOfAType << ".");
+        return false;
+    }
+    return true;
 }
