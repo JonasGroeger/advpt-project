@@ -69,28 +69,11 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 
 bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 {
-    //this should never hapen when calling method works correctly
-    assert(position < buildList.size());
+    assert(position <= buildList.size());
 
     // first get the "state" until pos-1 in our buildorder
-    auto iter = buildList.begin();
     int supply = getSupply(position);
-    map<action_t, int> currUnits;
-
-    auto startUnits = ConfigParser::Instance().getStartConfig();
-    for(auto startPair : startUnits)
-    {
-        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name << "] "
-                << startPair.second);
-        currUnits[startPair.first] = startPair.second;
-    }
-
-    // Add the units until the insert position (excl.) in the list.
-    for(int c = 0; c < position; c++)
-    {
-        addOrIncrementUnit(currUnits, (*iter));
-        iter++;
-    }
+    map<action_t, int> currUnits = applyBuildOrderUntilPos(position);
 
     // Check if the newly inserted action is possible at all
     if(!isActionPossible(currUnits, supply, action))
@@ -99,17 +82,12 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
     }
     addOrIncrementUnit(currUnits, action);
     supply = applySupply(supply, action);
-
-    for(;iter != buildList.end(); iter++)
+    if(checkBuildOrderFromPos(currUnits, supply, position))
     {
-        if(!isActionPossible(currUnits, supply, (*iter))){
-            return false;
-        }
-        addOrIncrementUnit(currUnits, (*iter));
-        supply = applySupply(supply, (*iter));
+        buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
+        return true;
     }
-    buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
-    return true;
+    return false;
 }
 
 bool BuildOrder::removeActionIfPossible(unsigned int position)
@@ -117,35 +95,38 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     assert(position < buildList.size());
 
     //first get the "state" until pos-1 in our buildorder
-    auto iter = buildList.begin();
     int supply = getSupply(position);
-    map<action_t, int> currUnits;
+    map<action_t, int> currUnits = applyBuildOrderUntilPos(position);
 
-    auto startUnits = ConfigParser::Instance().getStartConfig();
-    for(auto startPair : startUnits)
-    {
-        LOG_DEBUG("ADDING START UNITS : [" << ConfigParser::Instance().getAction(startPair.first).name<<"] "<<startPair.second);
-        currUnits[startPair.first] = startPair.second;
-    }
-
-    for(int c = 0; c < position; c++)
-    {
-        addOrIncrementUnit(currUnits, (*iter));
-        iter++;
-    }
     //skip the action we want to remove
-    iter++;
-
-    for(;iter != buildList.end(); iter++)
+    if(checkBuildOrderFromPos(currUnits, supply, position+1))
     {
-        if(!isActionPossible(currUnits, supply, (*iter))){
-            return false;
-        }
-        addOrIncrementUnit(currUnits, (*iter));
-        supply = applySupply(supply, (*iter));
+        buildList.erase(buildList.begin()+position);
+        return true;
     }
-    buildList.erase(buildList.begin()+position);
-    return true;
+    return false;
+}
+
+bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int position)
+{
+    assert(position < buildList.size());
+
+    //first get the "state" until pos-1 in our buildorder
+    int supply = getSupply(position);
+    map<action_t, int> currUnits = applyBuildOrderUntilPos(position);
+
+    // Check if the swapped action is possible
+    if(!isActionPossible(currUnits, supply, newAction))
+    {
+        return false;
+    }
+
+    if(checkBuildOrderFromPos(currUnits, supply, position+1))
+    {
+        buildList[position] = newAction;
+        return true;
+    }
+    return false;
 }
 
 bool BuildOrder::isActionPossible(const map<action_t, int> &currentUnits, unsigned int currentSupply, action_t action)
@@ -178,6 +159,44 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
 bool BuildOrder::checkSupply(unsigned int costSupply, unsigned int currentSupply)
 {
     return currentSupply >= costSupply;
+}
+
+map<action_t, int> BuildOrder::applyBuildOrderUntilPos(unsigned int pos)
+{
+    map<action_t, int> returnUnits;
+
+    //first get the "state" until pos-1 in our buildorder
+    auto iter = buildList.begin();
+    auto startUnits = ConfigParser::Instance().getStartConfig();
+    for(auto startPair : startUnits)
+    {
+        returnUnits[startPair.first] = startPair.second;
+    }
+
+    for(int index = 0; index < pos; index++)
+    {
+        auto action = *iter;
+        addOrIncrementUnit(returnUnits, action);
+        iter++;
+    }
+
+    return returnUnits;
+}
+
+bool BuildOrder::checkBuildOrderFromPos(map<action_t, int> &units, int supply, int pos)
+{
+    auto iter = buildList.begin() + pos;
+
+    for(; iter != buildList.end(); iter++)
+    {
+        auto action = *iter;
+        if(!isActionPossible(units, supply, action)){
+            return false;
+        }
+        addOrIncrementUnit(units, action);
+        supply = applySupply(supply, action);
+    }
+    return true;
 }
 
 void BuildOrder::reset()
