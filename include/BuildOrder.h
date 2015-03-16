@@ -31,8 +31,7 @@ public:
     * Initializes a given BuildOrder given by the values by @other.
     */
     BuildOrder(const BuildOrder& other)
-        :availableSupply(other.availableSupply)
-        ,availableUnits(other.availableUnits)
+        :availableUnits(other.availableUnits)
         ,buildList(other.buildList)
     {};
 
@@ -47,14 +46,13 @@ public:
     */
     bool insertActionIfPossible(action_t action, unsigned int position);
 
-    bool removeActionIfPossible(int position);
+    bool removeActionIfPossible(unsigned int position);
 
-    bool swapActionIfPossible(action_t old, action_t newAction, int position);
+    bool swapActionIfPossible(action_t old, action_t newAction, unsigned int position);
 
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
 
 private:
-    int availableSupply = 0;
     map<action_t, int> availableUnits;
     vector<action_t> buildList;
 
@@ -69,7 +67,7 @@ private:
     * @param action         : the action to check if its execution is possible
     * @returns true if action is possible, false otherwise
     */
-    bool isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action);
+    bool isActionPossible(const map<action_t, int> &currentUnits, unsigned int currentSupply, action_t action);
 
     /*
      * Removes all build steps and creates a fresh BuildOrder with all dependencies
@@ -99,7 +97,7 @@ private:
     * @param action     : the action_t to apply
     * @returns the resulting supply value with applied action_t
     */
-    int applySupply(int currSupply, action_t action);
+    int applySupply(unsigned int currSupply, action_t action);
 
     /*
     * Checks if @unit is already present in @unitMap, if so it will increment the unit count
@@ -114,7 +112,7 @@ private:
     * Checks if @currentSupply >= costSupply
     * @returns true if currentSupply >= costSupply, false otherwise
     */
-    bool checkSupply(int costSupply, int currentSupply);
+    bool checkSupply(unsigned int costSupply, unsigned int currentSupply);
 
     /*
     * Checks if the dependencies given by the @dependencies vector are fulfilled by the map @currentUnits.
@@ -134,5 +132,5 @@ private:
     * Checks, that there are no more units of a type than allowed in @currentUnits.
     * @returns true, if no more than allowed units are built
     */
-    bool checkMaxUnits(int maximumUnitsOfAType, action_t action, map<action_t, int> currentUnits);
+    bool checkMaxUnits(unsigned int maximumUnitsOfAType, action_t action, const map<action_t, int> &currentUnits);
 };

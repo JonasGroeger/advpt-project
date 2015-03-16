@@ -36,5 +36,5 @@ typedef struct BuildAction
 
     bool isWorker = false;
     bool isGasHarvester = false;
-     int maxNumber = 0;
+    int maxNumber = 0;
 } BuildAction;

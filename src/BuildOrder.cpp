@@ -72,7 +72,7 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 {
     //this should never hapen when calling method works correctly
-    assert(position > 0 && position < buildList.size());
+    assert(position < buildList.size());
 
     // first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
@@ -114,9 +114,9 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
     return true;
 }
 
-bool BuildOrder::removeActionIfPossible(int position)
+bool BuildOrder::removeActionIfPossible(unsigned int position)
 {
-    assert(position > 0 && position < buildList.size());
+    assert(position < buildList.size());
 
     //first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
@@ -150,7 +150,7 @@ bool BuildOrder::removeActionIfPossible(int position)
     return true;
 }
 
-bool BuildOrder::isActionPossible(map<action_t, int> currentUnits, int currentSupply, action_t action)
+bool BuildOrder::isActionPossible(const map<action_t, int> &currentUnits, unsigned int currentSupply, action_t action)
 {
     BuildAction bAction = ConfigParser::Instance().getAction(action);
     return checkSupply(bAction.cost.supply, currentSupply)
@@ -177,7 +177,7 @@ vector<action_t> BuildOrder::getPossibleNextActions(const map<action_t, int> &cu
     return resultVec;
 }
 
-bool BuildOrder::checkSupply(int costSupply, int currentSupply)
+bool BuildOrder::checkSupply(unsigned int costSupply, unsigned int currentSupply)
 {
     return currentSupply >= costSupply;
 }
@@ -185,7 +185,6 @@ bool BuildOrder::checkSupply(int costSupply, int currentSupply)
 void BuildOrder::reset()
 {
     buildList.clear();
-    availableSupply = 0;
     availableUnits.clear();
 }
 
@@ -203,7 +202,7 @@ int BuildOrder::getSupply(unsigned int index)
     return result;
 }
 
-int BuildOrder::applySupply(int currSupply, action_t action)
+int BuildOrder::applySupply(unsigned int currSupply, action_t action)
 {
     BuildAction bAction = ConfigParser::Instance().getAction(action);
     currSupply -= bAction.cost.supply;
@@ -257,14 +256,14 @@ ostream& operator<<(ostream &out, BuildOrder &obj)
     return out;
 }
 
-bool BuildOrder::checkMaxUnits(int unitMax, action_t action, map<action_t, int> currentUnits)
+bool BuildOrder::checkMaxUnits(unsigned int unitMax, action_t action, const map<action_t, int> &currentUnits)
 {
     //this is our default case with an unlimited unit
     if(unitMax == 0) return true;
     //unit is not yet present in our current state
     if(currentUnits.count(action) == 0) return true;
 
-    unsigned long unitCount = currentUnits[action];
+    unsigned long unitCount = currentUnits.at(action);
     LOG_DEBUG("Checking Unit [" << ConfigParser::Instance().getAction(action).name <<"] with max of ["
             << ConfigParser::Instance().getAction(action).maxNumber << "] and currently available [" << unitCount << "]");
     return unitCount < unitMax;
