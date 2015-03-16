@@ -74,20 +74,20 @@ void ConfigParser::parseConfig(char *file)
         for (XMLElement *max = maxElement->FirstChildElement(NODE_UNIT); max != nullptr;
              max = max->NextSiblingElement(NODE_UNIT))
         {
-            string workerName = max->Attribute(ATTRIBUTE_NAME);
+            string unitName = max->Attribute(ATTRIBUTE_NAME);
             int maxNumber = max->IntAttribute(ATTRIBUTE_MAX);
 
-            // find workers with name <workerName> in all units
+            // find units with name <unitName> in all actions of current race
             auto it = find_if(currRace.actions.begin(), currRace.actions.end(),
-                    [&workerName](const std::pair<action_t, BuildAction> &action)
+                    [&unitName](const std::pair<action_t, BuildAction> &action)
                     {
-                        return workerName.compare(action.second.name) == 0;
+                        return unitName.compare(action.second.name) == 0;
                     });
 
             if (it != currRace.actions.end())
             {
                 it->second.maxNumber = maxNumber;
-                LOG_DEBUG("   Found maxNumber for " << workerName << ": " << maxNumber);
+                LOG_DEBUG("   Found instance limit for unit [" << unitName << "] with max of [" << maxNumber << "]");
             }
         }
 
