@@ -71,11 +71,8 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 
 bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 {
-    // Assuming one provides a insert index higher than the list size, just insert it at the last position
-    if(position > buildList.size())
-    {
-        position = buildList.size();
-    }
+    //this should never hapen when calling method works correctly
+    assert(position > 0 && position < buildList.size());
 
     // first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
@@ -119,9 +116,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 
 bool BuildOrder::removeActionIfPossible(int position)
 {
-    if(position < 0) return false;
-    //assert(position > 0);
-    if(buildList.size() < (unsigned int)position) return false;
+    assert(position > 0 && position < buildList.size());
 
     //first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin();
