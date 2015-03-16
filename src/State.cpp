@@ -46,7 +46,6 @@ void State::advanceTime(time_t amount)
         LOG_DEBUG("Handle action with id: " << act->id << " and finishTime: " << activeActions.top().timeFinished);
         activeActions.pop();
 
-        const BuildResult& res = act->result;
         addActionResult(act->result);
 
         // Unborrow units
@@ -84,6 +83,9 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         }
     }
 
+    ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
+    ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
+
     // Maybe we have to wait until workers are produced
     if (minerals_needed != 0 && getMineralsPerTick() == 0)
     {
@@ -93,9 +95,6 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     {
         return getTimeTillNextActionIsFinished();
     }
-
-    ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
-    ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
 
     if (minerals_needed < 0) minerals_needed = 0;
     if (gas_needed < 0) gas_needed = 0;
