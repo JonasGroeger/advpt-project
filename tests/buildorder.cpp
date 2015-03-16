@@ -17,13 +17,37 @@ int main(int argc, char *argv[])
 
     ConfigParser::Instance().parseConfig(argv[1]);
 
-    bool b = false;
     BuildOrder order("battlecruiser");
+    //insert a few unneeded units
+    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
+    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
+    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
+    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
+    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
+
+    //should be possible
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 3));
+
+    //list size should now be 0 .. 12 with last entry == battlecruiser
+
+    //should work because 12 == buildList size
+    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 12));
+    //should work
+    assert(order.removeActionIfPossible(12));
+    //should work
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("battlecruiser").id, 12));
+    //should work
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("refinery").id, 6));
+    //should fail
+    assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 10));
+    //should work
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 1));
+    //should fail
+    assert(!order.removeActionIfPossible(0));
+    //should work
+    assert(order.removeActionIfPossible(2));
 
     std::cout << order << endl;
-
-    cout << "This is the value of b: " << b << endl;
-    cout << "I don't know why this variable exists but it must be really important! :)" << endl;
     cout << "SUCCESS" << endl;
     return 0;
 }
