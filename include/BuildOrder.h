@@ -87,11 +87,11 @@ private:
     void getDependencies(action_t id, vector<action_t> &outVector);
 
     /*
-    * Calculates the resulting supply for this BuildOrder from step[0] to step[pos-1]
-    * @param pos    : the last position to check
+    * Calculates the remaining supply of this BuildOrder after building units from step[0] to step[pos-1].
+    * @param index    : the last position to check
     * @returns the resulting supply value as int
     */
-    int getSupply(unsigned int pos);
+    int getSupply(unsigned int index);
 
     /*
     * Apply the cost/result supply of @action to a given value.

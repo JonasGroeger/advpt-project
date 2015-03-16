@@ -187,21 +187,23 @@ bool BuildOrder::checkSupply(int costSupply, int currentSupply)
     return currentSupply >= costSupply;
 }
 
-void BuildOrder::reset(){
+void BuildOrder::reset()
+{
     buildList.clear();
     availableSupply = 0;
     availableUnits.clear();
 }
 
-int BuildOrder::getSupply(unsigned int pos)
+int BuildOrder::getSupply(unsigned int index)
 {
     int result = 0;
-    int count = 0;
-    for(auto iter = buildList.begin(); iter != buildList.end() && count < pos; iter++)
+    int idx = 0;
+    for(auto it = buildList.begin(); it != buildList.end() && idx < index; it++)
     {
-        count++;
-        result -= ConfigParser::Instance().getAction((*iter)).cost.supply;
-        result += ConfigParser::Instance().getAction((*iter)).result.supply;
+        idx++;
+        action_t action = (*it);
+        result -= ConfigParser::Instance().getAction(action).cost.supply;
+        result += ConfigParser::Instance().getAction(action).result.supply;
     }
     return result;
 }
