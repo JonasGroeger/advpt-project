@@ -8,7 +8,7 @@
         worker ... Wenn es in sc2sim/workers drin ist.
         gas_harvester ... Wenn es in sc2sim/gas_harvesters drin ist.
     -->
-    <race name="zerg" default_supply="hatchery">
+    <race name="zerg" default_supply="overlord">
         <start_units>
             <unit name="hatchery" count="1"/>
             <unit name="drone" count="5"/>
@@ -445,7 +445,7 @@
         </action>
     </race>
 
-    <race name="protoss" default_supply="nexus">
+    <race name="protoss" default_supply="pylon">
         <start_units>
             <unit name="nexus" count="1"/>
             <unit name="probe" count="5"/>

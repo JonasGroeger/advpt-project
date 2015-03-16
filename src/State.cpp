@@ -10,7 +10,7 @@ bool State::isLegalAction(const BuildAction& act)
     }
 
     // Borrows
-    if (!isSatisfied(act.borrows, true))
+    if (!isOneSatisfied(act.borrows, true))
     {
         LOG_DEBUG("bor failed");
         return false;
@@ -32,9 +32,7 @@ void State::advanceTime(time_t amount)
     time_t end_time = currentTime + amount;
 
     // Finish all actions that will end withing @amount
-    // TODO read priority_queue docs
-    // TODO is <= correct?
-    while (activeActions.top().timeFinished <= currentTime + amount)
+    while (!activeActions.empty() && activeActions.top().timeFinished <= currentTime + amount)
     {
         time_t time_delta = activeActions.top().timeFinished - currentTime;
         assert(time_delta >= 0);
@@ -44,82 +42,147 @@ void State::advanceTime(time_t amount)
         currentTime += time_delta;
 
         // Handle action results
-        const BuildAction& act = activeActions.top().action;
-        LOG_DEBUG("Handle action with id: " << act.id << " and finishTime: " << activeActions.top().timeFinished);
+        const BuildAction* act = activeActions.top().action;
+        LOG_DEBUG("Handle action with id: " << act->id << " and finishTime: " << activeActions.top().timeFinished);
         activeActions.pop();
 
-        const BuildResult& res = act.result;
+        const BuildResult& res = act->result;
+        addActionResult(act->result);
 
-        minerals += res.minerals * RESS_FACTOR;
-        gas += res.gas * RESS_FACTOR;
-
-        supply_max += res.supply;
-
-        for (auto unit : res.units)
+        // Unborrow units
+        for (std::pair<action_t, int> borrow : act->borrows)
         {
-            addUnit(unit.first, unit.second);
-            producing[unit.first] -= unit.second;
+            borrowed[borrow.first] -= borrow.second;
+            assert(borrowed[borrow.first] >= 0);
         }
+
     }
 
-    increaseRessources(currentTime - end_time);
+    increaseRessources(end_time-currentTime);
     currentTime = end_time;
 }
 
-// TODO this one is tricky because we need to identify the actions upon which we have to wait
-// Also for determining how long until ressources are available we have to take active actions into account that are producing workers which will increase ressource production
 time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 {
     assert(isLegalAction(act));
-    // Dependencies
+    // Dependencies and supply
     if (!isSatisfied(act.dependencies, false)
-     || !isSatisfied(act.borrows, false)
      || !hasEnoughSupply(act.cost.supply))
     {
-        // TODO return time until next action is finished
-        return 1;
+        return getTimeTillNextActionIsFinished();
     }
 
-    ress_t minerals_needed = minerals - act.cost.minerals;
-    ress_t gas_needed      = gas - act.cost.gas;
+    // Borrows
+    for (auto entity : act.borrows)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (entities[type] - borrowed[type] < count)
+        {
+            return getTimeTillNextActionIsFinished();
+        }
+    }
+
+    // Maybe we have to wait until workers are produced
+    if (minerals_needed != 0 && getMineralsPerTick() == 0)
+    {
+        return getTimeTillNextActionIsFinished();
+    }
+    if (gas_needed != 0 && getGasPerTick() == 0)
+    {
+        return getTimeTillNextActionIsFinished();
+    }
+
+    ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
+    ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
 
     if (minerals_needed < 0) minerals_needed = 0;
     if (gas_needed < 0) gas_needed = 0;
 
-    // TODO division by zero
-    ress_t minerals_time = minerals_needed / getMineralsPerTick();
-    ress_t gas_time      = gas_needed / getGasPerTick();
+    assert(minerals_needed == 0 || getMineralsPerTick() != 0);
+    assert(gas_needed == 0 || getGasPerTick() != 0);
+    
+    ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
+    ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
+
+    if (minerals_needed == 0) minerals_time = 0;
+    if (gas_needed == 0) gas_time = 0;
 
     if (minerals_time > gas_time)
     {
-        return minerals_time+1;
+        return minerals_time;
     }
     else
     {
-        return gas_time+1;
+        return gas_time;
     }
 }
 
 void State::startAction(const BuildAction& act)
 {
-    // TODO remember to add result to producing
-    ActiveAction aa(currentTime + act.cost.time, act);
+    // Checking dependencies
+    assert(isSatisfied(act.dependencies, false));
+
+    ActiveAction aa(currentTime + act.cost.time, &act);
     activeActions.push(aa);
     
     LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
 
-    // TODO consume and borrow ressources
+    const BuildCost& cost = act.cost;
+
+    // Consume minerals, gas and supply
+    assert(minerals >= cost.minerals*RESS_FACTOR);
+    minerals -= cost.minerals*RESS_FACTOR;
+    assert(gas >= cost.gas*RESS_FACTOR);
+    gas -= cost.gas*RESS_FACTOR;
+    supply_used += cost.supply;
+    assert(supply_used <= supply_max);
+
+    // Remove the unit cost
+    for (std::pair<action_t, int> unit : cost.units)
+    {
+        assert(entities[unit.first] >= unit.second);
+        entities[unit.first] -= unit.second;
+    }
+
+    // Borrow some units
+    for (std::pair<action_t, int> borrow : act.borrows)
+    {
+        borrowed[borrow.first] += borrow.second;
+        assert(borrowed[borrow.first] <= entities[borrow.first]);
+    }
+
+    // We mark the results as being produced
+    for (std::pair<action_t, int> result : act.result.units)
+    {
+            producing[result.first] += result.second;
+    }
+}
+
+void State::addActionResult(const BuildResult& res, bool removeProducing)
+{
+    minerals += res.minerals * RESS_FACTOR;
+    gas += res.gas * RESS_FACTOR;
+
+    supply_max += res.supply;
+    for (auto unit : res.units)
+    {
+        addUnit(unit.first, unit.second);
+        if (removeProducing)
+        {
+            producing[unit.first] -= unit.second;
+            assert(producing[unit.first] >= 0);
+        }
+    }
 }
 
 void State::addUnit(action_t type, int count)
 {
-    // TODO
-    // TODO clean the worker detection up
     entities[type] += count;
 
     // This ain't pretty but it works
     const BuildAction& act = ConfigParser::Instance().getAction(type);
-    cerr << "Action: " << act.name << ":" << act.isWorker << endl;
     if (act.isGasHarvester)
     {
         gasHarvesting += 3;
@@ -128,19 +191,11 @@ void State::addUnit(action_t type, int count)
     if (act.isWorker) 
     {
         workersAll += count;
+    }
 
-        for (int i = 0; i < count; i++)
-        {
-            // Always put workers into gas if possible
-            if (workersGas < gasHarvesting)
-            {
-                workersGas++;
-            }
-            else
-            {
-                workersMinerals++;
-            }
-        }
+    if (act.isWorker || act.isGasHarvester)
+    {
+        reallocateWorkers();
     }
 }
 
@@ -152,9 +207,9 @@ void State::increaseRessources(time_t t)
     gas      += t * getGasPerTick();
 }
 
-bool State::isSatisfied(const vector<std::pair<action_t, int>>& constrains, bool use_producing)
+bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
 {
-    for (auto entity : constrains)
+    for (auto entity : constraints)
     {
         action_t type = entity.first;
         int count = entity.second;
@@ -165,6 +220,21 @@ bool State::isSatisfied(const vector<std::pair<action_t, int>>& constrains, bool
         }
     }
     return true;
+}
+
+bool State::isOneSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
+{
+    for (auto entity : constraints)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (entities[type] + producing[type] * use_producing >= count)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool State::hasEnoughSupply(ress_t supply_needed) const
@@ -182,4 +252,82 @@ ress_t State::getGasPerTick() const
 {
     // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
     return GAS_PER_TIME_UNIT * workersGas;
+}
+
+void State::reallocateWorkers()
+{
+    if (workersAll == 0)
+    {
+        return;
+    }
+
+    int workersRemaining = workersAll;
+    
+    // Always have at least one worker mine minerals
+    workersMinerals = 1;
+    workersRemaining --;
+
+    if (gasHarvesting >= workersRemaining)
+    {
+        workersGas = workersRemaining;
+        workersRemaining = 0;
+    }
+    else
+    {
+        workersGas = gasHarvesting;
+        workersRemaining -= gasHarvesting;
+    }
+
+    workersMinerals += workersRemaining;
+}
+
+ostream& operator<<(ostream& out, State& obj)
+{
+    out << "State with: " << endl;
+    out << "\tMinerals: " << obj.minerals << " (~" << (obj.minerals/RESS_FACTOR) << ")" << endl;
+    out << "\tGas: " << obj.gas << " (~" << (obj.gas/RESS_FACTOR) << ")" << endl;
+    out << "\tSupply: " << obj.supply_used << "/" << obj.supply_max << endl;
+    out << "\tWorkers: " << obj.workersAll << "/" << obj.workersMinerals << "/" << obj.workersGas << endl;
+    out << "\tCurrent time: " << obj.currentTime << endl;
+
+    for (auto e : obj.entities)
+    {
+        if (e.second)
+        out << "\tEntity: " << ConfigParser::Instance().getAction(e.first).name << ":" << e.second << endl;
+    }
+    for (auto b : obj.borrowed)
+    {
+        if (b.second)
+        out << "\tBorrowed: " << ConfigParser::Instance().getAction(b.first).name << ":" << b.second << endl;
+    }
+    for (auto p : obj.producing)
+    {
+        if (p.second)
+        out << "\tProducing: " << ConfigParser::Instance().getAction(p.first).name << ":" << p.second << endl;
+    }
+
+    out << "\tThere are currently " << obj.activeActions.size() << " active actions:" << endl;
+
+    auto copy = obj.activeActions;
+
+    while (not copy.empty())
+    {
+        State::ActiveAction aa = copy.top();
+        copy.pop();
+
+        out << "\t\t" << aa.action->name << " finished at: " << aa.timeFinished << endl;
+    }
+
+    return out;
+}
+time_t State::getTimeTillNextActionIsFinished() const
+{
+    if (activeActions.empty())
+    {
+        return 0;
+    }
+    else
+    {
+        return activeActions.top().timeFinished - currentTime;
+    }
 }

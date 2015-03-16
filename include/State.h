@@ -3,8 +3,8 @@
 #include <map>
 #include <queue> 
 #include <cassert> 
+#include <cmath> 
 
-// TODO remove
 #include <iostream>
 using namespace std;
 
@@ -31,12 +31,13 @@ const ress_t GAS_PER_TIME_UNIT = 0.35 * RESS_FACTOR;
 class State {
     //I think it is fine to expose these fields without getter and setters
     public: 
+    friend ostream& operator<<(ostream& out, State& obj);
+    friend int main(int argc, char*argv[]);
     // The elapsed time
     time_t currentTime = 0;
 
     // The available ressources
     ress_t minerals = 0, gas = 0;
-    // TODO handle supply with a factor??
     ress_t supply_used = 0, supply_max = 0;
 
     private:
@@ -50,37 +51,27 @@ class State {
 
     /*
      * This simply represents an action that is currently being produced
-     * TODO I just overloaded functions until the compiler stopped complaining
      */
     class ActiveAction
     {
         public:
         //this value is the currTime the action was startet + the time this action needs to finish
         time_t timeFinished;
-        BuildAction action;
+        const BuildAction* action;
 
-        ActiveAction(time_t _timeFinished, BuildAction _action)
-            : timeFinished(_timeFinished), action(_action) {}
-        ActiveAction(const ActiveAction& lhs)
-            : timeFinished(lhs.timeFinished), action(lhs.action) {}
+        ActiveAction(time_t t, const BuildAction* ba) : timeFinished(t), action(ba) {}
+    };
 
-        /*
-         * Reverse ordering on timeFinished so priority_queue works
-         */
-        bool operator<(const ActiveAction& lhs) const
+    class ReverseActiveActionComparator
+    {
+        public:
+        bool operator()(const ActiveAction& lhs, const ActiveAction& rhs)
         {
-            return timeFinished > lhs.timeFinished;
-        }
-
-        ActiveAction& operator=(const ActiveAction& lhs)
-        {
-            this->timeFinished = lhs.timeFinished;
-            this->action = lhs.action;
-            return *this;
+            return lhs.timeFinished > rhs.timeFinished;
         }
     };
 
-    std::priority_queue<ActiveAction> activeActions;
+    std::priority_queue<ActiveAction, vector<ActiveAction>, ReverseActiveActionComparator> activeActions;
 
 
     // How many workers exist at all
@@ -93,9 +84,6 @@ class State {
     // How many gas slots are available
     // This is increase by 3 for every gas harvester
     int gasHarvesting;
-
-    // This is used to determine if an Action that consumes gas is legal
-//    bool willProduceGas = false;
 
     public:
     // Paper S.3 "Action Legality"
@@ -134,20 +122,39 @@ class State {
      */
     void startAction(const BuildAction&);
 
+    void addActionResult(const BuildResult&, bool removeProducing=true);
+
+    private:
     /*
      * Adds @count units of typed @type
+     * Besides incrementing the entities map the function will also adjust worker and gasHarvester counts
+     * NOTE: you probably want to use addActionResults
      */
     void addUnit(action_t type, int count = 1);
     
-    // TODO make private
-    public:
     void increaseRessources(time_t);
     /*
      * Returns true if all entries in @entities are satisfied
      * If @use_producing is true, untis that are currently being built are also taken into account.
      */
     bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
+    /*
+     * Returns true if at least ONE entry in @entities is satisfied
+     * If @use_producing is true, untis that are currently being built are also taken into account.
+     */
+    bool isOneSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
     bool hasEnoughSupply(ress_t supply_needed) const;
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;
+
+    /*
+     * I think this qualifies for the longest function name of this project!
+     */
+    time_t getTimeTillNextActionIsFinished() const;
+    /*
+     * This function redistributes the workers to mine minerals and gas.
+     * If possible at least one worker will mine minerals, after that as many as possible will mine gas
+     */
+    void reallocateWorkers();
 };
+
