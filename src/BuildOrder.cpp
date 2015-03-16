@@ -71,13 +71,11 @@ void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 
 bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 {
-    //this should never hapen when calling method works correctly
-    assert(position < buildList.size());
+    assert(position <= buildList.size());
 
     // first get the "state" until pos-1 in our buildorder
     int supply = getSupply(position);
     map<action_t, int> currUnits = applyBuildOrderUntilPos(position);
-    LOG_DEBUG("POS IS ["<<position<<"] value there is ["<<ConfigParser::Instance().getAction(buildList[position]).name);
 
     // Check if the newly inserted action is possible at all
     if(!isActionPossible(currUnits, supply, action))

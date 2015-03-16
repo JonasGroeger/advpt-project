@@ -48,6 +48,12 @@ int main(int argc, char *argv[])
     assert(order.removeActionIfPossible(2));
 
     std::cout << order << endl;
+
+    //check empty one
+    BuildOrder empty;
+    empty.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 0);
+    empty.insertActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 1);
+    std::cout << empty << endl;
     cout << "SUCCESS" << endl;
     return 0;
 }
