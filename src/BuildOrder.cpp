@@ -3,10 +3,10 @@
 void BuildOrder::createMinimalBuildOrder(string target)
 {
     reset();
-    vector<action_t> deps;
+    vector<action_t> dependencies;
     ConfigParser::Instance().setRaceForAction(target);
     BuildAction targetAction = ConfigParser::Instance().getAction(target);
-    getDependencies(targetAction.id, deps);
+    getDependencies(targetAction.id, dependencies);
     map<action_t, int> currUnits;
 
     int supply = 0;
@@ -17,9 +17,9 @@ void BuildOrder::createMinimalBuildOrder(string target)
         currUnits[startPair.first] = startPair.second;
     }
 
-    while(deps.size() > 0)
+    while(dependencies.size() > 0)
     {
-        auto possibleActions = getPossibleNextActions(currUnits, deps);
+        auto possibleActions = getPossibleNextActions(currUnits, dependencies);
         for(action_t action : possibleActions)
         {
             auto bAction = ConfigParser::Instance().getAction(action);
@@ -32,13 +32,11 @@ void BuildOrder::createMinimalBuildOrder(string target)
             addOrIncrementUnit(currUnits, action);
             supply = applySupply(supply, action);
             buildList.push_back(action);
-            deps.erase(std::remove_if(deps.begin(),
-                            deps.end(),
-                            [&action](action_t id)
-                            {
-                                return id == action;
-                            }),
-                    deps.end());
+            dependencies.erase(std::remove_if(dependencies.begin(),dependencies.end(),
+                    [&action](action_t id)
+                    {
+                        return id == action;
+                    }),dependencies.end());
         }
     }
     while(!checkSupply(targetAction.cost.supply, supply))

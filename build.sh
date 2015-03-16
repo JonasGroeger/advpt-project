@@ -11,4 +11,4 @@ mkdir -p $BUILD_FOLDER
 cd $BUILD_FOLDER
 
 cmake ..
-make
+make -j4
