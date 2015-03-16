@@ -262,15 +262,15 @@ ostream& operator<<(ostream &out, BuildOrder &obj)
     return out;
 }
 
-bool BuildOrder::checkMaxUnits(int maximumUnitsOfAType, action_t action, map<action_t, int> currentUnits)
+bool BuildOrder::checkMaxUnits(int unitMax, action_t action, map<action_t, int> currentUnits)
 {
-    unsigned long builtUnitsOfAType = currentUnits.count(action);
+    //this is our default case with an unlimited unit
+    if(unitMax == 0) return true;
+    //unit is not yet present in our current state
+    if(currentUnits.count(action) == 0) return true;
 
-    if(builtUnitsOfAType >= maximumUnitsOfAType)
-    {
-        LOG_DEBUG("Cannot build [" << ConfigParser::Instance().getAction(action).name << "]."
-                "Already at maximum: " << builtUnitsOfAType << ".");
-        return false;
-    }
-    return true;
+    unsigned long unitCount = currentUnits[action];
+    LOG_DEBUG("Checking Unit [" << ConfigParser::Instance().getAction(action).name <<"] with max of ["
+            << ConfigParser::Instance().getAction(action).maxNumber << "] and currently available [" << unitCount << "]");
+    return unitCount < unitMax;
 }
