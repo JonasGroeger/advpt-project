@@ -10,6 +10,9 @@
 
 using namespace std;
 
+/*
+* @Invariant of this class is that the buildlist is always either empty or a valid buildlist
+*/
 class BuildOrder
 {
 public:
@@ -41,14 +44,27 @@ public:
     vector<action_t> getPossibleNextActions(const map<action_t, int> &currUnits, const vector<action_t> &actions);
 
     /*
-    * Insert an action at the given position in the buildlist. If the position is greater than the size of the buildlist
-    * the action will be inserted at the highest index (last in the buildlist).
+    * Insert an action at the given position in the buildlist.
+    * @param action : the action_t to insert
+    * @param position : the zero based index
+    * @returns true if action was successful, false otherwise
     */
     bool insertActionIfPossible(action_t action, unsigned int position);
 
+    /*
+    * Removes an action at the given index of the buildlist
+    * @param position : the zero based index
+    * @returns true if action was successful, false otherwise
+    */
     bool removeActionIfPossible(unsigned int position);
 
-    bool swapActionIfPossible(action_t old, action_t newAction, unsigned int position);
+    /*
+    * Replaces an action at the given index of the buildlist
+    * @param action : the action_t to insert
+    * @param position : the zero based index
+    * @returns true if action was successful, false otherwise
+    */
+    bool replaceActionIfPossible(action_t newAction, unsigned int position);
 
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
 
@@ -56,6 +72,15 @@ private:
     map<action_t, int> availableUnits;
     vector<action_t> buildList;
 
+    /*applys the buildlist until buildList[pos-1] and returns the resulting unitMap to the caller
+    * @returns the resulting unitMap
+    */
+    map<action_t, int> applyBuildOrderUntilPos(unsigned int pos);
+
+    /*checks if buildList[pos] to buildList.end() is possible with a given unitMap
+    * @returns true if it is possible, false otherwise
+    */
+    bool checkBuildOrderFromPos(map<action_t, int> &units, int supply, int pos);
     /*
     * this one resets all internally used variables
     */
