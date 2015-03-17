@@ -3,6 +3,7 @@
 #include "Strategy.h"
 #include "Debug.h"
 #include "BuildOrder.h"
+#include "Config.h"
 
 class GeneticOptimizer
 {

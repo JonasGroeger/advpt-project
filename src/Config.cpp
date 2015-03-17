@@ -1,6 +1,8 @@
 #include "Config.h"
 
-static INIReader reader("config.ini");
+INIReader reader("config.ini");
+#include <iostream>
+using namespace std;
 
 // Get a string value from INI file, returning default_value if not found.
 std::string getConfigString(std::string section, std::string name,
@@ -13,6 +15,7 @@ std::string getConfigString(std::string section, std::string name,
 // not found or not a valid integer (decimal "1234", "-1234", or hex "0x4d2").
 long getConfigInteger(std::string section, std::string name, long default_value)
 {
+        cerr << reader.ParseError() << endl;
         return reader.GetInteger(section, name, default_value);
 }
 
