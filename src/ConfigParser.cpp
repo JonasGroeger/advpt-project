@@ -282,9 +282,22 @@ const BuildAction &ConfigParser::getAction(action_t id)
     }
 }
 
-long ConfigParser::getActionCount()
+unsigned int ConfigParser::getActionCount()
 {
     return currentRace.actions.size();
+}
+
+action_t ConfigParser::getFirstActionId()
+{
+    action_t id = INT_MAX;
+    for(auto action : currentRace.actions)
+    {
+        if(action.first < id)
+        {
+            id = action.first;
+        }
+    }
+    return id;
 }
 
 action_t ConfigParser::getUnitId(string unitName)

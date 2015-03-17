@@ -13,7 +13,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    GeneticOptimizer optimizer(OptimizationStrategy::Push);
+    ConfigParser::Instance().parseConfig(argv[1]);
+    ConfigParser::Instance().setRaceForAction("battlecruiser");
+    GeneticOptimizer optimizer(OptimizationStrategy::Push, ConfigParser::Instance().getAction("battlecruiser").id);
 
     cout << "SUCCESS" << endl;
 }

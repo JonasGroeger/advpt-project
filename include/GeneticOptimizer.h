@@ -11,7 +11,7 @@ public:
     void run();
 private:
     action_t target;
-    vector<BuildOrder&> buildlists;
+    vector<BuildOrder> buildlists;
 
-    generateRandomBuildLists(unsigned int count);
+    void generateRandomBuildLists(unsigned int numberOfLists);
 };

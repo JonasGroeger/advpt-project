@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
     empty.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 0);
     empty.insertActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 1);
     std::cout << empty << endl;
+
+    cout << empty.getFitness() << endl;
     cout << "SUCCESS" << endl;
     return 0;
 }

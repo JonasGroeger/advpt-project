@@ -21,6 +21,8 @@ using std::string;
 using std::map;
 using std::stoi;
 using std::vector;
+#include <climits>
+
 
 class ConfigParser
 {
@@ -46,7 +48,8 @@ public:
     const BuildAction& getDefaulSupplyAction();
     const BuildAction& getAction(string actionName);
     const BuildAction& getAction(action_t id);
-    long getActionCount();
+    unsigned int getActionCount();
+    action_t getFirstActionId();
 
 private:
     ConfigParser(){};
