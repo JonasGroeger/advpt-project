@@ -37,4 +37,10 @@ typedef struct BuildAction
     bool isWorker = false;
     bool isGasHarvester = false;
     int maxNumber = 0;
+
+    bool operator==(const BuildAction &rhs) const
+    {
+            // TODO is this enough?
+            return id == rhs.id;
+    }
 } BuildAction;

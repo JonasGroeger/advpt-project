@@ -75,22 +75,27 @@ class State {
 
 
     // How many workers exist at all
-    int workersAll;
+    int workersAll = 0;
     // How many are producing minerals
-    int workersMinerals;
+    int workersMinerals = 0;
     // How many are producing gas
-    int workersGas;
+    int workersGas = 0;
 
     // How many gas slots are available
     // This is increase by 3 for every gas harvester
-    int gasHarvesting;
+    int gasHarvesting = 0;
 
     public:
+    State() = delete;
+    State(const map<action_t, int> &startConfig);
+
+    bool operator==(const State &rhs) const;
+    bool operator!=(const State &rhs) const;
+
     // Paper S.3 "Action Legality"
     /*
      * Returns true iff the following hold true:
      *  - Dependencies and borrows are available, borrowed or being created
-     *  - Costs are available or will be created
      */
     bool isLegalAction(const BuildAction&);
 

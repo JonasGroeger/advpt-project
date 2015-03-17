@@ -241,7 +241,7 @@ const BuildAction& ConfigParser::getDefaulSupplyAction()
     return currentRace.actions[currentRace.defaultSupplyAction];
 }
 
-const map<action_t, int> ConfigParser::getStartConfig()
+const map<action_t, int>& ConfigParser::getStartConfig()
 {
     return currentRace.startUnits;
 }
@@ -249,7 +249,7 @@ const map<action_t, int> ConfigParser::getStartConfig()
 const vector<BuildAction> ConfigParser::getAllActions()
 {
     vector<BuildAction> resultVec;
-    for (auto pair : buildActionMap)
+    for (auto pair : currentRace.actions)
     {
         resultVec.push_back(pair.second);
     }

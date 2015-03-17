@@ -42,7 +42,7 @@ public:
     const vector<BuildAction> getAllActions();
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
-    const map<action_t, int> getStartConfig();
+    const map<action_t, int>& getStartConfig();
     const BuildAction& getDefaulSupplyAction();
     const BuildAction& getAction(string actionName);
     const BuildAction& getAction(action_t id);

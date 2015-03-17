@@ -14,10 +14,62 @@ template <class T>
 void simple_test(string msg, T expression, T expected_value)
 {
     cerr << "TEST NR." << i++;
+    cerr << " " << msg << endl;
 
     assert(expression == expected_value);
-    
-    cerr << " " << msg << endl;
+}
+
+void assertOnlyLegalActions(State &s, vector<BuildAction> legals)
+{
+        for (BuildAction act : ConfigParser::Instance().getAllActions())
+        {
+                if (std::find(legals.begin(), legals.end(), act) == legals.end())
+                {
+                        simple_test(act.name + " should not be possible", s.isLegalAction(act), false);
+                }
+                else
+                {
+                        simple_test(act.name + " should be possible", s.isLegalAction(act), true);
+                }
+        }
+}
+
+vector<BuildAction> stringsToBuildActions(vector<string> strings)
+{
+        vector<BuildAction> buildActions;
+        for (string s : strings)
+        {
+                buildActions.push_back(ConfigParser::Instance().getAction(s));
+        }
+        return buildActions;
+}
+
+void testTerran()
+{
+    ConfigParser::Instance().setRaceForAction("command_center");
+
+    State terranState = State(ConfigParser::Instance().getStartConfig());
+    cerr << terranState << endl;
+
+    assertOnlyLegalActions(terranState, stringsToBuildActions({"command_center", "scv", "refinery", "supply_depot", "engineering_bay"}));
+}
+void testZerg()
+{
+    ConfigParser::Instance().setRaceForAction("hatchery");
+
+    State zergState = State(ConfigParser::Instance().getStartConfig());
+    cerr << zergState << endl;
+
+    assertOnlyLegalActions(zergState, stringsToBuildActions({"overlord", "drone", "larva", "hatchery", "extractor", "spawning_pool", "evolution_chamber"}));
+}
+void testProtoss()
+{
+    ConfigParser::Instance().setRaceForAction("nexus");
+
+    State protossState = State(ConfigParser::Instance().getStartConfig());
+    cerr << protossState << endl;
+
+    assertOnlyLegalActions(protossState, stringsToBuildActions({"nexus", "probe", "assimilator", "pylon"}));
 }
 
 int main(int argc, char *argv[])
@@ -29,9 +81,11 @@ int main(int argc, char *argv[])
     }
 
     ConfigParser::Instance().parseConfig(argv[1]);
-    ConfigParser::Instance().setRaceForAction("command_center");
 
-    State s = State();
+    testTerran();
+    testZerg();
+    testProtoss();
+    /*
     cerr << "Adding command_center" << endl;
     s.addActionResult(ConfigParser::Instance().getAction("command_center").result, false);
     cerr << "Adding scv" << endl;
@@ -128,7 +182,7 @@ int main(int argc, char *argv[])
 
 
 
-    cerr << s << endl;
+    */
 
     cerr << "SUCCESS" << endl;
     return 0;

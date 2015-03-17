@@ -1,28 +1,61 @@
 #include "State.h"
 
+State::State(const map<action_t, int> &startConfig)
+{
+    for (auto unit : startConfig)
+    {
+        action_t type = unit.first;
+        int count = unit.second;
+
+        const BuildAction& act = ConfigParser::Instance().getAction(type);
+
+        for (int i = 0; i < count; i++)
+        {
+            addActionResult(act.result, false);
+            supply_used += act.cost.supply;
+        }
+    }
+    assert(supply_max >= supply_used);
+
+    this->minerals = 50;
+}
+
+bool State::operator==(const State &rhs) const
+{
+    if (currentTime != rhs.currentTime
+     || minerals != rhs.minerals
+     || gas != rhs.gas
+     || supply_used != rhs.supply_used
+     || supply_max != rhs.supply_max
+     || entities != rhs.entities
+     || borrowed != rhs.borrowed
+     || producing != rhs.producing)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool State::operator!=(const State &rhs) const
+{
+    return !(*this == rhs);
+}
+
 bool State::isLegalAction(const BuildAction& act)
 {
     // Dependencies
     if (!isSatisfied(act.dependencies, true))
     {
-        LOG_DEBUG("dep failed");
+        LOG_DEBUG("dependencies not met");
         return false;
     }
 
     // Borrows
-    if (!isOneSatisfied(act.borrows, true))
+    if (act.borrows.size() != 0 && !isOneSatisfied(act.borrows, true))
     {
-        LOG_DEBUG("bor failed");
+        LOG_DEBUG("borrows not met for " << act.name);
         return false;
     }
-
-    // Costs
-    /* TODO declare variables
-    BuildCost& cost = act.cost;
-    if (cost.minerals > 0 && !producingMinerals) return false;
-    if (cost.gas > 0 && !producingGas) return false;
-    if (cost.supply > (supply_max - supply_used) && !producingSupply) return false;
-    */
 
     return true;
 }

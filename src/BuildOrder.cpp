@@ -173,7 +173,7 @@ map<action_t, int> BuildOrder::applyBuildOrderUntilPos(unsigned int pos)
         returnUnits[startPair.first] = startPair.second;
     }
 
-    for(int index = 0; index < pos; index++)
+    for(unsigned int index = 0; index < pos; index++)
     {
         auto action = *iter;
         addOrIncrementUnit(returnUnits, action);
@@ -208,7 +208,7 @@ void BuildOrder::reset()
 int BuildOrder::getSupply(unsigned int index)
 {
     int result = 0;
-    int idx = 0;
+    unsigned int idx = 0;
     for(auto it = buildList.begin(); it != buildList.end() && idx < index; it++)
     {
         idx++;
