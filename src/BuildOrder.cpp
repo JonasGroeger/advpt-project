@@ -77,6 +77,7 @@ unsigned int BuildOrder::getFitness()
         LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
     }
 
+    state.advanceTime(state.getTimeTillAllActionsAreFinished());
     return state.currentTime;
 }
 

@@ -49,6 +49,8 @@ class State {
     // At every position i, producing[i] indicates how many entities with action id i are currently being produced
     // Note: activeActions contains more information on currently produced actions
     std::map<action_t, int> producing;
+    // This is used to remember entities for dependency resolution
+    std::map<action_t, int> remembered;
 
     /*
      * This simply represents an action that is currently being produced
@@ -59,7 +61,7 @@ class State {
         //this value is the currTime the action was startet + the time this action needs to finish
         time_t timeFinished;
         const BuildAction* action;
-        action_t borrowedAction;
+        action_t borrowedAction = -1;
 
         ActiveAction(time_t t, const BuildAction* a, action_t ba) : timeFinished(t), action(a), borrowedAction(ba) {}
     };

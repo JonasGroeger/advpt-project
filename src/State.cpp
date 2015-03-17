@@ -90,7 +90,6 @@ void State::advanceTime(time_t amount)
 
         assert(time_delta >= 0);
         // First add Ressources
-        cerr << "time_delta: " << time_delta << endl;
         increaseRessources(time_delta);
         // Increase time
         currentTime += time_delta;
@@ -102,8 +101,11 @@ void State::advanceTime(time_t amount)
         addActionResult(act->result);
 
         // Unborrow units
-        borrowed[aa.borrowedAction] --;
-        assert(borrowed[aa.borrowedAction] >= 0);
+        if (aa.borrowedAction != -1)
+        {
+                borrowed[aa.borrowedAction] --;
+                assert(borrowed[aa.borrowedAction] >= 0);
+        }
     }
     increaseRessources(end_time-currentTime);
     currentTime = end_time;
@@ -196,7 +198,7 @@ void State::startAction(const BuildAction& act)
 
     // Borrow some units
     bool borrowFound = act.borrows.empty();
-    action_t borrowedAction;
+    action_t borrowedAction = -1;
     for (std::pair<action_t, int> borrow : act.borrows)
     {
         action_t type = borrow.first;
@@ -255,6 +257,7 @@ time_t State::getTimeTillAllActionsAreFinished() const
 void State::addUnit(action_t type, int count)
 {
     entities[type] += count;
+    remembered[type] = 1;
 
     // This ain't pretty but it works
     const BuildAction& act = ConfigParser::Instance().getAction(type);
@@ -289,7 +292,7 @@ bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, boo
         action_t type = entity.first;
         int count = entity.second;
 
-        if (entities[type] + producing[type] * use_producing < count)
+        if (remembered[type] + producing[type] * use_producing < count)
         {
             return false;
         }
