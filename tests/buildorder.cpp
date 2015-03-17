@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     empty.insertActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 1);
     std::cout << empty << endl;
 
-    cout << empty.getFitness() << endl;
+    cout << order.getFitness() << endl;
     cout << "SUCCESS" << endl;
     return 0;
 }

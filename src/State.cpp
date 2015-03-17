@@ -77,11 +77,11 @@ bool State::isLegalAction(const BuildAction& act)
 
 void State::advanceTime(time_t amount)
 {
-    LOG_DEBUG("Advance time by [" << amount << "]");
+    LOG_DEBUG("Advance time from [" << currentTime << "] by [" << amount << "]");
     time_t end_time = currentTime + amount;
 
     // Finish all actions that will end withing @amount
-    while (!activeActions.empty() && activeActions.top().timeFinished <= currentTime + amount)
+    while (!activeActions.empty() && activeActions.top().timeFinished <= end_time)
     {
         ActiveAction aa = activeActions.top();
         activeActions.pop();
@@ -90,13 +90,14 @@ void State::advanceTime(time_t amount)
 
         assert(time_delta >= 0);
         // First add Ressources
+        cerr << "time_delta: " << time_delta << endl;
         increaseRessources(time_delta);
         // Increase time
         currentTime += time_delta;
 
         // Handle action results
         const BuildAction* act = aa.action;
-        LOG_DEBUG("Handle action with id: " << act->id << " and finishTime: " << activeActions.top().timeFinished);
+        LOG_DEBUG("Handle action [" << act->name << "] id: " << act->id << " and finishTime: " << aa.timeFinished);
 
         addActionResult(act->result);
 
@@ -104,7 +105,6 @@ void State::advanceTime(time_t amount)
         borrowed[aa.borrowedAction] --;
         assert(borrowed[aa.borrowedAction] >= 0);
     }
-
     increaseRessources(end_time-currentTime);
     currentTime = end_time;
 }
@@ -195,7 +195,7 @@ void State::startAction(const BuildAction& act)
     }
 
     // Borrow some units
-    bool borrowFound = false;
+    bool borrowFound = act.borrows.empty();
     action_t borrowedAction;
     for (std::pair<action_t, int> borrow : act.borrows)
     {
@@ -377,7 +377,7 @@ ostream& operator<<(ostream& out, State& obj)
         State::ActiveAction aa = copy.top();
         copy.pop();
 
-        out << "\t\t" << aa.action->name << " finished at: " << aa.timeFinished << endl;
+        out << "\t\t" << aa.action->name << " (id: " << aa.action->id << "/at: " << aa.action << ") " << " finished at: " << aa.timeFinished << endl;
     }
 
     return out;

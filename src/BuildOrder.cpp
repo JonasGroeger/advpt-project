@@ -59,17 +59,22 @@ unsigned int BuildOrder::getFitness()
 
     for(auto action_id : buildList)
     {
-        auto buildAction = ConfigParser::Instance().getAction(action_id);
+        ConfigParser& cfg = ConfigParser::Instance();
+        auto& buildAction = cfg.getAction(action_id);
         if(!state.isLegalAction(buildAction))
         {
             throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
         }
-        while(state.isAdditionalTimeNeeded(buildAction) > 0)
+        
+        time_t t;
+        while((t = state.isAdditionalTimeNeeded(buildAction)) > 0)
         {
             LOG_DEBUG("STATE TIME NEEDED FOR ACTION ["+buildAction.name+"] IS ["<<state.isAdditionalTimeNeeded(buildAction) <<"]");
-            state.advanceTime(state.isAdditionalTimeNeeded(buildAction));
+            state.advanceTime(t);
+            //LOG_DEBUG("ADVANCED BY [" << t << "] " << state);
         }
         state.startAction(buildAction);
+        LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
     }
 
     return state.currentTime;
