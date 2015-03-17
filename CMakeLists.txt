@@ -33,6 +33,8 @@ set( HPP_FILES
     include/BuildOrder.h
     include/ConfigParser.h
     include/State.h
+    include/Strategy.h
+    include/GeneticOptimizer.h
     include/tinyxml2.h
 )
 
@@ -40,16 +42,18 @@ set( HPP_FILES
 set( CPP_FILES
   src/BuildOrder.cpp
   src/ConfigParser.cpp
+  src/GeneticOptimizer.cpp
   src/State.cpp
   src/tinyxml2.cpp
 )
 
 # ... to build the executable.
-add_executable( ${EXECUTABLE} src/main.cpp ${CPP_FILES} ${HPP_FILES} )
+add_executable( ${EXECUTABLE} src/main.cpp ${CPP_FILES} ${HPP_FILES})
 
 # Test executables
 add_executable( test_xml tests/xml.cpp ${CPP_FILES} ${HPP_FILES} )
 add_executable( test_state tests/state.cpp ${CPP_FILES} ${HPP_FILES} )
 add_executable( test_buildorder tests/buildorder.cpp ${CPP_FILES} ${HPP_FILES} )
+add_executable( optimizer tests/optimizer.cpp ${CPP_FILES} ${HPP_FILES} )
 
 add_definitions(-DDEBUG) # Uncomment (to enable) or Comment (to disable) the debug output (see include/Debug.hpp)

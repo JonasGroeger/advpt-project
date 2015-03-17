@@ -77,6 +77,7 @@ bool State::isLegalAction(const BuildAction& act)
 
 void State::advanceTime(time_t amount)
 {
+    LOG_DEBUG("Advance time by [" << amount << "]");
     time_t end_time = currentTime + amount;
 
     // Finish all actions that will end withing @amount

@@ -2,6 +2,7 @@
 
 #include "BuildAction.h"
 #include "ConfigParser.h"
+#include <State.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>    // std::reverse
@@ -38,6 +39,11 @@ public:
         ,buildList(other.buildList)
     {};
 
+    unsigned int getSize();
+
+    unsigned int getFitness();
+
+    unsigned int getUnitCount(action_t action, time_t maxTime);
     /*
     *
     */

@@ -48,6 +48,39 @@ void BuildOrder::createMinimalBuildOrder(string target)
     buildList.push_back(targetAction.id);
 }
 
+unsigned int BuildOrder::getSize()
+{
+    return buildList.size();
+}
+
+unsigned int BuildOrder::getFitness()
+{
+    State state(ConfigParser::Instance().getStartConfig());
+
+    for(auto action_id : buildList)
+    {
+        auto buildAction = ConfigParser::Instance().getAction(action_id);
+        if(!state.isLegalAction(buildAction))
+        {
+            throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
+        }
+        while(state.isAdditionalTimeNeeded(buildAction) > 0)
+        {
+            LOG_DEBUG("STATE TIME NEEDED FOR ACTION ["+buildAction.name+"] IS ["<<state.isAdditionalTimeNeeded(buildAction) <<"]");
+            state.advanceTime(state.isAdditionalTimeNeeded(buildAction));
+        }
+        state.startAction(buildAction);
+    }
+
+    return state.currentTime;
+}
+
+unsigned int BuildOrder::getUnitCount(action_t action, time_t maxTime)
+{
+    //TODO
+    return 0;
+}
+
 void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
 {
     auto dependencies = ConfigParser::Instance().getAction(id).dependencies;
