@@ -17,7 +17,7 @@ State::State(const map<action_t, int> &startConfig)
     }
     assert(supply_max >= supply_used);
 
-    this->minerals = 50;
+    this->minerals = 50 * RESS_FACTOR;
 }
 
 bool State::operator==(const State &rhs) const
@@ -51,10 +51,25 @@ bool State::isLegalAction(const BuildAction& act)
     }
 
     // Borrows
-    if (act.borrows.size() != 0 && !isOneSatisfied(act.borrows, true))
+    if (act.borrows.size() != 0)
     {
-        LOG_DEBUG("borrows not met for " << act.name);
-        return false;
+        bool fulfilled = false;
+        for (auto entity : act.borrows)
+        {
+            action_t type = entity.first;
+            int count = entity.second;
+
+            if (entities[type] + producing[type] - borrowed[type] >= count)
+            {
+                fulfilled = true;
+                break;
+            }
+        }
+        if (!fulfilled)
+        {
+            LOG_DEBUG("borrows not met for " << act.name);
+            return false;
+        }
     }
 
     return true;
@@ -179,11 +194,21 @@ void State::startAction(const BuildAction& act)
     }
 
     // Borrow some units
+    bool borrowFound = false;
     for (std::pair<action_t, int> borrow : act.borrows)
     {
-        borrowed[borrow.first] += borrow.second;
-        assert(borrowed[borrow.first] <= entities[borrow.first]);
+        action_t type = borrow.first;
+        int count = borrow.second;
+
+        if (entities[type] - borrowed[type] >= count)
+        {
+            borrowFound = true;
+            borrowed[type] += count;
+            assert(borrowed[type] <= entities[type]);
+            break;
+        }
     }
+    assert(borrowFound);
 
     // We mark the results as being produced
     for (std::pair<action_t, int> result : act.result.units)
@@ -207,6 +232,11 @@ void State::addActionResult(const BuildResult& res, bool removeProducing)
             assert(producing[unit.first] >= 0);
         }
     }
+}
+
+int State::getEntityCount(action_t entity)
+{
+    return entities[entity];
 }
 
 void State::addUnit(action_t type, int count)
@@ -252,21 +282,6 @@ bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, boo
         }
     }
     return true;
-}
-
-bool State::isOneSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
-{
-    for (auto entity : constraints)
-    {
-        action_t type = entity.first;
-        int count = entity.second;
-
-        if (entities[type] + producing[type] * use_producing >= count)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 bool State::hasEnoughSupply(ress_t supply_needed) const
@@ -317,7 +332,9 @@ ostream& operator<<(ostream& out, State& obj)
 {
     out << "State with: " << endl;
     out << "\tMinerals: " << obj.minerals << " (~" << (obj.minerals/RESS_FACTOR) << ")" << endl;
+    out << "\tMinerals/tick: " << obj.getMineralsPerTick() << " (~" << (obj.getMineralsPerTick()/RESS_FACTOR) << ")" << endl;
     out << "\tGas: " << obj.gas << " (~" << (obj.gas/RESS_FACTOR) << ")" << endl;
+    out << "\tGas/tick: " << obj.getGasPerTick() << " (~" << (obj.getGasPerTick()/RESS_FACTOR) << ")" << endl;
     out << "\tSupply: " << obj.supply_used << "/" << obj.supply_max << endl;
     out << "\tWorkers: " << obj.workersAll << "/" << obj.workersMinerals << "/" << obj.workersGas << endl;
     out << "\tCurrent time: " << obj.currentTime << endl;
@@ -325,7 +342,7 @@ ostream& operator<<(ostream& out, State& obj)
     for (auto e : obj.entities)
     {
         if (e.second)
-        out << "\tEntity: " << ConfigParser::Instance().getAction(e.first).name << ":" << e.second << endl;
+        out << "\tEntity: " << e.second << ":" << ConfigParser::Instance().getAction(e.first).name << "(id: " << e.first << ")" << endl;
     }
     for (auto b : obj.borrowed)
     {

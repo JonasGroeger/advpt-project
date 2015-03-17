@@ -33,6 +33,7 @@ class State {
     public: 
     friend ostream& operator<<(ostream& out, State& obj);
     friend int main(int argc, char*argv[]);
+    friend void testTerran();
     // The elapsed time
     time_t currentTime = 0;
 
@@ -128,6 +129,8 @@ class State {
     void startAction(const BuildAction&);
 
     void addActionResult(const BuildResult&, bool removeProducing=true);
+
+    int getEntityCount(action_t entity);
 
     private:
     /*
