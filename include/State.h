@@ -33,6 +33,7 @@ class State {
     public: 
     friend ostream& operator<<(ostream& out, State& obj);
     friend int main(int argc, char*argv[]);
+    friend void testTerran();
     // The elapsed time
     time_t currentTime = 0;
 
@@ -58,8 +59,9 @@ class State {
         //this value is the currTime the action was startet + the time this action needs to finish
         time_t timeFinished;
         const BuildAction* action;
+        action_t borrowedAction;
 
-        ActiveAction(time_t t, const BuildAction* ba) : timeFinished(t), action(ba) {}
+        ActiveAction(time_t t, const BuildAction* a, action_t ba) : timeFinished(t), action(a), borrowedAction(ba) {}
     };
 
     class ReverseActiveActionComparator
@@ -75,22 +77,29 @@ class State {
 
 
     // How many workers exist at all
-    int workersAll;
+    int workersAll = 0;
     // How many are producing minerals
-    int workersMinerals;
+    int workersMinerals = 0;
     // How many are producing gas
-    int workersGas;
+    int workersGas = 0;
 
     // How many gas slots are available
     // This is increase by 3 for every gas harvester
-    int gasHarvesting;
+    int gasHarvesting = 0;
+
+    time_t finishTime = 0;
 
     public:
+    State() = delete;
+    State(const map<action_t, int> &startConfig);
+
+    bool operator==(const State &rhs) const;
+    bool operator!=(const State &rhs) const;
+
     // Paper S.3 "Action Legality"
     /*
      * Returns true iff the following hold true:
      *  - Dependencies and borrows are available, borrowed or being created
-     *  - Costs are available or will be created
      */
     bool isLegalAction(const BuildAction&);
 
@@ -124,6 +133,9 @@ class State {
 
     void addActionResult(const BuildResult&, bool removeProducing=true);
 
+    int getEntityCount(action_t entity);
+    time_t getTimeTillAllActionsAreFinished() const;
+
     private:
     /*
      * Adds @count units of typed @type
@@ -138,11 +150,6 @@ class State {
      * If @use_producing is true, untis that are currently being built are also taken into account.
      */
     bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
-    /*
-     * Returns true if at least ONE entry in @entities is satisfied
-     * If @use_producing is true, untis that are currently being built are also taken into account.
-     */
-    bool isOneSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
     bool hasEnoughSupply(ress_t supply_needed) const;
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;
