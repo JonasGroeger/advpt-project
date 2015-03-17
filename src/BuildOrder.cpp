@@ -55,17 +55,7 @@ unsigned int BuildOrder::getSize()
 
 unsigned int BuildOrder::getFitness()
 {
-    State state;
-    //add start units to our state
-    auto startUnits = ConfigParser::Instance().getStartConfig();
-    for(auto startPair : startUnits)
-    {
-        auto buildAction = ConfigParser::Instance().getAction(startPair.first);
-        for(auto count = 0; count < startPair.second; count++)
-        {
-            state.addActionResult(buildAction.result, false);
-        }
-    }
+    State state(ConfigParser::Instance().getStartConfig());
 
     for(auto action_id : buildList)
     {
