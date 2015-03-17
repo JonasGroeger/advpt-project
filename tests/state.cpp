@@ -72,6 +72,32 @@ void testTerran()
     simple_test("Worker will be available", terranState.isLegalAction(cfg.getAction("supply_depot")), true);
 
     terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
+    terranState.startAction(cfg.getAction("barracks"));
+    terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
+
+    assertOnlyLegalActions(terranState, stringsToBuildActions({"command_center", "scv", "refinery", "supply_depot", "engineering_bay", "barracks", "marine", "bunker", "orbital_command"}));
+    terranState.startAction(cfg.getAction("refinery"));
+    terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
+    assertOnlyLegalActions(terranState, stringsToBuildActions({"command_center", "scv", "refinery", "supply_depot", "engineering_bay", "barracks", "marine", "bunker", "orbital_command", "barracks_reactor", "barracks_techlab", "factory", "ghost_academy"}));
+
+    cerr << terranState << endl;
+
+    cerr << "Resetting state" << endl;
+    terranState = State(ConfigParser::Instance().getStartConfig());
+
+    terranState.advanceTime(terranState.isAdditionalTimeNeeded(cfg.getAction("supply_depot")));
+    terranState.startAction(cfg.getAction("supply_depot"));
+
+    terranState.advanceTime(terranState.isAdditionalTimeNeeded(cfg.getAction("barracks")));
+    terranState.advanceTime(terranState.isAdditionalTimeNeeded(cfg.getAction("barracks")));
+
+    terranState.startAction(cfg.getAction("barracks"));
+
+    terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
+
+    simple_test("count of supply_depot == 1", terranState.getEntityCount(cfg.getAction("supply_depot").id), 1);
+    simple_test("count of barracks == 1", terranState.getEntityCount(cfg.getAction("barracks").id), 1);
+
     cerr << terranState << endl;
 }
 void testZerg()
