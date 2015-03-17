@@ -70,6 +70,8 @@ void testTerran()
     simple_test("No worker available", terranState.isLegalAction(cfg.getAction("supply_depot")), false);
     terranState.startAction(cfg.getAction("scv"));
     simple_test("Worker will be available", terranState.isLegalAction(cfg.getAction("supply_depot")), true);
+
+    terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
     cerr << terranState << endl;
 }
 void testZerg()

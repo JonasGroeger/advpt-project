@@ -59,8 +59,9 @@ class State {
         //this value is the currTime the action was startet + the time this action needs to finish
         time_t timeFinished;
         const BuildAction* action;
+        action_t borrowedAction;
 
-        ActiveAction(time_t t, const BuildAction* ba) : timeFinished(t), action(ba) {}
+        ActiveAction(time_t t, const BuildAction* a, action_t ba) : timeFinished(t), action(a), borrowedAction(ba) {}
     };
 
     class ReverseActiveActionComparator
@@ -85,6 +86,8 @@ class State {
     // How many gas slots are available
     // This is increase by 3 for every gas harvester
     int gasHarvesting = 0;
+
+    time_t finishTime = 0;
 
     public:
     State() = delete;
@@ -131,6 +134,7 @@ class State {
     void addActionResult(const BuildResult&, bool removeProducing=true);
 
     int getEntityCount(action_t entity);
+    time_t getTimeTillAllActionsAreFinished() const;
 
     private:
     /*
@@ -146,11 +150,6 @@ class State {
      * If @use_producing is true, untis that are currently being built are also taken into account.
      */
     bool isSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
-    /*
-     * Returns true if at least ONE entry in @entities is satisfied
-     * If @use_producing is true, untis that are currently being built are also taken into account.
-     */
-    bool isOneSatisfied(const vector<std::pair<action_t, int>>& entities, bool use_producing);
     bool hasEnoughSupply(ress_t supply_needed) const;
     ress_t getMineralsPerTick() const;
     ress_t getGasPerTick() const;

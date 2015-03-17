@@ -82,7 +82,11 @@ void State::advanceTime(time_t amount)
     // Finish all actions that will end withing @amount
     while (!activeActions.empty() && activeActions.top().timeFinished <= currentTime + amount)
     {
-        time_t time_delta = activeActions.top().timeFinished - currentTime;
+        ActiveAction aa = activeActions.top();
+        activeActions.pop();
+
+        time_t time_delta = aa.timeFinished - currentTime;
+
         assert(time_delta >= 0);
         // First add Ressources
         increaseRessources(time_delta);
@@ -90,19 +94,14 @@ void State::advanceTime(time_t amount)
         currentTime += time_delta;
 
         // Handle action results
-        const BuildAction* act = activeActions.top().action;
+        const BuildAction* act = aa.action;
         LOG_DEBUG("Handle action with id: " << act->id << " and finishTime: " << activeActions.top().timeFinished);
-        activeActions.pop();
 
         addActionResult(act->result);
 
         // Unborrow units
-        for (std::pair<action_t, int> borrow : act->borrows)
-        {
-            borrowed[borrow.first] -= borrow.second;
-            assert(borrowed[borrow.first] >= 0);
-        }
-
+        borrowed[aa.borrowedAction] --;
+        assert(borrowed[aa.borrowedAction] >= 0);
     }
 
     increaseRessources(end_time-currentTime);
@@ -171,10 +170,11 @@ void State::startAction(const BuildAction& act)
     // Checking dependencies
     assert(isSatisfied(act.dependencies, false));
 
-    ActiveAction aa(currentTime + act.cost.time, &act);
-    activeActions.push(aa);
-    
-    LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
+    time_t t = currentTime + act.cost.time;
+    if (t > finishTime)
+    {
+        finishTime = t;
+    }
 
     const BuildCost& cost = act.cost;
 
@@ -195,6 +195,7 @@ void State::startAction(const BuildAction& act)
 
     // Borrow some units
     bool borrowFound = false;
+    action_t borrowedAction;
     for (std::pair<action_t, int> borrow : act.borrows)
     {
         action_t type = borrow.first;
@@ -203,6 +204,7 @@ void State::startAction(const BuildAction& act)
         if (entities[type] - borrowed[type] >= count)
         {
             borrowFound = true;
+            borrowedAction = type;
             borrowed[type] += count;
             assert(borrowed[type] <= entities[type]);
             break;
@@ -215,6 +217,11 @@ void State::startAction(const BuildAction& act)
     {
             producing[result.first] += result.second;
     }
+
+    ActiveAction aa(t, &act, borrowedAction);
+    activeActions.push(aa);
+    
+    LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
 void State::addActionResult(const BuildResult& res, bool removeProducing)
@@ -237,6 +244,11 @@ void State::addActionResult(const BuildResult& res, bool removeProducing)
 int State::getEntityCount(action_t entity)
 {
     return entities[entity];
+}
+
+time_t State::getTimeTillAllActionsAreFinished() const
+{
+    return finishTime - currentTime;
 }
 
 void State::addUnit(action_t type, int count)
