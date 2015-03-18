@@ -532,21 +532,21 @@
 
         <action name="assimilator">
             <costs mineral="75" gas="0" time="30" supply="0"/>
-            <borrows>
+            <borrows/>
+            <dependencies>
                 <unit name="probe"/>
-            </borrows>
-            <dependencies/>
+            </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
                 <unit name="assimilator"/>
             </results>
         </action>
 
         <action name="nexus">
-            <costs mineral="400" gas="0" time="100" supply="0">
-                <unit name="probe"/>
-            </costs>
+            <costs mineral="400" gas="0" time="100" supply="0"/>
             <borrows/>
-            <dependencies/>
+            <dependencies>
+                <unit name="probe"/>
+            </dependencies>
             <results mineral="0" gas="0" time="0" supply="10">
                 <unit name="nexus"/>
                 <energy current="0" max="100"/>
@@ -556,10 +556,11 @@
 
         <action name="pylon">
             <costs mineral="100" gas="0" time="25" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
-            <dependencies/>
+            <dependencies>
+                <unit name="probe"/>
+            </dependencies>
             <results mineral="0" gas="0" time="0" supply="8">
                 <unit name="pylon"/>
             </results>
@@ -567,10 +568,10 @@
 
         <action name="forge">
             <costs mineral="150" gas="0" time="45" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="pylon"/>
                 <unit name="nexus"/>
             </dependencies>
@@ -581,10 +582,10 @@
 
         <action name="photon_cannon">
             <costs mineral="150" gas="0" time="40" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="forge"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -596,6 +597,7 @@
             <costs mineral="150" gas="0" time="65" supply="0"/>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="nexus"/>
                 <unit name="pylon"/>
             </dependencies>
@@ -647,10 +649,10 @@
 
         <action name="cybernetics_core">
             <costs mineral="150" gas="0" time="50" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="gateway"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -660,10 +662,10 @@
 
         <action name="robotics_facility">
             <costs mineral="200" gas="100" time="65" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="cybernetics_core"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -673,10 +675,10 @@
 
         <action name="robotics_bay">
             <costs mineral="200" gas="200" time="65" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="robotics_facility"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -753,10 +755,10 @@
 
         <action name="fleet_beacon">
             <costs mineral="300" gas="200" time="60" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="stargate"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -766,10 +768,10 @@
 
         <action name="stargate">
             <costs mineral="150" gas="150" time="60" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="cybernetics_core"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -779,10 +781,10 @@
 
         <action name="twilight_council">
             <costs mineral="150" gas="100" time="50" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="cybernetics_core"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -792,10 +794,10 @@
 
         <action name="templar_archives">
             <costs mineral="150" gas="100" time="50" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="twilight_council"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
@@ -805,10 +807,10 @@
 
         <action name="dark_shrine">
             <costs mineral="100" gas="250" time="100" supply="0">
-                <unit name="probe"/>
             </costs>
             <borrows/>
             <dependencies>
+                <unit name="probe"/>
                 <unit name="twilight_council"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
