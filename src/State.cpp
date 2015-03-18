@@ -67,16 +67,26 @@ void State::reset()
 
 bool State::isLegalAction(const BuildAction& act)
 {
-    if(act.name.compare("battlecruiser") == 0)
-    {
-        int a = 5;
-        a = 7;
-    }
     // Dependencies
     if (!isSatisfied(act.dependencies, true))
     {
         LOG_DEBUG("dependencies not met");
         return false;
+    }
+
+    // TODO handle actions that cost and borrow untis of the same type
+    // Costs
+    const BuildCost& cost = act.cost;
+
+    for (auto p : cost.units)
+    {
+            action_t type = p.first;
+            int count = p.second;
+
+            if (entities[type] + producing[type] < count)
+            {
+                    return false;
+            }
     }
 
     // Borrows
@@ -88,7 +98,7 @@ bool State::isLegalAction(const BuildAction& act)
             action_t type = entity.first;
             int count = entity.second;
 
-            if (entities[type] + producing[type] - borrowed[type] >= count)
+            if (entities[type] + producing[type] >= count)
             {
                 fulfilled = true;
                 break;
@@ -227,6 +237,8 @@ void State::startAction(const BuildAction& act)
     future_supply_max += act.result.supply;
     assert(future_supply_max >= supply_max);
 
+    cerr << *this << endl;
+    cerr << act.name << endl;
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)
     {
