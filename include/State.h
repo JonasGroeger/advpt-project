@@ -40,6 +40,7 @@ class State {
     // The available ressources
     ress_t minerals = 0, gas = 0;
     ress_t supply_used = 0, supply_max = 0;
+    ress_t future_supply_max = 0;
 
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
