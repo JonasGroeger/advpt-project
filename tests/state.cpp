@@ -122,6 +122,32 @@ void testProtoss()
 
     assertOnlyLegalActions(protossState, stringsToBuildActions({"nexus", "probe", "assimilator", "pylon"}));
 }
+void testEnergyManager()
+{
+    EnergyManager em;
+    ConfigParser::Instance().setRaceForAction("command_center");
+    const BuildAction& act = ConfigParser::Instance().getAction("orbital_command");
+    action_t a = act.id;
+
+    em.registerNew(a, 50, 100);
+    em.registerNew(a, 50, 100);
+    em.registerNew(a, 50, 100);
+    em.registerNew(a, 50, 100);
+
+    cerr << em << endl;
+    time_t t = em.timeUntilEnergyIsAvailable(a, 75);
+    cerr << "time until 75 Energy is available: " << t << endl;
+
+    em.advanceTime(t);
+
+    cerr << em << endl;
+
+    em.consumeEnergy(a, 75);
+    em.consumeEnergy(a, 75);
+    em.consumeEnergy(a, 75);
+    
+    cerr << em << endl;
+}
 
 int main(int argc, char *argv[])
 {
@@ -134,8 +160,10 @@ int main(int argc, char *argv[])
     ConfigParser::Instance().parseConfig(argv[1]);
 
     testTerran();
-    //testZerg();
-    //testProtoss();
+    testZerg();
+    testProtoss();
+
+    testEnergyManager();
 
     cerr << "SUCCESS" << endl;
     return 0;

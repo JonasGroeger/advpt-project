@@ -25,6 +25,60 @@
             <unit name="extractor"/>;
         </gas_harvesters>
 
+        <!--
+        <action name="supply_drop">
+            <costs minerals="0" gas="0" time="0" supply="0">
+                <energy from="orbital_command" amount="50">
+                <unit name="supply_depot">
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="orbital_command">
+            </dependencies>
+            <results minerals="0" gas="0" time="0" supply="8">
+                <unit name="enhanced_supply_depot">
+            </results>
+        </action>
+
+        <action name="chrono_boost">
+            <costs minerals="0" gas="0" time="0" supply="0">
+                <energy from="nexus" amount="25">
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="nexus">
+            </dependencies>
+            <results minerals="0" gas="0" time="0" supply="0">
+                <special name="chrono_boost">
+            </results>
+        </action>
+
+        <action name="mule">
+            <costs minerals="0" gas="0" time="0" supply="0">
+                <energy from="orbital_command" amount="50">
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="orbital_command">
+            </dependencies>
+            <results minerals="0" gas="0" time="0" supply="0">
+                <special name="mule">
+            </results>
+        </action>
+
+        <action name="spawn_larva">
+            <costs minerals="0" gas="0" time="0" supply="0">
+                <energy from="queen" amount=25>
+            </costs>
+            <borrows/>
+            <dependencies>
+                <unit name="queen">
+            </dependencies>
+            <results minerals="0" gas="0" time="0" supply="0">
+                <special name="spawn_larva">
+            </results>
+        </action>
+        -->
         <action name="hatchery">
             <costs mineral="300" gas="0" time="10" supply="0">
                 <unit name="drone"/>
