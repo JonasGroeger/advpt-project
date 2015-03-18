@@ -44,6 +44,27 @@ bool State::operator!=(const State &rhs) const
     return !(*this == rhs);
 }
 
+void State::reset()
+{
+    workersAll = 0;
+    workersMinerals = 0;
+    workersGas = 0;
+    gasHarvesting = 0;
+    finishTime = 0;
+
+    currentTime = 0;
+    minerals = 0;
+    gas = 0;
+    supply_used = 0;
+    supply_max = 0;
+
+    entities.clear();
+    borrowed.clear();
+    producing.clear();
+
+    activeActions = priority_queue<ActiveAction, vector<ActiveAction>, ReverseActiveActionComparator>();
+}
+
 bool State::isLegalAction(const BuildAction& act)
 {
     // Dependencies

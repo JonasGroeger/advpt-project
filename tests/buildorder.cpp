@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     ConfigParser::Instance().parseConfig(argv[1]);
 
     BuildOrder order("battlecruiser");
+    std::cout << order << endl;
+
     //insert a few unneeded units
     assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
     assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));

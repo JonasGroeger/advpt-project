@@ -34,6 +34,7 @@ class State {
     friend ostream& operator<<(ostream& out, State& obj);
     friend int main(int argc, char*argv[]);
     friend void testTerran();
+
     // The elapsed time
     time_t currentTime = 0;
 
@@ -93,12 +94,14 @@ class State {
     time_t finishTime = 0;
 
     public:
-    State() = delete;
+    State(){};
     State(const map<action_t, int> &startConfig);
 
     bool operator==(const State &rhs) const;
     bool operator!=(const State &rhs) const;
 
+    //This resets the state
+    void reset();
     // Paper S.3 "Action Legality"
     /*
      * Returns true iff the following hold true:

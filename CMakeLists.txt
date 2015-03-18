@@ -62,4 +62,4 @@ add_executable( test_state tests/state.cpp ${CPP_FILES} ${HPP_FILES} )
 add_executable( test_buildorder tests/buildorder.cpp ${CPP_FILES} ${HPP_FILES} )
 add_executable( optimizer tests/optimizer.cpp ${CPP_FILES} ${HPP_FILES} )
 
-add_definitions(-DDEBUG) # Uncomment (to enable) or Comment (to disable) the debug output (see include/Debug.hpp)
+#add_definitions(-DDEBUG) # Uncomment (to enable) or Comment (to disable) the debug output (see include/Debug.hpp)
