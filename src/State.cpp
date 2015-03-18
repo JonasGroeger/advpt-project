@@ -67,11 +67,6 @@ void State::reset()
 
 bool State::isLegalAction(const BuildAction& act)
 {
-    if(act.name.compare("battlecruiser") == 0)
-    {
-        int a = 5;
-        a = 7;
-    }
     // Dependencies
     if (!isSatisfied(act.dependencies, true))
     {
