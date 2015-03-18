@@ -32,6 +32,9 @@ set( HPP_FILES
     include/BuildAction.h
     include/BuildOrder.h
     include/ConfigParser.h
+    include/Config.h
+    include/INIReader.h
+    include/ini.h
     include/State.h
     include/Strategy.h
     include/GeneticOptimizer.h
@@ -42,6 +45,9 @@ set( HPP_FILES
 set( CPP_FILES
   src/BuildOrder.cpp
   src/ConfigParser.cpp
+  src/Config.cpp
+  src/INIReader.cpp
+  src/ini.c
   src/GeneticOptimizer.cpp
   src/State.cpp
   src/tinyxml2.cpp
