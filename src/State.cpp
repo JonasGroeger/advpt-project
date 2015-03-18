@@ -96,9 +96,9 @@ bool State::isLegalAction(const BuildAction& act)
         }
     }
 
-    if (act.result.supply > future_supply_max)
+    if (supply_used + act.cost.supply > future_supply_max)
     {
-            LOG_DEBUG("supply check failed: " << act.result.supply << " > " << future_supply_max);
+            LOG_DEBUG("supply check failed: " << act.cost.supply << " > " << future_supply_max);
             return false;
     }
 
