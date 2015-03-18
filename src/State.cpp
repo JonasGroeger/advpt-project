@@ -53,6 +53,21 @@ bool State::isLegalAction(const BuildAction& act)
         return false;
     }
 
+    // TODO handle actions that cost and borrow untis of the same type
+    // Costs
+    const BuildCost& cost = act.cost;
+
+    for (auto p : cost.units)
+    {
+            action_t type = p.first;
+            int count = p.second;
+
+            if (entities[type] + producing[type] < count)
+            {
+                    return false;
+            }
+    }
+
     // Borrows
     if (act.borrows.size() != 0)
     {
@@ -62,7 +77,7 @@ bool State::isLegalAction(const BuildAction& act)
             action_t type = entity.first;
             int count = entity.second;
 
-            if (entities[type] + producing[type] - borrowed[type] >= count)
+            if (entities[type] + producing[type] >= count)
             {
                 fulfilled = true;
                 break;
@@ -131,7 +146,25 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     }
 
     // Borrows
+    bool borrowFound = act.borrows.empty();
     for (auto entity : act.borrows)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (entities[type] - borrowed[type] >= count)
+        {
+            borrowFound = true;
+            break;
+        }
+    }
+    if (!borrowFound)
+    {
+        return getTimeTillNextActionIsFinished();
+    }
+
+    // costs
+    for (auto entity : act.cost.units)
     {
         action_t type = entity.first;
         int count = entity.second;
@@ -406,7 +439,9 @@ time_t State::getTimeTillNextActionIsFinished() const
     }
     else
     {
-        return activeActions.top().timeFinished - currentTime;
+        time_t t = activeActions.top().timeFinished - currentTime;
+        assert(t > 0);
+        return t;
     }
 }
 
