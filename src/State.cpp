@@ -184,6 +184,18 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         return getTimeTillNextActionIsFinished();
     }
 
+    // costs
+    for (auto entity : act.cost.units)
+    {
+        action_t type = entity.first;
+        int count = entity.second;
+
+        if (entities[type] - borrowed[type] < count)
+        {
+            return getTimeTillNextActionIsFinished();
+        }
+    }
+
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
     ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
 
