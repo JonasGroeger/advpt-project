@@ -450,6 +450,8 @@ time_t State::getTimeTillNextActionIsFinished() const
     }
     else
     {
-        return activeActions.top().timeFinished - currentTime;
+        time_t t = activeActions.top().timeFinished - currentTime;
+        assert(t > 0);
+        return t;
     }
 }
