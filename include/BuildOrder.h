@@ -82,12 +82,8 @@ private:
     /*applys the buildlist until buildList[pos-1] and returns the resulting unitMap to the caller
     * @returns the resulting unitMap
     */
-    void applyBuildOrderUntilPos(unsigned int pos);
+    bool applyBuildOrder(unsigned int posStart, unsigned int posEnd);
 
-    /*checks if buildList[pos] to buildList.end() is possible with a given unitMap
-    * @returns true if it is possible, false otherwise
-    */
-    bool checkBuildOrderFromPos(int pos);
     /*
     * this one resets all internally used variables
     */

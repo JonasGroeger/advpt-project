@@ -12,18 +12,12 @@ void BuildOrder::createMinimalBuildOrder(string target)
 
     while(dependencies.size() > 0)
     {
-        for(auto dep : dependencies)
-        {
-            std::cout << "DEP : "<< ConfigParser::Instance().getAction(dep).name << std::endl;
-        }
         auto possibleActions = getPossibleNextActions(dependencies);
         if(possibleActions.size() == 0)
         {
-            std::cout << "  PossibleActions is 0! : " << std::endl;
             //seems like nothing from our dependencies is possible so add a supply here
             if(state.isLegalAction(ConfigParser::Instance().getDefaulSupplyAction()))
             {
-                std::cout << "   Inserting : " << ConfigParser::Instance().getDefaulSupplyAction().name << std::endl;
                 startActionInState(ConfigParser::Instance().getDefaulSupplyAction().id);
                 buildList.push_back(ConfigParser::Instance().getDefaulSupplyAction().id);
             }
@@ -32,7 +26,6 @@ void BuildOrder::createMinimalBuildOrder(string target)
         for(action_t action : possibleActions)
         {
             auto bAction = ConfigParser::Instance().getAction(action);
-            std::cout << " Possible action : "<< ConfigParser::Instance().getAction(action).name << std::endl;
             startActionInState(action);
             buildList.push_back(action);
             dependencies.erase(std::remove_if(dependencies.begin(),dependencies.end(),
@@ -118,7 +111,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 
     state = State(ConfigParser::Instance().getStartConfig());
     // first get the "state" until pos-1 in our buildorder
-    applyBuildOrderUntilPos(position);
+    applyBuildOrder(0, position);
 
     // Check if the newly inserted action is possible at all
     if(!state.isLegalAction(ConfigParser::Instance().getAction(action)))
@@ -127,7 +120,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
     }
     startActionInState(ConfigParser::Instance().getAction(action).id);
 
-    if(checkBuildOrderFromPos(position))
+    if(applyBuildOrder(position, buildList.size()-1))
     {
         buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
         return true;
@@ -140,10 +133,10 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     assert(position < buildList.size());
     state = State(ConfigParser::Instance().getStartConfig());
     //first get the "state" until pos-1 in our buildorder
-    applyBuildOrderUntilPos(position);
+    applyBuildOrder(0, position);
 
     //skip the action we want to remove
-    if(checkBuildOrderFromPos(position+1))
+    if(applyBuildOrder(position+1, buildList.size()-1))
     {
         buildList.erase(buildList.begin()+position);
         return true;
@@ -157,7 +150,7 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
 
     state = State(ConfigParser::Instance().getStartConfig());
     //first get the "state" until pos-1 in our buildorder
-    applyBuildOrderUntilPos(position);
+    applyBuildOrder(0, position);
 
     // Check if the swapped action is possible
     if(!state.isLegalAction(ConfigParser::Instance().getAction(newAction)))
@@ -166,7 +159,7 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     }
     startActionInState(ConfigParser::Instance().getAction(newAction).id);
 
-    if(checkBuildOrderFromPos(position+1))
+    if(applyBuildOrder(position+1, buildList.size()-1))
     {
         buildList[position] = newAction;
         return true;
@@ -195,39 +188,26 @@ vector<action_t> BuildOrder::getPossibleNextActions(const vector<action_t> &acti
 void BuildOrder::startActionInState(const action_t &actionId)
 {
     const BuildAction& action = ConfigParser::Instance().getAction(actionId);
-    std::cout << "   State time : [" << state.currentTime << "]" << " State supply : [" << (state.supply_max -state.supply_used) <<"]" << std::endl;
     while (state.isAdditionalTimeNeeded(action))
     {
-        std::cout << "    For action ["<<action.name<<"] is additional time ["<<state.isAdditionalTimeNeeded(action)<<"] needed" << std::endl;
         state.advanceTime(state.isAdditionalTimeNeeded(action));
     }
-    std::cout << "   State time : [" << state.currentTime << "]" << " State supply : [" << (state.supply_max -state.supply_used) <<"]" << std::endl;
-    std::cout << "    Starting action ["<<action.name << "]" << std::endl;
     state.startAction(action);
 }
 
-void BuildOrder::applyBuildOrderUntilPos(unsigned int pos)
+bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
 {
     //first get the "state" until pos-1 in our buildorder
-    auto iter = buildList.begin();
-    for (unsigned int index = 0; index < pos; index++)
-    {
-        const BuildAction &action = ConfigParser::Instance().getAction(*iter);
-        startActionInState(action.id);
-    }
-}
-
-bool BuildOrder::checkBuildOrderFromPos(int pos)
-{
-    auto iter = buildList.begin() + pos;
-
-    for(; iter != buildList.end(); iter++)
+    auto iter = buildList.begin()+posStart;
+    for (unsigned int index = posStart; index < posEnd; index++)
     {
         const BuildAction &action = ConfigParser::Instance().getAction(*iter);
         if(!state.isLegalAction(action))
         {
             return false;
         }
+        startActionInState(action.id);
+        iter++;
     }
     return true;
 }

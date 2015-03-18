@@ -1322,7 +1322,7 @@
         </action>
 
         <action name="battlecruiser">
-            <costs mineral="400" gas="300" time="90" supply="60"/>
+            <costs mineral="400" gas="300" time="90" supply="6"/>
             <borrows>
                 <unit name="starport_techlab"/>
             </borrows>

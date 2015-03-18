@@ -18,7 +18,6 @@ void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
         //First create a minimal list to make sure we have all dependencies
         BuildOrder tmp(minimalBuildList);
         unsigned int randomEntries = getConfigInteger("Genetic", "InitialRandomEntries", 10);
-        cerr << randomEntries << endl;
 
         for(unsigned int step = 0; step < randomEntries; step++)
         {
@@ -26,6 +25,7 @@ void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
             int position = rand() % tmp.getSize();
 
             tmp.insertActionIfPossible(rndRange, position);
+            std::cout << tmp << std::endl;
         }
 
         std::cout << tmp << std::endl;

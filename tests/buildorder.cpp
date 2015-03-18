@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 
     ConfigParser::Instance().parseConfig(argv[1]);
 
+    std::cout << "Testing battlecruiser" << std::endl;
     BuildOrder order("battlecruiser");
-    std::cout << order << endl;
 
     //insert a few unneeded units
     assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
@@ -27,37 +27,35 @@ int main(int argc, char *argv[])
     assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
     assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 2));
 
-    //should be possible
-    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 3));
-
-    //list size should now be 0 .. 12 with last entry == battlecruiser
-
-    //should work because 12 == buildList size
-    assert(order.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 12));
-    //should work
-    assert(order.removeActionIfPossible(12));
-    //should work
-    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("battlecruiser").id, 12));
-    //should work
-    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("refinery").id, 6));
-    //should fail
-    assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 10));
-    //should work
-    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 1));
-    //should fail
-    assert(!order.removeActionIfPossible(0));
-    //should work
     assert(order.removeActionIfPossible(2));
+    assert(order.removeActionIfPossible(2));
+    assert(order.removeActionIfPossible(2));
+    assert(order.removeActionIfPossible(2));
+    assert(order.removeActionIfPossible(2));
+
+
+    assert(!order.removeActionIfPossible(0));
+    assert(!order.removeActionIfPossible(1));
+    assert(!order.removeActionIfPossible(2));
+    assert(!order.removeActionIfPossible(3));
+
+    assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 1));
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 0));
+    assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("thor").id, 7));
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("battlecruiser").id, 7));
 
     std::cout << order << endl;
 
-    //check empty one
-    BuildOrder empty;
-    empty.insertActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 0);
-    empty.insertActionIfPossible(ConfigParser::Instance().getAction("barracks").id, 1);
-    std::cout << empty << endl;
 
-    cout << order.getFitness() << endl;
+    std::cout << "Testing protoss colossus" << std::endl;
+    ConfigParser::Instance().setRaceForAction("colossus");
+    BuildOrder protossOrder("colossus");
+    std::cout << protossOrder << std::endl;
+
+    std::cout << "Testing protoss carrier" << std::endl;
+    BuildOrder protossCarrier("carrier");
+    std::cout << protossCarrier << std::endl;
+
     cout << "SUCCESS" << endl;
     return 0;
 }
