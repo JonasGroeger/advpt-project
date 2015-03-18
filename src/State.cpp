@@ -15,6 +15,8 @@ State::State(const map<action_t, int> &startConfig)
             supply_used += act.cost.supply;
         }
     }
+    // TODO this is a hack
+    future_supply_max = supply_max;
     assert(supply_max >= supply_used);
 
     this->minerals = 50 * RESS_FACTOR;
@@ -27,6 +29,7 @@ bool State::operator==(const State &rhs) const
      || gas != rhs.gas
      || supply_used != rhs.supply_used
      || supply_max != rhs.supply_max
+     || future_supply_max != rhs.future_supply_max
      || entities != rhs.entities
      || borrowed != rhs.borrowed
      || producing != rhs.producing)
@@ -70,6 +73,12 @@ bool State::isLegalAction(const BuildAction& act)
             LOG_DEBUG("borrows not met for " << act.name);
             return false;
         }
+    }
+
+    if (act.result.supply > future_supply_max)
+    {
+            LOG_DEBUG("supply check failed: " << act.result.supply << " > " << future_supply_max);
+            return false;
     }
 
     return true;
@@ -188,6 +197,9 @@ void State::startAction(const BuildAction& act)
     gas -= cost.gas*RESS_FACTOR;
     supply_used += cost.supply;
     assert(supply_used <= supply_max);
+
+    future_supply_max += act.result.supply;
+    assert(future_supply_max >= supply_max);
 
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)
@@ -352,6 +364,7 @@ ostream& operator<<(ostream& out, State& obj)
     out << "\tGas: " << obj.gas << " (~" << (obj.gas/RESS_FACTOR) << ")" << endl;
     out << "\tGas/tick: " << obj.getGasPerTick() << " (~" << (obj.getGasPerTick()/RESS_FACTOR) << ")" << endl;
     out << "\tSupply: " << obj.supply_used << "/" << obj.supply_max << endl;
+    out << "\tFuture supply max: " << obj.future_supply_max << endl;
     out << "\tWorkers: " << obj.workersAll << "/" << obj.workersMinerals << "/" << obj.workersGas << endl;
     out << "\tCurrent time: " << obj.currentTime << endl;
 
