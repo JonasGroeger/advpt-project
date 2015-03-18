@@ -67,7 +67,7 @@ void testTerran()
     terranState.startAction(cfg.getAction("supply_depot"));
     terranState.startAction(cfg.getAction("supply_depot"));
 
-    simple_test("No worker available", terranState.isLegalAction(cfg.getAction("supply_depot")), false);
+    simple_test("No worker available", terranState.isLegalAction(cfg.getAction("supply_depot")), true);
     terranState.startAction(cfg.getAction("scv"));
     simple_test("Worker will be available", terranState.isLegalAction(cfg.getAction("supply_depot")), true);
     ress_t future = terranState.future_supply_max;

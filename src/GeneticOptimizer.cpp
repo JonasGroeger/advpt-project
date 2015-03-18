@@ -37,11 +37,11 @@ void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
             int rndRange = rand() % ConfigParser::Instance().getActionCount() + ConfigParser::Instance().getFirstActionId();
             int position = rand() % tmp.getSize();
 
-            std::cerr << "Trying to insert action ["<<ConfigParser::Instance().getAction(rndRange).name << "] at position ["<<position <<"]" << std::endl;
+            //std::cerr << "Trying to insert action ["<<ConfigParser::Instance().getAction(rndRange).name << "] at position ["<<position <<"]" << std::endl;
             tmp.insertActionIfPossible(rndRange, position);
         }
 
-        std::cerr << tmp << std::endl;
+        //std::cerr << tmp << std::endl;
     }
 }
 
