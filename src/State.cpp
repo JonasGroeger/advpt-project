@@ -243,8 +243,6 @@ void State::startAction(const BuildAction& act)
     future_supply_max += act.result.supply;
     assert(future_supply_max >= supply_max);
 
-    cerr << *this << endl;
-    cerr << act.name << endl;
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)
     {

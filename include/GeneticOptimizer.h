@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ctime>
+
 #include "Strategy.h"
 #include "Debug.h"
 #include "BuildOrder.h"
