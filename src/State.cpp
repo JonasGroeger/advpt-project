@@ -167,7 +167,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     }
 
     // Borrows
-    bool borrowFound = false;
+    bool borrowFound = act.borrows.empty();
     for (auto entity : act.borrows)
     {
         action_t type = entity.first;
@@ -181,7 +181,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
     }
     if (!borrowFound)
     {
-            return getTimeTillNextActionIsFinished();
+        return getTimeTillNextActionIsFinished();
     }
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
