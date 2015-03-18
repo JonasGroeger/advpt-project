@@ -444,5 +444,42 @@ time_t EnergyManager::timeUntilEnergyIsAvailable(action_t type, energy_t amount)
 
 void EnergyManager::advanceTime(time_t amount)
 {
+        for (auto p : savedEnergy)
+        {
+                action_t type = p.first;
 
+                // We access again to obtain a reference
+                for (energy_t &e : savedEnergy.at(type))
+                {
+                        e += amount * ENERGY_PER_TICK;
+                        if (e > maxEnergy[type])
+                        {
+                                e = maxEnergy[type];
+                        }
+                }
+        }
+
+        currentTime += amount;
+}
+
+ostream& operator<<(ostream& out, EnergyManager& obj)
+{
+        out << "EnergyManager with: " << endl;
+        out << "Currently at time: " << obj.currentTime << endl;
+        for (auto p : obj.savedEnergy)
+        {
+                action_t type = p.first;
+                const BuildAction &act = ConfigParser::Instance().getAction(type);
+                vector<energy_t> &vec = p.second;
+
+                out << "\tAction: " << act.name << endl;
+                out << "\tMaxEnergy: " << obj.maxEnergy[type] << endl;
+                out << "\tSavedEnergy: " << endl;
+
+                for (energy_t e : vec)
+                {
+                        out << "\t\t" << e << endl;
+                }
+        }
+        return out;
 }

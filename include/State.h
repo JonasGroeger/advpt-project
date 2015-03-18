@@ -42,6 +42,9 @@ class EnergyManager
     void consumeEnergy(action_t type, energy_t amount);
     time_t timeUntilEnergyIsAvailable(action_t type, energy_t amount);
     void advanceTime(time_t amount);
+
+    friend ostream& operator<<(ostream& out, EnergyManager& obj);
+    friend void testEnergyManager();
 };
 
 class State {
