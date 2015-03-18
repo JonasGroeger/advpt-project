@@ -100,8 +100,6 @@ class State {
     bool operator==(const State &rhs) const;
     bool operator!=(const State &rhs) const;
 
-    //This resets the state
-    void reset();
     // Paper S.3 "Action Legality"
     /*
      * Returns true iff the following hold true:
