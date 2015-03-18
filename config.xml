@@ -25,6 +25,7 @@
             <unit name="extractor"/>;
         </gas_harvesters>
 
+        <!--
         <action name="supply_drop">
             <costs minerals="0" gas="0" time="0" supply="0">
                 <energy from="orbital_command" amount="50">
@@ -77,7 +78,7 @@
                 <special name="spawn_larva">
             </results>
         </action>
-
+        -->
         <action name="hatchery">
             <costs mineral="300" gas="0" time="10" supply="0">
                 <unit name="drone"/>

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include <queue> 
+#include <vector> 
 #include <cassert> 
 #include <cmath> 
 
@@ -17,8 +19,9 @@ using namespace std;
  * Internally it is always multiplied by RESS_FACTOR 
  */
 // TODO if someone is bored this could also be implementated by a smart class with overloaded arithmetic operators and default int conversions etc.
-using ress_t = long double;
+using ress_t = long int;
 const int RESS_FACTOR = 100; // Scaling factor
+using energy_t = long double;
 
 /*
  * These values represent how much minerals/gas are produced by one worker
@@ -26,7 +29,20 @@ const int RESS_FACTOR = 100; // Scaling factor
 const ress_t MINERALS_PER_TIME_UNIT = 0.7 * RESS_FACTOR;
 const ress_t GAS_PER_TIME_UNIT = 0.35 * RESS_FACTOR;
 
-// TODO managing units with energy
+class EnergyManager
+{
+    private:
+    const long double ENERGY_PER_TICK = 0.5625;
+    time_t currentTime = 0;
+    map<action_t, vector<energy_t>> savedEnergy;
+    map<action_t, energy_t> maxEnergy;
+
+    public:
+    void registerNew(action_t type, energy_t startingEnergy, energy_t maxEnergy);
+    void consumeEnergy(action_t type, energy_t amount);
+    time_t timeUntilEnergyIsAvailable(action_t type, energy_t amount);
+    void advanceTime(time_t amount);
+};
 
 class State {
     //I think it is fine to expose these fields without getter and setters

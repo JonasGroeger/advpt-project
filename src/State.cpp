@@ -75,9 +75,9 @@ bool State::isLegalAction(const BuildAction& act)
         }
     }
 
-    if (act.result.supply > future_supply_max)
+    if (supply_used + act.cost.supply > future_supply_max)
     {
-            LOG_DEBUG("supply check failed: " << act.result.supply << " > " << future_supply_max);
+            LOG_DEBUG("supply check failed: " << act.cost.supply << " > " << future_supply_max);
             return false;
     }
 
@@ -408,4 +408,41 @@ time_t State::getTimeTillNextActionIsFinished() const
     {
         return activeActions.top().timeFinished - currentTime;
     }
+}
+
+void EnergyManager::registerNew(action_t type, energy_t startingEnergy, energy_t max)
+{
+        maxEnergy[type] = max;
+        savedEnergy[type].push_back(startingEnergy);
+}
+
+void EnergyManager::consumeEnergy(action_t type, energy_t amount)
+{
+        vector<energy_t> &vec = savedEnergy.at(type);
+
+        auto it = find_if(vec.begin(), vec.end(),
+                        [amount](energy_t e) { return e >= amount;} 
+                );
+
+        assert(it != vec.end());
+
+        *it -= amount;
+}
+
+time_t EnergyManager::timeUntilEnergyIsAvailable(action_t type, energy_t amount)
+{
+        vector<energy_t> &vec = savedEnergy.at(type);
+        assert(!vec.empty());
+
+        auto max_it = max_element(vec.begin(), vec.end());
+
+        energy_t energyNeeded = amount - *max_it;
+        if (energyNeeded < 0) energyNeeded = 0;
+
+        return ceil(energyNeeded / ENERGY_PER_TICK);
+}
+
+void EnergyManager::advanceTime(time_t amount)
+{
+
 }
