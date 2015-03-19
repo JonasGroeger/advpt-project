@@ -548,6 +548,12 @@ void LarvaManager::advanceTime(time_t amount)
 
 void LarvaManager::injectLarva(unsigned long count)
 {
+    // Only zerg has larva. Noop if we are not zerg.
+    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
+    {
+        return;
+    }
+
     this->spawnLarva(count, true);
 }
 
