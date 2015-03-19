@@ -571,16 +571,16 @@ void LarvaManager::spawnLarva(unsigned long count, bool injecting)
     // If we are not injecting but have more larva than possible, do nothing
     if (!injecting)
     {
-        if (this->currentLarva >= this->maximumLarva)
+        if (this->_state.currentLarva >= this->maximumLarva)
         {
             return;
         }
     }
 
     // Add and cap at maximum
-    this->currentLarva += count;
-    if (this->currentLarva > this->maximumLarva)
+    this->_state.currentLarva += count;
+    if (this->_state.currentLarva > this->maximumLarva)
     {
-        this->currentLarva = this->maximumLarva;
+        this->_state.currentLarva = this->maximumLarva;
     }
 }

@@ -56,7 +56,6 @@ private:
     const unsigned long MAX_LARVA_PER_HATCHERY = 3;
     const unsigned long INJECT_MAX_LARVA_PER_HATCHERY = 19;
 
-    unsigned long currentLarva;
     unsigned long maximumLarva;
     double remainderLarva;
 
@@ -103,7 +102,7 @@ class State {
     ress_t supply_used = 0, supply_max = 0;
     ress_t future_supply_max = 0;
 
-
+    unsigned long currentLarva;
 
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
