@@ -854,30 +854,6 @@
             </results>
         </action>
 
-        <action name="fuse_archon_high">
-            <costs mineral="100" gas="300" time="12" supply="4">
-                <unit name="high_templar"/>
-                <unit name="high_templar"/>
-            </costs>
-            <borrows/>
-            <dependencies/>
-            <results mineral="0" gas="0" time="0" supply="0">
-                <unit name="archon"/>
-            </results>
-        </action>
-
-        <action name="fuse_archon_dark">
-            <costs mineral="175" gas="275" time="12" supply="4">
-                <unit name="dark_templar"/>
-                <unit name="dark_templar"/>
-            </costs>
-            <borrows/>
-            <dependencies/>
-            <results mineral="0" gas="0" time="0" supply="0">
-                <unit name="archon"/>
-            </results>
-        </action>
-
         <action name="fuse_archon_mixed">
             <costs mineral="250" gas="250" time="12" supply="4">
                 <unit name="high_templar"/>
