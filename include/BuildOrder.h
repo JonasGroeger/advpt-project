@@ -117,8 +117,9 @@ private:
     * Writes the dependencies to @outVector.
     * @param id         : the action_t to resolve dependencies for
     * @param outVector reference to the vector which receives the results
+    * TODO doku
     */
-    void getDependencies(action_t id, vector<action_t> &outVector);
+    vector<action_t> getDependencies(action_t id);
 
     /*
     * Checks, that there are no more units of a type than allowed in @currentUnits.

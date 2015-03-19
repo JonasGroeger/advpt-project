@@ -12,13 +12,15 @@ GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targe
     else
     {
         time_t seed = getConfigInteger(GENETIC_SECTION, FIELD_RANDOM_SEED, 0);
-        cerr << "Using static seed: " << seed << endl;
+        LOG_DEBUG("Using static seed: " << seed);
         srand(seed);
     }
 
     LOG_DEBUG("Initialized Genetic Optimizer with Strategy "<<strategy<<" for target ["
-            << ConfigParser::Instance().getAction(target).name);
+            << ConfigParser::Instance().getAction(target).name) << "].";
+
     generateRandomBuildLists(getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_START_LISTS, 20));
+
 }
 
 void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
@@ -41,7 +43,7 @@ void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
             int position = rand() % tmp.getSize();
             tmp.insertActionIfPossible(randomAction, position);
         }
-        LOG_DEBUG("Created random BuildList ["<<i+1<<"/"<<numberOfLists<<"] with [" << tmp.getSize() << "] entries");
+        LOG_DEBUG("Created random BuildList ["<<i+1<<"/"<<numberOfLists<<"] with [" << tmp.getSize() << "] entries.");
     }
 }
 

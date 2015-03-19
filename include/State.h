@@ -2,10 +2,10 @@
 
 #include <algorithm>
 #include <map>
-#include <queue> 
-#include <vector> 
-#include <cassert> 
-#include <cmath> 
+#include <queue>
+#include <vector>
+#include <cassert>
+#include <cmath>
 
 #include <iostream>
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 
 /*
  * This datatype is used to represent minerals and gas
- * Internally it is always multiplied by RESS_FACTOR 
+ * Internally it is always multiplied by RESS_FACTOR
  */
 // TODO if someone is bored this could also be implementated by a smart class with overloaded arithmetic operators and default int conversions etc.
 using ress_t = long int;
@@ -60,9 +60,49 @@ class EnergyManager
     friend void testEnergyManager();
 };
 
+
+class State; // Forward declaration for LarvaManager
+class LarvaManager
+{
+private:
+    const double SPAWN_LARVA_PER_TICK_PER_HATCHERY = 0.06667;
+    const unsigned long MAX_LARVA_PER_HATCHERY = 3;
+    const unsigned long INJECT_MAX_LARVA_PER_HATCHERY = 19;
+
+    unsigned long maximumLarva;
+    double remainderLarva;
+
+public:
+    LarvaManager(State &state)
+            : _state(state)
+    {
+    };
+
+    /*
+    * This should be called when the time is skipped. Based on @amount, we produce larva that we also add to @state.
+    *
+    * Params:
+    *   @amount: The amount of time that is skipped into the future.
+    */
+    void advanceTime(time_t amount);
+
+    /*
+    * Injects @count larva into the current state.
+    *
+    * Params:
+    *   @count: The amount of larva to be injected. Should be 4 in Starcraft 2.
+    */
+    void injectLarva(unsigned long count);
+
+private:
+    State &_state;
+    int number_of_hatcheries;
+    void spawnLarva(unsigned long count, bool injecting);
+};
+
 class State {
     //I think it is fine to expose these fields without getter and setters
-    public: 
+    public:
     friend ostream& operator<<(ostream& out, State& obj);
     friend int main(int argc, char*argv[]);
     friend void testTerran();
@@ -74,6 +114,8 @@ class State {
     ress_t minerals = 0, gas = 0;
     ress_t supply_used = 0, supply_max = 0;
     ress_t future_supply_max = 0;
+
+    unsigned long currentLarva;
 
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
@@ -182,7 +224,7 @@ class State {
      * NOTE: you probably want to use addActionResults
      */
     void addUnit(action_t type, int count = 1);
-    
+
     void increaseRessources(time_t);
     /*
      * Returns true if all entries in @entities are satisfied

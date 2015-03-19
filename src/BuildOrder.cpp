@@ -3,11 +3,11 @@
 void BuildOrder::createMinimalBuildOrder(string target)
 {
     reset();
-    vector<action_t> dependencies;
     ConfigParser::Instance().setRaceForAction(target);
     BuildAction targetAction = ConfigParser::Instance().getAction(target);
+    vector<action_t> dependencies = getDependencies(targetAction.id);
+
     state = State(ConfigParser::Instance().getStartConfig());
-    getDependencies(targetAction.id, dependencies);
     dependencies.push_back(targetAction.id);
 
     while(dependencies.size() > 0)
@@ -76,22 +76,30 @@ unsigned int BuildOrder::getUnitCount(action_t action, time_t maxTime)
     return 0;
 }
 
-void BuildOrder::getDependencies(action_t id, vector<action_t>& outVector)
+vector<action_t> BuildOrder::getDependencies(action_t id)
 {
-    auto dependencies = ConfigParser::Instance().getAction(id).dependencies;
-    for(auto depPair : dependencies)
+    map<action_t, bool> availableUnits;
+    vector<action_t> todo {id};
+    vector<action_t> deps;
+
+    while (!todo.empty())
     {
-        LOG_DEBUG("Dependency of [" << ConfigParser::Instance().getAction(id).name <<"] is " << depPair.second << "* [" << ConfigParser::Instance().getAction(depPair.first).name << "]");
-        if(availableUnits.count(ConfigParser::Instance().getAction(depPair.first).id) <= 0
-                || (availableUnits[ConfigParser::Instance().getAction(depPair.first).id] < depPair.second))
+        action_t current = todo.back();
+        todo.pop_back();
+
+        for (auto depPair : ConfigParser::Instance().getAction(current).dependencies)
         {
-            LOG_DEBUG("Adding it to our vector!");
-            outVector.push_back(ConfigParser::Instance().getAction(depPair.first).id);
+            action_t type = depPair.first;
+            if (!availableUnits[type])
+            {
+                todo.push_back(type);
+                deps.push_back(type);
+                availableUnits[type] = true;
+            }
         }
-        addOrIncrementUnit(availableUnits, ConfigParser::Instance().getAction(depPair.first).id);
-        getDependencies(ConfigParser::Instance().getAction(depPair.first).id, outVector);
     }
-    return;
+
+    return deps;
 }
 
 void BuildOrder::addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit)
