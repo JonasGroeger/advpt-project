@@ -3,11 +3,11 @@
 void BuildOrder::createMinimalBuildOrder(string target)
 {
     reset();
-    vector<action_t> dependencies;
     ConfigParser::Instance().setRaceForAction(target);
     BuildAction targetAction = ConfigParser::Instance().getAction(target);
+    vector<action_t> dependencies = getDependencies(targetAction.id);
+
     state = State(ConfigParser::Instance().getStartConfig());
-    getDependencies(targetAction.id, dependencies);
     dependencies.push_back(targetAction.id);
 
     while(dependencies.size() > 0)
