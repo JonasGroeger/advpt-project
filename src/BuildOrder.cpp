@@ -136,7 +136,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
     }
     startActionInState(ConfigParser::Instance().getAction(action).id);
 
-    if(applyBuildOrder(position, buildList.size()-1))
+    if(applyBuildOrder(position, buildList.size()))
     {
         buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
         return true;
@@ -152,7 +152,7 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     applyBuildOrder(0, position);
 
     //skip the action we want to remove
-    if(applyBuildOrder(position+1, buildList.size()-1))
+    if(applyBuildOrder(position+1, buildList.size()))
     {
         buildList.erase(buildList.begin()+position);
         return true;
@@ -175,7 +175,7 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     }
     startActionInState(ConfigParser::Instance().getAction(newAction).id);
 
-    if(applyBuildOrder(position+1, buildList.size()-1))
+    if(applyBuildOrder(position+1, buildList.size()))
     {
         buildList[position] = newAction;
         return true;
