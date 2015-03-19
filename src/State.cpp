@@ -193,7 +193,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     assert(minerals_needed == 0 || getMineralsPerTick() != 0);
     assert(gas_needed == 0 || getGasPerTick() != 0);
-    
+
     ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
     ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
 
@@ -268,7 +268,7 @@ void State::startAction(const BuildAction& act)
 
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
-    
+
     LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
@@ -311,7 +311,7 @@ void State::addUnit(action_t type, int count)
         gasHarvesting += 3;
     }
 
-    if (act.isWorker) 
+    if (act.isWorker)
     {
         workersAll += count;
     }
@@ -370,7 +370,7 @@ void State::reallocateWorkers()
     }
 
     int workersRemaining = workersAll;
-    
+
     // Always have at least one worker mine minerals
     workersMinerals = 1;
     workersRemaining --;
@@ -456,7 +456,7 @@ void EnergyManager::consumeEnergy(action_t type, energy_t amount)
         vector<energy_t> &vec = savedEnergy.at(type);
 
         auto it = find_if(vec.begin(), vec.end(),
-                        [amount](energy_t e) { return e >= amount;} 
+                        [amount](energy_t e) { return e >= amount;}
                 );
 
         assert(it != vec.end());

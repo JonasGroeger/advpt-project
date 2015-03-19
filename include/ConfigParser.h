@@ -50,7 +50,7 @@ public:
     const BuildAction& getAction(action_t id);
     unsigned int getActionCount();
     action_t getFirstActionId();
-    
+
 private:
     ConfigParser(){};
     ConfigParser(ConfigParser const&) = delete;
