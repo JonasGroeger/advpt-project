@@ -860,7 +860,10 @@
                 <unit name="dark_templar"/>
             </costs>
             <borrows/>
-            <dependencies/>
+            <dependencies>
+                <unit name="high_templar"/>
+                <unit name="dark_templar"/>
+            </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
                 <unit name="archon"/>
             </results>
