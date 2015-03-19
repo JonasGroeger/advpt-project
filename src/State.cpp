@@ -13,6 +13,11 @@ State::State(const map<action_t, int> &startConfig)
         {
             addActionResult(act.result, false);
             supply_used += act.cost.supply;
+            // Register energy
+            if (act.hasEnergy)
+            {
+                    energyManager.registerNew(act.id, act.startEnergy, act.maxEnergy);
+            }
         }
     }
     // TODO this is a hack
@@ -101,6 +106,20 @@ bool State::isLegalAction(const BuildAction& act)
             }
     }
 
+    if (act.isSpecial)
+    {
+        if (act.name == "chrono_boost" && !activeActions.empty())
+        {
+            const BuildAction *next = activeActions.top().action;
+            if (find_if(next->dependencies.begin(), next->dependencies.end(),
+                        [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
+                       ) != act.dependencies.end())
+            {
+                return false;
+            }
+        }
+    }
+
     if (supply_used + act.cost.supply > future_supply_max)
     {
             LOG_DEBUG("supply check failed: " << act.cost.supply << " > " << future_supply_max);
@@ -156,6 +175,7 @@ void State::advanceTime(time_t amount)
                 activeMules -= 1;
                 assert(activeMules >= 0);
             }
+            
         }
     }
     increaseRessources(end_time-currentTime);
@@ -316,6 +336,20 @@ void State::startAction(const BuildAction& act)
         if (act.name == "mule")
         {
             activeMules += 1;
+        } 
+        else if (act.name == "chrono_boost" && !activeActions.empty())
+        {
+            ActiveAction top = activeActions.top();
+            activeActions.pop();
+            if (top.timeFinished < 10) top.timeFinished = 0;
+            else top.timeFinished -= 10;
+            activeActions.push(top);
+
+            if (activeActions.size() == 1)
+            {
+                finishTime = top.timeFinished;
+                cerr << currentTime << endl;
+            }
         }
     }
 
