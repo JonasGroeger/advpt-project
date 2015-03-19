@@ -90,6 +90,15 @@ bool State::isLegalAction(const BuildAction& act)
         }
     }
 
+    // Energy
+    if (cost.energyAmount != 0)
+    {
+            if (entities[cost.energyFrom] + producing[cost.energyFrom] < 1)
+            {
+                    return false;
+            }
+    }
+
     if (supply_used + act.cost.supply > future_supply_max)
     {
             LOG_DEBUG("supply check failed: " << act.cost.supply << " > " << future_supply_max);
