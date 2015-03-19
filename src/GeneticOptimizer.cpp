@@ -3,7 +3,7 @@
 GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targetUnit)
 {
     target = targetUnit;
-    if (getConfigBoolean("Genetic", "UseTimeSeed", false))
+    if (getConfigBoolean(GENETIC_SECTION, FIELD_TIME_SEED, false))
     {
         time_t seed = time(NULL);
         LOG_DEBUG("Using random seed: " << seed);
@@ -11,14 +11,14 @@ GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targe
     }
     else
     {
-        time_t seed = getConfigInteger("Genetic", "RandomSeed", 0);
+        time_t seed = getConfigInteger(GENETIC_SECTION, FIELD_RANDOM_SEED, 0);
         cerr << "Using static seed: " << seed << endl;
         srand(seed);
     }
 
     LOG_DEBUG("Initialized Genetic Optimizer with Strategy "<<strategy<<" for target ["
             << ConfigParser::Instance().getAction(target).name);
-    generateRandomBuildLists(20);
+    generateRandomBuildLists(getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_START_LISTS, 20));
 }
 
 void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
@@ -31,7 +31,7 @@ void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
     {
         //First create a minimal list to make sure we have all dependencies
         BuildOrder tmp(minimalBuildList);
-        unsigned int randomEntries = getConfigInteger("Genetic", "InitialRandomEntries", 10);
+        unsigned int randomEntries = getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_RANDOM_ENTRIES, 10);
 
         for(unsigned int step = 0; step < randomEntries; step++)
         {
