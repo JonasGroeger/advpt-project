@@ -47,6 +47,36 @@ class EnergyManager
     friend void testEnergyManager();
 };
 
+class State;
+
+class LarvaManager
+{
+private:
+    const double SPAWN_LARVA_PER_TICK_PER_HATCHERY = 0.06667;
+    const unsigned long MAX_LARVA_PER_HATCHERY = 3;
+    const unsigned long INJECT_MAX_LARVA_PER_HATCHERY = 19;
+
+    unsigned long currentLarva;
+    unsigned long maximumLarva;
+    double remainderLarva;
+
+public:
+    LarvaManager(State &state)
+            : _state(state)
+    {
+    };
+
+    void advanceTime(time_t amount);
+
+    void spawnLarva(unsigned long count, bool injecting);
+
+    void injectLarva(unsigned long count);
+
+private:
+    State &_state;
+    int number_of_hatcheries;
+};
+
 class State {
     //I think it is fine to expose these fields without getter and setters
     public:
