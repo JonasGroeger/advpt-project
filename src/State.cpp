@@ -266,8 +266,11 @@ void State::startAction(const BuildAction& act)
     assert(future_supply_max >= supply_max);
 
     // and energy
-    assert(energyManager.timeUntilEnergyIsAvailable(cost.energyFrom, cost.energyAmount) == 0);
-    energyManager.consumeEnergy(cost.energyFrom, cost.energyAmount);
+    if (act.cost.energyAmount != 0)
+    {
+            assert(energyManager.timeUntilEnergyIsAvailable(cost.energyFrom, cost.energyAmount) == 0);
+            energyManager.consumeEnergy(cost.energyFrom, cost.energyAmount);
+    }
 
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)
@@ -536,10 +539,14 @@ void EnergyManager::advanceTime(time_t amount)
         currentTime += amount;
 }
 
-ostream& operator<<(ostream& out, EnergyManager& obj)
+ostream& operator<<(ostream& out, const EnergyManager& obj)
 {
         out << "EnergyManager with: " << endl;
         out << "Currently at time: " << obj.currentTime << endl;
+        if (obj.savedEnergy.empty())
+        {
+                out << "With no energy units" << endl;
+        }
         for (auto p : obj.savedEnergy)
         {
                 action_t type = p.first;
@@ -547,7 +554,7 @@ ostream& operator<<(ostream& out, EnergyManager& obj)
                 vector<energy_t> &vec = p.second;
 
                 out << "\tAction: " << act.name << endl;
-                out << "\tMaxEnergy: " << obj.maxEnergy[type] << endl;
+                out << "\tMaxEnergy: " << obj.maxEnergy.at(type) << endl;
                 out << "\tSavedEnergy: " << endl;
 
                 for (energy_t e : vec)

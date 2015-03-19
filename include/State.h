@@ -56,7 +56,7 @@ class EnergyManager
             return *this;
     }
 
-    friend ostream& operator<<(ostream& out, EnergyManager& obj);
+    friend ostream& operator<<(ostream& out, const EnergyManager& obj);
     friend void testEnergyManager();
 };
 

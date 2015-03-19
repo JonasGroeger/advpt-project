@@ -917,7 +917,6 @@
                 <unit name="orbital_command"/>
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="8">
-                <unit name="enhanced_supply_depot"/>
             </results>
         </action>
 
