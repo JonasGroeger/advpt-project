@@ -78,6 +78,7 @@ private:
 
     const char* ATTRIBUTE_NAME = "name";
     const char* ATTRIBUTE_COUNT = "count";
+    const char* ATTRIBUTE_SPECIAL = "special";
     const char* ATTRIBUTE_DEFAULT_SUPPLY = "default_supply";
     const char* ATTRIBUTE_MINERALS = "mineral";
     const char* ATTRIBUTE_GAS = "gas";

@@ -29,6 +29,7 @@ typedef struct BuildAction
 {
     action_t id;
     string name;
+    bool isSpecial = false;
     BuildCost cost;
     vector<std::pair<action_t, int>> dependencies;
     vector<std::pair<action_t, int>> borrows;
