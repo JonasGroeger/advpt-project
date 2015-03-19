@@ -518,3 +518,63 @@ ostream& operator<<(ostream& out, EnergyManager& obj)
         }
         return out;
 }
+
+void LarvaManager::advanceTime(time_t amount)
+{
+    // Only zerg has larva. Noop if we are not zerg.
+    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
+    {
+        return;
+    }
+
+    action_t hatchery_id = ConfigParser::Instance().getAction("hatchery").id;
+    this->number_of_hatcheries = this->_state.getEntityCount(hatchery_id);
+
+    // In the next @amount seconds, we will produce number_of_hatcheries * 0.06667
+    double spawnRate = this->number_of_hatcheries * SPAWN_LARVA_PER_TICK_PER_HATCHERY;
+    double spawnAmount = spawnRate * amount + this->remainderLarva;
+
+    // Since @spawnAmount can be 4.31, we only want to procude 4 larva
+    unsigned long numLarvaSpawn = (unsigned long) spawnAmount; // 4
+    double numLarvaRemainder = spawnAmount - numLarvaSpawn; // 0.31
+
+    // We want to remember the larva that is not yet ready to use it in the next call of advanceTime.
+    this->remainderLarva = numLarvaRemainder;
+
+    // Try to spawn the amount of larva.
+    bool injecting = false;
+    this->spawnLarva(numLarvaSpawn, injecting);
+}
+
+void LarvaManager::injectLarva(unsigned long count)
+{
+    this->spawnLarva(count, true);
+}
+
+void LarvaManager::spawnLarva(unsigned long count, bool injecting)
+{
+    if (injecting)
+    {
+        this->maximumLarva = this->number_of_hatcheries * INJECT_MAX_LARVA_PER_HATCHERY;
+    }
+    else
+    {
+        this->maximumLarva = this->number_of_hatcheries * MAX_LARVA_PER_HATCHERY;
+    }
+
+    // If we are not injecting but have more larva than possible, do nothing
+    if (!injecting)
+    {
+        if (this->currentLarva >= this->maximumLarva)
+        {
+            return;
+        }
+    }
+
+    // Add and cap at maximum
+    this->currentLarva += count;
+    if (this->currentLarva > this->maximumLarva)
+    {
+        this->currentLarva = this->maximumLarva;
+    }
+}
