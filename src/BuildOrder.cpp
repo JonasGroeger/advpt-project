@@ -78,28 +78,28 @@ unsigned int BuildOrder::getUnitCount(action_t action, time_t maxTime)
 
 vector<action_t> BuildOrder::getDependencies(action_t id)
 {
-        map<action_t, bool> availableUnits;
-        vector<action_t> todo {id};
-        vector<action_t> deps;
+    map<action_t, bool> availableUnits;
+    vector<action_t> todo {id};
+    vector<action_t> deps;
 
-        while (!todo.empty())
+    while (!todo.empty())
+    {
+        action_t current = todo.back();
+        todo.pop_back();
+
+        for (auto depPair : ConfigParser::Instance().getAction(current).dependencies)
         {
-                action_t current = todo.back();
-                todo.pop_back();
-
-                for (auto depPair : ConfigParser::Instance().getAction(current).dependencies)
-                {
-                        action_t type = depPair.first;
-                        if (!availableUnits[type])
-                        {
-                                todo.push_back(type);
-                                deps.push_back(type);
-                                availableUnits[type] = true;
-                        }
-                }
+            action_t type = depPair.first;
+            if (!availableUnits[type])
+            {
+                todo.push_back(type);
+                deps.push_back(type);
+                availableUnits[type] = true;
+            }
         }
+    }
 
-        return deps;
+    return deps;
 }
 
 void BuildOrder::addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit)
