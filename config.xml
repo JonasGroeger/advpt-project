@@ -72,7 +72,7 @@
             </results>
         </action>
 
-        <action name="queen">
+        <action name="queen" hasEnergy="true">
             <costs mineral="150" gas="0" time="50" supply="2"/>
             <borrows>
                 <unit name="hatchery"/>
@@ -84,7 +84,7 @@
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="0">
                 <unit name="queen"/>
-                <energy current="25" max="200"/>
+                <energy start="50" max="200"/>
             </results>
         </action>
 
@@ -511,7 +511,7 @@
             </results>
         </action>
 
-        <action name="nexus">
+        <action name="nexus" hasEnergy="true">
             <costs mineral="400" gas="0" time="100" supply="0"/>
             <borrows/>
             <dependencies>
@@ -519,7 +519,7 @@
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="10">
                 <unit name="nexus"/>
-                <energy current="0" max="100"/>
+                <energy start="0" max="100"/>
                 <!-- TODO: Chrono Boost -->
             </results>
         </action>
@@ -974,7 +974,7 @@
         </action>
 
         <!-- SPECIAL: Calldown, Mule -->
-        <action name="orbital_command">
+        <action name="orbital_command" hasEnergy="true">
             <costs mineral="150" gas="0" time="35" supply="0">
                 <unit name="command_center"/>
             </costs>
@@ -986,6 +986,7 @@
             </dependencies>
             <results mineral="0" gas="0" time="0" supply="11">
                 <unit name="orbital_command"/>
+                <energy start="50" max="200"/>
             </results>
         </action>
 
