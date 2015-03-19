@@ -74,6 +74,17 @@ void ConfigParser::parseConfig(char *file)
             buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
             addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
 
+            //Look if this one has energy
+            if(action->BoolAttribute(ATTRIBUTE_HAS_ENERGY))
+            {
+                buildAction.hasEnergy = true;
+                XMLElement* energyResult = results->FirstChildElement(NODE_ENERGY);
+                buildAction.startEnergy = energyResult->IntAttribute(ATTRIBUTE_ENERGY_START);
+                buildAction.maxEnergy = energyResult->IntAttribute(ATTRIBUTE_ENERGY_MAX);
+                LOG_DEBUG("   Action ["<<buildAction.name<<"] has energy! with start of ["<<buildAction.startEnergy
+                        <<"] and max of [" << buildAction.maxEnergy << "]");
+            }
+
             actions[buildAction.id] = buildAction;
         }
         currRace.actions = actions;
