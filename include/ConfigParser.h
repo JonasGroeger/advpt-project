@@ -75,9 +75,16 @@ private:
     const char* NODE_BORROWS = "borrows";
     const char* NODE_DEPENDENCIES = "dependencies";
     const char* NODE_RESULTS = "results";
+    const char* NODE_ENERGY = "energy";
 
     const char* ATTRIBUTE_NAME = "name";
     const char* ATTRIBUTE_COUNT = "count";
+    const char* ATTRIBUTE_SPECIAL = "special";
+    const char* ATTRIBUTE_HAS_ENERGY = "hasEnergy";
+    const char* ATTRIBUTE_ENERGY_FROM = "from";
+    const char* ATTRIBUTE_ENERGY_AMOUNT = "amount";
+    const char* ATTRIBUTE_ENERGY_START = "start";
+    const char* ATTRIBUTE_ENERGY_MAX = "max";
     const char* ATTRIBUTE_DEFAULT_SUPPLY = "default_supply";
     const char* ATTRIBUTE_MINERALS = "mineral";
     const char* ATTRIBUTE_GAS = "gas";

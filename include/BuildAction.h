@@ -7,6 +7,7 @@ using std::string;
 using std::vector;
 
 using action_t = int;
+using energy_t = long double;
 
 typedef struct BuildCost
 {
@@ -14,6 +15,8 @@ typedef struct BuildCost
     int gas = 0;
     int time = 0;
     int supply = 0;
+    energy_t energyAmount = 0;
+    action_t energyFrom;
     vector<std::pair<action_t, int>> units;
 } BuildCost;
 
@@ -29,6 +32,10 @@ typedef struct BuildAction
 {
     action_t id;
     string name;
+    bool isSpecial = false;
+    bool hasEnergy = false;
+    energy_t startEnergy = 0;
+    energy_t maxEnergy = 0;
     BuildCost cost;
     vector<std::pair<action_t, int>> dependencies;
     vector<std::pair<action_t, int>> borrows;

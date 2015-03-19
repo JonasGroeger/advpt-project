@@ -47,6 +47,17 @@ void ConfigParser::parseConfig(char *file)
             //if this action is consuming other units
             addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
 
+            //Look if this one is special
+            if(action->BoolAttribute(ATTRIBUTE_SPECIAL))
+            {
+                buildAction.isSpecial = true;
+                XMLElement* energyCost = costs->FirstChildElement(NODE_ENERGY);
+                buildAction.cost.energyAmount = energyCost->IntAttribute(ATTRIBUTE_ENERGY_AMOUNT);
+                buildAction.cost.energyFrom = getUnitId(energyCost->Attribute(ATTRIBUTE_ENERGY_FROM));
+                LOG_DEBUG("   Action ["<<buildAction.name<<"] is a SPECIAL! with energyAmount of ["<<buildAction.cost.energyAmount
+                    <<"]");
+            }
+
             //borrows
             XMLElement *borrows = action->FirstChildElement(NODE_BORROWS);
             addUnitsToVector(borrows, NODE_UNIT, buildAction.borrows);
@@ -62,6 +73,17 @@ void ConfigParser::parseConfig(char *file)
             buildAction.result.gas = stoi(results->Attribute(ATTRIBUTE_GAS));
             buildAction.result.supply = stoi(results->Attribute(ATTRIBUTE_SUPPLY));
             addUnitsToVector(results, NODE_UNIT, buildAction.result.units);
+
+            //Look if this one has energy
+            if(action->BoolAttribute(ATTRIBUTE_HAS_ENERGY))
+            {
+                buildAction.hasEnergy = true;
+                XMLElement* energyResult = results->FirstChildElement(NODE_ENERGY);
+                buildAction.startEnergy = energyResult->IntAttribute(ATTRIBUTE_ENERGY_START);
+                buildAction.maxEnergy = energyResult->IntAttribute(ATTRIBUTE_ENERGY_MAX);
+                LOG_DEBUG("   Action ["<<buildAction.name<<"] has energy! with start of ["<<buildAction.startEnergy
+                        <<"] and max of [" << buildAction.maxEnergy << "]");
+            }
 
             actions[buildAction.id] = buildAction;
         }
