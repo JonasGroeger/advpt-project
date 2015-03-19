@@ -38,12 +38,6 @@ void ConfigParser::parseConfig(char *file)
             buildAction.id = getUnitId(buildAction.name);
             LOG_DEBUG("    Unit [" << buildAction.name << "] added with id [" << buildAction.id <<"]");
 
-            if(action->BoolAttribute(ATTRIBUTE_SPECIAL))
-            {
-                LOG_DEBUG("   Action ["<<buildAction.name<<"] is a SPECIAL!");
-                buildAction.isSpecial = true;
-            }
-
             //costs of the action
             XMLElement *costs = action->FirstChildElement(NODE_COSTS);
             buildAction.cost.gas = stoi(costs->Attribute(ATTRIBUTE_GAS));
@@ -52,6 +46,17 @@ void ConfigParser::parseConfig(char *file)
             buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
             //if this action is consuming other units
             addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
+
+            //Look if this one is special
+            if(action->BoolAttribute(ATTRIBUTE_SPECIAL))
+            {
+                buildAction.isSpecial = true;
+                XMLElement* energyCost = costs->FirstChildElement(NODE_ENERGY);
+                buildAction.cost.energyAmount = energyCost->IntAttribute(ATTRIBUTE_ENERGY_AMOUNT);
+                buildAction.cost.energyFrom = getUnitId(energyCost->Attribute(ATTRIBUTE_ENERGY_FROM));
+                LOG_DEBUG("   Action ["<<buildAction.name<<"] is a SPECIAL! with energyAmount of ["<<buildAction.cost.energyAmount
+                    <<"]");
+            }
 
             //borrows
             XMLElement *borrows = action->FirstChildElement(NODE_BORROWS);
