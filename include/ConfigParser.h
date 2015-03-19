@@ -103,4 +103,6 @@ private:
 
     Race currentRace;
     map<string, Race> races;
+public:
+    const Race getRace();
 };

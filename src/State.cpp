@@ -193,7 +193,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     assert(minerals_needed == 0 || getMineralsPerTick() != 0);
     assert(gas_needed == 0 || getGasPerTick() != 0);
-    
+
     ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
     ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
 
@@ -268,7 +268,7 @@ void State::startAction(const BuildAction& act)
 
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
-    
+
     LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
@@ -311,7 +311,7 @@ void State::addUnit(action_t type, int count)
         gasHarvesting += 3;
     }
 
-    if (act.isWorker) 
+    if (act.isWorker)
     {
         workersAll += count;
     }
@@ -370,7 +370,7 @@ void State::reallocateWorkers()
     }
 
     int workersRemaining = workersAll;
-    
+
     // Always have at least one worker mine minerals
     workersMinerals = 1;
     workersRemaining --;
@@ -456,7 +456,7 @@ void EnergyManager::consumeEnergy(action_t type, energy_t amount)
         vector<energy_t> &vec = savedEnergy.at(type);
 
         auto it = find_if(vec.begin(), vec.end(),
-                        [amount](energy_t e) { return e >= amount;} 
+                        [amount](energy_t e) { return e >= amount;}
                 );
 
         assert(it != vec.end());
@@ -517,4 +517,70 @@ ostream& operator<<(ostream& out, EnergyManager& obj)
                 }
         }
         return out;
+}
+
+void LarvaManager::advanceTime(time_t amount)
+{
+    // Only zerg has larva. Noop if we are not zerg.
+    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
+    {
+        return;
+    }
+
+    action_t hatchery_id = ConfigParser::Instance().getAction("hatchery").id;
+    this->number_of_hatcheries = this->_state.getEntityCount(hatchery_id);
+
+    // In the next @amount seconds, we will produce number_of_hatcheries * 0.06667
+    double spawnRate = this->number_of_hatcheries * SPAWN_LARVA_PER_TICK_PER_HATCHERY;
+    double spawnAmount = spawnRate * amount + this->remainderLarva;
+
+    // Since @spawnAmount can be 4.31, we only want to procude 4 larva
+    unsigned long numLarvaSpawn = (unsigned long) spawnAmount; // 4
+    double numLarvaRemainder = spawnAmount - numLarvaSpawn; // 0.31
+
+    // We want to remember the larva that is not yet ready to use it in the next call of advanceTime.
+    this->remainderLarva = numLarvaRemainder;
+
+    // Try to spawn the amount of larva.
+    bool injecting = false;
+    this->spawnLarva(numLarvaSpawn, injecting);
+}
+
+void LarvaManager::injectLarva(unsigned long count)
+{
+    // Only zerg has larva. Noop if we are not zerg.
+    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
+    {
+        return;
+    }
+
+    this->spawnLarva(count, true);
+}
+
+void LarvaManager::spawnLarva(unsigned long count, bool injecting)
+{
+    if (injecting)
+    {
+        this->maximumLarva = this->number_of_hatcheries * INJECT_MAX_LARVA_PER_HATCHERY;
+    }
+    else
+    {
+        this->maximumLarva = this->number_of_hatcheries * MAX_LARVA_PER_HATCHERY;
+    }
+
+    // If we are not injecting but have more larva than possible, do nothing
+    if (!injecting)
+    {
+        if (this->_state.currentLarva >= this->maximumLarva)
+        {
+            return;
+        }
+    }
+
+    // Add and cap at maximum
+    this->_state.currentLarva += count;
+    if (this->_state.currentLarva > this->maximumLarva)
+    {
+        this->_state.currentLarva = this->maximumLarva;
+    }
 }
