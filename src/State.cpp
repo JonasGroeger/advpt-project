@@ -309,7 +309,7 @@ void State::startAction(const BuildAction& act)
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
     
-    LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
+    LOG_DEBUG("inserted new action [" << act.name << "] into queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
 void State::addActionResult(const BuildResult& res, bool removeProducing)
