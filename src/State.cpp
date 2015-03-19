@@ -64,6 +64,7 @@ bool State::isLegalAction(const BuildAction& act)
 
             if (entities[type] + producing[type] < count)
             {
+                    LOG_DEBUG("costs not met");
                     return false;
             }
     }
@@ -95,6 +96,7 @@ bool State::isLegalAction(const BuildAction& act)
     {
             if (entities[cost.energyFrom] + producing[cost.energyFrom] < 1)
             {
+                    LOG_DEBUG("energy not met");
                     return false;
             }
     }
@@ -149,7 +151,11 @@ void State::advanceTime(time_t amount)
         // Handle special abilities
         if (act->isSpecial)
         {
-                // TODO handle stuff here
+            if (act->name == "mule")
+            {
+                activeMules -= 1;
+                assert(activeMules >= 0);
+            }
         }
     }
     increaseRessources(end_time-currentTime);
@@ -305,6 +311,13 @@ void State::startAction(const BuildAction& act)
     }
 
     // TODO mabye handle some special stuff here
+    if (act.isSpecial)
+    {
+        if (act.name == "mule")
+        {
+            activeMules += 1;
+        }
+    }
 
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
@@ -395,7 +408,7 @@ bool State::hasEnoughSupply(ress_t supply_needed) const
 ress_t State::getMineralsPerTick() const
 {
     // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
-    return MINERALS_PER_TIME_UNIT * workersMinerals;
+    return MINERALS_PER_TIME_UNIT * workersMinerals + MINERALS_PER_TIME_UNIT * 4 * activeMules;
 }
 
 ress_t State::getGasPerTick() const
@@ -470,6 +483,9 @@ ostream& operator<<(ostream& out, State& obj)
 
         out << "\t\t" << aa.action->name << " (id: " << aa.action->id << "/at: " << aa.action << ") " << " finished at: " << aa.timeFinished << endl;
     }
+
+    out << "\tEnergyManager: " << endl;
+    out << obj.energyManager;
 
     return out;
 }

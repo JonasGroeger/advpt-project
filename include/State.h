@@ -117,6 +117,8 @@ class State {
     int workersAll = 0;
     // How many are producing minerals
     int workersMinerals = 0;
+    // How many mules are harvesting minerals
+    int activeMules = 0;
     // How many are producing gas
     int workersGas = 0;
 
