@@ -6,6 +6,7 @@ extern const char* FIELD_RANDOM_SEED;
 extern const char* FIELD_TIME_SEED;
 extern const char* FIELD_INITIAL_START_LISTS;
 extern const char* FIELD_INITIAL_RANDOM_ENTRIES;
+extern const char* FIELD_NUMBER_OF_GENERATIONS;
 
 // Get a string value from INI file, returning default_value if not found.
 std::string getConfigString(std::string section, std::string name,
