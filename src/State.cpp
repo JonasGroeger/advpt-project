@@ -482,8 +482,15 @@ time_t State::getTimeTillNextActionIsFinished() const
     else
     {
         time_t t = activeActions.top().timeFinished - currentTime;
-        assert(t > 0);
-        return t;
+        // Handle instant actions
+        if (t == 0)
+        { 
+                return 1;
+        }
+        else
+        {
+                return t;
+        }
     }
 }
 

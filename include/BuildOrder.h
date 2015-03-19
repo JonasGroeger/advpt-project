@@ -42,6 +42,8 @@ public:
         { 
             throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
         }
+        state.advanceTime(state.getTimeTillAllActionsAreFinished());
+        cerr << state << endl;
     }
     /*
     * Initializes a given BuildOrder given by the values by @other.
