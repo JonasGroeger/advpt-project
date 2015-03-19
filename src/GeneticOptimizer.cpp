@@ -19,11 +19,11 @@ GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targe
     LOG_DEBUG("Initialized Genetic Optimizer with Strategy "<<strategy<<" for target ["
             << ConfigParser::Instance().getAction(target).name) << "].";
 
-    generateRandomBuildLists(getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_START_LISTS, 20));
+    generateRandomStartLists(getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_START_LISTS, 20));
 
 }
 
-void GeneticOptimizer::generateRandomBuildLists(unsigned int numberOfLists)
+void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
 {
     BuildOrder minimalBuildList(ConfigParser::Instance().getAction(target).name);
     unsigned int firstActionId = ConfigParser::Instance().getFirstActionId();
