@@ -25,13 +25,14 @@ GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targe
 
 void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
 {
+    //First create a minimal list to make sure we have all dependencies
     BuildOrder minimalBuildList(ConfigParser::Instance().getAction(target).name);
+    //Get the range of action_t which are used by our race
     unsigned int firstActionId = ConfigParser::Instance().getFirstActionId();
     unsigned int actionCount = ConfigParser::Instance().getActionCount();
 
     for(unsigned int i = 0; i < numberOfLists; i++)
     {
-        //First create a minimal list to make sure we have all dependencies
         BuildOrder tmp(minimalBuildList);
         unsigned int randomEntries = getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_RANDOM_ENTRIES, 10);
 
@@ -44,7 +45,13 @@ void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
             tmp.insertActionIfPossible(randomAction, position);
         }
         LOG_DEBUG("Created random BuildList ["<<i+1<<"/"<<numberOfLists<<"] with [" << tmp.getSize() << "] entries.");
+        buildlists.push_back(tmp);
     }
+}
+
+void GeneticOptimizer::run()
+{
+    
 }
 
 
