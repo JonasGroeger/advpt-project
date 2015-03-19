@@ -50,7 +50,7 @@ public:
     const BuildAction& getAction(action_t id);
     unsigned int getActionCount();
     action_t getFirstActionId();
-
+    
 private:
     ConfigParser(){};
     ConfigParser(ConfigParser const&) = delete;
@@ -96,4 +96,6 @@ private:
 
     Race currentRace;
     map<string, Race> races;
+public:
+    const Race getRace();
 };

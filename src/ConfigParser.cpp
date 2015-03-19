@@ -333,3 +333,8 @@ void ConfigParser::addUnitsToVector(XMLElement *element, const char *node, vecto
         }
     }
 }
+
+ConfigParser::Race const ConfigParser::getRace()
+{
+    return this->currentRace;
+}
