@@ -40,7 +40,7 @@ class EnergyManager
     public:
     void registerNew(action_t type, energy_t startingEnergy, energy_t maxEnergy);
     void consumeEnergy(action_t type, energy_t amount);
-    time_t timeUntilEnergyIsAvailable(action_t type, energy_t amount);
+    time_t timeUntilEnergyIsAvailable(action_t type, energy_t amount) const;
     void advanceTime(time_t amount);
 
     /*

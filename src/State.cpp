@@ -139,6 +139,18 @@ void State::advanceTime(time_t amount)
                 borrowed[aa.borrowedAction] --;
                 assert(borrowed[aa.borrowedAction] >= 0);
         }
+
+        // Register energy
+        if (act->hasEnergy)
+        {
+                energyManager.registerNew(act->id, act->startEnergy, act->maxEnergy);
+        }
+
+        // Handle special abilities
+        if (act->isSpecial)
+        {
+                // TODO handle stuff here
+        }
     }
     increaseRessources(end_time-currentTime);
     currentTime = end_time;
@@ -182,6 +194,16 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         {
             return getTimeTillNextActionIsFinished();
         }
+    }
+
+    // Energy
+    if (act.cost.energyAmount != 0)
+    {
+            time_t t = energyManager.timeUntilEnergyIsAvailable(act.cost.energyFrom, act.cost.energyAmount);
+            if (t > 0)
+            {
+                    return std::max(t, getTimeTillNextActionIsFinished());
+            }
     }
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
@@ -243,6 +265,10 @@ void State::startAction(const BuildAction& act)
     future_supply_max += act.result.supply;
     assert(future_supply_max >= supply_max);
 
+    // and energy
+    assert(energyManager.timeUntilEnergyIsAvailable(cost.energyFrom, cost.energyAmount) == 0);
+    energyManager.consumeEnergy(cost.energyFrom, cost.energyAmount);
+
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)
     {
@@ -274,6 +300,8 @@ void State::startAction(const BuildAction& act)
     {
             producing[result.first] += result.second;
     }
+
+    // TODO mabye handle some special stuff here
 
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
@@ -337,6 +365,8 @@ void State::increaseRessources(time_t t)
 
     minerals += t * getMineralsPerTick();
     gas      += t * getGasPerTick();
+
+    energyManager.advanceTime(t);
 }
 
 bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
@@ -473,9 +503,9 @@ void EnergyManager::consumeEnergy(action_t type, energy_t amount)
         *it -= amount;
 }
 
-time_t EnergyManager::timeUntilEnergyIsAvailable(action_t type, energy_t amount)
+time_t EnergyManager::timeUntilEnergyIsAvailable(action_t type, energy_t amount) const
 {
-        vector<energy_t> &vec = savedEnergy.at(type);
+        const vector<energy_t> &vec = savedEnergy.at(type);
         assert(!vec.empty());
 
         auto max_it = max_element(vec.begin(), vec.end());
