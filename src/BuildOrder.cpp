@@ -50,8 +50,16 @@ unsigned int BuildOrder::getFitness()
     {
         ConfigParser& cfg = ConfigParser::Instance();
         auto& buildAction = cfg.getAction(action_id);
+
         if(!state.isLegalAction(buildAction))
         {
+            int c = 0;
+            for(auto a : buildList)
+            {
+                std::cout << "["<<c<<"] - " << cfg.getAction(a).name << std::endl;
+                c++;
+            }
+            std::cout << state << std::endl;
             throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
         }
         
@@ -212,8 +220,6 @@ bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
         const BuildAction &action = ConfigParser::Instance().getAction(*iter);
         if(!state.isLegalAction(action))
         {
-                cerr << state << endl;
-                cerr << action.name << endl;
             return false;
         }
         startActionInState(action.id);

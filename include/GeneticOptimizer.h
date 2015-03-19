@@ -12,7 +12,10 @@ class GeneticOptimizer
 public:
     GeneticOptimizer(OptimizationStrategy strategy, action_t target);
     void run();
+    void runPush();
+    void runRush();
 private:
+    OptimizationStrategy mode;
     action_t target;
     vector<BuildOrder> buildlists;
 

@@ -3,6 +3,7 @@
 GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targetUnit)
 {
     target = targetUnit;
+    mode = strategy;
     if (getConfigBoolean(GENETIC_SECTION, FIELD_TIME_SEED, false))
     {
         time_t seed = time(NULL);
@@ -17,10 +18,9 @@ GeneticOptimizer::GeneticOptimizer(OptimizationStrategy strategy, action_t targe
     }
 
     LOG_DEBUG("Initialized Genetic Optimizer with Strategy "<<strategy<<" for target ["
-            << ConfigParser::Instance().getAction(target).name) << "].";
+            << ConfigParser::Instance().getAction(target).name << "].");
 
     generateRandomStartLists(getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_START_LISTS, 20));
-
 }
 
 void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
@@ -40,6 +40,10 @@ void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
         {
             //get a random action of the current race
             int randomAction = rand() % actionCount + firstActionId;
+            if(randomAction == target)
+            {
+                continue;
+            }
             //get a random position in the range of the actual buildorder size
             int position = rand() % tmp.getSize();
             tmp.insertActionIfPossible(randomAction, position);
@@ -51,8 +55,32 @@ void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
 
 void GeneticOptimizer::run()
 {
-    
+    switch(mode)
+    {
+        case OptimizationStrategy::Push:
+            runPush();
+            break;
+        case OptimizationStrategy::Rush:
+            break;
+    }
 }
+
+
+void GeneticOptimizer::runPush()
+{
+    int generations = getConfigInteger(GENETIC_SECTION, FIELD_NUMBER_OF_GENERATIONS, 10);
+
+    for(int generation = 0; generation < generations; generation++)
+    {
+
+
+        for(auto list : buildlists)
+        {
+            std::cout << "FITNESS IS " << list.getFitness() << std::endl;
+        }
+    }
+}
+
 
 
 
