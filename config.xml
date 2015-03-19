@@ -25,15 +25,15 @@
             <unit name="extractor"/>;
         </gas_harvesters>
 
-        <action name="spawn_larva">
-            <costs minerals="0" gas="0" time="0" supply="0">
+        <action name="spawn_larva" special="true">
+            <costs mineral="0" gas="0" time="0" supply="0">
                 <energy from="queen" amount="25"/>
             </costs>
             <borrows/>
             <dependencies>
                 <unit name="queen"/>
             </dependencies>
-            <results minerals="0" gas="0" time="0" supply="0">
+            <results mineral="0" gas="0" time="0" supply="0">
             </results>
         </action>
 
@@ -475,15 +475,15 @@
             <unit name="assimilator"/>
         </gas_harvesters>
 
-        <action name="chrono_boost">
-            <costs minerals="0" gas="0" time="0" supply="0">
+        <action name="chrono_boost" special="true">
+            <costs mineral="0" gas="0" time="0" supply="0">
                 <energy from="nexus" amount="25"/>
             </costs>
             <borrows/>
             <dependencies>
                 <unit name="nexus"/>
             </dependencies>
-            <results minerals="0" gas="0" time="0" supply="0">
+            <results mineral="0" gas="0" time="0" supply="0">
             </results>
         </action>
 
@@ -907,8 +907,8 @@
               <unit name="refinery"/>
           </gas_harvesters>
 
-        <action name="supply_drop">
-            <costs minerals="0" gas="0" time="0" supply="0">
+        <action name="supply_drop" special="true">
+            <costs mineral="0" gas="0" time="0" supply="0">
                 <energy from="orbital_command" amount="50"/>
                 <unit name="supply_depot"/>
             </costs>
@@ -916,20 +916,20 @@
             <dependencies>
                 <unit name="orbital_command"/>
             </dependencies>
-            <results minerals="0" gas="0" time="0" supply="8">
+            <results mineral="0" gas="0" time="0" supply="8">
                 <unit name="enhanced_supply_depot"/>
             </results>
         </action>
 
-        <action name="mule">
-            <costs minerals="0" gas="0" time="0" supply="0">
+        <action name="mule" special="true">
+            <costs mineral="0" gas="0" time="0" supply="0">
                 <energy from="orbital_command" amount="50"/>
             </costs>
             <borrows/>
             <dependencies>
                 <unit name="orbital_command"/>
             </dependencies>
-            <results minerals="0" gas="0" time="0" supply="0"/>
+            <results mineral="0" gas="0" time="0" supply="0"/>
         </action>
 
         <action name="command_center">
