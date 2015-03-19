@@ -900,7 +900,7 @@
         </action>
 
         <action name="mule" special="true">
-            <costs mineral="0" gas="0" time="0" supply="0">
+            <costs mineral="0" gas="0" time="90" supply="0">
                 <energy from="orbital_command" amount="50"/>
             </costs>
             <borrows/>

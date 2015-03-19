@@ -4,6 +4,8 @@
 #include <vector>
 #include <cassert>
 
+#include "Debug.h"
+
 using std::string;
 using std::vector;
 
@@ -48,15 +50,14 @@ typedef struct BuildAction
 
     bool operator==(const BuildAction &rhs) const
     {
-            if (id == rhs.id)
-            {
-                    assert(name == rhs.name);
-                    return true;
-            }
-            else
-            {
-                    return false;
-            }
-
+        if (id == rhs.id)
+        {
+            assert(name == rhs.name);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 } BuildAction;

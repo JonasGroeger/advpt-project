@@ -84,7 +84,9 @@ void testTerran()
     terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
     assertOnlyLegalActions(terranState, stringsToBuildActions({"command_center", "scv", "refinery", "supply_depot", "engineering_bay", "barracks", "marine", "bunker", "orbital_command", "barracks_reactor", "barracks_techlab", "factory", "ghost_academy"}));
 
-    cerr << terranState << endl;
+    terranState.startAction(cfg.getAction("orbital_command"));
+    terranState.advanceTime(terranState.getTimeTillAllActionsAreFinished());
+    assertOnlyLegalActions(terranState, stringsToBuildActions({"command_center", "scv", "refinery", "supply_depot", "engineering_bay", "barracks", "marine", "bunker", "barracks_reactor", "barracks_techlab", "factory", "ghost_academy", "supply_drop", "mule"}));
 
     cerr << "Resetting state" << endl;
     terranState = State(ConfigParser::Instance().getStartConfig());
@@ -120,7 +122,7 @@ void testProtoss()
     State protossState = State(ConfigParser::Instance().getStartConfig());
     cerr << protossState << endl;
 
-    assertOnlyLegalActions(protossState, stringsToBuildActions({"nexus", "probe", "assimilator", "pylon"}));
+    assertOnlyLegalActions(protossState, stringsToBuildActions({"nexus", "probe", "assimilator", "pylon", "chrono_boost"}));
 }
 void testEnergyManager()
 {
@@ -160,7 +162,7 @@ int main(int argc, char *argv[])
     ConfigParser::Instance().parseConfig(argv[1]);
 
     testTerran();
-    testZerg();
+    //testZerg();
     testProtoss();
 
     testEnergyManager();

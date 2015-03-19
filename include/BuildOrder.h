@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>    // std::reverse
+#include <initializer_list>
 
 #include "Debug.h"
 
@@ -23,12 +24,27 @@ public:
     * Initializes a BuildOrder with a minimal BuildList for the action given by target
     * @param target : the target action we want to build.
     */
-    BuildOrder(string target)
+    explicit BuildOrder(string target)
     {
         state = State(ConfigParser::Instance().getStartConfig());
         createMinimalBuildOrder(target);
-    };
+    }
 
+    explicit BuildOrder(std::initializer_list<string> l)
+    {
+        state = State(ConfigParser::Instance().getStartConfig());
+        buildList.resize(l.size());
+        transform(l.begin(), l.end(), buildList.begin(), 
+                [] (string s) { return ConfigParser::Instance().getAction(s).id;}
+                );
+
+        if (!applyBuildOrder(0, buildList.size()))
+        { 
+            throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
+        }
+        state.advanceTime(state.getTimeTillAllActionsAreFinished());
+        cerr << state << endl;
+    }
     /*
     * Initializes a given BuildOrder given by the values by @other.
     */
@@ -79,8 +95,8 @@ private:
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
     void startActionInState(const action_t &actionId);
-    /*applys the buildlist until buildList[pos-1] and returns the resulting unitMap to the caller
-    * @returns the resulting unitMap
+    /*applys the buildlist until buildList[pos-1] 
+    * @returns if every action was possible
     */
     bool applyBuildOrder(unsigned int posStart, unsigned int posEnd);
 

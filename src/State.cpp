@@ -13,6 +13,11 @@ State::State(const map<action_t, int> &startConfig)
         {
             addActionResult(act.result, false);
             supply_used += act.cost.supply;
+            // Register energy
+            if (act.hasEnergy)
+            {
+                    energyManager.registerNew(act.id, act.startEnergy, act.maxEnergy);
+            }
         }
     }
     // TODO this is a hack
@@ -64,6 +69,7 @@ bool State::isLegalAction(const BuildAction& act)
 
             if (entities[type] + producing[type] < count)
             {
+                    LOG_DEBUG("costs not met");
                     return false;
             }
     }
@@ -87,6 +93,30 @@ bool State::isLegalAction(const BuildAction& act)
         {
             LOG_DEBUG("borrows not met for " << act.name);
             return false;
+        }
+    }
+
+    // Energy
+    if (cost.energyAmount != 0)
+    {
+            if (entities[cost.energyFrom] + producing[cost.energyFrom] < 1)
+            {
+                    LOG_DEBUG("energy not met");
+                    return false;
+            }
+    }
+
+    if (act.isSpecial)
+    {
+        if (act.name == "chrono_boost" && !activeActions.empty())
+        {
+            const BuildAction *next = activeActions.top().action;
+            if (find_if(next->dependencies.begin(), next->dependencies.end(),
+                        [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
+                       ) != act.dependencies.end())
+            {
+                return false;
+            }
         }
     }
 
@@ -129,6 +159,23 @@ void State::advanceTime(time_t amount)
         {
                 borrowed[aa.borrowedAction] --;
                 assert(borrowed[aa.borrowedAction] >= 0);
+        }
+
+        // Register energy
+        if (act->hasEnergy)
+        {
+                energyManager.registerNew(act->id, act->startEnergy, act->maxEnergy);
+        }
+
+        // Handle special abilities
+        if (act->isSpecial)
+        {
+            if (act->name == "mule")
+            {
+                activeMules -= 1;
+                assert(activeMules >= 0);
+            }
+            
         }
     }
     increaseRessources(end_time-currentTime);
@@ -173,6 +220,16 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
         {
             return getTimeTillNextActionIsFinished();
         }
+    }
+
+    // Energy
+    if (act.cost.energyAmount != 0)
+    {
+            time_t t = energyManager.timeUntilEnergyIsAvailable(act.cost.energyFrom, act.cost.energyAmount);
+            if (t > 0)
+            {
+                    return std::max(t, getTimeTillNextActionIsFinished());
+            }
     }
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
@@ -234,6 +291,13 @@ void State::startAction(const BuildAction& act)
     future_supply_max += act.result.supply;
     assert(future_supply_max >= supply_max);
 
+    // and energy
+    if (act.cost.energyAmount != 0)
+    {
+            assert(energyManager.timeUntilEnergyIsAvailable(cost.energyFrom, cost.energyAmount) == 0);
+            energyManager.consumeEnergy(cost.energyFrom, cost.energyAmount);
+    }
+
     // Remove the unit cost
     for (std::pair<action_t, int> unit : cost.units)
     {
@@ -266,10 +330,33 @@ void State::startAction(const BuildAction& act)
             producing[result.first] += result.second;
     }
 
+    // TODO mabye handle some special stuff here
+    if (act.isSpecial)
+    {
+        if (act.name == "mule")
+        {
+            activeMules += 1;
+        } 
+        else if (act.name == "chrono_boost" && !activeActions.empty())
+        {
+            ActiveAction top = activeActions.top();
+            activeActions.pop();
+            if (top.timeFinished < 10) top.timeFinished = 0;
+            else top.timeFinished -= 10;
+            activeActions.push(top);
+
+            if (activeActions.size() == 1)
+            {
+                finishTime = top.timeFinished;
+                cerr << currentTime << endl;
+            }
+        }
+    }
+
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
-
-    LOG_DEBUG("inserted new action int queue with id: " << act.id << " finish time: " << aa.timeFinished);
+    
+    LOG_DEBUG("inserted new action [" << act.name << "] into queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
 void State::addActionResult(const BuildResult& res, bool removeProducing)
@@ -328,6 +415,8 @@ void State::increaseRessources(time_t t)
 
     minerals += t * getMineralsPerTick();
     gas      += t * getGasPerTick();
+
+    energyManager.advanceTime(t);
 }
 
 bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
@@ -353,7 +442,7 @@ bool State::hasEnoughSupply(ress_t supply_needed) const
 ress_t State::getMineralsPerTick() const
 {
     // *_PER_TIME_UNIT is already scaled by RESS_FACTOR
-    return MINERALS_PER_TIME_UNIT * workersMinerals;
+    return MINERALS_PER_TIME_UNIT * workersMinerals + MINERALS_PER_TIME_UNIT * 4 * activeMules;
 }
 
 ress_t State::getGasPerTick() const
@@ -429,6 +518,9 @@ ostream& operator<<(ostream& out, State& obj)
         out << "\t\t" << aa.action->name << " (id: " << aa.action->id << "/at: " << aa.action << ") " << " finished at: " << aa.timeFinished << endl;
     }
 
+    out << "\tEnergyManager: " << endl;
+    out << obj.energyManager;
+
     return out;
 }
 time_t State::getTimeTillNextActionIsFinished() const
@@ -440,8 +532,15 @@ time_t State::getTimeTillNextActionIsFinished() const
     else
     {
         time_t t = activeActions.top().timeFinished - currentTime;
-        assert(t > 0);
-        return t;
+        // Handle instant actions
+        if (t == 0)
+        { 
+                return 1;
+        }
+        else
+        {
+                return t;
+        }
     }
 }
 
@@ -464,9 +563,9 @@ void EnergyManager::consumeEnergy(action_t type, energy_t amount)
         *it -= amount;
 }
 
-time_t EnergyManager::timeUntilEnergyIsAvailable(action_t type, energy_t amount)
+time_t EnergyManager::timeUntilEnergyIsAvailable(action_t type, energy_t amount) const
 {
-        vector<energy_t> &vec = savedEnergy.at(type);
+        const vector<energy_t> &vec = savedEnergy.at(type);
         assert(!vec.empty());
 
         auto max_it = max_element(vec.begin(), vec.end());
@@ -497,10 +596,14 @@ void EnergyManager::advanceTime(time_t amount)
         currentTime += amount;
 }
 
-ostream& operator<<(ostream& out, EnergyManager& obj)
+ostream& operator<<(ostream& out, const EnergyManager& obj)
 {
         out << "EnergyManager with: " << endl;
         out << "Currently at time: " << obj.currentTime << endl;
+        if (obj.savedEnergy.empty())
+        {
+                out << "With no energy units" << endl;
+        }
         for (auto p : obj.savedEnergy)
         {
                 action_t type = p.first;
@@ -508,7 +611,7 @@ ostream& operator<<(ostream& out, EnergyManager& obj)
                 vector<energy_t> &vec = p.second;
 
                 out << "\tAction: " << act.name << endl;
-                out << "\tMaxEnergy: " << obj.maxEnergy[type] << endl;
+                out << "\tMaxEnergy: " << obj.maxEnergy.at(type) << endl;
                 out << "\tSavedEnergy: " << endl;
 
                 for (energy_t e : vec)

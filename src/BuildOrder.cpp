@@ -212,6 +212,8 @@ bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
         const BuildAction &action = ConfigParser::Instance().getAction(*iter);
         if(!state.isLegalAction(action))
         {
+                cerr << state << endl;
+                cerr << action.name << endl;
             return false;
         }
         startActionInState(action.id);

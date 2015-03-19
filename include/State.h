@@ -40,10 +40,23 @@ class EnergyManager
     public:
     void registerNew(action_t type, energy_t startingEnergy, energy_t maxEnergy);
     void consumeEnergy(action_t type, energy_t amount);
-    time_t timeUntilEnergyIsAvailable(action_t type, energy_t amount);
+    time_t timeUntilEnergyIsAvailable(action_t type, energy_t amount) const;
     void advanceTime(time_t amount);
 
-    friend ostream& operator<<(ostream& out, EnergyManager& obj);
+    /*
+     * This has to be defined because of the const member
+     * See http://en.cppreference.com/w/cpp/language/as_operator#Deleted_implicitly-declared_copy_assignment_operator
+     */
+    EnergyManager& operator=(const EnergyManager& rhs)
+    {
+            this->currentTime = rhs.currentTime;
+            this->savedEnergy = rhs.savedEnergy;
+            this->maxEnergy = rhs.maxEnergy;
+
+            return *this;
+    }
+
+    friend ostream& operator<<(ostream& out, const EnergyManager& obj);
     friend void testEnergyManager();
 };
 
@@ -115,6 +128,7 @@ class State {
     // This is used to remember entities for dependency resolution
     std::map<action_t, int> remembered;
 
+    EnergyManager energyManager;
     /*
      * This simply represents an action that is currently being produced
      */
@@ -145,6 +159,8 @@ class State {
     int workersAll = 0;
     // How many are producing minerals
     int workersMinerals = 0;
+    // How many mules are harvesting minerals
+    int activeMules = 0;
     // How many are producing gas
     int workersGas = 0;
 
