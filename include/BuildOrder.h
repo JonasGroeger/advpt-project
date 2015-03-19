@@ -54,7 +54,7 @@ public:
 
     unsigned int getSize();
 
-    unsigned int getFitness();
+    unsigned int getFitness() const;
 
     unsigned int getUnitCount(action_t action, time_t maxTime);
     /*

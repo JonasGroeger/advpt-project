@@ -42,7 +42,7 @@ unsigned int BuildOrder::getSize()
     return buildList.size();
 }
 
-unsigned int BuildOrder::getFitness()
+unsigned int BuildOrder::getFitness() const
 {
     State state(ConfigParser::Instance().getStartConfig());
 

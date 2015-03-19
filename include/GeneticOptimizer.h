@@ -19,5 +19,12 @@ private:
     action_t target;
     vector<BuildOrder> buildlists;
 
+    struct PushComparator
+    {
+        bool operator()( const BuildOrder& lx, const BuildOrder& rx ) const {
+            return lx.getFitness() < rx.getFitness();
+        }
+    };
+
     void generateRandomStartLists(unsigned int numberOfLists);
 };
