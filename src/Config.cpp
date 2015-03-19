@@ -1,5 +1,11 @@
 #include "Config.h"
 
+const char* GENETIC_SECTION = "Genetic";
+const char* FIELD_RANDOM_SEED = "RandomSeed";
+const char* FIELD_TIME_SEED = "UseTimeSeed";
+const char* FIELD_INITIAL_START_LISTS = "InitialRandomStartLists";
+const char* FIELD_INITIAL_RANDOM_ENTRIES = "InitialRandomEntries";
+
 INIReader reader("config.ini");
 #include <iostream>
 using namespace std;

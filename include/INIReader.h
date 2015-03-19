@@ -14,12 +14,6 @@
 // Read an INI file into easy-to-access name/value pairs. (Note that I've gone
 // for simplicity here rather than speed, but it should be pretty decent.)
 
-static const char* GENETIC_SECTION = "Genetic";
-static const char* FIELD_RANDOM_SEED = "RandomSeed";
-static const char* FIELD_TIME_SEED = "UseTimeSeed";
-static const char* FIELD_INITIAL_START_LISTS = "InitialRandomStartLists";
-static const char* FIELD_INITIAL_RANDOM_ENTRIES = "InitialRandomEntries";
-
 class INIReader
 {
 public:

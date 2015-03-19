@@ -1,6 +1,12 @@
 #pragma once
 #include "INIReader.h"
 
+extern const char* GENETIC_SECTION;
+extern const char* FIELD_RANDOM_SEED;
+extern const char* FIELD_TIME_SEED;
+extern const char* FIELD_INITIAL_START_LISTS;
+extern const char* FIELD_INITIAL_RANDOM_ENTRIES;
+
 // Get a string value from INI file, returning default_value if not found.
 std::string getConfigString(std::string section, std::string name,
                 std::string default_value);
