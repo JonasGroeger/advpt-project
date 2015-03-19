@@ -48,7 +48,15 @@ typedef struct BuildAction
 
     bool operator==(const BuildAction &rhs) const
     {
-            assert(name == rhs.name);
-            return id == rhs.id;
+            if (id == rhs.id)
+            {
+                    assert(name == rhs.name);
+                    return true;
+            }
+            else
+            {
+                    return false;
+            }
+
     }
 } BuildAction;
