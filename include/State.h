@@ -47,8 +47,8 @@ class EnergyManager
     friend void testEnergyManager();
 };
 
-class State;
 
+class State; // Forward declaration for LarvaManager
 class LarvaManager
 {
 private:
@@ -66,15 +66,26 @@ public:
     {
     };
 
+    /*
+    * This should be called when the time is skipped. Based on @amount, we produce larva that we also add to @state.
+    *
+    * Params:
+    *   @amount: The amount of time that is skipped into the future.
+    */
     void advanceTime(time_t amount);
 
-    void spawnLarva(unsigned long count, bool injecting);
-
+    /*
+    * Injects @count larva into the current state.
+    *
+    * Params:
+    *   @count: The amount of larva to be injected. Should be 4 in Starcraft 2.
+    */
     void injectLarva(unsigned long count);
 
 private:
     State &_state;
     int number_of_hatcheries;
+    void spawnLarva(unsigned long count, bool injecting);
 };
 
 class State {
