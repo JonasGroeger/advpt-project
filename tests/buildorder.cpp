@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     assert(!order.removeActionIfPossible(2));
     assert(!order.removeActionIfPossible(3));
 
-    assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 1));
-    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 0));
+    assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 1));
+    assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("supply_depot").id, 0));
     assert(!order.replaceActionIfPossible(ConfigParser::Instance().getAction("thor").id, 7));
     assert(order.replaceActionIfPossible(ConfigParser::Instance().getAction("battlecruiser").id, 7));
 
