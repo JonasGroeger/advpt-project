@@ -54,6 +54,10 @@ public:
 
     unsigned int getSize();
 
+    action_t getAction(unsigned int position) const;
+
+    vector<action_t> getBuildList() const;
+
     unsigned int getFitness() const;
 
     unsigned int getUnitCount(action_t action, time_t maxTime);

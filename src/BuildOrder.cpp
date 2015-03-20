@@ -42,6 +42,12 @@ unsigned int BuildOrder::getSize()
     return buildList.size();
 }
 
+action_t BuildOrder::getAction(unsigned int position) const
+{
+    assert(position < buildList.size());
+    return buildList[position];
+}
+
 unsigned int BuildOrder::getFitness() const
 {
     State state(ConfigParser::Instance().getStartConfig());
@@ -181,6 +187,11 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
         return true;
     }
     return false;
+}
+
+vector<action_t> BuildOrder::getBuildList() const
+{
+    return buildList;
 }
 
 

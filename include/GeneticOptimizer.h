@@ -27,4 +27,5 @@ private:
     };
 
     void generateRandomStartLists(unsigned int numberOfLists);
+    void mutate(BuildOrder &child, double probability);
 };

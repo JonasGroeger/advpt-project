@@ -70,13 +70,121 @@ void GeneticOptimizer::runPush()
 {
     int generations = getConfigInteger(GENETIC_SECTION, FIELD_NUMBER_OF_GENERATIONS, 10);
 
+    double fraction = ((double) 1) / buildlists.size();
+    double probabilityToMutate = 0;
+
     for(int generation = 0; generation < generations; generation++)
     {
+        if(probabilityToMutate >= 1) probabilityToMutate = 0;
 
+        std::sort(buildlists.begin(), buildlists.end(), PushComparator());
 
-        for(auto list : buildlists)
+        std::cout << "GENERATION : "<< generation << std::endl;
+        //std::cout << "  Fitness Mum : "<< buildlists[0].getFitness() << std::endl;
+        //std::cout << "  Fitness Dad : "<< buildlists[1].getFitness() << std::endl;
+
+        //keep the two best lists
+        auto mum = buildlists[0].getBuildList();
+        auto dad = buildlists[1].getBuildList();
+
+        probabilityToMutate += fraction;
+
+        for(auto iter = buildlists.begin()+2; iter < buildlists.end(); iter++)
         {
-            std::cout << "FITNESS IS " << list.getFitness() << std::endl;
+            BuildOrder &child = *iter;
+            bool targetAdded = false;
+
+            //Do the recombination of the parent "genoms" until we could add our target
+            while(!targetAdded)
+            {
+                //clear the child
+                child = BuildOrder();
+
+                auto mumIter = mum.begin();
+                auto dadIter = dad.begin();
+                int pos = 0;
+
+                while (mumIter != mum.end() && dadIter != dad.end())
+                {
+                    action_t action = (rand() % 2 == 0)
+                            ? *mumIter
+                            : *dadIter;
+
+                    if (child.insertActionIfPossible(action, pos))
+                    {
+                        if (action == target) targetAdded = true;
+                        pos++;
+                    }
+                    mumIter++;
+                    dadIter++;
+                }
+
+                if (!targetAdded)
+                {
+                    while (mumIter != mum.end())
+                    {
+                        if (child.insertActionIfPossible(*mumIter, pos))
+                        {
+                            if (*dadIter == target) targetAdded = true;
+                            pos++;
+                        }
+                        mumIter++;
+                    }
+                    while (dadIter != dad.end())
+                    {
+                        if (child.insertActionIfPossible(*dadIter, pos))
+                        {
+                            if (*dadIter == target) targetAdded = true;
+                            pos++;
+                        }
+                        dadIter++;
+                    }
+                }
+            }
+
+            mutate(child, probabilityToMutate);
+        }
+        std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
+    }
+    std::sort(buildlists.begin(), buildlists.end(), PushComparator());
+    std::cout << "Winner with fitness of [" << buildlists[0].getFitness() << "]" << std::endl;
+    std::cout << buildlists[0] << std::endl;
+    std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
+}
+
+void GeneticOptimizer::mutate(BuildOrder &child, double probability)
+{
+    //we dont want to mutate our target (last entry)
+    for(int i = 0; i < child.getSize()-1; i++)
+    {
+        double mutationProbability = (double)rand() / RAND_MAX;
+
+        if(mutationProbability <= probability)
+        {
+            //Get the range of action_t which are used by our race
+            unsigned int firstActionId = ConfigParser::Instance().getFirstActionId();
+            unsigned int actionCount = ConfigParser::Instance().getActionCount();
+            int randomAction = rand() % actionCount + firstActionId;
+
+            //We dont want to add our target action more than once
+            if(randomAction == target)
+            {
+                continue;
+            }
+
+            int mutationAction = rand()%3;
+            switch(mutationAction)
+            {
+                case 0:
+                    child.removeActionIfPossible(i);
+                    break;
+                case 1:
+                    child.replaceActionIfPossible(randomAction, i);
+                    break;
+                case 2:
+                    child.insertActionIfPossible(randomAction, i);
+                    break;
+            }
         }
     }
 }
