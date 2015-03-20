@@ -71,7 +71,8 @@ private:
     double remainderLarva = 0.0;
     // We always start with one hatchery
     int number_of_hatcheries = 1;
-    ress_t currentLarva = 0;
+    // We start with 3 larva
+    ress_t currentLarva = 3;
     
     void spawnLarva(ress_t count, bool injecting);
 public:
