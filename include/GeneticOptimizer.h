@@ -12,9 +12,20 @@ class GeneticOptimizer
 public:
     GeneticOptimizer(OptimizationStrategy strategy, action_t target);
     void run();
+    void runPush();
+    void runRush();
 private:
+    OptimizationStrategy mode;
     action_t target;
     vector<BuildOrder> buildlists;
 
-    void generateRandomBuildLists(unsigned int numberOfLists);
+    struct PushComparator
+    {
+        bool operator()( BuildOrder& lx, BuildOrder& rx ) const {
+            return lx.getFitness() < rx.getFitness();
+        }
+    };
+
+    void generateRandomStartLists(unsigned int numberOfLists);
+    void mutate(BuildOrder &child, double probability);
 };

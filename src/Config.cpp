@@ -5,6 +5,7 @@ const char* FIELD_RANDOM_SEED = "RandomSeed";
 const char* FIELD_TIME_SEED = "UseTimeSeed";
 const char* FIELD_INITIAL_START_LISTS = "InitialRandomStartLists";
 const char* FIELD_INITIAL_RANDOM_ENTRIES = "InitialRandomEntries";
+const char* FIELD_NUMBER_OF_GENERATIONS = "NumberOfGenerations";
 
 INIReader reader("config.ini");
 #include <iostream>

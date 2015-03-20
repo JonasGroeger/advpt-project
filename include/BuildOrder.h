@@ -43,7 +43,6 @@ public:
             throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
         }
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
-        cerr << state << endl;
     }
     /*
     * Initializes a given BuildOrder given by the values by @other.
@@ -54,6 +53,10 @@ public:
     {};
 
     unsigned int getSize();
+
+    action_t getAction(unsigned int position) const;
+
+    vector<action_t> getBuildList() const;
 
     unsigned int getFitness();
 
@@ -92,6 +95,8 @@ private:
     State state;
     map<action_t, int> availableUnits;
     vector<action_t> buildList;
+    bool isDirty = true;
+    unsigned int fitness = INT32_MAX;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
     void startActionInState(const action_t &actionId);

@@ -42,32 +42,52 @@ unsigned int BuildOrder::getSize()
     return buildList.size();
 }
 
+action_t BuildOrder::getAction(unsigned int position) const
+{
+    assert(position < buildList.size());
+    return buildList[position];
+}
+
 unsigned int BuildOrder::getFitness()
 {
-    State state(ConfigParser::Instance().getStartConfig());
-
-    for(auto action_id : buildList)
+    if(isDirty)
     {
-        ConfigParser& cfg = ConfigParser::Instance();
-        auto& buildAction = cfg.getAction(action_id);
-        if(!state.isLegalAction(buildAction))
-        {
-            throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
-        }
-        
-        time_t t;
-        while((t = state.isAdditionalTimeNeeded(buildAction)) > 0)
-        {
-            LOG_DEBUG("STATE TIME NEEDED FOR ACTION ["+buildAction.name+"] IS ["<<state.isAdditionalTimeNeeded(buildAction) <<"]");
-            state.advanceTime(t);
-            //LOG_DEBUG("ADVANCED BY [" << t << "] " << state);
-        }
-        state.startAction(buildAction);
-        LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
-    }
+        State state(ConfigParser::Instance().getStartConfig());
 
-    state.advanceTime(state.getTimeTillAllActionsAreFinished());
-    return state.currentTime;
+        for (auto action_id : buildList)
+        {
+            ConfigParser &cfg = ConfigParser::Instance();
+            auto &buildAction = cfg.getAction(action_id);
+
+            if (!state.isLegalAction(buildAction))
+            {
+                int c = 0;
+                for (auto a : buildList)
+                {
+                    std::cout << "[" << c << "] - " << cfg.getAction(a).name << std::endl;
+                    c++;
+                }
+                std::cout << state << std::endl;
+                throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
+            }
+
+            time_t t;
+            while ((t = state.isAdditionalTimeNeeded(buildAction)) > 0)
+            {
+                LOG_DEBUG("STATE TIME NEEDED FOR ACTION [" + buildAction.name + "] IS [" << state.isAdditionalTimeNeeded(buildAction) << "]");
+                state.advanceTime(t);
+                //LOG_DEBUG("ADVANCED BY [" << t << "] " << state);
+            }
+            state.startAction(buildAction);
+            LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
+        }
+
+        state.advanceTime(state.getTimeTillAllActionsAreFinished());
+
+        fitness = state.currentTime;
+        isDirty = false;
+    }
+    return fitness;
 }
 
 unsigned int BuildOrder::getUnitCount(action_t action, time_t maxTime)
@@ -128,9 +148,10 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
     }
     startActionInState(ConfigParser::Instance().getAction(action).id);
 
-    if(applyBuildOrder(position, buildList.size()-1))
+    if(applyBuildOrder(position, buildList.size()))
     {
         buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
+        isDirty = true;
         return true;
     }
     return false;
@@ -144,9 +165,10 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     applyBuildOrder(0, position);
 
     //skip the action we want to remove
-    if(applyBuildOrder(position+1, buildList.size()-1))
+    if(applyBuildOrder(position+1, buildList.size()))
     {
         buildList.erase(buildList.begin()+position);
+        isDirty = true;
         return true;
     }
     return false;
@@ -167,12 +189,18 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     }
     startActionInState(ConfigParser::Instance().getAction(newAction).id);
 
-    if(applyBuildOrder(position+1, buildList.size()-1))
+    if(applyBuildOrder(position+1, buildList.size()))
     {
         buildList[position] = newAction;
+        isDirty = true;
         return true;
     }
     return false;
+}
+
+vector<action_t> BuildOrder::getBuildList() const
+{
+    return buildList;
 }
 
 
@@ -212,8 +240,6 @@ bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
         const BuildAction &action = ConfigParser::Instance().getAction(*iter);
         if(!state.isLegalAction(action))
         {
-                cerr << state << endl;
-                cerr << action.name << endl;
             return false;
         }
         startActionInState(action.id);
