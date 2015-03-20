@@ -11,14 +11,14 @@ set( CMAKE_BUILD_TYPE Debug )
 # See: http://stackoverflow.com/q/7031126
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
     set( CMAKE_C_FLAGS                  "-Wall -Werror -std=c11" )
-    set( CMAKE_C_FLAGS_DEBUG            "-g" )
+    set( CMAKE_C_FLAGS_DEBUG            "-O3" )
     set( CMAKE_CXX_FLAGS                "-Wall -Werror -std=c++11" )
-    set( CMAKE_CXX_FLAGS_DEBUG          "-g" )
+    set( CMAKE_CXX_FLAGS_DEBUG          "-O3" )
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
     set( CMAKE_C_FLAGS                  "-Wall -Werror -std=c11" )
-    set( CMAKE_C_FLAGS_DEBUG            "-g" )
+    set( CMAKE_C_FLAGS_DEBUG            "-O3" )
     set( CMAKE_CXX_FLAGS                "-Wall -Werror -std=c++11" )
-    set( CMAKE_CXX_FLAGS_DEBUG          "-g" )
+    set( CMAKE_CXX_FLAGS_DEBUG          "-O3" )
 endif()
 
 # Output some properties for easy debugging
