@@ -630,9 +630,6 @@ void LarvaManager::advanceTime(time_t amount)
         return;
     }
 
-    action_t hatchery_id = ConfigParser::Instance().getAction("hatchery").id;
-    this->number_of_hatcheries = this->_state.getEntityCount(hatchery_id);
-
     // In the next @amount seconds, we will produce number_of_hatcheries * 0.06667
     double spawnRate = this->number_of_hatcheries * SPAWN_LARVA_PER_TICK_PER_HATCHERY;
     double spawnAmount = spawnRate * amount + this->remainderLarva;
@@ -662,28 +659,31 @@ void LarvaManager::injectLarva(unsigned long count)
 
 void LarvaManager::spawnLarva(unsigned long count, bool injecting)
 {
+    unsigned long maximumLarva;
+
     if (injecting)
     {
-        this->maximumLarva = this->number_of_hatcheries * INJECT_MAX_LARVA_PER_HATCHERY;
+        maximumLarva = this->number_of_hatcheries * INJECT_MAX_LARVA_PER_HATCHERY;
     }
     else
     {
-        this->maximumLarva = this->number_of_hatcheries * MAX_LARVA_PER_HATCHERY;
+        maximumLarva = this->number_of_hatcheries * MAX_LARVA_PER_HATCHERY;
     }
 
     // If we are not injecting but have more larva than possible, do nothing
+    // TODO Why do we need this?
     if (!injecting)
     {
-        if (this->_state.currentLarva >= this->maximumLarva)
+        if (this->currentLarva >= maximumLarva)
         {
             return;
         }
     }
 
     // Add and cap at maximum
-    this->_state.currentLarva += count;
-    if (this->_state.currentLarva > this->maximumLarva)
+    this->currentLarva += count;
+    if (this->currentLarva > maximumLarva)
     {
-        this->_state.currentLarva = this->maximumLarva;
+        this->currentLarva = maximumLarva;
     }
 }

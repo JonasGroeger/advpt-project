@@ -69,14 +69,20 @@ private:
     const unsigned long MAX_LARVA_PER_HATCHERY = 3;
     const unsigned long INJECT_MAX_LARVA_PER_HATCHERY = 19;
 
-    unsigned long maximumLarva;
-    double remainderLarva;
-
+    double remainderLarva = 0.0;
+    int number_of_hatcheries = 0;
+    unsigned long currentLarva = 0;
+    
+    void spawnLarva(unsigned long count, bool injecting);
 public:
-    LarvaManager(State &state)
-            : _state(state)
+
+    LarvaManager& operator=(const LarvaManager& rhs)
     {
-    };
+            this->remainderLarva = rhs.remainderLarva;
+            this->number_of_hatcheries = rhs.number_of_hatcheries;
+
+            return *this;
+    }
 
     /*
     * This should be called when the time is skipped. Based on @amount, we produce larva that we also add to @state.
@@ -94,10 +100,8 @@ public:
     */
     void injectLarva(unsigned long count);
 
-private:
-    State &_state;
-    int number_of_hatcheries;
-    void spawnLarva(unsigned long count, bool injecting);
+    void addHatcherie() { this->number_of_hatcheries++;}
+    void removeHatcherie() { this->number_of_hatcheries--;}
 };
 
 class State {
@@ -114,8 +118,6 @@ class State {
     ress_t minerals = 0, gas = 0;
     ress_t supply_used = 0, supply_max = 0;
     ress_t future_supply_max = 0;
-
-    unsigned long currentLarva;
 
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
