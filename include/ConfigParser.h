@@ -90,6 +90,7 @@ private:
     const char* ATTRIBUTE_GAS = "gas";
     const char* ATTRIBUTE_TIME = "time";
     const char* ATTRIBUTE_SUPPLY = "supply";
+    const char* ATTRIBUTE_LARVA = "larva";
     const char* ATTRIBUTE_MAX = "max";
 
     XMLDocument xmlConfig;
