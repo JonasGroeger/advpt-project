@@ -88,7 +88,11 @@ int main(int argc, char *argv[])
         //zerg
         ConfigParser::Instance().setRaceForAction("queen");
 
+        BuildAction roach = ConfigParser::Instance().getAction("roach");
+        assert(roach.cost.larva == 1);
+
         BuildAction queen = ConfigParser::Instance().getAction("queen");
+        assert(queen.cost.larva == 0);
         assert(queen.hasEnergy == true);
         assert(queen.startEnergy == 50);
         assert(queen.maxEnergy == 200);
