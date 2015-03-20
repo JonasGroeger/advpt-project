@@ -44,6 +44,9 @@ void ConfigParser::parseConfig(char *file)
             buildAction.cost.minerals = stoi(costs->Attribute(ATTRIBUTE_MINERALS));
             buildAction.cost.supply = stoi(costs->Attribute(ATTRIBUTE_SUPPLY));
             buildAction.cost.time = stoi(costs->Attribute(ATTRIBUTE_TIME));
+
+            //Check for larva here
+            costs->QueryIntAttribute(ATTRIBUTE_LARVA, &buildAction.cost.larva);
             //if this action is consuming other units
             addUnitsToVector(costs, NODE_UNIT, buildAction.cost.units);
 
