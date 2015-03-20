@@ -44,13 +44,6 @@ public:
         }
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
-    /*
-    * Initializes a given BuildOrder given by the values by @other.
-    */
-    BuildOrder(const BuildOrder& other)
-        :availableUnits(other.availableUnits)
-        ,buildList(other.buildList)
-    {};
 
     unsigned int getSize();
 
