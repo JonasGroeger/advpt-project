@@ -73,13 +73,12 @@ void GeneticOptimizer::runPush()
     double fraction = ((double) 1) / buildlists.size();
     double probabilityToMutate = 0;
 
+    std::cout << "Starting optimizer ...." << std::endl;
     for(int generation = 0; generation < generations; generation++)
     {
         if(probabilityToMutate >= 1) probabilityToMutate = 0;
 
         std::sort(buildlists.begin(), buildlists.end(), PushComparator());
-
-        std::cout << "GENERATION : "<< generation << std::endl;
         //std::cout << "  Fitness Mum : "<< buildlists[0].getFitness() << std::endl;
         //std::cout << "  Fitness Dad : "<< buildlists[1].getFitness() << std::endl;
 
@@ -144,10 +143,11 @@ void GeneticOptimizer::runPush()
 
             mutate(child, probabilityToMutate);
         }
-        std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
+        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getFitness() <<"]";
+        std::cout.flush();
     }
     std::sort(buildlists.begin(), buildlists.end(), PushComparator());
-    std::cout << "Winner with fitness of [" << buildlists[0].getFitness() << "]" << std::endl;
+    std::cout << "\nWinner with fitness of [" << buildlists[0].getFitness() << "]" << std::endl;
     std::cout << buildlists[0] << std::endl;
     std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
 }
