@@ -139,7 +139,7 @@
             </results>
         </action>
 
-        <action name="zergling_pair">
+        <action name="zergling">
             <costs mineral="50" gas="0" time="24" supply="1" larva="1">
             </costs>
             <borrows/>

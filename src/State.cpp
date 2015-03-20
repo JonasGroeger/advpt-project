@@ -330,7 +330,6 @@ void State::startAction(const BuildAction& act)
             producing[result.first] += result.second;
     }
 
-    // TODO mabye handle some special stuff here
     if (act.isSpecial)
     {
         if (act.name == "mule")
@@ -519,8 +518,8 @@ ostream& operator<<(ostream& out, State& obj)
         out << "\t\t" << aa.action->name << " (id: " << aa.action->id << "/at: " << aa.action << ") " << " finished at: " << aa.timeFinished << endl;
     }
 
-    out << "\tEnergyManager: " << endl;
     out << obj.energyManager;
+    out << obj.larvaManager;
 
     return out;
 }
@@ -600,10 +599,10 @@ void EnergyManager::advanceTime(time_t amount)
 ostream& operator<<(ostream& out, const EnergyManager& obj)
 {
         out << "EnergyManager with: " << endl;
-        out << "Currently at time: " << obj.currentTime << endl;
+        out << "\tCurrently at time: " << obj.currentTime << endl;
         if (obj.savedEnergy.empty())
         {
-                out << "With no energy units" << endl;
+                out << "\tWith no energy units" << endl;
         }
         for (auto p : obj.savedEnergy)
         {
@@ -611,13 +610,13 @@ ostream& operator<<(ostream& out, const EnergyManager& obj)
                 const BuildAction &act = ConfigParser::Instance().getAction(type);
                 vector<energy_t> &vec = p.second;
 
-                out << "\tAction: " << act.name << endl;
-                out << "\tMaxEnergy: " << obj.maxEnergy.at(type) << endl;
-                out << "\tSavedEnergy: " << endl;
+                out << "\t\tAction: " << act.name << endl;
+                out << "\t\tMaxEnergy: " << obj.maxEnergy.at(type) << endl;
+                out << "\t\tSavedEnergy: " << endl;
 
                 for (energy_t e : vec)
                 {
-                        out << "\t\t" << e << endl;
+                        out << "\t\t\t" << e << endl;
                 }
         }
         return out;
@@ -625,12 +624,6 @@ ostream& operator<<(ostream& out, const EnergyManager& obj)
 
 void LarvaManager::advanceTime(time_t amount)
 {
-    // Only zerg has larva. Noop if we are not zerg.
-    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
-    {
-        return;
-    }
-
     // In the next @amount seconds, we will produce number_of_hatcheries * 0.06667
     double spawnRate = this->number_of_hatcheries * SPAWN_LARVA_PER_TICK_PER_HATCHERY;
     double spawnAmount = spawnRate * amount + this->remainderLarva;
