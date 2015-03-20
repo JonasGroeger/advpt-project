@@ -3,7 +3,7 @@
 #include <tinyxml2.h>
 #include <iostream>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
@@ -18,7 +18,7 @@ using tinyxml2::XMLError;
 using tinyxml2::XMLNode;
 
 using std::string;
-using std::map;
+using std::unordered_map;
 using std::stoi;
 using std::vector;
 #include <climits>
@@ -44,7 +44,7 @@ public:
     const vector<BuildAction> getAllActions();
     // We return a reference to prevent unneccessary copying
     // But nobody else should be able to modify it
-    const map<action_t, int>& getStartConfig();
+    const unordered_map<action_t, int>& getStartConfig();
     const BuildAction& getDefaulSupplyAction();
     const BuildAction& getAction(string actionName);
     const BuildAction& getAction(action_t id);
@@ -60,8 +60,8 @@ private:
     {
         string name;
         action_t defaultSupplyAction;
-        map<action_t, int> startUnits;
-        map<action_t, BuildAction> actions;
+        unordered_map<action_t, int> startUnits;
+        unordered_map<action_t, BuildAction> actions;
     };
 
     const char* NODE_RACE = "race";
@@ -93,16 +93,16 @@ private:
     const char* ATTRIBUTE_MAX = "max";
 
     XMLDocument xmlConfig;
-    map<string, int> unitMap;
+    unordered_map<string, int> unitunordered_map;
     int unitCount = 0;
-    map<string, BuildAction> buildActionMap;
-    map<action_t, BuildAction> buildActionIdMap;
+    unordered_map<string, BuildAction> buildActionunordered_map;
+    unordered_map<action_t, BuildAction> buildActionIdunordered_map;
 
     int getUnitId(string unitName);
     void addUnitsToVector(XMLElement* element, const char* node, vector<std::pair<action_t, int>>& vec);
 
     Race currentRace;
-    map<string, Race> races;
+    unordered_map<string, Race> races;
 public:
     const Race getRace();
 };

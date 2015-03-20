@@ -23,12 +23,12 @@ void ConfigParser::parseConfig(char *file)
         Race currRace;
         currRace.name = race->Attribute(ATTRIBUTE_NAME);
         LOG_DEBUG(" Parsing race ["<<currRace.name<<"]");
-        //this map will hold all actions by this race
-        map<action_t, BuildAction> actions;
+        //this unordered_map will hold all actions by this race
+        unordered_map<action_t, BuildAction> actions;
 
 
         LOG_DEBUG("  Parsing actions");
-        // parse the actions and put them to the map
+        // parse the actions and put them to the unordered_map
         for (XMLElement *action = race->FirstChildElement(NODE_ACTION); action != nullptr;
              action = action->NextSiblingElement(NODE_ACTION))
         {
@@ -191,7 +191,7 @@ void ConfigParser::parseConfig(char *file)
         //parse our start_config
         LOG_DEBUG("  Parsing start_config");
         XMLElement* startConfig = race->FirstChildElement(NODE_START_UNITS);
-        map<action_t, int> startMap;
+        unordered_map<action_t, int> startunordered_map;
         for(XMLElement* startUnit = startConfig->FirstChildElement(NODE_UNIT);
             startUnit != nullptr;
             startUnit = startUnit->NextSiblingElement(NODE_UNIT))
@@ -211,10 +211,10 @@ void ConfigParser::parseConfig(char *file)
             else
             {
                 LOG_DEBUG("   Found start unit ["<<it->second.name<<"] with count [" << startCount << "]");
-                startMap[it->second.id] = startCount;
+                startunordered_map[it->second.id] = startCount;
             }
         }
-        currRace.startUnits = startMap;
+        currRace.startUnits = startunordered_map;
 
 
         //resolve the gas dependencies
@@ -227,7 +227,7 @@ void ConfigParser::parseConfig(char *file)
                 it->second.dependencies.push_back(std::pair<action_t, int>(gasHarvesterId, 1));
             }
         }
-        //the races map will hold all available races and their corresponding struct
+        //the races unordered_map will hold all available races and their corresponding struct
         races[currRace.name] = currRace;
     }
 }
@@ -263,7 +263,7 @@ const BuildAction& ConfigParser::getDefaulSupplyAction()
     return currentRace.actions[currentRace.defaultSupplyAction];
 }
 
-const map<action_t, int>& ConfigParser::getStartConfig()
+const unordered_map<action_t, int>& ConfigParser::getStartConfig()
 {
     return currentRace.startUnits;
 }
@@ -324,12 +324,12 @@ action_t ConfigParser::getFirstActionId()
 
 action_t ConfigParser::getUnitId(string unitName)
 {
-    if (unitMap.count(unitName) == 0)
+    if (unitunordered_map.count(unitName) == 0)
     {
-        unitMap.insert(std::pair<string, int>(unitName, unitCount));
+        unitunordered_map.insert(std::pair<string, int>(unitName, unitCount));
         ++unitCount;
     }
-    return unitMap[unitName];
+    return unitunordered_map[unitName];
 }
 
 void ConfigParser::addUnitsToVector(XMLElement *element, const char *node, vector<std::pair<action_t, int>> &targetVector)
@@ -351,7 +351,7 @@ void ConfigParser::addUnitsToVector(XMLElement *element, const char *node, vecto
         }
         else
         {
-            targetVector.push_back(std::pair<action_t, int>(unitMap[unitName], 1));
+            targetVector.push_back(std::pair<action_t, int>(unitunordered_map[unitName], 1));
         }
     }
 }

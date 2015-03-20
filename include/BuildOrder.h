@@ -5,6 +5,7 @@
 #include <State.h>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <algorithm>    // std::reverse
 #include <initializer_list>
 

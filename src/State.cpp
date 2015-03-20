@@ -1,6 +1,6 @@
 #include "State.h"
 
-State::State(const map<action_t, int> &startConfig)
+State::State(const unordered_map<action_t, int> &startConfig)
 {
     for (auto unit : startConfig)
     {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <map>
+#include <unordered_map>
 #include <queue>
 #include <vector>
 #include <cassert>
@@ -34,8 +34,8 @@ class EnergyManager
     private:
     const long double ENERGY_PER_TICK = 0.5625;
     time_t currentTime = 0;
-    map<action_t, vector<energy_t>> savedEnergy;
-    map<action_t, energy_t> maxEnergy;
+    unordered_map<action_t, vector<energy_t>> savedEnergy;
+    unordered_map<action_t, energy_t> maxEnergy;
 
     public:
     void registerNew(action_t type, energy_t startingEnergy, energy_t maxEnergy);
@@ -119,14 +119,14 @@ class State {
 
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
-    std::map<action_t, int> entities;
+    std::unordered_map<action_t, int> entities;
     // At every position i, borrowed[i] indicates how many entities with action id i are currently borrowed
-    std::map<action_t, int> borrowed;
+    std::unordered_map<action_t, int> borrowed;
     // At every position i, producing[i] indicates how many entities with action id i are currently being produced
     // Note: activeActions contains more information on currently produced actions
-    std::map<action_t, int> producing;
+    std::unordered_map<action_t, int> producing;
     // This is used to remember entities for dependency resolution
-    std::map<action_t, int> remembered;
+    std::unordered_map<action_t, int> remembered;
 
     EnergyManager energyManager;
     /*
@@ -172,7 +172,7 @@ class State {
 
     public:
     State(){};
-    State(const map<action_t, int> &startConfig);
+    State(const unordered_map<action_t, int> &startConfig);
 
     bool operator==(const State &rhs) const;
     bool operator!=(const State &rhs) const;
@@ -220,7 +220,7 @@ class State {
     private:
     /*
      * Adds @count units of typed @type
-     * Besides incrementing the entities map the function will also adjust worker and gasHarvester counts
+     * Besides incrementing the entities unordered_map the function will also adjust worker and gasHarvester counts
      * NOTE: you probably want to use addActionResults
      */
     void addUnit(action_t type, int count = 1);
