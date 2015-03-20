@@ -16,11 +16,11 @@ int main(int argc, char *argv[])
     }
 
     ConfigParser::Instance().parseConfig(argv[1]);
-    ConfigParser::Instance().setRaceForAction("battlecruiser");
 
     OptimizationStrategy strategy;
     string type = getConfigString(GENETIC_SECTION, FIELD_TYPE, "Rush");
     string target = getConfigString(GENETIC_SECTION, FIELD_TARGET, "marine");
+    ConfigParser::Instance().setRaceForAction(target);
 
     if (type == "Rush")
     {
