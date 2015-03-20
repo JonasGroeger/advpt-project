@@ -140,7 +140,7 @@
             </results>
         </action>
 
-        <action name="zergling_pair">
+        <action name="zergling">
             <costs mineral="50" gas="0" time="24" supply="1">
                 <unit name="larva"/>
             </costs>
@@ -854,7 +854,7 @@
             </results>
         </action>
 
-        <action name="fuse_archon_mixed">
+        <action name="archon">
             <costs mineral="250" gas="250" time="12" supply="4">
                 <unit name="high_templar"/>
                 <unit name="dark_templar"/>
