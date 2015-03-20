@@ -845,7 +845,7 @@
             </results>
         </action>
 
-        <action name="fuse_archon_mixed">
+        <action name="archon">
             <costs mineral="250" gas="250" time="12" supply="4">
                 <unit name="high_templar"/>
                 <unit name="dark_templar"/>
