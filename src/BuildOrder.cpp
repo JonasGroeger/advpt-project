@@ -48,40 +48,46 @@ action_t BuildOrder::getAction(unsigned int position) const
     return buildList[position];
 }
 
-unsigned int BuildOrder::getFitness() const
+unsigned int BuildOrder::getFitness()
 {
-    State state(ConfigParser::Instance().getStartConfig());
-
-    for(auto action_id : buildList)
+    if(isDirty)
     {
-        ConfigParser& cfg = ConfigParser::Instance();
-        auto& buildAction = cfg.getAction(action_id);
+        State state(ConfigParser::Instance().getStartConfig());
 
-        if(!state.isLegalAction(buildAction))
+        for (auto action_id : buildList)
         {
-            int c = 0;
-            for(auto a : buildList)
+            ConfigParser &cfg = ConfigParser::Instance();
+            auto &buildAction = cfg.getAction(action_id);
+
+            if (!state.isLegalAction(buildAction))
             {
-                std::cout << "["<<c<<"] - " << cfg.getAction(a).name << std::endl;
-                c++;
+                int c = 0;
+                for (auto a : buildList)
+                {
+                    std::cout << "[" << c << "] - " << cfg.getAction(a).name << std::endl;
+                    c++;
+                }
+                std::cout << state << std::endl;
+                throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
             }
-            std::cout << state << std::endl;
-            throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
-        }
-        
-        time_t t;
-        while((t = state.isAdditionalTimeNeeded(buildAction)) > 0)
-        {
-            LOG_DEBUG("STATE TIME NEEDED FOR ACTION ["+buildAction.name+"] IS ["<<state.isAdditionalTimeNeeded(buildAction) <<"]");
-            state.advanceTime(t);
-            //LOG_DEBUG("ADVANCED BY [" << t << "] " << state);
-        }
-        state.startAction(buildAction);
-        LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
-    }
 
-    state.advanceTime(state.getTimeTillAllActionsAreFinished());
-    return state.currentTime;
+            time_t t;
+            while ((t = state.isAdditionalTimeNeeded(buildAction)) > 0)
+            {
+                LOG_DEBUG("STATE TIME NEEDED FOR ACTION [" + buildAction.name + "] IS [" << state.isAdditionalTimeNeeded(buildAction) << "]");
+                state.advanceTime(t);
+                //LOG_DEBUG("ADVANCED BY [" << t << "] " << state);
+            }
+            state.startAction(buildAction);
+            LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
+        }
+
+        state.advanceTime(state.getTimeTillAllActionsAreFinished());
+
+        fitness = state.currentTime;
+        isDirty = false;
+    }
+    return fitness;
 }
 
 unsigned int BuildOrder::getUnitCount(action_t action, time_t maxTime)
@@ -145,6 +151,7 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
     if(applyBuildOrder(position, buildList.size()))
     {
         buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
+        isDirty = true;
         return true;
     }
     return false;
@@ -161,6 +168,7 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     if(applyBuildOrder(position+1, buildList.size()))
     {
         buildList.erase(buildList.begin()+position);
+        isDirty = true;
         return true;
     }
     return false;
@@ -184,6 +192,7 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     if(applyBuildOrder(position+1, buildList.size()))
     {
         buildList[position] = newAction;
+        isDirty = true;
         return true;
     }
     return false;
