@@ -171,7 +171,7 @@ class State {
     time_t finishTime = 0;
 
     public:
-    State(){};
+    State() = default;
     State(const map<action_t, int> &startConfig);
 
     bool operator==(const State &rhs) const;
@@ -212,12 +212,12 @@ class State {
      */
     void startAction(const BuildAction&);
 
-    void addActionResult(const BuildResult&, bool removeProducing=true);
 
     int getEntityCount(action_t entity);
     time_t getTimeTillAllActionsAreFinished() const;
 
     private:
+    void addActionResult(const BuildResult&, bool removeProducing=true);
     /*
      * Adds @count units of typed @type
      * Besides incrementing the entities map the function will also adjust worker and gasHarvester counts

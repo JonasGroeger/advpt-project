@@ -82,10 +82,9 @@ void GeneticOptimizer::runRush()
         if(probabilityToMutate >= 1) probabilityToMutate = 0;
 
         std::sort(buildlists.begin(), buildlists.end(), RushComparator());
-
         //keep the two best lists
-        auto mum = buildlists[0].getBuildList();
-        auto dad = buildlists[1].getBuildList();
+        const auto& mum = buildlists[0].getBuildList();
+        const auto& dad = buildlists[1].getBuildList();
 
         probabilityToMutate += fraction;
 
@@ -97,7 +96,7 @@ void GeneticOptimizer::runRush()
 
             mutate(child, probabilityToMutate);
         }
-        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(maxTime) <<"]";
+        std::cout << " Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(maxTime) <<"]\n";
         std::cout.flush();
     }
     std::sort(buildlists.begin(), buildlists.end(), PushComparator());
@@ -200,7 +199,7 @@ void GeneticOptimizer::makeChildren(const vector<action_t> &mum, const vector<ac
 void GeneticOptimizer::mutate(BuildOrder &child, double probability)
 {
     //we dont want to mutate our target (last entry)
-    for(int i = 0; i < child.getSize()-1; i++)
+    for(unsigned int i = 0; i < child.getSize()-1; i++)
     {
         double mutationProbability = (double)rand() / RAND_MAX;
 
@@ -217,6 +216,7 @@ void GeneticOptimizer::mutate(BuildOrder &child, double probability)
                 continue;
             }
 
+            // TODO sadf
             int mutationAction = rand()%3;
             switch(mutationAction)
             {

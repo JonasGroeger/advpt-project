@@ -118,6 +118,7 @@ bool State::isLegalAction(const BuildAction& act)
                 return false;
             }
         }
+        // TODO implement mothership
     }
 
     if (supply_used + act.cost.supply > future_supply_max)
