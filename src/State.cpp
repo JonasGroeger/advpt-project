@@ -106,22 +106,6 @@ bool State::isLegalAction(const BuildAction& act)
             }
     }
 
-    if (act.isSpecial)
-    {
-        if (act.name == "chrono_boost" && !activeActions.empty())
-        {
-            // TODO
-            return true;
-            const BuildAction *next = activeActions.top().action;
-            if (find_if(next->dependencies.begin(), next->dependencies.end(),
-                        [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
-                       ) != next->dependencies.end())
-            {
-                return false;
-            }
-        }
-    }
-
     if (supply_used + act.cost.supply > future_supply_max)
     {
             LOG_DEBUG("supply check failed: " << act.cost.supply << " > " << future_supply_max);
@@ -180,6 +164,10 @@ void State::advanceTime(time_t amount)
             else if (act->name == "hatchery")
             {
                 larvaManager.addHatcherie();
+            }
+            else if (act->name == "chrono_boost")
+            {
+                boostNextPossibleAction = true;
             }
         }
     }
@@ -272,6 +260,19 @@ void State::startAction(const BuildAction& act)
     assert(isSatisfied(act.dependencies, false));
 
     time_t t = currentTime + act.cost.time;
+    if (boostNextPossibleAction)
+    {
+        // Only if it isn't built by a probe
+        if (find_if(act.dependencies.begin(), act.dependencies.end(),
+                    [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
+                   ) == act.dependencies.end())
+        {
+            if (t < 10) t = 0;
+            else t -= 10;
+            if (t < currentTime) t = currentTime;
+            boostNextPossibleAction = false;
+        }
+    }
     if (t > finishTime)
     {
         finishTime = t;
@@ -338,22 +339,6 @@ void State::startAction(const BuildAction& act)
         {
             activeMules += 1;
         } 
-        else if (act.name == "chrono_boost" && !activeActions.empty())
-        {
-            ActiveAction top = activeActions.top();
-            activeActions.pop();
-            top.timeFinished -= 10;
-            if (top.timeFinished < currentTime) 
-            {
-                top.timeFinished = currentTime;
-            }
-            activeActions.push(top);
-
-            if (activeActions.size() == 1)
-            {
-                finishTime = top.timeFinished;
-            }
-        }
     }
 
     ActiveAction aa(t, &act, borrowedAction);

@@ -132,6 +132,8 @@ class State {
     // This is used to remember entities for dependency resolution
     std::map<action_t, int> remembered;
 
+    bool boostNextPossibleAction = false;
+
     EnergyManager energyManager;
     LarvaManager larvaManager;
     /*
