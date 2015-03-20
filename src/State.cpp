@@ -175,7 +175,10 @@ void State::advanceTime(time_t amount)
                 activeMules -= 1;
                 assert(activeMules >= 0);
             }
-            
+            else if (act->name == "hatchery")
+            {
+                larvaManager.addHatcherie();
+            }
         }
     }
     increaseRessources(end_time-currentTime);
@@ -369,10 +372,6 @@ void State::addActionResult(const BuildResult& res, bool removeProducing)
         {
             producing[unit.first] -= unit.second;
             assert(producing[unit.first] >= 0);
-        }
-        if (ConfigParser::Instance().getAction("hatchery").id == unit.first)
-        {
-            larvaManager.addHatcherie();
         }
     }
 }
@@ -706,4 +705,14 @@ time_t LarvaManager::getTimeUntilLarvaAvailable(ress_t amount)
 void LarvaManager::consumeLarva(ress_t amount)
 {
     currentLarva -= amount;
+}
+
+ostream& operator<<(ostream& out, const LarvaManager& obj)
+{
+    out << "LarvaManager with:" << endl;
+    out << "\tnumber_of_hatcheries: " << obj.number_of_hatcheries << endl;
+    out << "\tcurrentLarva: " << obj.currentLarva << endl;
+    out << "\tremainderLarva:  " << obj.remainderLarva << endl;
+
+    return out;
 }

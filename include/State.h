@@ -69,11 +69,13 @@ private:
     const unsigned long INJECT_MAX_LARVA_PER_HATCHERY = 19;
 
     double remainderLarva = 0.0;
-    int number_of_hatcheries = 0;
+    // We always start with one hatchery
+    int number_of_hatcheries = 1;
     ress_t currentLarva = 0;
     
     void spawnLarva(ress_t count, bool injecting);
 public:
+    friend ostream& operator<<(ostream& out, const LarvaManager& obj);
     LarvaManager& operator=(const LarvaManager& rhs)
     {
             this->remainderLarva = rhs.remainderLarva;
@@ -99,7 +101,6 @@ public:
     void injectLarva(ress_t count);
     time_t getTimeUntilLarvaAvailable(ress_t amount);
     void addHatcherie() { this->number_of_hatcheries++;}
-    void removeHatcherie() { this->number_of_hatcheries--;}
 
     void consumeLarva(ress_t amount);
 };

@@ -37,7 +37,7 @@
             </results>
         </action>
 
-        <action name="hatchery">
+        <action name="hatchery" special="true">
             <costs mineral="300" gas="0" time="10" supply="0">
                 <unit name="drone"/>
             </costs>
