@@ -214,24 +214,6 @@
             </results>
         </action>
 
-        <!-- TODO: Handle larva properly. Currently it has no costs, no borrows
-         and depends on hatchery. However, larva can also spawn in lair and hive.
-         -->
-        <action name="larva">
-            <costs mineral="0" gas="0" time="15" supply="0">
-
-            </costs>
-            <borrows>
-
-            </borrows>
-            <dependencies>
-                <unit name="hatchery"/>
-            </dependencies>
-            <results mineral="0" gas="0" time="0" supply="0">
-                <unit name="larva"/>
-            </results>
-        </action>
-
         <action name="overlord">
             <costs mineral="100" gas="0" time="25" supply="0" larva="1">
             </costs>

@@ -169,6 +169,10 @@ void State::advanceTime(time_t amount)
             {
                 boostNextPossibleAction = true;
             }
+            else if (act->name == "spawn_larva")
+            {
+                larvaManager.injectLarva(4);
+            }
         }
     }
     increaseRessources(end_time-currentTime);
@@ -631,12 +635,6 @@ void LarvaManager::advanceTime(time_t amount)
 
 void LarvaManager::injectLarva(ress_t count)
 {
-    // Only zerg has larva. Noop if we are not zerg.
-    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
-    {
-        return;
-    }
-
     this->spawnLarva(count, true);
 }
 
