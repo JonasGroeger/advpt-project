@@ -110,10 +110,12 @@ bool State::isLegalAction(const BuildAction& act)
     {
         if (act.name == "chrono_boost" && !activeActions.empty())
         {
+            // TODO
+            return true;
             const BuildAction *next = activeActions.top().action;
             if (find_if(next->dependencies.begin(), next->dependencies.end(),
                         [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
-                       ) != act.dependencies.end())
+                       ) != next->dependencies.end())
             {
                 return false;
             }
@@ -340,14 +342,16 @@ void State::startAction(const BuildAction& act)
         {
             ActiveAction top = activeActions.top();
             activeActions.pop();
-            if (top.timeFinished < 10) top.timeFinished = 0;
-            else top.timeFinished -= 10;
+            top.timeFinished -= 10;
+            if (top.timeFinished < currentTime) 
+            {
+                top.timeFinished = currentTime;
+            }
             activeActions.push(top);
 
             if (activeActions.size() == 1)
             {
                 finishTime = top.timeFinished;
-                cerr << currentTime << endl;
             }
         }
     }

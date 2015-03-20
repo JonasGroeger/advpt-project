@@ -126,6 +126,13 @@ void testProtoss()
     cerr << protossState << endl;
 
     assertOnlyLegalActions(protossState, stringsToBuildActions({"nexus", "probe", "assimilator", "pylon", "chrono_boost"}));
+
+    BuildOrder b{"pylon", "probe", "gateway", "zealot"};
+    cerr << b << endl;
+    cerr << b.getFitness() << endl;
+    b = BuildOrder({"pylon", "probe", "chrono_boost", "gateway", "zealot", "chrono_boost"});
+    cerr << b << endl;
+    cerr << b.getFitness() << endl;
 }
 void testEnergyManager()
 {
