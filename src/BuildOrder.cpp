@@ -90,10 +90,24 @@ unsigned int BuildOrder::getFitness()
     return fitness;
 }
 
-unsigned int BuildOrder::getUnitCount(action_t action, time_t maxTime)
+unsigned int BuildOrder::getUnitCount(time_t maxTime)
 {
-    //TODO
-    return 0;
+    if(isDirty)
+    {
+        int t = getFitness();
+        if (t > maxTime)
+        {
+            return 0;
+        }
+        action_t target = targetUnit;
+        count = count_if(buildList.begin(), buildList.end(),
+                [&target](const action_t &entry)
+                {
+                    return entry == target;
+                });
+        isDirty = false;
+    }
+    return count;
 }
 
 vector<action_t> BuildOrder::getDependencies(action_t id)
@@ -198,9 +212,14 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     return false;
 }
 
-vector<action_t> BuildOrder::getBuildList() const
+const vector<action_t>& BuildOrder::getBuildList() const
 {
     return buildList;
+}
+
+void BuildOrder::setTargetUnit(action_t target)
+{
+    targetUnit = target;
 }
 
 
