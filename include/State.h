@@ -61,7 +61,6 @@ class EnergyManager
 };
 
 
-class State; // Forward declaration for LarvaManager
 class LarvaManager
 {
 private:
@@ -71,11 +70,10 @@ private:
 
     double remainderLarva = 0.0;
     int number_of_hatcheries = 0;
-    unsigned long currentLarva = 0;
+    ress_t currentLarva = 0;
     
-    void spawnLarva(unsigned long count, bool injecting);
+    void spawnLarva(ress_t count, bool injecting);
 public:
-
     LarvaManager& operator=(const LarvaManager& rhs)
     {
             this->remainderLarva = rhs.remainderLarva;
@@ -98,10 +96,12 @@ public:
     * Params:
     *   @count: The amount of larva to be injected. Should be 4 in Starcraft 2.
     */
-    void injectLarva(unsigned long count);
-
+    void injectLarva(ress_t count);
+    time_t getTimeUntilLarvaAvailable(ress_t amount);
     void addHatcherie() { this->number_of_hatcheries++;}
     void removeHatcherie() { this->number_of_hatcheries--;}
+
+    void consumeLarva(ress_t amount);
 };
 
 class State {
@@ -131,6 +131,7 @@ class State {
     std::map<action_t, int> remembered;
 
     EnergyManager energyManager;
+    LarvaManager larvaManager;
     /*
      * This simply represents an action that is currently being produced
      */

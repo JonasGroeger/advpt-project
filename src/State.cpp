@@ -234,6 +234,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
     ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
+    ress_t larva_needed    = act.cost.larva - larva;
 
     // Maybe we have to wait until workers are produced
     if (minerals_needed != 0 && getMineralsPerTick() == 0)
@@ -247,24 +248,19 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     if (minerals_needed < 0) minerals_needed = 0;
     if (gas_needed < 0) gas_needed = 0;
+    if (larva_needed < 0) larva_needed = 0;
 
     assert(minerals_needed == 0 || getMineralsPerTick() != 0);
     assert(gas_needed == 0 || getGasPerTick() != 0);
 
     ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
     ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
+    time_t larva_time    = larvaManager.getTimeUntilLarvaAvailable(larva_needed);
 
     if (minerals_needed == 0) minerals_time = 0;
     if (gas_needed == 0) gas_time = 0;
 
-    if (minerals_time > gas_time)
-    {
-        return minerals_time;
-    }
-    else
-    {
-        return gas_time;
-    }
+    return std::max( {minerals_time, gas_time, larva_time} );
 }
 
 void State::startAction(const BuildAction& act)
@@ -287,6 +283,9 @@ void State::startAction(const BuildAction& act)
     gas -= cost.gas*RESS_FACTOR;
     supply_used += cost.supply;
     assert(supply_used <= supply_max);
+
+    // Larva
+    larvaManager.consumeLarva(cost.larva);
 
     future_supply_max += act.result.supply;
     assert(future_supply_max >= supply_max);
@@ -373,6 +372,10 @@ void State::addActionResult(const BuildResult& res, bool removeProducing)
             producing[unit.first] -= unit.second;
             assert(producing[unit.first] >= 0);
         }
+        if (ConfigParser::Instance().getAction("hatchery").id == unit.first)
+        {
+            larvaManager.addHatcherie();
+        }
     }
 }
 
@@ -417,6 +420,7 @@ void State::increaseRessources(time_t t)
     gas      += t * getGasPerTick();
 
     energyManager.advanceTime(t);
+    larvaManager.advanceTime(t);
 }
 
 bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
@@ -685,5 +689,18 @@ void LarvaManager::spawnLarva(unsigned long count, bool injecting)
     if (this->currentLarva > maximumLarva)
     {
         this->currentLarva = maximumLarva;
+    }
+}
+
+time_t LarvaManager::getTimeTillNextActionIsFinished(ress_t amount)
+{
+    // TODO optimize to give real amount
+    if (currentLarva < amount)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
     }
 }
