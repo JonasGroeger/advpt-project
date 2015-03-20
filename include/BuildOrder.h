@@ -58,7 +58,7 @@ public:
 
     vector<action_t> getBuildList() const;
 
-    unsigned int getFitness() const;
+    unsigned int getFitness();
 
     unsigned int getUnitCount(action_t action, time_t maxTime);
     /*
@@ -95,6 +95,8 @@ private:
     State state;
     map<action_t, int> availableUnits;
     vector<action_t> buildList;
+    bool isDirty = true;
+    unsigned int fitness = INT32_MAX;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
     void startActionInState(const action_t &actionId);

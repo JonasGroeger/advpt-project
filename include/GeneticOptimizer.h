@@ -21,7 +21,7 @@ private:
 
     struct PushComparator
     {
-        bool operator()( const BuildOrder& lx, const BuildOrder& rx ) const {
+        bool operator()( BuildOrder& lx, BuildOrder& rx ) const {
             return lx.getFitness() < rx.getFitness();
         }
     };
