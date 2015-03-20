@@ -155,7 +155,7 @@ void GeneticOptimizer::runPush()
 void GeneticOptimizer::mutate(BuildOrder &child, double probability)
 {
     //we dont want to mutate our target (last entry)
-    for(int i = 0; i < child.getSize()-1; i++)
+    for(unsigned int i = 0; i < child.getSize()-1; i++)
     {
         double mutationProbability = (double)rand() / RAND_MAX;
 

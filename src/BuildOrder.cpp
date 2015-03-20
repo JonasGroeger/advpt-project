@@ -252,6 +252,20 @@ ostream& operator<<(ostream &out, BuildOrder &obj)
         out << "[" << c << "] = [" << ConfigParser::Instance().getAction(element).name << "]" << std::endl;
         c++;
     }
+    obj.state = State(ConfigParser::Instance().getStartConfig());
+    for (auto it : obj.buildList)
+    {
+            const BuildAction &action = ConfigParser::Instance().getAction(it);
+            while (obj.state.isAdditionalTimeNeeded(action))
+            {
+                    cerr << obj.state << "advancing time by: " << obj.state.isAdditionalTimeNeeded(action) << endl;
+                    obj.state.advanceTime(obj.state.isAdditionalTimeNeeded(action));
+            }
+            cerr << "Starting Action: " << action.name << endl;
+            obj.state.startAction(action);
+    }
+    obj.state.advanceTime(obj.state.getTimeTillAllActionsAreFinished());
+    cerr << obj.state << endl;
     return out;
 }
 
