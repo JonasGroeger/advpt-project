@@ -55,10 +55,13 @@ void ConfigParser::parseConfig(char *file)
             {
                 buildAction.isSpecial = true;
                 XMLElement* energyCost = costs->FirstChildElement(NODE_ENERGY);
-                buildAction.cost.energyAmount = energyCost->IntAttribute(ATTRIBUTE_ENERGY_AMOUNT);
-                buildAction.cost.energyFrom = getUnitId(energyCost->Attribute(ATTRIBUTE_ENERGY_FROM));
-                LOG_DEBUG("   Action ["<<buildAction.name<<"] is a SPECIAL! with energyAmount of ["<<buildAction.cost.energyAmount
-                    <<"]");
+                if(energyCost != nullptr)
+                {
+                    buildAction.cost.energyAmount = energyCost->IntAttribute(ATTRIBUTE_ENERGY_AMOUNT);
+                    buildAction.cost.energyFrom = getUnitId(energyCost->Attribute(ATTRIBUTE_ENERGY_FROM));
+                    LOG_DEBUG("   Action ["<<buildAction.name<<"] is a SPECIAL! with energyAmount of ["<<buildAction.cost.energyAmount
+                            <<"]");
+                }
             }
 
             //borrows

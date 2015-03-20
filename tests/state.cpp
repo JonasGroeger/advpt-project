@@ -5,6 +5,7 @@
 
 #include "State.h"
 #include "ConfigParser.h"
+#include "BuildOrder.h"
 
 using namespace std; // If you feel offended by this change it!
 
@@ -114,6 +115,8 @@ void testZerg()
     cerr << zergState << endl;
 
     assertOnlyLegalActions(zergState, stringsToBuildActions({"overlord", "drone", "larva", "hatchery", "extractor", "spawning_pool", "evolution_chamber"}));
+
+    BuildOrder b {"drone", "spawning_pool", "zergling"};
 }
 void testProtoss()
 {
@@ -162,7 +165,7 @@ int main(int argc, char *argv[])
     ConfigParser::Instance().parseConfig(argv[1]);
 
     testTerran();
-    //testZerg();
+    testZerg();
     testProtoss();
 
     testEnergyManager();
