@@ -234,7 +234,6 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     ress_t minerals_needed = act.cost.minerals * RESS_FACTOR - minerals;
     ress_t gas_needed      = act.cost.gas * RESS_FACTOR - gas;
-    ress_t larva_needed    = act.cost.larva - larva;
 
     // Maybe we have to wait until workers are produced
     if (minerals_needed != 0 && getMineralsPerTick() == 0)
@@ -248,14 +247,13 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     if (minerals_needed < 0) minerals_needed = 0;
     if (gas_needed < 0) gas_needed = 0;
-    if (larva_needed < 0) larva_needed = 0;
 
     assert(minerals_needed == 0 || getMineralsPerTick() != 0);
     assert(gas_needed == 0 || getGasPerTick() != 0);
 
     ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
     ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
-    time_t larva_time    = larvaManager.getTimeUntilLarvaAvailable(larva_needed);
+    time_t larva_time    = larvaManager.getTimeUntilLarvaAvailable(act.cost.larva);
 
     if (minerals_needed == 0) minerals_time = 0;
     if (gas_needed == 0) gas_time = 0;
@@ -639,7 +637,7 @@ void LarvaManager::advanceTime(time_t amount)
     double spawnAmount = spawnRate * amount + this->remainderLarva;
 
     // Since @spawnAmount can be 4.31, we only want to procude 4 larva
-    unsigned long numLarvaSpawn = (unsigned long) spawnAmount; // 4
+    ress_t numLarvaSpawn = (ress_t) spawnAmount; // 4
     double numLarvaRemainder = spawnAmount - numLarvaSpawn; // 0.31
 
     // We want to remember the larva that is not yet ready to use it in the next call of advanceTime.
@@ -650,7 +648,7 @@ void LarvaManager::advanceTime(time_t amount)
     this->spawnLarva(numLarvaSpawn, injecting);
 }
 
-void LarvaManager::injectLarva(unsigned long count)
+void LarvaManager::injectLarva(ress_t count)
 {
     // Only zerg has larva. Noop if we are not zerg.
     if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
@@ -661,9 +659,9 @@ void LarvaManager::injectLarva(unsigned long count)
     this->spawnLarva(count, true);
 }
 
-void LarvaManager::spawnLarva(unsigned long count, bool injecting)
+void LarvaManager::spawnLarva(ress_t count, bool injecting)
 {
-    unsigned long maximumLarva;
+    ress_t maximumLarva;
 
     if (injecting)
     {
@@ -692,7 +690,7 @@ void LarvaManager::spawnLarva(unsigned long count, bool injecting)
     }
 }
 
-time_t LarvaManager::getTimeTillNextActionIsFinished(ress_t amount)
+time_t LarvaManager::getTimeUntilLarvaAvailable(ress_t amount)
 {
     // TODO optimize to give real amount
     if (currentLarva < amount)
@@ -703,4 +701,9 @@ time_t LarvaManager::getTimeTillNextActionIsFinished(ress_t amount)
     {
         return 0;
     }
+}
+
+void LarvaManager::consumeLarva(ress_t amount)
+{
+    currentLarva -= amount;
 }
