@@ -114,7 +114,7 @@ void testZerg()
     State zergState = State(ConfigParser::Instance().getStartConfig());
     cerr << zergState << endl;
 
-    assertOnlyLegalActions(zergState, stringsToBuildActions({"overlord", "drone", "larva", "hatchery", "extractor", "spawning_pool", "evolution_chamber"}));
+    assertOnlyLegalActions(zergState, stringsToBuildActions({"overlord", "drone", "hatchery", "extractor", "spawning_pool", "evolution_chamber"}));
 
     BuildOrder b {"drone", "spawning_pool", "zergling"};
 }
@@ -129,10 +129,10 @@ void testProtoss()
 
     BuildOrder b{"pylon", "probe", "gateway", "zealot"};
     cerr << b;
-    cerr << b.getFitness() << endl;
+    cerr << b.execute().executionTime << endl;
     b = BuildOrder({"pylon", "probe", "chrono_boost", "gateway", "zealot", "chrono_boost"});
     cerr << b;
-    cerr << b.getFitness() << endl;
+    cerr << b.execute().executionTime << endl;
 }
 void testEnergyManager()
 {

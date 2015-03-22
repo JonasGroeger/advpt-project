@@ -34,7 +34,6 @@ void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
     for(unsigned int i = 0; i < numberOfLists; i++)
     {
         BuildOrder tmp(minimalBuildList);
-        tmp.setTargetUnit(target);
         unsigned int randomEntries = getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_RANDOM_ENTRIES, 10);
 
         for(unsigned int step = 0; step < randomEntries; step++)
@@ -69,8 +68,6 @@ void GeneticOptimizer::run()
 
 void GeneticOptimizer::runRush()
 {
-    int maxTime = getConfigInteger(GENETIC_SECTION, FIELD_RUSH_MAX_TIME, 1000);
-
     int generations = getConfigInteger(GENETIC_SECTION, FIELD_NUMBER_OF_GENERATIONS, 10);
 
     double fraction = ((double) 1) / buildlists.size();
@@ -96,12 +93,12 @@ void GeneticOptimizer::runRush()
 
             mutate(child, probabilityToMutate);
         }
-        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(maxTime) <<"]";
+        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(target) <<"]";
         std::cout.flush();
     }
     std::sort(buildlists.begin(), buildlists.end(), PushComparator());
 
-    std::cout << "\nWinner with fitness of [" << buildlists[0].getUnitCount(maxTime) << "] took time ["<<buildlists[0].getFitness()<<"]" << std::endl;
+    std::cout << "\nWinner with fitness of [" << buildlists[0].getUnitCount(target) << "] took time ["<<buildlists[0].execute().executionTime<<"]" << std::endl;
     std::cout << buildlists[0] << std::endl;
     std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
 }
@@ -134,11 +131,11 @@ void GeneticOptimizer::runPush()
 
             mutate(child, probabilityToMutate);
         }
-        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getFitness() <<"]";
+        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].execute().executionTime <<"]";
         std::cout.flush();
     }
     std::sort(buildlists.begin(), buildlists.end(), PushComparator());
-    std::cout << "\nWinner with fitness of [" << buildlists[0].getFitness() << "]" << std::endl;
+    std::cout << "\nWinner with fitness of [" << buildlists[0].execute().executionTime << "]" << std::endl;
     std::cout << buildlists[0] << std::endl;
     std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
 }
@@ -151,7 +148,6 @@ void GeneticOptimizer::makeChildren(const vector<action_t> &mum, const vector<ac
     {
         //clear the child
         child = BuildOrder();
-        child.setTargetUnit(target);
 
         auto mumIter = mum.begin();
         auto dadIter = dad.begin();

@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
         }
         ConfigParser::Instance().setRaceForAction(buildListVec[0]);
         BuildOrder mBuildOrder(buildListVec);
-        mBuildOrder.getFitness();
     }
 
 

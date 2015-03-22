@@ -12,6 +12,13 @@
 
 using namespace std;
 
+struct ExecutionResult
+{
+        bool successfull;
+        time_t executionTime;
+        vector<action_t>::difference_type lastStep;
+};
+
 /*
 * @Invariant of this class is that the buildlist is always either empty or a valid buildlist
 */
@@ -26,56 +33,50 @@ public:
     */
     explicit BuildOrder(string target)
     {
-        state = State(ConfigParser::Instance().getStartConfig());
         createMinimalBuildOrder(target);
     }
 
     explicit BuildOrder(std::initializer_list<string> l)
     {
-        state = State(ConfigParser::Instance().getStartConfig());
+        State state = State(ConfigParser::Instance().getStartConfig());
         buildList.resize(l.size());
         transform(l.begin(), l.end(), buildList.begin(), 
                 [] (string s) { return ConfigParser::Instance().getAction(s).id;}
                 );
-
-        if (!applyBuildOrder(0, buildList.size()))
-        { 
-            throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
-        }
-        state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
 
     explicit BuildOrder(std::vector<string> v)
     {
         isForwardSim = true;
-        state = State(ConfigParser::Instance().getStartConfig(), isForwardSim);
         buildList.resize(v.size());
         transform(v.begin(), v.end(), buildList.begin(),
                 [] (string s) { return ConfigParser::Instance().getAction(s).id;}
         );
 
-        if (!applyBuildOrder(0, buildList.size()))
+        if (!execute().successfull)
         {
             throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
         }
-        state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
 
-    unsigned int getSize();
+    unsigned int getSize() const;
 
     action_t getAction(unsigned int position) const;
 
+    void setBuildList(const vector<action_t>& vec);
     const vector<action_t> &getBuildList() const;
 
-    unsigned int getFitness();
+    //unsigned int getFitness() const;
+    ExecutionResult execute(time_t maxTime = 0) const;
 
-    unsigned int getUnitCount(time_t maxTime);
+    unsigned int getUnitCount(action_t target) const;
+    unsigned int getUnitCount(action_t target, vector<action_t>::difference_type untilStep) const;
 
     void setTargetUnit(action_t target);
     /*
     *
     */
-    vector<action_t> getPossibleNextActions(const vector<action_t> &actions);
+    vector<action_t> getPossibleNextActions(const vector<action_t> &actions, State& state) const;
 
     /*
     * Insert an action at the given position in the buildlist.
@@ -101,29 +102,12 @@ public:
     bool replaceActionIfPossible(action_t newAction, unsigned int position);
 
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
-
 private:
     bool isForwardSim = false;
-    State state;
-    map<action_t, int> availableUnits;
     vector<action_t> buildList;
-    action_t targetUnit;
-    bool isDirty = true;
-    unsigned int count = 0;
-    unsigned int fitness = INT32_MAX;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
-    void startActionInState(const action_t &actionId);
-    /*applys the buildlist until buildList[pos-1] 
-    * @returns if every action was possible
-    */
-    bool applyBuildOrder(unsigned int posStart, unsigned int posEnd);
-
-    /*
-    * this one resets all internally used variables
-    */
-    void reset();
-
+    void startActionInState(action_t actionId, State& state) const;
     /*
      * Removes all build steps and creates a fresh BuildOrder with all dependencies
      * to produce @target as the last entry.
@@ -138,7 +122,7 @@ private:
     * @param outVector reference to the vector which receives the results
     * TODO doku
     */
-    vector<action_t> getDependencies(action_t id);
+    vector<action_t> getDependencies(action_t id) const;
 
     /*
     * Checks, that there are no more units of a type than allowed in @currentUnits.
