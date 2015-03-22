@@ -1,6 +1,5 @@
 #include <iostream>
 #include <GeneticOptimizer.h>
-#include <AddressBook/AddressBook.h>
 #include "ConfigParser.h"
 #include "BuildOrder.h"
 #include "Config.h"
