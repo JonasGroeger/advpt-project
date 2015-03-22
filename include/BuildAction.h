@@ -18,6 +18,8 @@ typedef struct BuildCost
     int gas = 0;
     int time = 0;
     int supply = 0;
+    int larva = 0;
+
     energy_t energyAmount = 0;
     action_t energyFrom;
     vector<std::pair<action_t, int>> units;

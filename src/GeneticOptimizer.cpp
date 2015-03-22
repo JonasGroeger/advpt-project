@@ -96,7 +96,7 @@ void GeneticOptimizer::runRush()
 
             mutate(child, probabilityToMutate);
         }
-        std::cout << " Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(maxTime) <<"]\n";
+        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(maxTime) <<"]";
         std::cout.flush();
     }
     std::sort(buildlists.begin(), buildlists.end(), PushComparator());

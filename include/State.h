@@ -61,7 +61,6 @@ class EnergyManager
 };
 
 
-class State; // Forward declaration for LarvaManager
 class LarvaManager
 {
 private:
@@ -69,14 +68,22 @@ private:
     const unsigned long MAX_LARVA_PER_HATCHERY = 3;
     const unsigned long INJECT_MAX_LARVA_PER_HATCHERY = 19;
 
-    unsigned long maximumLarva;
-    double remainderLarva;
-
+    double remainderLarva = 0.0;
+    // We always start with one hatchery
+    int number_of_hatcheries = 1;
+    // We start with 3 larva
+    ress_t currentLarva = 3;
+    
+    void spawnLarva(ress_t count, bool injecting);
 public:
-    LarvaManager(State &state)
-            : _state(state)
+    friend ostream& operator<<(ostream& out, const LarvaManager& obj);
+    LarvaManager& operator=(const LarvaManager& rhs)
     {
-    };
+            this->remainderLarva = rhs.remainderLarva;
+            this->number_of_hatcheries = rhs.number_of_hatcheries;
+
+            return *this;
+    }
 
     /*
     * This should be called when the time is skipped. Based on @amount, we produce larva that we also add to @state.
@@ -92,12 +99,11 @@ public:
     * Params:
     *   @count: The amount of larva to be injected. Should be 4 in Starcraft 2.
     */
-    void injectLarva(unsigned long count);
+    void injectLarva(ress_t count);
+    time_t getTimeUntilLarvaAvailable(ress_t amount);
+    void addHatcherie() { this->number_of_hatcheries++;}
 
-private:
-    State &_state;
-    int number_of_hatcheries;
-    void spawnLarva(unsigned long count, bool injecting);
+    void consumeLarva(ress_t amount);
 };
 
 class State {
@@ -115,8 +121,6 @@ class State {
     ress_t supply_used = 0, supply_max = 0;
     ress_t future_supply_max = 0;
 
-    unsigned long currentLarva;
-
     private:
     // At every position i, entities[i] indicates how many entities with action id i exist currently
     std::map<action_t, int> entities;
@@ -128,7 +132,10 @@ class State {
     // This is used to remember entities for dependency resolution
     std::map<action_t, int> remembered;
 
+    bool boostNextPossibleAction = false;
+
     EnergyManager energyManager;
+    LarvaManager larvaManager;
     /*
      * This simply represents an action that is currently being produced
      */

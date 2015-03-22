@@ -108,17 +108,10 @@ bool State::isLegalAction(const BuildAction& act)
 
     if (act.isSpecial)
     {
-        if (act.name == "chrono_boost" && !activeActions.empty())
-        {
-            const BuildAction *next = activeActions.top().action;
-            if (find_if(next->dependencies.begin(), next->dependencies.end(),
-                        [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
-                       ) != act.dependencies.end())
+            if (act.name == "mothership" && getEntityCount(act.id) > 0)
             {
-                return false;
+                    return false;
             }
-        }
-        // TODO implement mothership
     }
 
     if (supply_used + act.cost.supply > future_supply_max)
@@ -176,7 +169,18 @@ void State::advanceTime(time_t amount)
                 activeMules -= 1;
                 assert(activeMules >= 0);
             }
-            
+            else if (act->name == "hatchery")
+            {
+                larvaManager.addHatcherie();
+            }
+            else if (act->name == "chrono_boost")
+            {
+                boostNextPossibleAction = true;
+            }
+            else if (act->name == "spawn_larva")
+            {
+                larvaManager.injectLarva(4);
+            }
         }
     }
     increaseRessources(end_time-currentTime);
@@ -254,18 +258,12 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
     ress_t minerals_time = std::ceil(double(minerals_needed) / double(getMineralsPerTick()));
     ress_t gas_time      = std::ceil(double(gas_needed) / double(getGasPerTick()));
+    time_t larva_time    = larvaManager.getTimeUntilLarvaAvailable(act.cost.larva);
 
     if (minerals_needed == 0) minerals_time = 0;
     if (gas_needed == 0) gas_time = 0;
 
-    if (minerals_time > gas_time)
-    {
-        return minerals_time;
-    }
-    else
-    {
-        return gas_time;
-    }
+    return std::max( {minerals_time, gas_time, larva_time} );
 }
 
 void State::startAction(const BuildAction& act)
@@ -274,6 +272,19 @@ void State::startAction(const BuildAction& act)
     assert(isSatisfied(act.dependencies, false));
 
     time_t t = currentTime + act.cost.time;
+    if (boostNextPossibleAction)
+    {
+        // Only if it isn't built by a probe
+        if (find_if(act.dependencies.begin(), act.dependencies.end(),
+                    [] (std::pair<action_t, int> p) { return p.first == ConfigParser::Instance().getAction("probe").id;}
+                   ) == act.dependencies.end())
+        {
+            if (t < 10) t = 0;
+            else t -= 10;
+            if (t < currentTime) t = currentTime;
+            boostNextPossibleAction = false;
+        }
+    }
     if (t > finishTime)
     {
         finishTime = t;
@@ -288,6 +299,9 @@ void State::startAction(const BuildAction& act)
     gas -= cost.gas*RESS_FACTOR;
     supply_used += cost.supply;
     assert(supply_used <= supply_max);
+
+    // Larva
+    larvaManager.consumeLarva(cost.larva);
 
     future_supply_max += act.result.supply;
     assert(future_supply_max >= supply_max);
@@ -331,27 +345,12 @@ void State::startAction(const BuildAction& act)
             producing[result.first] += result.second;
     }
 
-    // TODO mabye handle some special stuff here
     if (act.isSpecial)
     {
         if (act.name == "mule")
         {
             activeMules += 1;
         } 
-        else if (act.name == "chrono_boost" && !activeActions.empty())
-        {
-            ActiveAction top = activeActions.top();
-            activeActions.pop();
-            if (top.timeFinished < 10) top.timeFinished = 0;
-            else top.timeFinished -= 10;
-            activeActions.push(top);
-
-            if (activeActions.size() == 1)
-            {
-                finishTime = top.timeFinished;
-                cerr << currentTime << endl;
-            }
-        }
     }
 
     ActiveAction aa(t, &act, borrowedAction);
@@ -418,6 +417,7 @@ void State::increaseRessources(time_t t)
     gas      += t * getGasPerTick();
 
     energyManager.advanceTime(t);
+    larvaManager.advanceTime(t);
 }
 
 bool State::isSatisfied(const vector<std::pair<action_t, int>>& constraints, bool use_producing)
@@ -519,8 +519,8 @@ ostream& operator<<(ostream& out, State& obj)
         out << "\t\t" << aa.action->name << " (id: " << aa.action->id << "/at: " << aa.action << ") " << " finished at: " << aa.timeFinished << endl;
     }
 
-    out << "\tEnergyManager: " << endl;
     out << obj.energyManager;
+    out << obj.larvaManager;
 
     return out;
 }
@@ -600,10 +600,10 @@ void EnergyManager::advanceTime(time_t amount)
 ostream& operator<<(ostream& out, const EnergyManager& obj)
 {
         out << "EnergyManager with: " << endl;
-        out << "Currently at time: " << obj.currentTime << endl;
+        out << "\tCurrently at time: " << obj.currentTime << endl;
         if (obj.savedEnergy.empty())
         {
-                out << "With no energy units" << endl;
+                out << "\tWith no energy units" << endl;
         }
         for (auto p : obj.savedEnergy)
         {
@@ -611,13 +611,13 @@ ostream& operator<<(ostream& out, const EnergyManager& obj)
                 const BuildAction &act = ConfigParser::Instance().getAction(type);
                 vector<energy_t> &vec = p.second;
 
-                out << "\tAction: " << act.name << endl;
-                out << "\tMaxEnergy: " << obj.maxEnergy.at(type) << endl;
-                out << "\tSavedEnergy: " << endl;
+                out << "\t\tAction: " << act.name << endl;
+                out << "\t\tMaxEnergy: " << obj.maxEnergy.at(type) << endl;
+                out << "\t\tSavedEnergy: " << endl;
 
                 for (energy_t e : vec)
                 {
-                        out << "\t\t" << e << endl;
+                        out << "\t\t\t" << e << endl;
                 }
         }
         return out;
@@ -625,21 +625,12 @@ ostream& operator<<(ostream& out, const EnergyManager& obj)
 
 void LarvaManager::advanceTime(time_t amount)
 {
-    // Only zerg has larva. Noop if we are not zerg.
-    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
-    {
-        return;
-    }
-
-    action_t hatchery_id = ConfigParser::Instance().getAction("hatchery").id;
-    this->number_of_hatcheries = this->_state.getEntityCount(hatchery_id);
-
     // In the next @amount seconds, we will produce number_of_hatcheries * 0.06667
     double spawnRate = this->number_of_hatcheries * SPAWN_LARVA_PER_TICK_PER_HATCHERY;
     double spawnAmount = spawnRate * amount + this->remainderLarva;
 
     // Since @spawnAmount can be 4.31, we only want to procude 4 larva
-    unsigned long numLarvaSpawn = (unsigned long) spawnAmount; // 4
+    ress_t numLarvaSpawn = (ress_t) spawnAmount; // 4
     double numLarvaRemainder = spawnAmount - numLarvaSpawn; // 0.31
 
     // We want to remember the larva that is not yet ready to use it in the next call of advanceTime.
@@ -650,41 +641,66 @@ void LarvaManager::advanceTime(time_t amount)
     this->spawnLarva(numLarvaSpawn, injecting);
 }
 
-void LarvaManager::injectLarva(unsigned long count)
+void LarvaManager::injectLarva(ress_t count)
 {
-    // Only zerg has larva. Noop if we are not zerg.
-    if (ConfigParser::Instance().getRace().name.compare("zerg") != 0)
-    {
-        return;
-    }
-
     this->spawnLarva(count, true);
 }
 
-void LarvaManager::spawnLarva(unsigned long count, bool injecting)
+void LarvaManager::spawnLarva(ress_t count, bool injecting)
 {
+    ress_t maximumLarva;
+
     if (injecting)
     {
-        this->maximumLarva = this->number_of_hatcheries * INJECT_MAX_LARVA_PER_HATCHERY;
+        maximumLarva = this->number_of_hatcheries * INJECT_MAX_LARVA_PER_HATCHERY;
     }
     else
     {
-        this->maximumLarva = this->number_of_hatcheries * MAX_LARVA_PER_HATCHERY;
+        maximumLarva = this->number_of_hatcheries * MAX_LARVA_PER_HATCHERY;
     }
 
     // If we are not injecting but have more larva than possible, do nothing
+    // TODO Why do we need this?
     if (!injecting)
     {
-        if (this->_state.currentLarva >= this->maximumLarva)
+        if (this->currentLarva >= maximumLarva)
         {
             return;
         }
     }
 
     // Add and cap at maximum
-    this->_state.currentLarva += count;
-    if (this->_state.currentLarva > this->maximumLarva)
+    this->currentLarva += count;
+    if (this->currentLarva > maximumLarva)
     {
-        this->_state.currentLarva = this->maximumLarva;
+        this->currentLarva = maximumLarva;
     }
+}
+
+time_t LarvaManager::getTimeUntilLarvaAvailable(ress_t amount)
+{
+    // TODO optimize to give real amount
+    if (currentLarva < amount)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void LarvaManager::consumeLarva(ress_t amount)
+{
+    currentLarva -= amount;
+}
+
+ostream& operator<<(ostream& out, const LarvaManager& obj)
+{
+    out << "LarvaManager with:" << endl;
+    out << "\tnumber_of_hatcheries: " << obj.number_of_hatcheries << endl;
+    out << "\tcurrentLarva: " << obj.currentLarva << endl;
+    out << "\tremainderLarva:  " << obj.remainderLarva << endl;
+
+    return out;
 }

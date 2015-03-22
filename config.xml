@@ -37,7 +37,7 @@
             </results>
         </action>
 
-        <action name="hatchery">
+        <action name="hatchery" special="true">
             <costs mineral="300" gas="0" time="10" supply="0">
                 <unit name="drone"/>
             </costs>
@@ -128,8 +128,7 @@
         </action>
 
         <action name="roach">
-            <costs mineral="75" gas="25" time="27" supply="2">
-                <unit name="larva"/>
+            <costs mineral="75" gas="25" time="27" supply="2" larva="1">
             </costs>
             <borrows/>
             <dependencies>
@@ -141,8 +140,7 @@
         </action>
 
         <action name="zergling">
-            <costs mineral="50" gas="0" time="24" supply="1">
-                <unit name="larva"/>
+            <costs mineral="50" gas="0" time="24" supply="1" larva="1">
             </costs>
             <borrows/>
             <dependencies>
@@ -207,8 +205,7 @@
         </action>
 
         <action name="drone">
-            <costs mineral="50" gas="0" time="17" supply="1">
-                <unit name="larva"/>
+            <costs mineral="50" gas="0" time="17" supply="1" larva="1">
             </costs>
             <borrows/>
             <dependencies/>
@@ -217,27 +214,8 @@
             </results>
         </action>
 
-        <!-- TODO: Handle larva properly. Currently it has no costs, no borrows
-         and depends on hatchery. However, larva can also spawn in lair and hive.
-         -->
-        <action name="larva">
-            <costs mineral="0" gas="0" time="15" supply="0">
-
-            </costs>
-            <borrows>
-
-            </borrows>
-            <dependencies>
-                <unit name="hatchery"/>
-            </dependencies>
-            <results mineral="0" gas="0" time="0" supply="0">
-                <unit name="larva"/>
-            </results>
-        </action>
-
         <action name="overlord">
-            <costs mineral="100" gas="0" time="25" supply="0">
-                <unit name="larva"/>
+            <costs mineral="100" gas="0" time="25" supply="0" larva="1">
             </costs>
             <borrows/>
 
@@ -277,8 +255,7 @@
         </action>
 
         <action name="hydralisk">
-            <costs mineral="100" gas="50" time="33" supply="2">
-                <unit name="larva"/>
+            <costs mineral="100" gas="50" time="33" supply="2" larva="1">
             </costs>
             <borrows/>
             <dependencies>
@@ -365,8 +342,7 @@
         </action>
 
         <action name="ultralisk">
-            <costs mineral="300" gas="200" time="55" supply="6">
-                <unit name="larva"/>
+            <costs mineral="300" gas="200" time="55" supply="6" larva="1">
             </costs>
             <borrows/>
             <dependencies>
@@ -378,8 +354,7 @@
         </action>
 
         <action name="infestor">
-            <costs mineral="100" gas="150" time="50" supply="2">
-                <unit name="larva"/>
+            <costs mineral="100" gas="150" time="50" supply="2" larva="1">
             </costs>
             <borrows/>
             <dependencies>
@@ -431,8 +406,7 @@
         </action>
 
         <action name="corruptor">
-            <costs mineral="150" gas="100" time="40" supply="2">
-                <unit name="larva"/>
+            <costs mineral="150" gas="100" time="40" supply="2" larva="1">
             </costs>
             <borrows/>
             <dependencies>
@@ -444,8 +418,7 @@
         </action>
 
         <action name="mutalisk">
-            <costs mineral="100" gas="100" time="33" supply="2">
-                <unit name="larva"/>
+            <costs mineral="100" gas="100" time="33" supply="2" larva="1">
             </costs>
             <borrows/>
             <dependencies>

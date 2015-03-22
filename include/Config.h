@@ -8,6 +8,8 @@ extern const char* FIELD_INITIAL_START_LISTS;
 extern const char* FIELD_INITIAL_RANDOM_ENTRIES;
 extern const char* FIELD_NUMBER_OF_GENERATIONS;
 extern const char* FIELD_RUSH_MAX_TIME;
+extern const char* FIELD_TYPE;
+extern const char* FIELD_TARGET;
 
 // Get a string value from INI file, returning default_value if not found.
 std::string getConfigString(std::string section, std::string name,
