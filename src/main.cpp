@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
         }
         ConfigParser::Instance().setRaceForAction(buildListVec[0]);
         BuildOrder mBuildOrder(buildListVec);
-        std::cout << "ForwardSim took " << mBuildOrder.execute().executionTime << std::endl;
     }
 
 
