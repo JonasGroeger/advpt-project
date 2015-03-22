@@ -114,7 +114,7 @@ void testZerg()
     State zergState = State(ConfigParser::Instance().getStartConfig());
     cerr << zergState << endl;
 
-    assertOnlyLegalActions(zergState, stringsToBuildActions({"overlord", "drone", "larva", "hatchery", "extractor", "spawning_pool", "evolution_chamber"}));
+    assertOnlyLegalActions(zergState, stringsToBuildActions({"overlord", "drone", "hatchery", "extractor", "spawning_pool", "evolution_chamber"}));
 
     BuildOrder b {"drone", "spawning_pool", "zergling"};
 }

@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     ConfigParser::Instance().setRaceForAction("chrono_boost");
     State chronoBoost(ConfigParser::Instance().getStartConfig());
 
-    actions = {"pylon", "gateway", "zealot"};
+    actions = {"pylon", "gateway"};
     for (string a : actions)
     {
         const BuildAction& act = ConfigParser::Instance().getAction(a);
@@ -139,13 +139,21 @@ int main(int argc, char *argv[])
     State noChrono(chronoBoost);
     chronoBoost.startAction(ConfigParser::Instance().getAction("chrono_boost"));
 
+    const BuildAction& zealot = ConfigParser::Instance().getAction("zealot");
+
+    chronoBoost.advanceTime(70);
+    noChrono.advanceTime(70);
+
+    chronoBoost.startAction(zealot);
+    noChrono.startAction(zealot);
+
     chronoBoost.advanceTime(chronoBoost.getTimeTillAllActionsAreFinished());
     noChrono.advanceTime(noChrono.getTimeTillAllActionsAreFinished());
 
     assert(noChrono.currentTime - chronoBoost.currentTime == 10);
 
     chronoBoost.startAction(ConfigParser::Instance().getAction("assimilator"));
-    assert(!chronoBoost.isLegalAction(ConfigParser::Instance().getAction("chrono_boost")));
+    assert(chronoBoost.isLegalAction(ConfigParser::Instance().getAction("chrono_boost")));
 
     cerr << "SUCCESS" << endl;
     return 0;

@@ -37,7 +37,7 @@ public:
                 [] (string s) { return ConfigParser::Instance().getAction(s).id;}
                 );
 
-        if (!applyBuildOrderInState(0, buildList.size()))
+        if (!applyBuildOrderInState(0, buildList.size(), state))
         { 
             throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
         }
@@ -90,11 +90,11 @@ private:
     action_t targetUnit = -1;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
-    void startActionInState(const action_t &actionId);
+    void startActionInState(action_t actionId, State& state) const;
     /*applys the buildlist until buildList[pos-1] 
     * @returns if every action was possible
     */
-    bool applyBuildOrderInState(unsigned int posStart, unsigned int posEnd, State& state);
+    bool applyBuildOrderInState(unsigned int posStart, unsigned int posEnd, State& state) const;
 
     /*
      * Removes all build steps and creates a fresh BuildOrder with all dependencies

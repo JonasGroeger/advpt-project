@@ -18,10 +18,10 @@ void BuildOrder::createMinimalBuildOrder(string target)
         {
             //seems like nothing from our dependencies is possible so add a supply here
             const auto& defaultSupply = ConfigParser::Instance().getDefaulSupplyAction();
-            if(state.isLegalAction(defaultSupply);
+            if(state.isLegalAction(defaultSupply))
             {
-                startActionInState(defaultSupply);
-                buildList.push_back(defaultSupply);
+                startActionInState(defaultSupply.id, state);
+                buildList.push_back(defaultSupply.id);
                 continue;
             }
             else
@@ -174,7 +174,7 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     applyBuildOrderInState(0, position, state);
 
     //skip the action we want to remove
-    if(applyBuildOrderInState(position+1, buildList.size()))
+    if(applyBuildOrderInState(position+1, buildList.size(), state))
     {
         buildList.erase(buildList.begin()+position);
         return true;
@@ -199,10 +199,9 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     }
     startActionInState(newAction, state);
 
-    if(applyBuildOrderInState(position+1, buildList.size()))
+    if(applyBuildOrderInState(position+1, buildList.size(), state))
     {
         buildList[position] = newAction;
-        isDirty = true;
         return true;
     }
     return false;
@@ -211,13 +210,14 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
 void BuildOrder::setBuildList(const vector<action_t>& vec)
 {
         buildList = vec;
-        isDirty = true;
 }
+
 const vector<action_t>& BuildOrder::getBuildList() const
 {
     return buildList;
 }
 
+// TODO
 void BuildOrder::setTargetUnit(action_t target)
 {
     targetUnit = target;
@@ -240,7 +240,7 @@ vector<action_t> BuildOrder::getPossibleNextActions(const vector<action_t> &acti
     return resultVec;
 }
 
-void BuildOrder::startActionInState(const action_t &actionId)
+void BuildOrder::startActionInState(action_t actionId, State& state) const
 {
     const BuildAction& action = ConfigParser::Instance().getAction(actionId);
     while (state.isAdditionalTimeNeeded(action))
@@ -250,7 +250,7 @@ void BuildOrder::startActionInState(const action_t &actionId)
     state.startAction(action);
 }
 
-bool BuildOrder::applyBuildOrderInState(unsigned int posStart, unsigned int posEnd)
+bool BuildOrder::applyBuildOrderInState(unsigned int posStart, unsigned int posEnd, State& state) const
 {
     //first get the "state" until pos-1 in our buildorder
     auto iter = buildList.begin()+posStart;
@@ -261,7 +261,7 @@ bool BuildOrder::applyBuildOrderInState(unsigned int posStart, unsigned int posE
         {
             return false;
         }
-        startActionInState(action.id);
+        startActionInState(action.id, state);
         iter++;
     }
     return true;
