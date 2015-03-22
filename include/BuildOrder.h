@@ -96,7 +96,6 @@ public:
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
 private:
     vector<action_t> buildList;
-    action_t targetUnit = -1;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
     void startActionInState(action_t actionId, State& state) const;

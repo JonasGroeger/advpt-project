@@ -155,59 +155,48 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
 {
     assert(position < buildList.size());
 
-    State state = State(ConfigParser::Instance().getStartConfig());
+    action_t saved = buildList[position];
+    buildList.erase(buildList.begin()+position);
 
-    //first get the "state" until pos-1 in our buildorder
-    applyBuildOrderInState(0, position, state);
-
-    //skip the action we want to remove
-    if(applyBuildOrderInState(position+1, buildList.size(), state))
+    if (!execute().successful)
     {
-        buildList.erase(buildList.begin()+position);
+        buildList.insert(buildList.begin()+position, saved);
+        return false;
+    }
+    else
+    {
         return true;
     }
-    return false;
 }
 
 bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int position)
 {
     assert(position < buildList.size());
 
-    const auto& act = ConfigParser::Instance().getAction(newAction);
-    State state = State(ConfigParser::Instance().getStartConfig());
+    action_t saved = buildList[position];
+    buildList.erase(buildList.begin()+position);
+    buildList.insert(buildList.begin()+position, newAction);
 
-    //first get the "state" until pos-1 in our buildorder
-    applyBuildOrderInState(0, position, state);
-
-    // Check if the swapped action is possible
-    if(!state.isLegalAction(act))
+    if (!execute.successful)
     {
+        buildList.erase(buildList.begin()+position);
+        buildList.insert(buildList.begin()+position, saved);
         return false;
     }
-    startActionInState(newAction, state);
-
-    if(applyBuildOrderInState(position+1, buildList.size(), state))
+    else
     {
-        buildList[position] = newAction;
         return true;
     }
-    return false;
 }
 
 void BuildOrder::setBuildList(const vector<action_t>& vec)
 {
-        buildList = vec;
+    buildList = vec;
 }
 
 const vector<action_t>& BuildOrder::getBuildList() const
 {
     return buildList;
-}
-
-// TODO
-void BuildOrder::setTargetUnit(action_t target)
-{
-    targetUnit = target;
 }
 
 vector<action_t> BuildOrder::getPossibleNextActions(const vector<action_t> &actions, State& state) const
