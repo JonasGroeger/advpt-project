@@ -29,15 +29,9 @@ private:
     struct RushComparator
     {
         int maxTime = getConfigInteger(GENETIC_SECTION, FIELD_RUSH_MAX_TIME, 1000);
-        action_t target = getConfigInteger(GENETIC_SECTION, FIELD_TARGET, -1);
+        action_t target = ConfigParser::Instance().getAction(getConfigString(GENETIC_SECTION, FIELD_TARGET, "marine")).id;
 
         bool operator()( BuildOrder& lx, BuildOrder& rx ) const {
-            const ExecutionResult& rl = lx.execute();
-            const ExecutionResult& rr = rx.execute();
-
-            if (rl.executionTime > maxTime) return false;
-            if (rr.executionTime > maxTime) return true;
-
             return lx.getUnitCount(target) > rx.getUnitCount(target);
         }
     };

@@ -56,7 +56,7 @@ action_t BuildOrder::getAction(unsigned int position) const
 }
 
 //unsigned int BuildOrder::getFitness() const
-ExecutionResult BuildOrder::execute() const
+ExecutionResult BuildOrder::execute(time_t maxTime) const
 {
     ConfigParser &cfg = ConfigParser::Instance();
     State state(cfg.getStartConfig());
@@ -75,6 +75,11 @@ ExecutionResult BuildOrder::execute() const
         {
             LOG_DEBUG("STATE TIME NEEDED FOR ACTION [" + buildAction.name + "] IS [" << state.isAdditionalTimeNeeded(buildAction) << "]");
             state.advanceTime(t);
+
+            if (maxTime > 0 && state.currentTime > maxTime)
+            {
+                return {false, state.currentTime, i-1};
+            }
         }
         state.startAction(buildAction);
         LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
@@ -82,16 +87,17 @@ ExecutionResult BuildOrder::execute() const
 
     state.advanceTime(state.getTimeTillAllActionsAreFinished());
 
-    return {true, state.currentTime, buildList.size()-1};
+    return {true, state.currentTime, static_cast<vector<action_t>::difference_type> (buildList.size())-1};
 }
 
 unsigned int BuildOrder::getUnitCount(action_t target) const
 {
-    return getUnitCount(buildList.size()-1);
+    return getUnitCount(target, buildList.size()-1);
 }
 
-unsigned int BuildOrder::getUnitCount(action_t target, vector<action_t>::size_type untilStep) const
+unsigned int BuildOrder::getUnitCount(action_t target, vector<action_t>::difference_type untilStep) const
 {
+    assert(untilStep >= -1 && untilStep < (vector<action_t>::difference_type)buildList.size());
     return count_if(buildList.begin(), buildList.begin()+untilStep+1,
             [&target](const action_t &entry)
             {

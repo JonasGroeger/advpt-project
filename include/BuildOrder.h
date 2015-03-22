@@ -16,7 +16,7 @@ struct ExecutionResult
 {
         bool successfull;
         time_t executionTime;
-        vector<action_t>::size_type lastStep;
+        vector<action_t>::difference_type lastStep;
 };
 
 /*
@@ -53,10 +53,10 @@ public:
     const vector<action_t> &getBuildList() const;
 
     //unsigned int getFitness() const;
-    ExecutionResult execute() const;
+    ExecutionResult execute(time_t maxTime = 0) const;
 
     unsigned int getUnitCount(action_t target) const;
-    unsigned int getUnitCount(action_t target, vector<action_t>::size_type untilStep) const;
+    unsigned int getUnitCount(action_t target, vector<action_t>::difference_type untilStep) const;
 
     void setTargetUnit(action_t target);
     /*
