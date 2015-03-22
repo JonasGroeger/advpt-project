@@ -121,7 +121,11 @@ class State {
     ress_t supply_used = 0, supply_max = 0;
     ress_t future_supply_max = 0;
 
-    private:
+    void printWorkers();
+
+private:
+    bool isForwardSim = false;
+    bool dirty = false;
     // At every position i, entities[i] indicates how many entities with action id i exist currently
     std::map<action_t, int> entities;
     // At every position i, borrowed[i] indicates how many entities with action id i are currently borrowed
@@ -179,7 +183,7 @@ class State {
 
     public:
     State() = default;
-    State(const map<action_t, int> &startConfig);
+    State(const map<action_t, int> &startConfig, bool forwardSim = false);
 
     bool operator==(const State &rhs) const;
     bool operator!=(const State &rhs) const;
@@ -218,6 +222,7 @@ class State {
      *  - Insert the action
      */
     void startAction(const BuildAction&);
+    void printRessources();
 
 
     int getEntityCount(action_t entity);

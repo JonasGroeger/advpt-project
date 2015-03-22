@@ -81,9 +81,11 @@ unsigned int BuildOrder::getFitness()
             state.startAction(buildAction);
             LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
         }
-
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
-
+        if(isForwardSim)
+        {
+            state.printRessources();
+        }
         fitness = state.currentTime;
         isDirty = false;
     }

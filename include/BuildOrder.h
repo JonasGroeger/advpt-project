@@ -47,7 +47,8 @@ public:
 
     explicit BuildOrder(std::vector<string> v)
     {
-        state = State(ConfigParser::Instance().getStartConfig());
+        isForwardSim = true;
+        state = State(ConfigParser::Instance().getStartConfig(), isForwardSim);
         buildList.resize(v.size());
         transform(v.begin(), v.end(), buildList.begin(),
                 [] (string s) { return ConfigParser::Instance().getAction(s).id;}
@@ -102,6 +103,7 @@ public:
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
 
 private:
+    bool isForwardSim = false;
     State state;
     map<action_t, int> availableUnits;
     vector<action_t> buildList;

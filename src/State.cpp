@@ -1,7 +1,8 @@
 #include "State.h"
 
-State::State(const map<action_t, int> &startConfig)
+State::State(const map<action_t, int> &startConfig, bool forwardSim)
 {
+    isForwardSim = forwardSim;
     for (auto unit : startConfig)
     {
         action_t type = unit.first;
@@ -47,6 +48,12 @@ bool State::operator==(const State &rhs) const
 bool State::operator!=(const State &rhs) const
 {
     return !(*this == rhs);
+}
+
+void State::printWorkers()
+{
+    std::cout << currentTime << "\tworkers minerals:" << workersMinerals
+        << ", vespene:"<<workersGas << std::endl;
 }
 
 bool State::isLegalAction(const BuildAction& act)
@@ -127,10 +134,10 @@ void State::advanceTime(time_t amount)
 {
     LOG_DEBUG("Advance time from [" << currentTime << "] by [" << amount << "]");
     time_t end_time = currentTime + amount;
-
     // Finish all actions that will end withing @amount
     while (!activeActions.empty() && activeActions.top().timeFinished <= end_time)
     {
+        dirty = true;
         ActiveAction aa = activeActions.top();
         activeActions.pop();
 
@@ -268,8 +275,14 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
 void State::startAction(const BuildAction& act)
 {
+    dirty = true;
     // Checking dependencies
     assert(isSatisfied(act.dependencies, false));
+
+    if(isForwardSim)
+    {
+        std::cout << currentTime << "\tbuild-start " << act.name << std::endl;
+    }
 
     time_t t = currentTime + act.cost.time;
     if (boostNextPossibleAction)
@@ -359,6 +372,13 @@ void State::startAction(const BuildAction& act)
     LOG_DEBUG("inserted new action [" << act.name << "] into queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
+void State::printRessources()
+{
+    std::cout << currentTime << "\tresources minerals:" << (minerals/RESS_FACTOR)
+            << ", vespene:"<< (gas/RESS_FACTOR) << ", usedSupply:" << supply_used
+            << ", availableSupply:" << supply_max << std::endl;
+}
+
 void State::addActionResult(const BuildResult& res, bool removeProducing)
 {
     minerals += res.minerals * RESS_FACTOR;
@@ -367,6 +387,10 @@ void State::addActionResult(const BuildResult& res, bool removeProducing)
     supply_max += res.supply;
     for (auto unit : res.units)
     {
+        if(isForwardSim)
+        {
+            std::cout << currentTime << "\tbuild-end " << ConfigParser::Instance().getAction(unit.first).name << std::endl;
+        }
         addUnit(unit.first, unit.second);
         if (removeProducing)
         {
