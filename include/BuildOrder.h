@@ -12,6 +12,13 @@
 
 using namespace std;
 
+struct ExecutionResult
+{
+        bool successfull;
+        time_t executionTime;
+        vector<action_t>::size_type lastStep;
+};
+
 /*
 * @Invariant of this class is that the buildlist is always either empty or a valid buildlist
 */
@@ -51,9 +58,11 @@ public:
     void setBuildList(const vector<action_t>& vec);
     const vector<action_t> &getBuildList() const;
 
-    unsigned int getFitness() const;
+    //unsigned int getFitness() const;
+    ExecutionResult execute() const;
 
-    unsigned int getUnitCount(time_t maxTime) const;
+    unsigned int getUnitCount(time_t maxTime, action_t target) const;
+    unsigned int getUnitCount(time_t maxTime, action_t target, vector<action_t>::size_type untilStep) const;
 
     void setTargetUnit(action_t target);
     /*

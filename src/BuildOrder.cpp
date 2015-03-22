@@ -54,23 +54,19 @@ action_t BuildOrder::getAction(unsigned int position) const
     return buildList[position];
 }
 
-unsigned int BuildOrder::getFitness() const
+//unsigned int BuildOrder::getFitness() const
+ExecutionResult BuildOrder::execute() const
 {
     ConfigParser &cfg = ConfigParser::Instance();
     State state(cfg.getStartConfig());
 
-    for (auto action_id : buildList)
+    for (unsigned int i = 0; i < buildList.size(); i++)
     {
-        const auto &buildAction = cfg.getAction(action_id);
+        const auto &buildAction = cfg.getAction(buildList[i]);
 
         if (!state.isLegalAction(buildAction))
         {
-            for (unsigned int i = 0; i < buildList.size(); i++)
-            {
-                std::cerr << "[" << i << "] - " << cfg.getAction(buildList[i]).name << std::endl;
-            }
-            std::cerr << state << std::endl;
-            throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
+            return {false, 0, i};
         }
 
         time_t t;
@@ -85,18 +81,17 @@ unsigned int BuildOrder::getFitness() const
 
     state.advanceTime(state.getTimeTillAllActionsAreFinished());
 
-    return state.currentTime;
+    return {true, state.currentTime, buildList.size()-1};
 }
 
-unsigned int BuildOrder::getUnitCount(time_t maxTime) const
+unsigned int BuildOrder::getUnitCount(time_t maxTime, action_t target) const
 {
-    int t = getFitness();
-    if (t > maxTime)
-    {
-        return 0;
-    }
-    action_t target = targetUnit;
-    return count_if(buildList.begin(), buildList.end(),
+    return getUnitCount(maxTime, buildList.size()-1);
+}
+
+unsigned int BuildOrder::getUnitCount(time_t maxTime, action_t target, vector<action_t>::size_type untilStep) const
+{
+    return count_if(buildList.begin(), buildList.begin()+untilStep+1,
             [&target](const action_t &entry)
             {
                 return entry == target;
@@ -143,25 +138,17 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 {
     assert(position <= buildList.size());
 
-    const auto& act = ConfigParser::Instance().getAction(action);
-    State state = State(ConfigParser::Instance().getStartConfig());
+    buildList.insert(buildList.begin()+position, action);
 
-    // first get the "state" until pos-1 in our buildorder
-    applyBuildOrderInState(0, position, state);
-
-    // Check if the newly inserted action is possible at all
-    if(!state.isLegalAction(act))
+    if (!execute().successful)
     {
+        buildList.erase(buildList.begin()+position, action);
         return false;
     }
-    startActionInState(action, state);
-
-    if(applyBuildOrderInState(position, buildList.size(), state))
+    else
     {
-        buildList.insert(buildList.begin()+position, action);
         return true;
     }
-    return false;
 }
 
 bool BuildOrder::removeActionIfPossible(unsigned int position)
