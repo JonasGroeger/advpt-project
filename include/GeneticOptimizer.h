@@ -22,15 +22,23 @@ private:
     struct PushComparator
     {
         bool operator()( BuildOrder& lx, BuildOrder& rx ) const {
-            return lx.getFitness() < rx.getFitness();
+            return lx.execute().executionTime < rx.execute().executionTime;
         }
     };
 
     struct RushComparator
     {
         int maxTime = getConfigInteger(GENETIC_SECTION, FIELD_RUSH_MAX_TIME, 1000);
+        action_t target = getConfigInteger(GENETIC_SECTION, FIELD_TARGET, -1);
+
         bool operator()( BuildOrder& lx, BuildOrder& rx ) const {
-            return lx.getUnitCount(maxTime) > rx.getUnitCount(maxTime);
+            const ExecutionResult& rl = lx.execute();
+            const ExecutionResult& rr = rx.execute();
+
+            if (rl.executionTime > maxTime) return false;
+            if (rr.executionTime > maxTime) return true;
+
+            return lx.getUnitCount(target) > rx.getUnitCount(target);
         }
     };
 

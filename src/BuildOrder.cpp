@@ -1,5 +1,6 @@
 #include "BuildOrder.h"
 
+// TODO remove state logic
 void BuildOrder::createMinimalBuildOrder(string target)
 {
     buildList.clear();
@@ -84,12 +85,12 @@ ExecutionResult BuildOrder::execute() const
     return {true, state.currentTime, buildList.size()-1};
 }
 
-unsigned int BuildOrder::getUnitCount(time_t maxTime, action_t target) const
+unsigned int BuildOrder::getUnitCount(action_t target) const
 {
-    return getUnitCount(maxTime, buildList.size()-1);
+    return getUnitCount(buildList.size()-1);
 }
 
-unsigned int BuildOrder::getUnitCount(time_t maxTime, action_t target, vector<action_t>::size_type untilStep) const
+unsigned int BuildOrder::getUnitCount(action_t target, vector<action_t>::size_type untilStep) const
 {
     return count_if(buildList.begin(), buildList.begin()+untilStep+1,
             [&target](const action_t &entry)
@@ -140,9 +141,9 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 
     buildList.insert(buildList.begin()+position, action);
 
-    if (!execute().successful)
+    if (!execute().successfull)
     {
-        buildList.erase(buildList.begin()+position, action);
+        buildList.erase(buildList.begin()+position);
         return false;
     }
     else
@@ -158,7 +159,7 @@ bool BuildOrder::removeActionIfPossible(unsigned int position)
     action_t saved = buildList[position];
     buildList.erase(buildList.begin()+position);
 
-    if (!execute().successful)
+    if (!execute().successfull)
     {
         buildList.insert(buildList.begin()+position, saved);
         return false;
@@ -177,7 +178,7 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     buildList.erase(buildList.begin()+position);
     buildList.insert(buildList.begin()+position, newAction);
 
-    if (!execute.successful)
+    if (!execute().successfull)
     {
         buildList.erase(buildList.begin()+position);
         buildList.insert(buildList.begin()+position, saved);
@@ -224,23 +225,6 @@ void BuildOrder::startActionInState(action_t actionId, State& state) const
         state.advanceTime(state.isAdditionalTimeNeeded(action));
     }
     state.startAction(action);
-}
-
-bool BuildOrder::applyBuildOrderInState(unsigned int posStart, unsigned int posEnd, State& state) const
-{
-    //first get the "state" until pos-1 in our buildorder
-    auto iter = buildList.begin()+posStart;
-    for (unsigned int index = posStart; index < posEnd; index++)
-    {
-        const BuildAction &action = ConfigParser::Instance().getAction(*iter);
-        if(!state.isLegalAction(action))
-        {
-            return false;
-        }
-        startActionInState(action.id, state);
-        iter++;
-    }
-    return true;
 }
 
 ostream& operator<<(ostream &out, BuildOrder &obj)

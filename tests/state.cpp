@@ -129,10 +129,10 @@ void testProtoss()
 
     BuildOrder b{"pylon", "probe", "gateway", "zealot"};
     cerr << b;
-    cerr << b.getFitness() << endl;
+    cerr << b.execute().executionTime << endl;
     b = BuildOrder({"pylon", "probe", "chrono_boost", "gateway", "zealot", "chrono_boost"});
     cerr << b;
-    cerr << b.getFitness() << endl;
+    cerr << b.execute().executionTime << endl;
 }
 void testEnergyManager()
 {

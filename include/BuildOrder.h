@@ -43,12 +43,6 @@ public:
         transform(l.begin(), l.end(), buildList.begin(), 
                 [] (string s) { return ConfigParser::Instance().getAction(s).id;}
                 );
-
-        if (!applyBuildOrderInState(0, buildList.size(), state))
-        { 
-            throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
-        }
-        state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
 
     unsigned int getSize() const;
@@ -61,8 +55,8 @@ public:
     //unsigned int getFitness() const;
     ExecutionResult execute() const;
 
-    unsigned int getUnitCount(time_t maxTime, action_t target) const;
-    unsigned int getUnitCount(time_t maxTime, action_t target, vector<action_t>::size_type untilStep) const;
+    unsigned int getUnitCount(action_t target) const;
+    unsigned int getUnitCount(action_t target, vector<action_t>::size_type untilStep) const;
 
     void setTargetUnit(action_t target);
     /*
@@ -99,11 +93,6 @@ private:
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
     void startActionInState(action_t actionId, State& state) const;
-    /*applys the buildlist until buildList[pos-1] 
-    * @returns if every action was possible
-    */
-    bool applyBuildOrderInState(unsigned int posStart, unsigned int posEnd, State& state) const;
-
     /*
      * Removes all build steps and creates a fresh BuildOrder with all dependencies
      * to produce @target as the last entry.
