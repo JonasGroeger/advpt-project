@@ -125,7 +125,6 @@ class State {
 
 private:
     bool isForwardSim = false;
-    bool dirty = false;
     // At every position i, entities[i] indicates how many entities with action id i exist currently
     std::map<action_t, int> entities;
     // At every position i, borrowed[i] indicates how many entities with action id i are currently borrowed

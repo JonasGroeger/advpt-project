@@ -137,7 +137,6 @@ void State::advanceTime(time_t amount)
     // Finish all actions that will end withing @amount
     while (!activeActions.empty() && activeActions.top().timeFinished <= end_time)
     {
-        dirty = true;
         ActiveAction aa = activeActions.top();
         activeActions.pop();
 
@@ -154,6 +153,10 @@ void State::advanceTime(time_t amount)
         LOG_DEBUG("Handle action [" << act->name << "] id: " << act->id << " and finishTime: " << aa.timeFinished);
 
         addActionResult(act->result);
+        if(isForwardSim)
+        {
+            printWorkers();
+        }
 
         // Unborrow units
         if (aa.borrowedAction != -1)
@@ -190,6 +193,7 @@ void State::advanceTime(time_t amount)
             }
         }
     }
+
     increaseRessources(end_time-currentTime);
     currentTime = end_time;
 }
@@ -275,7 +279,7 @@ time_t State::isAdditionalTimeNeeded(const BuildAction& act)
 
 void State::startAction(const BuildAction& act)
 {
-    dirty = true;
+
     // Checking dependencies
     assert(isSatisfied(act.dependencies, false));
 
@@ -368,7 +372,6 @@ void State::startAction(const BuildAction& act)
 
     ActiveAction aa(t, &act, borrowedAction);
     activeActions.push(aa);
-    
     LOG_DEBUG("inserted new action [" << act.name << "] into queue with id: " << act.id << " finish time: " << aa.timeFinished);
 }
 
@@ -387,7 +390,7 @@ void State::addActionResult(const BuildResult& res, bool removeProducing)
     supply_max += res.supply;
     for (auto unit : res.units)
     {
-        if(isForwardSim)
+        if(isForwardSim && currentTime > 0)
         {
             std::cout << currentTime << "\tbuild-end " << ConfigParser::Instance().getAction(unit.first).name << std::endl;
         }
