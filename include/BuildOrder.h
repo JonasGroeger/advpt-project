@@ -45,6 +45,20 @@ public:
                 );
     }
 
+    explicit BuildOrder(std::vector<string> v)
+    {
+        isForwardSim = true;
+        buildList.resize(v.size());
+        transform(v.begin(), v.end(), buildList.begin(),
+                [] (string s) { return ConfigParser::Instance().getAction(s).id;}
+        );
+
+        if (!execute().successfull)
+        {
+            throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
+        }
+    }
+
     unsigned int getSize() const;
 
     action_t getAction(unsigned int position) const;
@@ -89,6 +103,7 @@ public:
 
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
 private:
+    bool isForwardSim = false;
     vector<action_t> buildList;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);

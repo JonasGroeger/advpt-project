@@ -59,7 +59,7 @@ action_t BuildOrder::getAction(unsigned int position) const
 ExecutionResult BuildOrder::execute(time_t maxTime) const
 {
     ConfigParser &cfg = ConfigParser::Instance();
-    State state(cfg.getStartConfig());
+    State state(cfg.getStartConfig(), isForwardSim);
 
     for (unsigned int i = 0; i < buildList.size(); i++)
     {
@@ -86,6 +86,11 @@ ExecutionResult BuildOrder::execute(time_t maxTime) const
     }
 
     state.advanceTime(state.getTimeTillAllActionsAreFinished());
+
+    if(isForwardSim)
+    {
+        state.printRessources();
+    }
 
     return {true, state.currentTime, static_cast<vector<action_t>::difference_type> (buildList.size())-1};
 }
