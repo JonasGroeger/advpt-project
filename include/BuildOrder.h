@@ -49,6 +49,7 @@ public:
 
     action_t getAction(unsigned int position) const;
 
+    void setBuildList(const vector<action_t>& vec);
     const vector<action_t> &getBuildList() const;
 
     unsigned int getFitness();

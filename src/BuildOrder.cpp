@@ -212,6 +212,11 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
     return false;
 }
 
+void BuildOrder::setBuildList(const vector<action_t>& vec)
+{
+        buildList = vec;
+        isDirty = true;
+}
 const vector<action_t>& BuildOrder::getBuildList() const
 {
     return buildList;
@@ -270,6 +275,7 @@ bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
 void BuildOrder::reset()
 {
     buildList.clear();
+    isDirty = true;
 }
 
 ostream& operator<<(ostream &out, BuildOrder &obj)
