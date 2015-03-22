@@ -250,6 +250,10 @@ void BuildOrder::startActionInState(const action_t &actionId)
         state.advanceTime(state.isAdditionalTimeNeeded(action));
     }
     state.startAction(action);
+    if(isForwardSim)
+    {
+        state.printWorkers();
+    }
 }
 
 bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
