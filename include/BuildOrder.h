@@ -45,6 +45,21 @@ public:
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
 
+    explicit BuildOrder(std::vector<string> v)
+    {
+        state = State(ConfigParser::Instance().getStartConfig());
+        buildList.resize(v.size());
+        transform(v.begin(), v.end(), buildList.begin(),
+                [] (string s) { return ConfigParser::Instance().getAction(s).id;}
+        );
+
+        if (!applyBuildOrder(0, buildList.size()))
+        {
+            throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
+        }
+        state.advanceTime(state.getTimeTillAllActionsAreFinished());
+    }
+
     unsigned int getSize();
 
     action_t getAction(unsigned int position) const;
