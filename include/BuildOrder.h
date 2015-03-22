@@ -26,19 +26,18 @@ public:
     */
     explicit BuildOrder(string target)
     {
-        state = State(ConfigParser::Instance().getStartConfig());
         createMinimalBuildOrder(target);
     }
 
     explicit BuildOrder(std::initializer_list<string> l)
     {
-        state = State(ConfigParser::Instance().getStartConfig());
+        State state = State(ConfigParser::Instance().getStartConfig());
         buildList.resize(l.size());
         transform(l.begin(), l.end(), buildList.begin(), 
                 [] (string s) { return ConfigParser::Instance().getAction(s).id;}
                 );
 
-        if (!applyBuildOrder(0, buildList.size()))
+        if (!applyBuildOrderInState(0, buildList.size()))
         { 
             throw std::invalid_argument(string(__PRETTY_FUNCTION__) + " invalid arguments");
         }
@@ -52,15 +51,15 @@ public:
     void setBuildList(const vector<action_t>& vec);
     const vector<action_t> &getBuildList() const;
 
-    unsigned int getFitness();
+    unsigned int getFitness() const;
 
-    unsigned int getUnitCount(time_t maxTime);
+    unsigned int getUnitCount(time_t maxTime) const;
 
     void setTargetUnit(action_t target);
     /*
     *
     */
-    vector<action_t> getPossibleNextActions(const vector<action_t> &actions);
+    vector<action_t> getPossibleNextActions(const vector<action_t> &actions, State& state) const;
 
     /*
     * Insert an action at the given position in the buildlist.
@@ -86,27 +85,16 @@ public:
     bool replaceActionIfPossible(action_t newAction, unsigned int position);
 
     friend ostream& operator<< (ostream &out, BuildOrder &obj);
-
 private:
-    State state;
-    map<action_t, int> availableUnits;
     vector<action_t> buildList;
-    action_t targetUnit;
-    bool isDirty = true;
-    unsigned int count = 0;
-    unsigned int fitness = INT32_MAX;
+    action_t targetUnit = -1;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);
     void startActionInState(const action_t &actionId);
     /*applys the buildlist until buildList[pos-1] 
     * @returns if every action was possible
     */
-    bool applyBuildOrder(unsigned int posStart, unsigned int posEnd);
-
-    /*
-    * this one resets all internally used variables
-    */
-    void reset();
+    bool applyBuildOrderInState(unsigned int posStart, unsigned int posEnd, State& state);
 
     /*
      * Removes all build steps and creates a fresh BuildOrder with all dependencies
