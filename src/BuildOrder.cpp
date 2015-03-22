@@ -32,7 +32,6 @@ void BuildOrder::createMinimalBuildOrder(string target)
         }
         for(action_t action : possibleActions)
         {
-            const auto& bAction = ConfigParser::Instance().getAction(action);
             startActionInState(action, state);
             buildList.push_back(action);
             dependencies.erase(std::remove_if(dependencies.begin(),dependencies.end(),
