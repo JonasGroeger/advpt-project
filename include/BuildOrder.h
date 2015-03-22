@@ -44,23 +44,18 @@ public:
         }
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
-    /*
-    * Initializes a given BuildOrder given by the values by @other.
-    */
-    BuildOrder(const BuildOrder& other)
-        :availableUnits(other.availableUnits)
-        ,buildList(other.buildList)
-    {};
 
     unsigned int getSize();
 
     action_t getAction(unsigned int position) const;
 
-    vector<action_t> getBuildList() const;
+    const vector<action_t> &getBuildList() const;
 
     unsigned int getFitness();
 
-    unsigned int getUnitCount(action_t action, time_t maxTime);
+    unsigned int getUnitCount(time_t maxTime);
+
+    void setTargetUnit(action_t target);
     /*
     *
     */
@@ -95,7 +90,9 @@ private:
     State state;
     map<action_t, int> availableUnits;
     vector<action_t> buildList;
+    action_t targetUnit;
     bool isDirty = true;
+    unsigned int count = 0;
     unsigned int fitness = INT32_MAX;
 
     void addOrIncrementUnit(map<action_t, int> &unitMap, action_t unit);

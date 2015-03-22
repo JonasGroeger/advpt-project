@@ -34,6 +34,7 @@ void GeneticOptimizer::generateRandomStartLists(unsigned int numberOfLists)
     for(unsigned int i = 0; i < numberOfLists; i++)
     {
         BuildOrder tmp(minimalBuildList);
+        tmp.setTargetUnit(target);
         unsigned int randomEntries = getConfigInteger(GENETIC_SECTION, FIELD_INITIAL_RANDOM_ENTRIES, 10);
 
         for(unsigned int step = 0; step < randomEntries; step++)
@@ -61,10 +62,49 @@ void GeneticOptimizer::run()
             runPush();
             break;
         case OptimizationStrategy::Rush:
+            runRush();
             break;
     }
 }
 
+void GeneticOptimizer::runRush()
+{
+    int maxTime = getConfigInteger(GENETIC_SECTION, FIELD_RUSH_MAX_TIME, 1000);
+
+    int generations = getConfigInteger(GENETIC_SECTION, FIELD_NUMBER_OF_GENERATIONS, 10);
+
+    double fraction = ((double) 1) / buildlists.size();
+    double probabilityToMutate = 0;
+
+    std::cout << "Starting optimizer ...." << std::endl;
+    for(int generation = 0; generation < generations; generation++)
+    {
+        if(probabilityToMutate >= 1) probabilityToMutate = 0;
+
+        std::sort(buildlists.begin(), buildlists.end(), RushComparator());
+        //keep the two best lists
+        const auto& mum = buildlists[0].getBuildList();
+        const auto& dad = buildlists[1].getBuildList();
+
+        probabilityToMutate += fraction;
+
+        for(auto iter = buildlists.begin()+2; iter < buildlists.end(); iter++)
+        {
+            BuildOrder &child = *iter;
+
+            makeChildren(mum, dad, child);
+
+            mutate(child, probabilityToMutate);
+        }
+        std::cout << "\r Current Generation ["<<(generation+1)<<" / " << generations <<"] best Fitness ["<< buildlists[0].getUnitCount(maxTime) <<"]";
+        std::cout.flush();
+    }
+    std::sort(buildlists.begin(), buildlists.end(), PushComparator());
+
+    std::cout << "\nWinner with fitness of [" << buildlists[0].getUnitCount(maxTime) << "] took time ["<<buildlists[0].getFitness()<<"]" << std::endl;
+    std::cout << buildlists[0] << std::endl;
+    std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
+}
 
 void GeneticOptimizer::runPush()
 {
@@ -79,8 +119,6 @@ void GeneticOptimizer::runPush()
         if(probabilityToMutate >= 1) probabilityToMutate = 0;
 
         std::sort(buildlists.begin(), buildlists.end(), PushComparator());
-        //std::cout << "  Fitness Mum : "<< buildlists[0].getFitness() << std::endl;
-        //std::cout << "  Fitness Dad : "<< buildlists[1].getFitness() << std::endl;
 
         //keep the two best lists
         auto mum = buildlists[0].getBuildList();
@@ -91,55 +129,8 @@ void GeneticOptimizer::runPush()
         for(auto iter = buildlists.begin()+2; iter < buildlists.end(); iter++)
         {
             BuildOrder &child = *iter;
-            bool targetAdded = false;
 
-            //Do the recombination of the parent "genoms" until we could add our target
-            while(!targetAdded)
-            {
-                //clear the child
-                child = BuildOrder();
-
-                auto mumIter = mum.begin();
-                auto dadIter = dad.begin();
-                int pos = 0;
-
-                while (mumIter != mum.end() && dadIter != dad.end())
-                {
-                    action_t action = (rand() % 2 == 0)
-                            ? *mumIter
-                            : *dadIter;
-
-                    if (child.insertActionIfPossible(action, pos))
-                    {
-                        if (action == target) targetAdded = true;
-                        pos++;
-                    }
-                    mumIter++;
-                    dadIter++;
-                }
-
-                if (!targetAdded)
-                {
-                    while (mumIter != mum.end())
-                    {
-                        if (child.insertActionIfPossible(*mumIter, pos))
-                        {
-                            if (*dadIter == target) targetAdded = true;
-                            pos++;
-                        }
-                        mumIter++;
-                    }
-                    while (dadIter != dad.end())
-                    {
-                        if (child.insertActionIfPossible(*dadIter, pos))
-                        {
-                            if (*dadIter == target) targetAdded = true;
-                            pos++;
-                        }
-                        dadIter++;
-                    }
-                }
-            }
+            makeChildren(mum, dad, child);
 
             mutate(child, probabilityToMutate);
         }
@@ -150,6 +141,59 @@ void GeneticOptimizer::runPush()
     std::cout << "\nWinner with fitness of [" << buildlists[0].getFitness() << "]" << std::endl;
     std::cout << buildlists[0] << std::endl;
     std::cout << " Probablity = "<< std::to_string(probabilityToMutate) << std::endl;
+}
+
+void GeneticOptimizer::makeChildren(const vector<action_t> &mum, const vector<action_t> &dad, BuildOrder &child)
+{
+    bool targetAdded = false;
+    //Do the recombination of the parent "genoms" until we could add our target
+    while(!targetAdded)
+    {
+        //clear the child
+        child = BuildOrder();
+        child.setTargetUnit(target);
+
+        auto mumIter = mum.begin();
+        auto dadIter = dad.begin();
+        int pos = 0;
+
+        while (mumIter != mum.end() && dadIter != dad.end())
+        {
+            action_t action = (rand() % 2 == 0)
+                    ? *mumIter
+                    : *dadIter;
+
+            if (child.insertActionIfPossible(action, pos))
+            {
+                if (action == target) targetAdded = true;
+                pos++;
+            }
+            mumIter++;
+            dadIter++;
+        }
+
+        if (!targetAdded)
+        {
+            while (mumIter != mum.end())
+            {
+                if (child.insertActionIfPossible(*mumIter, pos))
+                {
+                    if (*dadIter == target) targetAdded = true;
+                    pos++;
+                }
+                mumIter++;
+            }
+            while (dadIter != dad.end())
+            {
+                if (child.insertActionIfPossible(*dadIter, pos))
+                {
+                    if (*dadIter == target) targetAdded = true;
+                    pos++;
+                }
+                dadIter++;
+            }
+        }
+    }
 }
 
 void GeneticOptimizer::mutate(BuildOrder &child, double probability)
@@ -167,11 +211,12 @@ void GeneticOptimizer::mutate(BuildOrder &child, double probability)
             int randomAction = rand() % actionCount + firstActionId;
 
             //We dont want to add our target action more than once
-            if(randomAction == target)
+            if(randomAction == target && mode == OptimizationStrategy::Push)
             {
                 continue;
             }
 
+            // TODO sadf
             int mutationAction = rand()%3;
             switch(mutationAction)
             {

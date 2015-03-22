@@ -106,6 +106,14 @@ bool State::isLegalAction(const BuildAction& act)
             }
     }
 
+    if (act.isSpecial)
+    {
+            if (act.name == "mothership" && getEntityCount(act.id) > 0)
+            {
+                    return false;
+            }
+    }
+
     if (supply_used + act.cost.supply > future_supply_max)
     {
             LOG_DEBUG("supply check failed: " << act.cost.supply << " > " << future_supply_max);

@@ -26,6 +26,15 @@ private:
         }
     };
 
+    struct RushComparator
+    {
+        int maxTime = getConfigInteger(GENETIC_SECTION, FIELD_RUSH_MAX_TIME, 1000);
+        bool operator()( BuildOrder& lx, BuildOrder& rx ) const {
+            return lx.getUnitCount(maxTime) > rx.getUnitCount(maxTime);
+        }
+    };
+
     void generateRandomStartLists(unsigned int numberOfLists);
+    void makeChildren(const vector<action_t> &mum, const vector<action_t> &dad, BuildOrder &child);
     void mutate(BuildOrder &child, double probability);
 };

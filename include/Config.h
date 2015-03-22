@@ -7,6 +7,7 @@ extern const char* FIELD_TIME_SEED;
 extern const char* FIELD_INITIAL_START_LISTS;
 extern const char* FIELD_INITIAL_RANDOM_ENTRIES;
 extern const char* FIELD_NUMBER_OF_GENERATIONS;
+extern const char* FIELD_RUSH_MAX_TIME;
 extern const char* FIELD_TYPE;
 extern const char* FIELD_TARGET;
 

@@ -436,6 +436,7 @@
             <unit name="probe" count="6"/>
         </start_units>
 
+        <!-- TODO implement this with isSpecial-->
         <max_units>
             <unit name="mothership" max="1"/>
         </max_units>

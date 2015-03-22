@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 
     cerr << "Starting " << type << " to " << target << endl;
     GeneticOptimizer optimizer(strategy, ConfigParser::Instance().getAction(target).id);
+
     optimizer.run();
     cout << "SUCCESS" << endl;
 }
