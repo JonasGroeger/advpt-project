@@ -45,7 +45,7 @@ public:
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
     }
 
-    unsigned int getSize();
+    unsigned int getSize() const;
 
     action_t getAction(unsigned int position) const;
 
@@ -122,7 +122,7 @@ private:
     * @param outVector reference to the vector which receives the results
     * TODO doku
     */
-    vector<action_t> getDependencies(action_t id);
+    vector<action_t> getDependencies(action_t id) const;
 
     /*
     * Checks, that there are no more units of a type than allowed in @currentUnits.

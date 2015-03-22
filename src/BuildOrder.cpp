@@ -5,27 +5,32 @@ void BuildOrder::createMinimalBuildOrder(string target)
     reset();
     ConfigParser::Instance().setRaceForAction(target);
     BuildAction targetAction = ConfigParser::Instance().getAction(target);
-    vector<action_t> dependencies = getDependencies(targetAction.id);
 
     state = State(ConfigParser::Instance().getStartConfig());
+
+    vector<action_t> dependencies = getDependencies(targetAction.id);
     dependencies.push_back(targetAction.id);
 
     while(dependencies.size() > 0)
     {
         auto possibleActions = getPossibleNextActions(dependencies);
-        if(possibleActions.size() == 0)
+        if(possibleActions.empty())
         {
             //seems like nothing from our dependencies is possible so add a supply here
             if(state.isLegalAction(ConfigParser::Instance().getDefaulSupplyAction()))
             {
                 startActionInState(ConfigParser::Instance().getDefaulSupplyAction().id);
                 buildList.push_back(ConfigParser::Instance().getDefaulSupplyAction().id);
+                continue;
             }
-            continue;
+            else
+            {
+                throw std::logic_error("No supply possible");
+            }
         }
         for(action_t action : possibleActions)
         {
-            auto bAction = ConfigParser::Instance().getAction(action);
+            const auto& bAction = ConfigParser::Instance().getAction(action);
             startActionInState(action);
             buildList.push_back(action);
             dependencies.erase(std::remove_if(dependencies.begin(),dependencies.end(),
@@ -37,7 +42,7 @@ void BuildOrder::createMinimalBuildOrder(string target)
     }
 }
 
-unsigned int BuildOrder::getSize()
+unsigned int BuildOrder::getSize() const
 {
     return buildList.size();
 }
@@ -52,22 +57,20 @@ unsigned int BuildOrder::getFitness()
 {
     if(isDirty)
     {
-        State state(ConfigParser::Instance().getStartConfig());
+        ConfigParser &cfg = ConfigParser::Instance();
+        State state(cfg.getStartConfig());
 
         for (auto action_id : buildList)
         {
-            ConfigParser &cfg = ConfigParser::Instance();
-            auto &buildAction = cfg.getAction(action_id);
+            const auto &buildAction = cfg.getAction(action_id);
 
             if (!state.isLegalAction(buildAction))
             {
-                int c = 0;
-                for (auto a : buildList)
+                for (unsigned int i = 0; i < buildList.size(); i++)
                 {
-                    std::cout << "[" << c << "] - " << cfg.getAction(a).name << std::endl;
-                    c++;
+                    std::cerr << "[" << i << "] - " << cfg.getAction(buildList[i]).name << std::endl;
                 }
-                std::cout << state << std::endl;
+                std::cerr << state << std::endl;
                 throw std::logic_error("Somethings wrong with this buildOrder ! " + buildAction.name + " is NEVER legal!");
             }
 
@@ -76,7 +79,6 @@ unsigned int BuildOrder::getFitness()
             {
                 LOG_DEBUG("STATE TIME NEEDED FOR ACTION [" + buildAction.name + "] IS [" << state.isAdditionalTimeNeeded(buildAction) << "]");
                 state.advanceTime(t);
-                //LOG_DEBUG("ADVANCED BY [" << t << "] " << state);
             }
             state.startAction(buildAction);
             LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
@@ -92,25 +94,21 @@ unsigned int BuildOrder::getFitness()
 
 unsigned int BuildOrder::getUnitCount(time_t maxTime)
 {
-    if(isDirty)
+    int t = getFitness();
+    if (t > maxTime)
     {
-        int t = getFitness();
-        if (t > maxTime)
-        {
-            return 0;
-        }
-        action_t target = targetUnit;
-        count = count_if(buildList.begin(), buildList.end(),
-                [&target](const action_t &entry)
-                {
-                    return entry == target;
-                });
-        isDirty = false;
+        return 0;
     }
+    action_t target = targetUnit;
+    count = count_if(buildList.begin(), buildList.end(),
+            [&target](const action_t &entry)
+            {
+                return entry == target;
+            });
     return count;
 }
 
-vector<action_t> BuildOrder::getDependencies(action_t id)
+vector<action_t> BuildOrder::getDependencies(action_t id) const
 {
     map<action_t, bool> availableUnits;
     vector<action_t> todo {id};
@@ -151,20 +149,22 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 {
     assert(position <= buildList.size());
 
+    const auto& act = ConfigParser::Instance().getAction(action);
     state = State(ConfigParser::Instance().getStartConfig());
+
     // first get the "state" until pos-1 in our buildorder
     applyBuildOrder(0, position);
 
     // Check if the newly inserted action is possible at all
-    if(!state.isLegalAction(ConfigParser::Instance().getAction(action)))
+    if(!state.isLegalAction(act))
     {
         return false;
     }
-    startActionInState(ConfigParser::Instance().getAction(action).id);
+    startActionInState(action);
 
     if(applyBuildOrder(position, buildList.size()))
     {
-        buildList.insert(buildList.begin()+position, ConfigParser::Instance().getAction(action).id);
+        buildList.insert(buildList.begin()+position, action);
         isDirty = true;
         return true;
     }
@@ -174,7 +174,9 @@ bool BuildOrder::insertActionIfPossible(action_t action, unsigned int position)
 bool BuildOrder::removeActionIfPossible(unsigned int position)
 {
     assert(position < buildList.size());
+
     state = State(ConfigParser::Instance().getStartConfig());
+
     //first get the "state" until pos-1 in our buildorder
     applyBuildOrder(0, position);
 
@@ -192,16 +194,18 @@ bool BuildOrder::replaceActionIfPossible(action_t newAction, unsigned int positi
 {
     assert(position < buildList.size());
 
+    const auto& act = ConfigParser::Instance().getAction(newAction);
     state = State(ConfigParser::Instance().getStartConfig());
+
     //first get the "state" until pos-1 in our buildorder
     applyBuildOrder(0, position);
 
     // Check if the swapped action is possible
-    if(!state.isLegalAction(ConfigParser::Instance().getAction(newAction)))
+    if(!state.isLegalAction(act))
     {
         return false;
     }
-    startActionInState(ConfigParser::Instance().getAction(newAction).id);
+    startActionInState(newAction);
 
     if(applyBuildOrder(position+1, buildList.size()))
     {
@@ -227,19 +231,18 @@ void BuildOrder::setTargetUnit(action_t target)
     targetUnit = target;
 }
 
-
-vector<action_t> BuildOrder::getPossibleNextActions(const vector<action_t> &actions)
+vector<action_t> BuildOrder::getPossibleNextActions(const vector<action_t> &actions, State)
 {
     vector<action_t> resultVec;
 
     for(auto action : actions)
     {
-        auto bAction = ConfigParser::Instance().getAction(action);
+        const auto& bAction = ConfigParser::Instance().getAction(action);
 
         if(state.isLegalAction(bAction))
         {
             LOG_DEBUG("Action [" << bAction.name << "] is possible");
-            resultVec.push_back(bAction.id);
+            resultVec.push_back(action);
         }
     }
     return resultVec;
