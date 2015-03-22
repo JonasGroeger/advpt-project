@@ -81,6 +81,10 @@ ExecutionResult BuildOrder::execute(time_t maxTime) const
             }
         }
         state.startAction(buildAction);
+        if(isForwardSim)
+        {
+            state.printWorkers();
+        }
         LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
     }
 
