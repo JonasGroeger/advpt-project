@@ -21,7 +21,6 @@ State::State(const map<action_t, int> &startConfig, bool forwardSim)
             }
         }
     }
-    // TODO this is a hack
     future_supply_max = supply_max;
     assert(supply_max >= supply_used);
 
@@ -65,7 +64,6 @@ bool State::isLegalAction(const BuildAction& act)
         return false;
     }
 
-    // TODO handle actions that cost and borrow untis of the same type
     // Costs
     const BuildCost& cost = act.cost;
 
@@ -687,7 +685,6 @@ void LarvaManager::spawnLarva(ress_t count, bool injecting)
     }
 
     // If we are not injecting but have more larva than possible, do nothing
-    // TODO Why do we need this?
     if (!injecting)
     {
         if (this->currentLarva >= maximumLarva)
@@ -706,7 +703,6 @@ void LarvaManager::spawnLarva(ress_t count, bool injecting)
 
 time_t LarvaManager::getTimeUntilLarvaAvailable(ress_t amount)
 {
-    // TODO optimize to give real amount
     if (currentLarva < amount)
     {
         return 1;

@@ -18,7 +18,6 @@ using namespace std;
  * This datatype is used to represent minerals and gas
  * Internally it is always multiplied by RESS_FACTOR
  */
-// TODO if someone is bored this could also be implementated by a smart class with overloaded arithmetic operators and default int conversions etc.
 using ress_t = long int;
 const int RESS_FACTOR = 100; // Scaling factor
 using energy_t = long double;

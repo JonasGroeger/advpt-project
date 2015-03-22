@@ -266,7 +266,6 @@
             </results>
         </action>
 
-        <!-- TODO: Oder hatchery, lair und hive zusammen -->
 
 
         <action name="nydus_network">
@@ -436,7 +435,6 @@
             <unit name="probe" count="6"/>
         </start_units>
 
-        <!-- TODO implement this with isSpecial-->
         <max_units>
             <unit name="mothership" max="1"/>
         </max_units>
@@ -494,7 +492,6 @@
             <results mineral="0" gas="0" time="0" supply="10">
                 <unit name="nexus"/>
                 <energy start="0" max="100"/>
-                <!-- TODO: Chrono Boost -->
             </results>
         </action>
 

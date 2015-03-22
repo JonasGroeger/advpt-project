@@ -1,6 +1,5 @@
 #include "BuildOrder.h"
 
-// TODO remove state logic
 void BuildOrder::createMinimalBuildOrder(string target)
 {
     buildList.clear();

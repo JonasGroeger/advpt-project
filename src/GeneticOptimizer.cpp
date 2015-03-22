@@ -212,7 +212,6 @@ void GeneticOptimizer::mutate(BuildOrder &child, double probability)
                 continue;
             }
 
-            // TODO sadf
             int mutationAction = rand()%3;
             switch(mutationAction)
             {
