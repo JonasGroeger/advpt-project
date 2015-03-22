@@ -81,9 +81,11 @@ unsigned int BuildOrder::getFitness()
             state.startAction(buildAction);
             LOG_DEBUG("ACTION STARTED: [" << buildAction.name << "] ");
         }
-
         state.advanceTime(state.getTimeTillAllActionsAreFinished());
-
+        if(isForwardSim)
+        {
+            state.printRessources();
+        }
         fitness = state.currentTime;
         isDirty = false;
     }
@@ -248,6 +250,10 @@ void BuildOrder::startActionInState(const action_t &actionId)
         state.advanceTime(state.isAdditionalTimeNeeded(action));
     }
     state.startAction(action);
+    if(isForwardSim)
+    {
+        state.printWorkers();
+    }
 }
 
 bool BuildOrder::applyBuildOrder(unsigned int posStart, unsigned int posEnd)
